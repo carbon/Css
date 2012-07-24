@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7EFEE97C-F942-47BB-86B6-AEBCADB81034}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cadmium.Css</RootNamespace>
+    <AssemblyName>Cadmium.Css</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\Blocks\CssBlock.cs" />
+    <Compile Include="Model\Modules\CssModule.cs" />
+    <Compile Include="Model\Modules\CssModuleType.cs" />
+    <Compile Include="Model\Rules\FontFaceRule.cs" />
+    <Compile Include="Model\Rules\RuleType.cs" />
+    <Compile Include="Model\Values\CssValueType.cs" />
+    <Compile Include="Parser\CssParser.cs" />
+    <Compile Include="Parser\CssToken.cs" />
+    <Compile Include="Parser\CssTokenizer.cs" />
+    <Compile Include="Model\Browser.cs" />
+    <Compile Include="Model\CssDeclaration.cs" />
+    <Compile Include="Model\CssProperty.cs" />
+    <Compile Include="Model\Rules\CssRule.cs" />
+    <Compile Include="Model\CssSelector.cs" />
+    <Compile Include="Model\Values\CssValue.cs" />
+    <Compile Include="Model\StyleSheet.cs" />
+    <Compile Include="Model\Values\CssPadding.cs" />
+    <Compile Include="Model\Values\CssUrlValue.cs" />
+    <Compile Include="Parser\ParseException.cs" />
+    <Compile Include="Parser\SourceReader.cs" />
+    <Compile Include="Parser\StringBuffer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transformer\CssTransformer.cs" />
+    <Compile Include="Variables\VariableBag.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
