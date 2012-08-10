@@ -45,7 +45,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cadmium.Css\Cadmium.Css.csproj">
+    <ProjectReference Include="..\Carbon.Css\Carbon.Css.csproj">
       <Project>{7EFEE97C-F942-47BB-86B6-AEBCADB81034}</Project>
       <Name>Cadmium.Css</Name>
     </ProjectReference>
