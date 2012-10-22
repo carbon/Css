@@ -15,12 +15,12 @@
 
 		public CssDeclaration Source { get; set; }
 
-		public List<CssDeclaration> ToAdd
+		public List<CssDeclaration> AddList
 		{
 			get { return add; }
 		}
 
-		public List<CssDeclaration> ToRemove
+		public List<CssDeclaration> RemoveList
 		{
 			get { return remove; }
 		}
@@ -36,22 +36,22 @@
 
 			rewrite.Index = rule.Block.IndexOf(declaration);
 
-			var valueText = declaration.Value.ToString();
+			var cssValue = declaration.Value;
 
 			if (declaration.Property.Name == "opacity")
 			{
 				int value = -1;
 
-				try { value = (int)(float.Parse(valueText) * 100); }
+				try { value = (int)(float.Parse(cssValue.ToString()) * 100); }
 				catch { }
 
 				if (value > -1)
 				{
-					rewrite.ToAdd.Add(new CssDeclaration("filter", string.Format("alpha(opacity={0})", value.ToString())));
+					rewrite.AddList.Add(new CssDeclaration("filter", string.Format("alpha(opacity={0})", value.ToString())));
 
 					foreach (var filter in rule.Block.FindHavingProperty(CssProperty.Get("filter")).Where(f => f.Value.ToString().Contains("alpha")))
 					{
-						rewrite.ToRemove.Add(filter);
+						rewrite.RemoveList.Add(filter);
 					}
 				}
 			}
@@ -59,10 +59,10 @@
 			{
 				foreach (var prefix in declaration.Property.GetPrefixedProperties())
 				{
-					rewrite.ToAdd.Add(new CssDeclaration(prefix, valueText));
+					rewrite.AddList.Add(new CssDeclaration(prefix, cssValue));
 
 					// Remove existing prefixes
-					rewrite.ToRemove.AddRange(rule.Block.FindHavingProperty(prefix));
+					rewrite.RemoveList.AddRange(rule.Block.FindHavingProperty(prefix));
 				}
 			}
 
@@ -84,12 +84,12 @@
 			{
 				var indexOf = rule.Block.Declarations.IndexOf(rewrite.Source);
 
-				foreach (var add in rewrite.ToAdd)
+				foreach (var add in rewrite.AddList)
 				{
 					rule.Block.Declarations.Insert(indexOf, add);
 				}
 
-				foreach (var remove in rewrite.ToRemove)
+				foreach (var remove in rewrite.RemoveList)
 				{
 					rule.Block.Remove(remove);
 				}

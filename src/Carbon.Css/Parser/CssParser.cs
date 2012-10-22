@@ -119,7 +119,7 @@
 
 				if (tokenizer.Current.Kind == TokenKind.Declaration)
 				{
-					block.Declarations.Add(new CssDeclaration(tokenizer.Current.Value));
+					block.Declarations.Add(CssDeclaration.Parse(tokenizer.Current.Value));
 				}
 
 				tokenizer.Next();

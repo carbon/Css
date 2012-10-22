@@ -1,3 +1,8 @@
 src/Carbon.Css.suo
 src/Carbon.Css.Tests/.DS_Store
 src/Carbon.Css/.DS_Store
+/src/Carbon.Css.Tests/obj/
+/src/Carbon.Css/bin/
+/src/Carbon.Css/obj/
+/src/Carbon.Css.v11.suo
+/src/Carbon.Css.Tests/bin/

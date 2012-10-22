@@ -29,9 +29,7 @@
 				case '7':
 				case '8':
 				case '9': break; // Number (px,em,deg,s,ms,%)
-
 			}
-
 		}
 
 		public string Text
@@ -57,8 +55,8 @@
 		public override IEnumerator<CssValue> GetEnumerator()
 		{
 			return Enumerable.GetEnumerator();
-
 		}
+
 		public override string ToString()
 		{
 			return text;

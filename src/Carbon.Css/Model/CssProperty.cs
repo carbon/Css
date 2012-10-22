@@ -29,8 +29,7 @@
 		{
 			#region Preconditions
 
-			if (name == null)
-				throw new ArgumentNullException("name");
+			if (name == null) throw new ArgumentNullException("name");
 
 			#endregion
 
@@ -97,10 +96,6 @@
 
 			return propertyInfo;
 		}
-
-
-
-
 
 
 
@@ -246,12 +241,12 @@
 		public static readonly CssProperty FontWeight		= new CssProperty("font-weight",		CssModule.Css1);
 
 		// Grids ---------------------------------------------------------------------------------------
-		public static readonly Compatibility GridComptability = new Compatibility { Prefixed = new[] { Browser.IE10 } };
+		public static readonly Compatibility GridComptability	= new Compatibility { Prefixed = new[] { Browser.IE10 } };
 
-		public static readonly CssProperty GridColumns		= new CssProperty("grid-columns",	GridComptability);
-		public static readonly CssProperty GridRows			= new CssProperty("grid-rows",		GridComptability);
+		public static readonly CssProperty GridColumns			= new CssProperty("grid-columns",	GridComptability);
+		public static readonly CssProperty GridRows				= new CssProperty("grid-rows",		GridComptability);
 
-		public static readonly CssProperty Height			= new CssProperty("height", CssModule.Css1);
+		public static readonly CssProperty Height				= new CssProperty("height", CssModule.Css1);
 
 		// Hyphens -------------------------------------------------------------------------------------
 		public static readonly CssProperty HyphenateAfter		= new CssProperty("hyphenate-after");
@@ -418,8 +413,6 @@
 		public static readonly CssProperty WordWrap			= new CssProperty("word-wrap");
 		
 		public static readonly CssProperty ZIndex			= new CssProperty("z-index");
-
-
 
 
 
