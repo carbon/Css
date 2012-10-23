@@ -5,6 +5,7 @@
 	using System.Text;
 
 	using Carbon.Css.Parser;
+	using System.IO;
 
 	public class StyleSheet
 	{
@@ -66,9 +67,9 @@
 			{
 				foreach (var d in rule.Block.Declarations)
 				{
-					if (d.Property.Name.StartsWith("var-"))
+					if (d.Name.StartsWith("var-"))
 					{
-						sheet.Variables.Set(d.Property.Name.Replace("var-", ""), d.Value.ToString());
+						sheet.Variables.Set(d.Name.Replace("var-", ""), d.Value.ToString());
 					}
 				}
 			}
@@ -76,16 +77,33 @@
 			return sheet;
 		}
 
+		public void WriteTo(TextWriter writer)
+		{
+			var i = 0;
+
+			foreach (var rule in rules)
+			{
+				if (i != 0)
+				{
+					writer.WriteLine();
+				}
+
+				rule.WriteTo(writer);
+
+				i++;
+			}
+		}
+
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
 
-			foreach (var rule in rules)
+			using (var sw = new StringWriter(sb))
 			{
-				sb.AppendLine(rule.ToString());
-			}
+				WriteTo(sw);
 
-			return sb.ToString();
+				return sb.ToString();
+			}
 		}
 	}
 }

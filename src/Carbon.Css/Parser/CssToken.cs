@@ -20,6 +20,11 @@
 		{
 			get { return value; }
 		}
+
+		public override string ToString()
+		{
+			return Kind + ": " + Value;
+		}
 	}
 
 	public enum TokenKind
@@ -27,12 +32,21 @@
 		Whitespace,
 		Comment,
 		Identifier,		// selector or identifer (IDENT)
-		Declaration,	// property: value
+		
+		// Declaration,	// property: value
+
+		/*
+		DeclarationName,			// [property]:
+		DeclarationValue,			// :[value]
+		*/
+
+		Name, 
+		Value,
 
 		// Identifier, // value
 
 		Semicolon,  // ;
-
+		Colon,		// :
 		BlockStart,	// {
 		BlockEnd,	// }
 

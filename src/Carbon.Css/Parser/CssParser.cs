@@ -32,7 +32,7 @@
 				case TokenKind.Identifier:	return ReadStyleRule();
 				case TokenKind.AtKeyword:	return ReadAtRule();
 
-				default:					throw new Exception("Unexpected:" + this.tokenizer.Current.Kind);
+				default: throw new ParseException("Unexpected:" + this.tokenizer.Current.Kind + " reading rule");
 			}
 		}
 
@@ -41,46 +41,50 @@
 			// @import "subs.css";
 			// @media print {
 
-			RuleType type = RuleType.Unknown;
+			var ruleType = RuleType.Unknown;
 
-			var atKeyword = tokenizer.Current;
+			var atToken = tokenizer.Current;
 
 			tokenizer.Next(); // Read the @ keyword
 
 			SkipWhitespaceAndComments();
 
-			switch (atKeyword.Value)
+			switch (atToken.Value)
 			{
-				case "@charset":	type = RuleType.CharsetRule;	break;
-				case "@import":		type = RuleType.ImportRule;		break;
-				case "@font-face":	type = RuleType.FontFaceRule;	break;
-				case "@media":		type = RuleType.MediaRule;		break;
-				case "@page":		type = RuleType.PageRule;		break;
-				case "@keyframes":	type = RuleType.KeyframesRule;	break;
+				case "@charset":	ruleType = RuleType.CharsetRule;	break;
+				case "@import":		ruleType = RuleType.ImportRule;		break;
+				case "@font-face":	ruleType = RuleType.FontFaceRule;	break;
+				case "@media":		ruleType = RuleType.MediaRule;		break;
+				case "@page":		ruleType = RuleType.PageRule;		break;
+
+				case "@-webkit-keyframes":
+				case "@keyframes":	ruleType = RuleType.KeyframesRule;	break;
 			}
 
 			// ATKEYWORD S* any* [ block | ';' S* ];
 			// @{keyword} ... 
 
-			var rule = new CssRule(type);
+			var selector = new CssSelector(atToken.Value);
 
-			rule.Selector = new CssSelector(atKeyword.Value);
-
-			if (tokenizer.Current.Kind == TokenKind.Identifier || tokenizer.Current.Kind == TokenKind.Declaration)
+			if (tokenizer.Current.Kind == TokenKind.Identifier)
 			{
-				rule.Selector = new CssSelector(atKeyword.Value + " " + tokenizer.Current.Value);
+				selector = new CssSelector(atToken.Value + " " + tokenizer.Current.Value);
 
-				tokenizer.Next(); // Read the selector
+				tokenizer.Next(); // Read the identifer (i.e. selector)
+			}
+			else if (tokenizer.Current.Kind == TokenKind.Name)
+			{
+				var declaration = ReadDeclaration();
+
+				selector = new CssSelector(atToken.Value + " " + declaration.ToString());
 			}
 
-			if (tokenizer.Current.Kind == TokenKind.BlockStart)
-			{
-				rule.Block = ReadBlock();
-			}
+			var rule = new CssRule(ruleType, selector);
 
-			if (tokenizer.Current.Kind == TokenKind.Semicolon)
+			switch (tokenizer.Current.Kind)
 			{
-				tokenizer.Next(); // Read the semicolon
+				case TokenKind.BlockStart:	rule.Block = ReadBlock();	break;
+				case TokenKind.Semicolon:	tokenizer.Next();			break; // Read the semicolon 
 			}
 
 			return rule;
@@ -88,23 +92,20 @@
 
 		public CssRule ReadStyleRule()
 		{
-			var rule = new CssRule(RuleType.StyleRule);
-
-			rule.Selector = new CssSelector(tokenizer.Current.Value);
+			var selectorToken = tokenizer.Current;
 
 			tokenizer.Next(); // Read the selector
 
-			Expect(TokenKind.BlockStart);
-
-			rule.Block = ReadBlock();
-
-			return rule;
+			return new CssRule(RuleType.StyleRule, new CssSelector(selectorToken.Value)) {
+				Block = ReadBlock()
+			};
 		}
-
 
 		public CssBlock ReadBlock()
 		{
 			var block = new CssBlock();
+
+			Expect(TokenKind.BlockStart);
 
 			tokenizer.Next(); // Read {
 
@@ -112,17 +113,16 @@
 			{
 				if (tokenizer.IsEnd) throw new Exception("Unexpected EOF reading block");
 
-				if (tokenizer.Current.Kind == TokenKind.Identifier)
-				{
-					block.Rules.Add(ReadRule());
-				}
+				SkipWhitespaceAndComments();
 
-				if (tokenizer.Current.Kind == TokenKind.Declaration)
+				switch (tokenizer.Current.Kind)
 				{
-					block.Declarations.Add(CssDeclaration.Parse(tokenizer.Current.Value));
-				}
+					case TokenKind.Identifier:	block.Rules.Add(ReadRule());				break;
+					case TokenKind.Name:		block.Declarations.Add(ReadDeclaration());	break; // DeclarationName
+					case TokenKind.BlockEnd:	break;
 
-				tokenizer.Next();
+					default: throw new Exception("Unexpected " + tokenizer.Current.ToString() + " reading Block.");
+				}
 			}
 
 			tokenizer.Next(); // Read }
@@ -130,6 +130,31 @@
 			return block;
 		}
 
+		public CssDeclaration ReadDeclaration()
+		{
+			var nameToken = tokenizer.Current;
+
+			tokenizer.Next(); // Read the name
+
+			Expect(TokenKind.Colon);
+
+			tokenizer.Next(); // Read the colon
+
+			SkipWhitespaceAndComments(); // Read as leading triva
+
+			Expect(TokenKind.Value);
+
+			var valueToken = tokenizer.Current;
+
+			tokenizer.Next(); // Read the value
+
+			if (tokenizer.Current.Kind == TokenKind.Semicolon)
+			{
+				tokenizer.Next(); // Read the semicolon
+			}
+
+			return new CssDeclaration(nameToken.Value, valueToken.Value);
+		}
 
 		public void SkipWhitespaceAndComments()
 		{

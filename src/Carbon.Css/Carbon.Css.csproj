@@ -49,13 +49,14 @@
     <Compile Include="Parser\CssTokenizer.cs" />
     <Compile Include="Model\Browser.cs" />
     <Compile Include="Model\CssDeclaration.cs" />
-    <Compile Include="Model\CssProperty.cs" />
+    <Compile Include="Model\CssPropertyInfo.cs" />
     <Compile Include="Model\Rules\CssRule.cs" />
     <Compile Include="Model\CssSelector.cs" />
     <Compile Include="Model\Values\CssValue.cs" />
     <Compile Include="Model\StyleSheet.cs" />
     <Compile Include="Model\Values\CssPadding.cs" />
     <Compile Include="Model\Values\CssUrlValue.cs" />
+    <Compile Include="Parser\LexicalMode.cs" />
     <Compile Include="Parser\ParseException.cs" />
     <Compile Include="Parser\SourceReader.cs" />
     <Compile Include="Parser\StringBuffer.cs" />

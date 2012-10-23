@@ -5,28 +5,28 @@
 
 	public class CssDeclaration
 	{
-		private readonly CssProperty property;
+		private readonly string name;
 		private readonly CssValue value;
 
-		public CssDeclaration(string propertyName, string valueText)
-			: this(CssProperty.Get(propertyName), CssValue.Parse(valueText)) { }
+		public CssDeclaration(string name, string value)
+			: this(name, CssValue.Parse(value)) { }
 
-		public CssDeclaration(CssProperty property, CssValue value)
+		public CssDeclaration(string name, CssValue value)
 		{
 			#region Preconditions
 
-			if (property == null) 
-				throw new ArgumentNullException("property");
+			if (name == null)	throw new ArgumentNullException("name");
+			if (value == null)	throw new ArgumentNullException("value");
 
 			#endregion
 
-			this.property = property;
+			this.name = name;
 			this.value = value;
 		}
 
-		public CssProperty Property
+		public string Name
 		{
-			get { return property; }
+			get { return name; }
 		}
 
 		public CssValue Value
@@ -34,24 +34,15 @@
 			get { return value; }
 		}
 
-		public static CssDeclaration Parse(string text)
+		public CssPropertyInfo GetPropertyInfo()
 		{
-			#region
+			return CssPropertyInfo.Get(name);
+		}
 
-			if (text == null) throw new ArgumentNullException("text");
-
-			#endregion
-
-			// property : value
-
-			text = text.Replace('\t', ' ').Replace('\n', ' ').Replace('\r', ' ');
-
-			var colonIndex = text.IndexOf(':');
-
-			var propertyName = text.Substring(0, colonIndex).Trim();
-			var valueText = text.Substring(colonIndex + 1);
-
-			return new CssDeclaration(propertyName, valueText);
+		public override string ToString()
+		{
+			// color: red
+			return name + ": " + value.ToString();
 		}
 	}
 }

@@ -1,17 +1,14 @@
 ﻿namespace Carbon.Css.Parser
 {
 	using System;
-	using System.Collections.Generic;
 	using System.IO;
 
 	public class CssTokenizer
 	{
 		private readonly SourceReader reader;
-
-		private bool isInBlock = false;
+		private readonly LexicalModeContext mode = new LexicalModeContext(LexicalMode.Selector);
 
 		private Token current = null;
-
 
 		public CssTokenizer(SourceReader reader)
 		{
@@ -53,32 +50,64 @@
 
 				case '/': return ReadComment();
 
-				case ';':					  reader.Next(); /* Read ; */ return new Token(TokenKind.Semicolon,  ";");
-				case '{': isInBlock = true;   reader.Next(); /* Read { */ return new Token(TokenKind.BlockStart, "{");
-				case '}': isInBlock = false;  reader.Next(); /* Read } */ return new Token(TokenKind.BlockEnd,   "}");
+				case ';':									reader.Next(); /* Read ; */ return new Token(TokenKind.Semicolon,	";");
+				case '{': mode.Enter(LexicalMode.Block);	reader.Next(); /* Read { */ return new Token(TokenKind.BlockStart,	"{");
+				case '}': mode.Leave(LexicalMode.Block);	reader.Next(); /* Read } */ return new Token(TokenKind.BlockEnd, "}");
+			}
 
-				default: return (isInBlock) ? ReadDeclaration() : ReadSelector();
+			switch (mode.Current)
+			{
+				case LexicalMode.Block:			return ReadName();		// Property declaration name
+				case LexicalMode.Value:			return ReadValue();		// Property declaration value
+				case LexicalMode.Selector:		return ReadSelector();
+
+				default: throw new Exception("Unexpected lexical mode:" + this.mode);
 			}
 		}
 
-		private Token ReadDeclaration()
+		private Token ReadName()
 		{
 			reader.Mark();
 
-			while (reader.Current != ';' && reader.Current != '}' && reader.Current != '{')
+			while (reader.Current != ':' && reader.Current != '{')
 			{
-				if (reader.IsEof) throw new ParseException("Unexpected EOF reading declaration");
+				if (reader.IsEof) throw new ParseException("Unexpected EOF reading name");
 
 				reader.Next();
 			}
 
 			if (reader.Current == '{')
 			{
-				// We were actually reading a selector instead an @rule block
+				// We were actually reading a selector instead an @ rule block
 				return new Token(TokenKind.Identifier, reader.Unmark());
 			}
 
-			return new Token(TokenKind.Declaration, reader.Unmark());
+			mode.Enter(LexicalMode.Value);
+
+			return new Token(TokenKind.Name, reader.Unmark());
+		}
+
+		private Token ReadValue()
+		{
+			if(reader.Current == ':') 
+			{
+				reader.Next(); /* Read : */
+
+				return new Token(TokenKind.Colon, ":");
+			}
+
+			reader.Mark();
+
+			while (reader.Current != ';' && reader.Current != '}')
+			{
+				if (reader.IsEof) throw new ParseException("Unexpected EOF reading value");
+
+				reader.Next();
+			}
+
+			mode.Leave(LexicalMode.Value);
+
+			return new Token(TokenKind.Value, reader.Unmark());
 		}
 
 		private Token ReadAtKeyword()
@@ -147,7 +176,7 @@
 		{
 			reader.Mark();
 			
-			// { (Start declaration)
+			// { (Declaration start)
 			while (reader.Current != '{')
 			{
 				if (reader.IsEof) throw new ParseException("Unexpected EOF reading selector");

@@ -38,7 +38,7 @@
 
 			var cssValue = declaration.Value;
 
-			if (declaration.Property.Name == "opacity")
+			if (declaration.Name == "opacity")
 			{
 				int value = -1;
 
@@ -49,7 +49,7 @@
 				{
 					rewrite.AddList.Add(new CssDeclaration("filter", string.Format("alpha(opacity={0})", value.ToString())));
 
-					foreach (var filter in rule.Block.FindHavingProperty(CssProperty.Get("filter")).Where(f => f.Value.ToString().Contains("alpha")))
+					foreach (var filter in rule.Block.FindHavingProperty(CssPropertyInfo.Get("filter")).Where(f => f.Value.ToString().Contains("alpha")))
 					{
 						rewrite.RemoveList.Add(filter);
 					}
@@ -57,9 +57,9 @@
 			}
 			else
 			{
-				foreach (var prefix in declaration.Property.GetPrefixedProperties())
+				foreach (var prefix in declaration.GetPropertyInfo().GetPrefixedProperties())
 				{
-					rewrite.AddList.Add(new CssDeclaration(prefix, cssValue));
+					rewrite.AddList.Add(new CssDeclaration(prefix.Name, cssValue));
 
 					// Remove existing prefixes
 					rewrite.RemoveList.AddRange(rule.Block.FindHavingProperty(prefix));

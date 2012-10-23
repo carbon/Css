@@ -17,9 +17,9 @@
 		}
 
 
-		public IList<CssDeclaration> FindHavingProperty(CssProperty property)
+		public IList<CssDeclaration> FindHavingProperty(CssPropertyInfo property)
 		{
-			return declarations.Where(d => d.Property.Name == property.Name).ToList();
+			return declarations.Where(d => d.Name == property.Name).ToList();
 		}
 
 		// Nested rules
@@ -97,7 +97,7 @@
 					writer.Write(" ");
 				}
 
-				writer.Write(string.Format(" {0}: {1};", d.Property, d.Value.ToString()));
+				writer.Write(string.Format(" {0}: {1};", d.Name, d.Value.ToString()));
 
 				if (declarations.Count == 1)
 				{

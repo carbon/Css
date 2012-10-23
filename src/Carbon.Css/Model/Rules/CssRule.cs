@@ -1,20 +1,19 @@
 ﻿namespace Carbon.Css
 {
 	using System;
-	using System.Collections.Generic;
 	using System.IO;
-	using System.Linq;
-	using System.Text;
 
 	// A StyleRule rule has a selector, and one or more declarations
 
 	public class CssRule
 	{
 		private readonly RuleType type;
+		private readonly CssSelector selector;
 
-		public CssRule(RuleType type)
+		public CssRule(RuleType type, CssSelector selector)
 		{
 			this.type = type;
+			this.selector = selector;
 		}
 
 		public RuleType Type
@@ -22,7 +21,10 @@
 			get { return type; }
 		}
 
-		public CssSelector Selector { get; set; }
+		public CssSelector Selector
+		{
+			get { return selector; }
+		}
 
 		public CssBlock Block { get; set; }
 

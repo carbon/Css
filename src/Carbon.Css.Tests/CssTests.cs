@@ -11,14 +11,74 @@
 	public class CssTests
 	{
 		[Test]
+		public void Modes()
+		{
+			var mode = new LexicalModeContext(LexicalMode.Selector);
+
+			Assert.AreEqual(LexicalMode.Selector, mode.Current);
+
+			mode.Enter(LexicalMode.Block);
+
+			Assert.AreEqual(LexicalMode.Block, mode.Current);
+
+			mode.Enter(LexicalMode.Value);
+
+			Assert.AreEqual(LexicalMode.Value, mode.Current);
+
+			mode.Leave(LexicalMode.Value);
+
+			Assert.AreEqual(LexicalMode.Block, mode.Current);
+
+			mode.Leave(LexicalMode.Block);
+
+			Assert.AreEqual(LexicalMode.Selector, mode.Current);
+		}
+
+		[Test]
+		public void ParseSelector()
+		{
+			var sheet = StyleSheet.Parse("div > h1 { width: 100px; }");
+
+			var style = sheet.Rules[0] as CssRule;
+
+			Assert.AreEqual(1, sheet.Rules.Count);
+			Assert.AreEqual(RuleType.StyleRule, style.Type);
+			Assert.AreEqual("div > h1", style.Selector.ToString());
+			Assert.AreEqual(1, style.Block.Declarations.Count);
+			Assert.AreEqual("width", style.Block.Declarations[0].Name);
+			Assert.AreEqual("100px", style.Block.Declarations[0].Value.ToString());
+			Assert.AreEqual("div > h1 { width: 100px; }", sheet.ToString());
+		}
+
+		[Test]
+		public void ParseSelector2()
+		{
+			var sheet = StyleSheet.Parse("#monster { font-color: red; background-color: url(http://google.com); }");
+
+			var style = sheet.Rules[0] as CssRule;
+
+			Assert.AreEqual(1, sheet.Rules.Count);
+			Assert.AreEqual(RuleType.StyleRule, style.Type);
+			Assert.AreEqual("#monster", style.Selector.ToString());
+			Assert.AreEqual(2, style.Block.Declarations.Count);
+			Assert.AreEqual("font-color", style.Block.Declarations[0].Name);
+			Assert.AreEqual("red", style.Block.Declarations[0].Value.ToString());
+			Assert.AreEqual("background-color", style.Block.Declarations[1].Name);
+			Assert.AreEqual("url(http://google.com)", style.Block.Declarations[1].Value.ToString());
+		}
+
+		[Test]
 		public void ParseAtRule()
 		{
-			var stylesheet = @"@-webkit-keyframes fade {
+			var sheet = StyleSheet.Parse(@"@-webkit-keyframes fade {
 	from {opacity: 1;}
 	to {opacity: 0.25;}
-}";
+}");
 
-			var tokenizer = new CssTokenizer(new SourceReader(stylesheet));
+			Assert.AreEqual(1, sheet.Rules.Count);
+			Assert.AreEqual("@-webkit-keyframes fade", sheet.Rules[0].Selector.Text);
+
+			var tokenizer = new CssTokenizer(new SourceReader(sheet.ToString()));
 
 			Token token;
 
@@ -26,30 +86,6 @@
 			{
 				Console.WriteLine(token.Kind + ":" + token.Value);
 			}
-
-		}
-
-		[Test]
-		public void Parse()
-		{
-			var styles = @"#monster { font-color: red; background-color: url(http://google.com); }";
-
-			var tokenizer = new CssTokenizer(new SourceReader(styles));
-
-			Token token;
-
-			var i = 0;
-
-			while ((token = tokenizer.Next()) != null)
-			{
-				Console.WriteLine(i + ":" + token.Kind + ":" + token.Value);
-
-				i++;
-
-				if (i > 100)
-					break;
-			}
-
 		}
 
 		[Test]
@@ -88,7 +124,9 @@ p { font-color: red; background: url(http://google.com); }
 		[Test]
 		public void Declares()
 		{
-			Console.WriteLine(new CssDeclaration("font-size", "14px"));
+			Assert.AreEqual("font-size: 14px", new CssDeclaration("font-size", "14px").ToString());
+
+
 			// Console.WriteLine(new CssDeclaration("filter", "alpha(opacity=50)"));
 			// Console.WriteLine(new CssDeclaration("-webkit-box-sizing", "border-box"));
 		}
@@ -96,11 +134,11 @@ p { font-color: red; background: url(http://google.com); }
 		[Test]
 		public void PropertiesA()
 		{
-			Console.WriteLine(CssProperty.BoxSizing.GetPrefixedProperties().Length.ToString());
-			Console.WriteLine(CssProperty.Get("font-size"));
-			Console.WriteLine(CssProperty.Get("box-sizing"));
-			Console.WriteLine(CssProperty.Get("-webkit-box-sizing"));
-			Console.WriteLine(CssProperty.Get("-non-standards"));
+			Console.WriteLine(CssPropertyInfo.BoxSizing.GetPrefixedProperties().Length.ToString());
+			Console.WriteLine(CssPropertyInfo.Get("font-size"));
+			Console.WriteLine(CssPropertyInfo.Get("box-sizing"));
+			Console.WriteLine(CssPropertyInfo.Get("-webkit-box-sizing"));
+			Console.WriteLine(CssPropertyInfo.Get("-non-standards"));
 		}
 
 		[Test]
@@ -140,8 +178,8 @@ body { font-size: 14px; opacity: 0.5; }
 		{
 
 			var styleSheet = @"
-div#profile_locationEdit table 						{ width:100%; }
-div#profile_locationEdit table td 				{ padding:2px 0; }
+div#profile_locationEdit table				{ width:100%; }
+div#profile_locationEdit table td 			{ padding:2px 0; }
 div#profile_locationEdit table td.addLab 	{ width:90px; font-size:13px; }
 
 table.info { width:100%; margin:16px 0 0 0; padding:0; }

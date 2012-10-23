@@ -12,12 +12,14 @@
 		private readonly TextReader textReader;
 		private char currentCharacter;
 		private bool isDisposed = false;
+		private bool isEof = false;
 		private int position;
 
 		public SourceReader(string text)
 			: this(new StringReader(text)) { }
 
-		public SourceReader(TextReader textReader) {
+		public SourceReader(TextReader textReader) 
+		{
 			this.textReader = textReader;
 		}
 
@@ -28,7 +30,7 @@
 
 		public bool IsEof 
 		{
-			get { return currentCharacter == EofChar; }
+			get { return isEof; }
 		}
 
 		public int Position
@@ -48,14 +50,23 @@
 		/// </summary>
 		public void Next() 
 		{
-			if (marked != -1 && (marked <= this.position) && !IsEof)
+			if (marked != -1 && (marked <= this.position) && !isEof)
 			{
 				buffer.Append(currentCharacter);
 			}
 
 			int charCode = textReader.Read(); // -1 if there are no more chars to read (e.g. stream has ended)
 
-			this.currentCharacter = (charCode > 0) ? (char)charCode : EofChar;
+			if (charCode > 0)
+			{
+				this.currentCharacter = (char)charCode;
+			}
+			else
+			{
+				isEof = true;
+			
+				this.currentCharacter = EofChar;
+			}
 
 			position++;
 		}
@@ -94,10 +105,9 @@
 
 		#region IDisposable
 
-		public void Dispose() {
-			if (isDisposed) {
-				return;
-			}
+		public void Dispose()
+		{
+			if (isDisposed) return;
 
 			textReader.Close();
 
