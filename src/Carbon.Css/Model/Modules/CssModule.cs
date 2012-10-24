@@ -11,7 +11,19 @@
 			this.level = level;
 		}
 
-		public static readonly CssModule Css1 = new CssModule(CssModuleType.Core, 1);
+		public CssModuleType Type
+		{
+			get { return type; }
+		}
+
+		public override string ToString()
+		{
+			return type + " Level " + level;
+		}
+
+		public static readonly CssModule Core1 = new CssModule(CssModuleType.Core, 1);
+		public static readonly CssModule Css2 = new CssModule(CssModuleType.Core, 2);
+		public static readonly CssModule Core21 = new CssModule(CssModuleType.Core, 2.1f);
 
 		#region Animations
 

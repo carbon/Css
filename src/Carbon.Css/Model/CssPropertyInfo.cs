@@ -41,8 +41,23 @@
 
 			if (compatibility == null && module != null)
 			{
-				compatibility = module.Compatibility;
+				this.compatibility = module.Compatibility;
 			}
+		}
+
+		public string Vendor
+		{
+			get
+			{
+				if (name.StartsWith("-")) return name.Substring(1);
+
+				return null;
+			}
+		}
+
+		public bool IsStandard
+		{
+			get { return Module != null; }
 		}
 
 		public string Name
@@ -50,12 +65,21 @@
 			get { return name; }
 		}
 
-		public CssPropertyInfo[] GetPrefixedProperties()
+		public CssModule Module
 		{
-			if(compatibility == null || compatibility.Prefixed == null)
-				return new CssPropertyInfo[0];
+			get { return module; }
+		}
 
-			return compatibility.Prefixed.Select(p => p.Prefix).Distinct().Select(p => new CssPropertyInfo(p + this.name)).ToArray();
+		public string[] GetPrefixedPropertyNames()
+		{
+			if (compatibility == null || compatibility.Prefixed == null)
+				return new string[0];
+
+			return compatibility.Prefixed
+				.Select(b => b.Prefix + name)
+				.OrderByDescending(p => p)
+				.Distinct()
+				.ToArray();
 		}
 
 		public override int GetHashCode()
@@ -115,14 +139,14 @@
 		public static readonly CssPropertyInfo BackfaceVisibility		= new CssPropertyInfo("backface-visibility", CssModule.Transforms3);
 
 		// Backgrounds
-		public static readonly CssPropertyInfo Background				= new CssPropertyInfo("background",				CssModule.Css1);
-		public static readonly CssPropertyInfo BackgroundAttachment		= new CssPropertyInfo("background-attachment",	CssModule.Css1);
+		public static readonly CssPropertyInfo Background				= new CssPropertyInfo("background",				CssModule.Core1);
+		public static readonly CssPropertyInfo BackgroundAttachment		= new CssPropertyInfo("background-attachment",	CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundClip			= new CssPropertyInfo("background-clip",		CssModule.BackgroundsAndBorders3);
-		public static readonly CssPropertyInfo BackgroundColor			= new CssPropertyInfo("background-color",		CssModule.Css1);
-		public static readonly CssPropertyInfo BackgroundImage			= new CssPropertyInfo("background-image",		CssModule.Css1);
+		public static readonly CssPropertyInfo BackgroundColor			= new CssPropertyInfo("background-color",		CssModule.Core1);
+		public static readonly CssPropertyInfo BackgroundImage			= new CssPropertyInfo("background-image",		CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundOrigin			= new CssPropertyInfo("background-origin",		CssModule.BackgroundsAndBorders3, new Compatibility { Standard = new[] { Browser.Chrome1, Browser.Firefox4, Browser.IE9, Browser.Safari3 } });
-		public static readonly CssPropertyInfo BackgroundPosition		= new CssPropertyInfo("background-position",	CssModule.Css1);
-		public static readonly CssPropertyInfo BackgroundRepeat			= new CssPropertyInfo("background-repeat",		CssModule.Css1);
+		public static readonly CssPropertyInfo BackgroundPosition		= new CssPropertyInfo("background-position",	CssModule.Core1);
+		public static readonly CssPropertyInfo BackgroundRepeat			= new CssPropertyInfo("background-repeat",		CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundSize			= new CssPropertyInfo("background-size",		CssModule.BackgroundsAndBorders3);
 
 		// Borders -------------------------------------------------------------------------------------------------------
@@ -131,8 +155,8 @@
 			Standard = new[] { Browser.Firefox(15) }
 		};
 
-		public static readonly CssPropertyInfo Border					= new CssPropertyInfo("border",					CssModule.Css1);
-		public static readonly CssPropertyInfo BorderBottom				= new CssPropertyInfo("border-bottom",			CssModule.Css1);
+		public static readonly CssPropertyInfo Border					= new CssPropertyInfo("border",					CssModule.Core1);
+		public static readonly CssPropertyInfo BorderBottom				= new CssPropertyInfo("border-bottom",			CssModule.Core1);
 		public static readonly CssPropertyInfo BorderBottomColor		= new CssPropertyInfo("border-bottom-color");
 		public static readonly CssPropertyInfo BorderBottomLeftRadius	= new CssPropertyInfo("border-bottom-left-radius");
 		public static readonly CssPropertyInfo BorderBottomRightRadius	= new CssPropertyInfo("border-bottom-right-radius");
@@ -147,24 +171,24 @@
 		public static readonly CssPropertyInfo BorderImageSource		= new CssPropertyInfo("border-image-source",	BorderImageCompatibility);
 		public static readonly CssPropertyInfo BorderImageWidth			= new CssPropertyInfo("border-image-width",		BorderImageCompatibility);
 
-		public static readonly CssPropertyInfo BorderLeft				= new CssPropertyInfo("border-left",			CssModule.Css1);
+		public static readonly CssPropertyInfo BorderLeft				= new CssPropertyInfo("border-left",			CssModule.Core1);
 		public static readonly CssPropertyInfo BorderLeftColor			= new CssPropertyInfo("border-left-color");
 		public static readonly CssPropertyInfo BorderLeftStyle			= new CssPropertyInfo("border-left-style");
 		public static readonly CssPropertyInfo BorderLeftWidth			= new CssPropertyInfo("border-left-width");
 		public static readonly CssPropertyInfo BorderRadius				= new CssPropertyInfo("border-radius",			CssModule.BackgroundsAndBorders3);
-		public static readonly CssPropertyInfo BorderRight				= new CssPropertyInfo("border-right",			CssModule.Css1);
+		public static readonly CssPropertyInfo BorderRight				= new CssPropertyInfo("border-right",			CssModule.Core1);
 		public static readonly CssPropertyInfo BorderRightColor			= new CssPropertyInfo("border-right-color");
 		public static readonly CssPropertyInfo BorderRightStyle			= new CssPropertyInfo("border-right-style");
 		public static readonly CssPropertyInfo BorderRightWidth			= new CssPropertyInfo("border-right-width");
 		public static readonly CssPropertyInfo BorderSpacing			= new CssPropertyInfo("border-spacing");
-		public static readonly CssPropertyInfo BorderStyle				= new CssPropertyInfo("border-style",			CssModule.Css1);
-		public static readonly CssPropertyInfo BorderTop				= new CssPropertyInfo("border-top",				CssModule.Css1);
+		public static readonly CssPropertyInfo BorderStyle				= new CssPropertyInfo("border-style",			CssModule.Core1);
+		public static readonly CssPropertyInfo BorderTop				= new CssPropertyInfo("border-top",				CssModule.Core1);
 		public static readonly CssPropertyInfo BorderTopColor			= new CssPropertyInfo("border-top-color");
 		public static readonly CssPropertyInfo BorderTopLeftRadius		= new CssPropertyInfo("border-top-left-radius");
 		public static readonly CssPropertyInfo BorderTopRightRadius		= new CssPropertyInfo("border-top-right-radius");
 		public static readonly CssPropertyInfo BorderTopStyle			= new CssPropertyInfo("border-top-style");
-		public static readonly CssPropertyInfo BorderTopWidth			= new CssPropertyInfo("border-top-width",		CssModule.Css1);
-		public static readonly CssPropertyInfo BorderWidth				= new CssPropertyInfo("border-width",			CssModule.Css1);
+		public static readonly CssPropertyInfo BorderTopWidth			= new CssPropertyInfo("border-top-width",		CssModule.Core1);
+		public static readonly CssPropertyInfo BorderWidth				= new CssPropertyInfo("border-width",			CssModule.Core1);
 
 		public static readonly CssPropertyInfo Bottom					= new CssPropertyInfo("bottom");
 		public static readonly CssPropertyInfo BoxDecorationBreak		= new CssPropertyInfo("box-decoration-break");
@@ -188,7 +212,7 @@
 		public static readonly CssPropertyInfo CaptionSide = new CssPropertyInfo("caption-side");
 		public static readonly CssPropertyInfo Clear = new CssPropertyInfo("clear");
 		public static readonly CssPropertyInfo Clip = new CssPropertyInfo("clip");
-		public static readonly CssPropertyInfo Color = new CssPropertyInfo("color", CssModule.Css1);
+		public static readonly CssPropertyInfo Color = new CssPropertyInfo("color", CssModule.Core1);
 
 		public static readonly CssPropertyInfo ColumnCount		= new CssPropertyInfo("column-count",		CssModule.Columns3);
 		public static readonly CssPropertyInfo ColumnFill		= new CssPropertyInfo("column-fill",		CssModule.Columns3);
@@ -227,18 +251,18 @@
 		public static readonly CssPropertyInfo FlexOrder	= new CssPropertyInfo("flex-order");
 		public static readonly CssPropertyInfo FlexPack		= new CssPropertyInfo("flex-pack");
 		
-		public static readonly CssPropertyInfo Float		= new CssPropertyInfo("float");
+		public static readonly CssPropertyInfo Float		= new CssPropertyInfo("float",					CssModule.Core1);
 		public static readonly CssPropertyInfo FloatOffset	= new CssPropertyInfo("float-offset");
 
 		// Fonts -------------------------------------------------------------------------------------------
-		public static readonly CssPropertyInfo Font				= new CssPropertyInfo("font",				CssModule.Css1);
-		public static readonly CssPropertyInfo FontFamily		= new CssPropertyInfo("font-family",		CssModule.Css1);
-		public static readonly CssPropertyInfo FontSize			= new CssPropertyInfo("font-size",			CssModule.Css1);
+		public static readonly CssPropertyInfo Font				= new CssPropertyInfo("font",				CssModule.Core1);
+		public static readonly CssPropertyInfo FontFamily		= new CssPropertyInfo("font-family",		CssModule.Core1);
+		public static readonly CssPropertyInfo FontSize			= new CssPropertyInfo("font-size",			CssModule.Core1);
 		public static readonly CssPropertyInfo FontSizeAdjust	= new CssPropertyInfo("font-size-adjust"		  );
 		public static readonly CssPropertyInfo FontStretch		= new CssPropertyInfo("font-stretch",		CssModule.Fonts3); 
-		public static readonly CssPropertyInfo FontStyle		= new CssPropertyInfo("font-style",			CssModule.Css1);
-		public static readonly CssPropertyInfo FontVariant		= new CssPropertyInfo("font-variant",		CssModule.Css1);
-		public static readonly CssPropertyInfo FontWeight		= new CssPropertyInfo("font-weight",		CssModule.Css1);
+		public static readonly CssPropertyInfo FontStyle		= new CssPropertyInfo("font-style",			CssModule.Core1);
+		public static readonly CssPropertyInfo FontVariant		= new CssPropertyInfo("font-variant",		CssModule.Core1);
+		public static readonly CssPropertyInfo FontWeight		= new CssPropertyInfo("font-weight",		CssModule.Core1);
 
 		// Grids ---------------------------------------------------------------------------------------
 		public static readonly Compatibility GridComptability	= new Compatibility { Prefixed = new[] { Browser.IE10 } };
@@ -246,7 +270,7 @@
 		public static readonly CssPropertyInfo GridColumns			= new CssPropertyInfo("grid-columns",	GridComptability);
 		public static readonly CssPropertyInfo GridRows				= new CssPropertyInfo("grid-rows",		GridComptability);
 
-		public static readonly CssPropertyInfo Height				= new CssPropertyInfo("height", CssModule.Css1);
+		public static readonly CssPropertyInfo Height				= new CssPropertyInfo("height", CssModule.Core1);
 
 		// Hyphens -------------------------------------------------------------------------------------
 		public static readonly CssPropertyInfo HyphenateAfter		= new CssPropertyInfo("hyphenate-after");
@@ -265,20 +289,20 @@
 
 		// Lines
 		public static readonly CssPropertyInfo LineBreak			= new CssPropertyInfo("line-break");
-		public static readonly CssPropertyInfo LineHeight			= new CssPropertyInfo("line-height", CssModule.Css1);
+		public static readonly CssPropertyInfo LineHeight			= new CssPropertyInfo("line-height", CssModule.Core1);
 		
 		// List Styles -------------------------------------------------------------------------------------------------------
-		public static readonly CssPropertyInfo ListStyle			= new CssPropertyInfo("list-style",				CssModule.Css1);
-		public static readonly CssPropertyInfo ListStyleImage		= new CssPropertyInfo("list-style-image",		CssModule.Css1);
-		public static readonly CssPropertyInfo ListStylePosition	= new CssPropertyInfo("list-style-position",	CssModule.Css1);
-		public static readonly CssPropertyInfo ListStyleType		= new CssPropertyInfo("list-style-type",		CssModule.Css1);
+		public static readonly CssPropertyInfo ListStyle			= new CssPropertyInfo("list-style",				CssModule.Core1);
+		public static readonly CssPropertyInfo ListStyleImage		= new CssPropertyInfo("list-style-image",		CssModule.Core1);
+		public static readonly CssPropertyInfo ListStylePosition	= new CssPropertyInfo("list-style-position",	CssModule.Core1);
+		public static readonly CssPropertyInfo ListStyleType		= new CssPropertyInfo("list-style-type",		CssModule.Core1);
 
 		// Margins -----------------------------------------------------------------------------------------------------------
-		public static readonly CssPropertyInfo Margin				= new CssPropertyInfo("margin",					CssModule.Css1);
-		public static readonly CssPropertyInfo MarginBottom			= new CssPropertyInfo("margin-bottom",			CssModule.Css1);
-		public static readonly CssPropertyInfo MarginLeft			= new CssPropertyInfo("margin-left",			CssModule.Css1);
-		public static readonly CssPropertyInfo MarginRight			= new CssPropertyInfo("margin-right",			CssModule.Css1);
-		public static readonly CssPropertyInfo MarginTop			= new CssPropertyInfo("margin-top",				CssModule.Css1);
+		public static readonly CssPropertyInfo Margin				= new CssPropertyInfo("margin",					CssModule.Core1);
+		public static readonly CssPropertyInfo MarginBottom			= new CssPropertyInfo("margin-bottom",			CssModule.Core1);
+		public static readonly CssPropertyInfo MarginLeft			= new CssPropertyInfo("margin-left",			CssModule.Core1);
+		public static readonly CssPropertyInfo MarginRight			= new CssPropertyInfo("margin-right",			CssModule.Core1);
+		public static readonly CssPropertyInfo MarginTop			= new CssPropertyInfo("margin-top",				CssModule.Core1);
 
 		// Marquee -----------------------------------------------------------------------------------------
 		public static readonly CssPropertyInfo MarqueeDirection	= new CssPropertyInfo("marquee-direction");
@@ -287,11 +311,11 @@
 		public static readonly CssPropertyInfo MarqueeSpeed		= new CssPropertyInfo("marquee-speed");
 		public static readonly CssPropertyInfo MarqueeStyle		= new CssPropertyInfo("marquee-style");
 
-		public static readonly CssPropertyInfo MaxHeight		= new CssPropertyInfo("max-height");
-		public static readonly CssPropertyInfo MaxWidth			= new CssPropertyInfo("max-width");
+		public static readonly CssPropertyInfo MaxHeight		= new CssPropertyInfo("max-height",		CssModule.Core21);
+		public static readonly CssPropertyInfo MaxWidth			= new CssPropertyInfo("max-width",		CssModule.Core21);
 
-		public static readonly CssPropertyInfo MinHeight		= new CssPropertyInfo("min-height");
-		public static readonly CssPropertyInfo MinWidth			= new CssPropertyInfo("min-width");
+		public static readonly CssPropertyInfo MinHeight		= new CssPropertyInfo("min-height",		CssModule.Core21);
+		public static readonly CssPropertyInfo MinWidth			= new CssPropertyInfo("min-width",		CssModule.Core21);
 
 		// <= IE8 filter: alpha(opacity=xx)
 		// IE8 introduced -ms-filter, which is synonymous with filter. Both are gone in IE10
@@ -304,25 +328,25 @@
 		});
 
 		// Outlines -------------------------------------------------------------------------------
-		public static readonly CssPropertyInfo Outline			= new CssPropertyInfo("outline");
-		public static readonly CssPropertyInfo OutlineColor		= new CssPropertyInfo("outline-color");
-		public static readonly CssPropertyInfo OutlineOffset	= new CssPropertyInfo("outline-offset");
-		public static readonly CssPropertyInfo OutlineStyle		= new CssPropertyInfo("outline-style");
-		public static readonly CssPropertyInfo OutlineWidth		= new CssPropertyInfo("outline-width");
+		public static readonly CssPropertyInfo Outline			= new CssPropertyInfo("outline",		CssModule.Core21);
+		public static readonly CssPropertyInfo OutlineColor		= new CssPropertyInfo("outline-color",	CssModule.Core21);
+		public static readonly CssPropertyInfo OutlineOffset	= new CssPropertyInfo("outline-offset", CssModule.Core21);
+		public static readonly CssPropertyInfo OutlineStyle		= new CssPropertyInfo("outline-style",	CssModule.Core21);
+		public static readonly CssPropertyInfo OutlineWidth		= new CssPropertyInfo("outline-width",	CssModule.Core21);
 
 		// Overflow -------------------------------------------------------------------------------
-		public static readonly CssPropertyInfo Overflow			= new CssPropertyInfo("overflow");
+		public static readonly CssPropertyInfo Overflow			= new CssPropertyInfo("overflow",		CssModule.Core21);
 		public static readonly CssPropertyInfo OverflowStyle	= new CssPropertyInfo("overflow-style");
 		public static readonly CssPropertyInfo OverflowWrap		= new CssPropertyInfo("overflow-wrap");
-		public static readonly CssPropertyInfo OverflowX		= new CssPropertyInfo("overflow-x");
-		public static readonly CssPropertyInfo OverflowY		= new CssPropertyInfo("overflow-y");
+		public static readonly CssPropertyInfo OverflowX		= new CssPropertyInfo("overflow-x",		CssModule.Core21);
+		public static readonly CssPropertyInfo OverflowY		= new CssPropertyInfo("overflow-y",		CssModule.Core21);
 
 		// Padding -----------------------------------------------------------------------------------------------
-		public static readonly CssPropertyInfo Padding			= new CssPropertyInfo("padding",		CssModule.Css1);
-		public static readonly CssPropertyInfo PaddingBottom	= new CssPropertyInfo("padding-bottom", CssModule.Css1);
-		public static readonly CssPropertyInfo PaddingLeft		= new CssPropertyInfo("padding-left",	CssModule.Css1);
-		public static readonly CssPropertyInfo PaddingRight		= new CssPropertyInfo("padding-right",	CssModule.Css1);
-		public static readonly CssPropertyInfo PaddingTop		= new CssPropertyInfo("padding-top",	CssModule.Css1);
+		public static readonly CssPropertyInfo Padding			= new CssPropertyInfo("padding",		CssModule.Core1);
+		public static readonly CssPropertyInfo PaddingBottom	= new CssPropertyInfo("padding-bottom", CssModule.Core1);
+		public static readonly CssPropertyInfo PaddingLeft		= new CssPropertyInfo("padding-left",	CssModule.Core1);
+		public static readonly CssPropertyInfo PaddingRight		= new CssPropertyInfo("padding-right",	CssModule.Core1);
+		public static readonly CssPropertyInfo PaddingTop		= new CssPropertyInfo("padding-top",	CssModule.Core1);
 		
 		public static readonly CssPropertyInfo Page				= new CssPropertyInfo("page");
 
@@ -354,10 +378,10 @@
 		public static readonly CssPropertyInfo Size						= new CssPropertyInfo("size");
 		public static readonly CssPropertyInfo Speak					= new CssPropertyInfo("speak");
 
-		public static readonly CssPropertyInfo TableLayout				= new CssPropertyInfo("table-layout");
+		public static readonly CssPropertyInfo TableLayout				= new CssPropertyInfo("table-layout", CssModule.Core21);
 
 		// Text ------------------------------------------------------------------------
-		public static readonly CssPropertyInfo TextAlign				= new CssPropertyInfo("text-align", CssModule.Css1);
+		public static readonly CssPropertyInfo TextAlign				= new CssPropertyInfo("text-align", CssModule.Core1);
 		public static readonly CssPropertyInfo TextAlignLast			= new CssPropertyInfo("text-align-last");
 		public static readonly CssPropertyInfo TextDecoration			= new CssPropertyInfo("text-decoration");
 		public static readonly CssPropertyInfo TextDecorationColor		= new CssPropertyInfo("text-decoration-color");
@@ -369,12 +393,12 @@
 		public static readonly CssPropertyInfo TextEmphasisPosition		= new CssPropertyInfo("text-emphasis-position");
 		public static readonly CssPropertyInfo TextEmphasisStyle		= new CssPropertyInfo("text-emphasis-style");
 		public static readonly CssPropertyInfo TextHeight				= new CssPropertyInfo("text-height");
-		public static readonly CssPropertyInfo TextIndent				= new CssPropertyInfo("text-indent", CssModule.Css1);
+		public static readonly CssPropertyInfo TextIndent				= new CssPropertyInfo("text-indent", CssModule.Core1);
 		public static readonly CssPropertyInfo TextJustify				= new CssPropertyInfo("text-justify");
 		public static readonly CssPropertyInfo TextOutline				= new CssPropertyInfo("text-outline");
 		public static readonly CssPropertyInfo TextShadow				= new CssPropertyInfo("text-shadow", new Compatibility { Standard = new[] { Browser.Chrome(2), Browser.Firefox(3.5f), Browser.IE10, Browser.Safari(1.1f) } });
 		public static readonly CssPropertyInfo TextSpaceCollapse		= new CssPropertyInfo("text-space-collapse");
-		public static readonly CssPropertyInfo TextTransform			= new CssPropertyInfo("text-transform", CssModule.Css1);
+		public static readonly CssPropertyInfo TextTransform			= new CssPropertyInfo("text-transform", CssModule.Core1);
 		public static readonly CssPropertyInfo TextUnderlinePosition	= new CssPropertyInfo("text-underline-position");
 		public static readonly CssPropertyInfo TextWrap					= new CssPropertyInfo("text-wrap");
 
@@ -401,16 +425,16 @@
 			Prefixed = new[] { Browser.Chrome1, Browser.Firefox1, Browser.IE10, Browser.Safari3 }	
 		});
 
-		public static readonly CssPropertyInfo VerticalAlign	= new CssPropertyInfo("vertical-align", CssModule.Css1);
+		public static readonly CssPropertyInfo VerticalAlign	= new CssPropertyInfo("vertical-align", CssModule.Core1);
 		public static readonly CssPropertyInfo Visibility		= new CssPropertyInfo("visibility");
 		public static readonly CssPropertyInfo WhiteSpace		= new CssPropertyInfo("white-space");
-		public static readonly CssPropertyInfo Widows			= new CssPropertyInfo("widows", new CssModule(CssModuleType.Core, 2.1f));
-		public static readonly CssPropertyInfo Width			= new CssPropertyInfo("width", CssModule.Css1);
+		public static readonly CssPropertyInfo Widows			= new CssPropertyInfo("widows",			CssModule.Core21);
+		public static readonly CssPropertyInfo Width			= new CssPropertyInfo("width",			CssModule.Core1);
 
 		// Words
-		public static readonly CssPropertyInfo WordBreak		= new CssPropertyInfo("word-break");
-		public static readonly CssPropertyInfo WordSpacing		= new CssPropertyInfo("word-spacing", CssModule.Css1);
-		public static readonly CssPropertyInfo WordWrap			= new CssPropertyInfo("word-wrap");
+		public static readonly CssPropertyInfo WordBreak		= new CssPropertyInfo("word-break",		CssModule.Text3);
+		public static readonly CssPropertyInfo WordSpacing		= new CssPropertyInfo("word-spacing",	CssModule.Core1);
+		public static readonly CssPropertyInfo WordWrap			= new CssPropertyInfo("word-wrap",		CssModule.Text3);
 		
 		public static readonly CssPropertyInfo ZIndex			= new CssPropertyInfo("z-index");
 

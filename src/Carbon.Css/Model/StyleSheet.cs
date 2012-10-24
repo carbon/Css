@@ -30,17 +30,26 @@
 			}
 		}
 
-		public void EvaluateVariables()
+		public void EvaluateVariables(bool removeRootRule = true)
 		{
+			CssRule root = null;
+
 			foreach (var rule in rules)
 			{
+				if (rule.Selector.Text == ":root")
+				{
+					root = rule;
+				}
+
 				foreach (var d in rule.Block.Declarations)
 				{
 					foreach(var value in d.Value)
 					{
 						if (value.Type == CssValueType.Variable)
 						{
-							((CssPrimitiveValue)value).SetText(this.variables.Get(value.ToString().Substring(1)));
+							var varName = value.ToString().Substring(1);
+
+							((CssPrimitiveValue)value).SetText(this.variables.Get(varName).ToString());
 						}
 
 						// System.Console.WriteLine("Variable:" + d.Property.Name + ":" + d.Value.ToString());
@@ -48,6 +57,11 @@
 						// sheet.Variables.Set(d.Property.Name.Replace("var-", ""), d.Value.ToString());
 					}
 				}
+			}
+
+			if (removeRootRule && root != null)
+			{
+				rules.Remove(root);
 			}
 		}
 
@@ -59,19 +73,20 @@
 
 			foreach (var rule in cssParser.ReadRules())
 			{
-				sheet.Rules.Add(rule);
-			}
+				// Gather variables in the :root { } selector
+				// http://dev.w3.org/csswg/css-variables/
 
-			// Gather variables
-			foreach (var rule in sheet.Rules)
-			{
-				foreach (var d in rule.Block.Declarations)
+				if (rule.Selector.Text.ToString() == ":root")
 				{
-					if (d.Name.StartsWith("var-"))
+					foreach (var d in rule.Block.Declarations)
 					{
-						sheet.Variables.Set(d.Name.Replace("var-", ""), d.Value.ToString());
+						if (d.Name.StartsWith("var-"))
+						{
+							sheet.Variables.Set(d.Name.Substring(4), d.Value);
+						}
 					}
 				}
+				sheet.Rules.Add(rule);
 			}
 
 			return sheet;

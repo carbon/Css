@@ -2,16 +2,18 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Text;
 
 	public class CssDeclaration
 	{
 		private readonly string name;
 		private readonly CssValue value;
+		private readonly string priority;
 
-		public CssDeclaration(string name, string value)
-			: this(name, CssValue.Parse(value)) { }
+		public CssDeclaration(string name, string value, string priority = null)
+			: this(name, CssValue.Parse(value), priority) { }
 
-		public CssDeclaration(string name, CssValue value)
+		public CssDeclaration(string name, CssValue value, string priorty = null)
 		{
 			#region Preconditions
 
@@ -22,6 +24,7 @@
 
 			this.name = name;
 			this.value = value;
+			this.priority = priorty;
 		}
 
 		public string Name
@@ -34,6 +37,11 @@
 			get { return value; }
 		}
 
+		public string Priority
+		{
+			get { return priority; }
+		}
+
 		public CssPropertyInfo GetPropertyInfo()
 		{
 			return CssPropertyInfo.Get(name);
@@ -41,8 +49,18 @@
 
 		public override string ToString()
 		{
-			// color: red
-			return name + ": " + value.ToString();
+			// color: red !important
+
+			var sb = new StringBuilder();
+
+			sb.Append(name).Append(": ").Append(Value.ToString());
+
+			if (priority != null)
+			{
+				sb.Append(" !").Append(priority);
+			}
+
+			return sb.ToString();
 		}
 	}
 }

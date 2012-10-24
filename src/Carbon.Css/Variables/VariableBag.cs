@@ -4,18 +4,18 @@
 
 	public class VariableBag
 	{
-		private readonly IDictionary<string, string> items = new Dictionary<string, string>();
+		private readonly IDictionary<string, CssValue> items = new Dictionary<string, CssValue>();
 
-		public string Get(string name)
+		public CssValue Get(string name)
 		{
-			string value;
+			CssValue value;
 			
 			items.TryGetValue(name, out value);
 
 			return value;
 		}
 
-		public void Set(string name, string value)
+		public void Set(string name, CssValue value)
 		{
 			items[name] = value;
 		}

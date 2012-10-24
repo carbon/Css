@@ -16,10 +16,9 @@
 			get { return declarations; }
 		}
 
-
-		public IList<CssDeclaration> FindHavingProperty(CssPropertyInfo property)
+		public IEnumerable<CssDeclaration> FindHavingPropertyName(string propertyName)
 		{
-			return declarations.Where(d => d.Name == property.Name).ToList();
+			return declarations.Where(d => d.Name == propertyName);
 		}
 
 		// Nested rules

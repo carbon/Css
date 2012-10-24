@@ -49,7 +49,7 @@
 				{
 					rewrite.AddList.Add(new CssDeclaration("filter", string.Format("alpha(opacity={0})", value.ToString())));
 
-					foreach (var filter in rule.Block.FindHavingProperty(CssPropertyInfo.Get("filter")).Where(f => f.Value.ToString().Contains("alpha")))
+					foreach (var filter in rule.Block.FindHavingPropertyName("filter").Where(f => f.Value.ToString().Contains("alpha")))
 					{
 						rewrite.RemoveList.Add(filter);
 					}
@@ -57,12 +57,12 @@
 			}
 			else
 			{
-				foreach (var prefix in declaration.GetPropertyInfo().GetPrefixedProperties())
+				foreach (var prefix in declaration.GetPropertyInfo().GetPrefixedPropertyNames())
 				{
-					rewrite.AddList.Add(new CssDeclaration(prefix.Name, cssValue));
+					rewrite.AddList.Add(new CssDeclaration(prefix, cssValue));
 
 					// Remove existing prefixes
-					rewrite.RemoveList.AddRange(rule.Block.FindHavingProperty(prefix));
+					rewrite.RemoveList.AddRange(rule.Block.FindHavingPropertyName(prefix));
 				}
 			}
 

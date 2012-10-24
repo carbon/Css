@@ -78,6 +78,14 @@
 			Assert.AreEqual(1, sheet.Rules.Count);
 			Assert.AreEqual("@-webkit-keyframes fade", sheet.Rules[0].Selector.Text);
 
+			Assert.AreEqual(@"@-webkit-keyframes fade {
+  from { opacity: 1; }
+  to { opacity: 0.25; }
+}", sheet.ToString());
+
+
+
+			/*
 			var tokenizer = new CssTokenizer(new SourceReader(sheet.ToString()));
 
 			Token token;
@@ -86,6 +94,7 @@
 			{
 				Console.WriteLine(token.Kind + ":" + token.Value);
 			}
+			*/
 		}
 
 		[Test]
@@ -125,6 +134,7 @@ p { font-color: red; background: url(http://google.com); }
 		public void Declares()
 		{
 			Assert.AreEqual("font-size: 14px", new CssDeclaration("font-size", "14px").ToString());
+			Assert.AreEqual("font-size: 14px !important", new CssDeclaration("font-size", "14px", "important").ToString());
 
 
 			// Console.WriteLine(new CssDeclaration("filter", "alpha(opacity=50)"));
@@ -134,11 +144,57 @@ p { font-color: red; background: url(http://google.com); }
 		[Test]
 		public void PropertiesA()
 		{
-			Console.WriteLine(CssPropertyInfo.BoxSizing.GetPrefixedProperties().Length.ToString());
+			Console.WriteLine(CssPropertyInfo.BoxSizing.GetPrefixedPropertyNames().Length.ToString());
 			Console.WriteLine(CssPropertyInfo.Get("font-size"));
 			Console.WriteLine(CssPropertyInfo.Get("box-sizing"));
 			Console.WriteLine(CssPropertyInfo.Get("-webkit-box-sizing"));
 			Console.WriteLine(CssPropertyInfo.Get("-non-standards"));
+		}
+
+		[Test]
+		public void Transform()
+		{
+			var sheet = StyleSheet.Parse(
+@"
+body { 
+  transform: rotate(90);
+}
+");
+
+			sheet.SetCompatibility(Browser.Chrome1);
+
+			Assert.AreEqual(@"body { 
+  -moz-transform:rotate(90);
+  -ms-transform:rotate(90);
+  -o-transform:rotate: 90);
+  -webkit-transform:rotate(90);
+  transform:rotate(90);
+}", sheet.ToString());
+
+		}
+
+		[Test]
+		public void VariableTests()
+		{
+			var sheet = StyleSheet.Parse(
+@"
+:root {
+	var-blue: #dceef7;
+	var-yellow: #fff5cc;
+}
+
+body { 
+  background-color: $blue;
+  color: $yellow;
+}
+");
+			sheet.EvaluateVariables(removeRootRule: true);
+
+			Assert.AreEqual(
+@"body {
+  background-color: #dceef7;
+  color: #fff5cc;
+}", sheet.ToString());
 		}
 
 		[Test]
