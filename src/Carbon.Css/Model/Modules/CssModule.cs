@@ -48,6 +48,16 @@
 
 		#endregion
 
+		#region Color
+
+		public static CssModule Color3 = new CssModule(CssModuleType.Columns, 3f) {
+			Compatibility = new Compatibility {
+				Standard = new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari(1.2f), Browser.Opera9, Browser.IE9 }
+			}
+		};
+
+		#endregion
+
 		#region Columns
 
 		public static CssModule Columns(float level)

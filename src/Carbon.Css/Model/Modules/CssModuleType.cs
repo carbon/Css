@@ -8,6 +8,7 @@
 		BackgroundsAndBorders,
 
 		Core,
+		Color,
 		Columns,
 
 		// http://dev.w3.org/csswg/css3-fonts/

@@ -319,9 +319,7 @@
 
 		// <= IE8 filter: alpha(opacity=xx)
 		// IE8 introduced -ms-filter, which is synonymous with filter. Both are gone in IE10
-		public static readonly CssPropertyInfo Opacity = new CssPropertyInfo("opacity", new Compatibility {
-			Standard = new[] { Browser.Chrome1, Browser.Firefox1, Browser.IE9, Browser.Opera9, Browser.Safari(1.2f) } 
-		});
+		public static readonly CssPropertyInfo Opacity = new CssPropertyInfo("opacity",					CssModule.Color3);
 
 		public static readonly CssPropertyInfo Orphans = new CssPropertyInfo("orphans", new CssModule(CssModuleType.Core, 2.1f), new Compatibility {
 			Standard = new[] { Browser.IE8, Browser.Opera(9.2f) }	
