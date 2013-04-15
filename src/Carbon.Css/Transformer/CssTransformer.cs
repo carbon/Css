@@ -6,12 +6,10 @@
 
 	using System.Text;
 
-	public class NodeRewrite
+	public class ChangeSet
 	{
 		private readonly List<CssDeclaration> add = new List<CssDeclaration>();
 		private readonly List<CssDeclaration> remove = new List<CssDeclaration>();
-
-		public int Index { get; set; }
 
 		public CssDeclaration Source { get; set; }
 
@@ -28,70 +26,31 @@
 
 	public class DefaultRuleTransformer
 	{
-		public NodeRewrite Rewrite(CssRule rule, CssDeclaration declaration)
-		{
-			var rewrite = new NodeRewrite();
-
-			rewrite.Source = declaration;
-
-			rewrite.Index = rule.Block.IndexOf(declaration);
-
-			var cssValue = declaration.Value;
-
-			if (declaration.Name == "opacity")
-			{
-				int value = -1;
-
-				try { value = (int)(float.Parse(cssValue.ToString()) * 100); }
-				catch { }
-
-				if (value > -1)
-				{
-					rewrite.AddList.Add(new CssDeclaration("filter", string.Format("alpha(opacity={0})", value.ToString())));
-
-					foreach (var filter in rule.Block.FindHavingPropertyName("filter").Where(f => f.Value.ToString().Contains("alpha")))
-					{
-						rewrite.RemoveList.Add(filter);
-					}
-				}
-			}
-			else
-			{
-				foreach (var prefix in declaration.GetPropertyInfo().GetPrefixedPropertyNames())
-				{
-					rewrite.AddList.Add(new CssDeclaration(prefix, cssValue));
-
-					// Remove existing prefixes
-					rewrite.RemoveList.AddRange(rule.Block.FindHavingPropertyName(prefix));
-				}
-			}
-
-			return rewrite;
-		}
+		private readonly List<ICssTransform> transforms = new List<ICssTransform> {
+			new IEOpacityTransform(),
+			new AddVendorPrefixesTransform()
+		};
 
 		public void Transform(CssRule rule)
 		{
-			var rewrites = new List<NodeRewrite>();
-
-			// Padding padding = null;
-
-			foreach (var declaration in rule.Block)
+			foreach(var transform in transforms)
 			{
-				rewrites.Add(Rewrite(rule, declaration));
-			}
-
-			foreach (var rewrite in rewrites)
-			{
-				var indexOf = rule.Block.Declarations.IndexOf(rewrite.Source);
-
-				foreach (var add in rewrite.AddList)
+				if(transform.Matches(rule))
 				{
-					rule.Block.Declarations.Insert(indexOf, add);
-				}
+					foreach (var changes in transform.GetChanges(rule))
+					{
+						var indexOf = rule.Block.Declarations.IndexOf(changes.Source);
 
-				foreach (var remove in rewrite.RemoveList)
-				{
-					rule.Block.Remove(remove);
+						foreach (var add in changes.AddList)
+						{
+							rule.Block.Declarations.Insert(indexOf, add);
+						}
+
+						foreach (var remove in changes.RemoveList)
+						{
+							rule.Block.Remove(remove);
+						}
+					}
 				}
 			}
 		}

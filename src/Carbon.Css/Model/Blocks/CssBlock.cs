@@ -21,6 +21,11 @@
 			return declarations.Where(d => d.Name == propertyName);
 		}
 
+		public CssDeclaration Get(string name)
+		{
+			return declarations.FirstOrDefault(d => d.Name == name);
+		}
+
 		// Nested rules
 		// { to: { opacity: 1 } }
 		public IList<CssRule> Rules

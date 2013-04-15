@@ -3,12 +3,12 @@
 	public enum RuleType : ushort
 	{
 		Unknown = 0,
-		StyleRule = 1,
-		CharsetRule = 2,
-		ImportRule = 3,
-		MediaRule = 4,
-		FontFaceRule = 5,
-		PageRule = 6,
-		KeyframesRule = 7
+		Style = 1,
+		Charset = 2,
+		Import = 3,
+		Media = 4,
+		FontFace = 5,
+		Page = 6,
+		Keyframes = 7
 	}
 }

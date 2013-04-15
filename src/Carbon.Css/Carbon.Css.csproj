@@ -41,6 +41,7 @@
     <Compile Include="Model\Blocks\CssBlock.cs" />
     <Compile Include="Model\Modules\CssModule.cs" />
     <Compile Include="Model\Modules\CssModuleType.cs" />
+    <Compile Include="Model\Rules\ImportRule.cs" />
     <Compile Include="Model\Rules\FontFaceRule.cs" />
     <Compile Include="Model\Rules\RuleType.cs" />
     <Compile Include="Model\Values\CssValueType.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Parser\StringBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transformer\CssTransformer.cs" />
+    <Compile Include="Transformer\ICssTransform.cs" />
     <Compile Include="Variables\VariableBag.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

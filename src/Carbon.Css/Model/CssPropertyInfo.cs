@@ -11,6 +11,16 @@
 		public Browser[] Prefixed { get; set; }
 
 		public Browser[] Standard { get; set; }
+
+		public IEnumerable<string> GetPrefixes(string name)
+		{
+			if (Prefixed == null) yield break;
+
+			foreach (var prefix in Prefixed.Select(p => p.Prefix).Distinct().OrderByDescending(o => o))
+			{
+				yield return prefix + name;
+			}
+		}
 	}
 
 	public class CssPropertyInfo
@@ -41,7 +51,7 @@
 
 			if (compatibility == null && module != null)
 			{
-				this.compatibility = module.Compatibility;
+				this.compatibility = module;
 			}
 		}
 
@@ -70,16 +80,9 @@
 			get { return module; }
 		}
 
-		public string[] GetPrefixedPropertyNames()
+		public Compatibility Compatibility
 		{
-			if (compatibility == null || compatibility.Prefixed == null)
-				return new string[0];
-
-			return compatibility.Prefixed
-				.Select(b => b.Prefix + name)
-				.OrderByDescending(p => p)
-				.Distinct()
-				.ToArray();
+			get { return compatibility; }
 		}
 
 		public override int GetHashCode()
@@ -402,12 +405,12 @@
 
 		public static readonly CssPropertyInfo Top						= new CssPropertyInfo("top");
 
-		// Transforms (Level 3) ------------------------------------------------------------------------
-		public static readonly CssPropertyInfo Transform		= new CssPropertyInfo("transform",			CssModule.Transforms3);
-		public static readonly CssPropertyInfo TransformOrigin	= new CssPropertyInfo("transform-origin",	CssModule.Transforms3);
-		public static readonly CssPropertyInfo TransformStyle	= new CssPropertyInfo("transform-style",	CssModule.Transforms3);
+		// Transforms (Level 3) -------------------------------------------------------------------------------------------------------------------
+		public static readonly CssPropertyInfo Transform				= new CssPropertyInfo("transform",					CssModule.Transforms3);
+		public static readonly CssPropertyInfo TransformOrigin			= new CssPropertyInfo("transform-origin",			CssModule.Transforms3);
+		public static readonly CssPropertyInfo TransformStyle			= new CssPropertyInfo("transform-style",			CssModule.Transforms3);
 
-		// - Transitions (Level 3 ) ------------------------------------------------------------------------------------------------
+		// - Transitions (Level 3 ) ---------------------------------------------------------------------------------------------------------------
 
 		public static readonly CssPropertyInfo Transition				= new CssPropertyInfo("transition",					CssModule.Transitions3);
 		public static readonly CssPropertyInfo TransitionDelay			= new CssPropertyInfo("transition-delay",			CssModule.Transitions3);
@@ -439,14 +442,16 @@
 
 
 		public static readonly IDictionary<string, CssPropertyInfo> Map = new Dictionary<string, CssPropertyInfo> {
-			{ "animation", Animation },
-			{ "animation-delay", AnimationDelay },
-			{ "animation-direction", AnimationDirection },
-			{ "animation-duration", AnimationDuration },
-			{ "animation-iteration-count", AnimationIterationCount },
-			{ "animation-name", AnimationName },
-			{ "animation-play-state", AnimationPlayState },
-			{ "animation-timing-function", AnimationTimingFunction },
+			// Animations
+			{ "animation",					Animation },
+			{ "animation-delay",			AnimationDelay },
+			{ "animation-direction",		AnimationDirection },
+			{ "animation-duration",			AnimationDuration },
+			{ "animation-iteration-count",	AnimationIterationCount },
+			{ "animation-name",				AnimationName },
+			{ "animation-play-state",		AnimationPlayState },
+			{ "animation-timing-function",	AnimationTimingFunction },
+
 			{ "appearance", Appearance },
 			{ "backface-visibility", BackfaceVisibility },
 			{ "background", Background },

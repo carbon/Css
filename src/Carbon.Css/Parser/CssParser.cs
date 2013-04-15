@@ -51,14 +51,14 @@
 
 			switch (atToken.Value)
 			{
-				case "@charset":	ruleType = RuleType.CharsetRule;	break;
-				case "@import":		ruleType = RuleType.ImportRule;		break;
-				case "@font-face":	ruleType = RuleType.FontFaceRule;	break;
-				case "@media":		ruleType = RuleType.MediaRule;		break;
-				case "@page":		ruleType = RuleType.PageRule;		break;
+				case "@charset":	ruleType = RuleType.Charset;	break;
+				case "@import":		ruleType = RuleType.Import;		break;
+				case "@font-face":	ruleType = RuleType.FontFace;	break;
+				case "@media":		ruleType = RuleType.Media;		break;
+				case "@page":		ruleType = RuleType.Page;		break;
 
 				case "@-webkit-keyframes":
-				case "@keyframes":	ruleType = RuleType.KeyframesRule;	break;
+				case "@keyframes":	ruleType = RuleType.Keyframes;	break;
 			}
 
 			// ATKEYWORD S* any* [ block | ';' S* ];
@@ -96,7 +96,7 @@
 
 			tokenizer.Next(); // Read the selector
 
-			return new CssRule(RuleType.StyleRule, new CssSelector(selectorToken.Value)) {
+			return new CssRule(RuleType.Style, new CssSelector(selectorToken.Value)) {
 				Block = ReadBlock()
 			};
 		}

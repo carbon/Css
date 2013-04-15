@@ -42,7 +42,7 @@
 			var style = sheet.Rules[0] as CssRule;
 
 			Assert.AreEqual(1, sheet.Rules.Count);
-			Assert.AreEqual(RuleType.StyleRule, style.Type);
+			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("div > h1", style.Selector.ToString());
 			Assert.AreEqual(1, style.Block.Declarations.Count);
 			Assert.AreEqual("width", style.Block.Declarations[0].Name);
@@ -58,7 +58,7 @@
 			var style = sheet.Rules[0] as CssRule;
 
 			Assert.AreEqual(1, sheet.Rules.Count);
-			Assert.AreEqual(RuleType.StyleRule, style.Type);
+			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("#monster", style.Selector.ToString());
 			Assert.AreEqual(2, style.Block.Declarations.Count);
 			Assert.AreEqual("font-color", style.Block.Declarations[0].Name);
@@ -78,10 +78,9 @@
 			Assert.AreEqual(1, sheet.Rules.Count);
 			Assert.AreEqual("@-webkit-keyframes fade", sheet.Rules[0].Selector.Text);
 
-			Assert.AreEqual(@"@-webkit-keyframes fade {
-  from { opacity: 1; }
-  to { opacity: 0.25; }
-}", sheet.ToString());
+			Assert.AreEqual(@"@-webkit-keyframes fade {  
+from { opacity: 1; }  
+to { opacity: 0.25; }}", sheet.ToString());
 
 
 
@@ -144,7 +143,7 @@ p { font-color: red; background: url(http://google.com); }
 		[Test]
 		public void PropertiesA()
 		{
-			Console.WriteLine(CssPropertyInfo.BoxSizing.GetPrefixedPropertyNames().Length.ToString());
+			// Console.WriteLine(CssPropertyInfo.BoxSizing.GetPrefixedPropertyNames().Length.ToString());
 			Console.WriteLine(CssPropertyInfo.Get("font-size"));
 			Console.WriteLine(CssPropertyInfo.Get("box-sizing"));
 			Console.WriteLine(CssPropertyInfo.Get("-webkit-box-sizing"));
@@ -161,14 +160,15 @@ body {
 }
 ");
 
+
 			sheet.SetCompatibility(Browser.Chrome1);
 
-			Assert.AreEqual(@"body { 
-  -moz-transform:rotate(90);
-  -ms-transform:rotate(90);
-  -o-transform:rotate: 90);
-  -webkit-transform:rotate(90);
-  transform:rotate(90);
+			Assert.AreEqual(@"body {
+  -moz-transform: rotate(90);
+  -ms-transform: rotate(90);
+  -o-transform: rotate(90);
+  -webkit-transform: rotate(90);
+  transform: rotate(90);
 }", sheet.ToString());
 
 		}

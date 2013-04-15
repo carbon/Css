@@ -42,11 +42,6 @@
 			get { return priority; }
 		}
 
-		public CssPropertyInfo GetPropertyInfo()
-		{
-			return CssPropertyInfo.Get(name);
-		}
-
 		public override string ToString()
 		{
 			// color: red !important

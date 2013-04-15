@@ -1,4 +1,5 @@
-﻿namespace Carbon.Css
+﻿using System;
+namespace Carbon.Css
 {
 	public class Browser
 	{
@@ -13,18 +14,7 @@
 
 		public string Prefix
 		{
-			get
-			{
-				switch (type)
-				{
-					case BrowserType.Chrome:	return "-webkit-";
-					case BrowserType.Firefox:	return "-moz-";
-					case BrowserType.IE:		return "-ms-";
-					case BrowserType.Opera:		return "-o-";
-					case BrowserType.Safari:	return "-webkit-";
-					default:					return "";
-				}
-			}
+			get { return GetPrefix(type); }
 		}
 
 		public static Browser Chrome(float version)
@@ -56,18 +46,21 @@
 		public static readonly Browser Chrome7 =	Chrome(7);
 		public static readonly Browser Chrome10 =	Chrome(10);
 		public static readonly Browser Chrome13 =	Chrome(13);
+		public static readonly Browser Chrome26 =	Chrome(26);
 
 		public static readonly Browser Firefox1 =	Firefox(1);
 		public static readonly Browser Firefox4 =	Firefox(4);
 		public static readonly Browser Firefox5 =	Firefox(5);
 		public static readonly Browser Firefox6 =	Firefox(6);
 		public static readonly Browser Firefox9 =	Firefox(9);
+		public static readonly Browser Firefox20 =	Firefox(20);
 
-		public static readonly Browser IE6 =		IE(6);
-		public static readonly Browser IE7 =		IE(7);
-		public static readonly Browser IE8 =		IE(8);
-		public static readonly Browser IE9 =		IE(9);
-		public static readonly Browser IE10 =		IE(10);
+		public static readonly Browser IE6 =	IE(6);
+		public static readonly Browser IE7 =	IE(7);
+		public static readonly Browser IE8 =	IE(8);
+		public static readonly Browser IE9 =	IE(9);
+		public static readonly Browser IE10 =	IE(10);
+		public static readonly Browser IE11 =	IE(11);
 
 		public static readonly Browser Opera4 =		Opera(3);
 		public static readonly Browser Opera9 =		Opera(9);
@@ -77,6 +70,20 @@
 		public static readonly Browser Safari4 =	Safari(4);
 		public static readonly Browser Safari5 =	Safari(5);
 		public static readonly Browser Safari6 =	Safari(6);
+
+		public static string GetPrefix(BrowserType type)
+		{
+			switch (type)
+			{
+				case BrowserType.Chrome:	return "-webkit-";
+				case BrowserType.Firefox:	return "-moz-";
+				case BrowserType.IE:		return "-ms-";
+				case BrowserType.Opera:		return "-o-";
+				case BrowserType.Safari:	return "-webkit-";
+
+				default:					throw new Exception("Huh?");
+			}
+		}
 
 	}
 
