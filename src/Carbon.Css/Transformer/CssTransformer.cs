@@ -39,16 +39,16 @@
 				{
 					foreach (var changes in transform.GetChanges(rule))
 					{
-						var indexOf = rule.Block.Declarations.IndexOf(changes.Source);
+						var indexOf = rule.Declarations.IndexOf(changes.Source);
 
 						foreach (var add in changes.AddList)
 						{
-							rule.Block.Declarations.Insert(indexOf, add);
+							rule.Declarations.Insert(indexOf, add);
 						}
 
 						foreach (var remove in changes.RemoveList)
 						{
-							rule.Block.Remove(remove);
+							rule.Remove(remove);
 						}
 					}
 				}

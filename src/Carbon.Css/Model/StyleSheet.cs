@@ -6,6 +6,7 @@
 
 	using Carbon.Css.Parser;
 	using System.IO;
+	using System;
 
 	public class StyleSheet
 	{
@@ -41,7 +42,7 @@
 					root = rule;
 				}
 
-				foreach (var d in rule.Block.Declarations)
+				foreach (var d in rule.Declarations)
 				{
 					foreach(var value in d.Value)
 					{
@@ -71,14 +72,16 @@
 
 			var cssParser = new CssParser(text);
 
+			int i = 0;
+
 			foreach (var rule in cssParser.ReadRules())
 			{
 				// Gather variables in the :root { } selector
 				// http://dev.w3.org/csswg/css-variables/
 
-				if (rule.Selector.Text.ToString() == ":root")
+				if (rule.Selector.Text == ":root")
 				{
-					foreach (var d in rule.Block.Declarations)
+					foreach (var d in rule.Declarations)
 					{
 						if (d.Name.StartsWith("var-"))
 						{
@@ -86,6 +89,11 @@
 						}
 					}
 				}
+
+				i++;
+
+				if (i > 1000) throw new Exception("To many");
+
 				sheet.Rules.Add(rule);
 			}
 

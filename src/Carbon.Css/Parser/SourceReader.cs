@@ -10,7 +10,6 @@
 		private readonly TextReader textReader;
 		private char currentCharacter;
 		private bool isDisposed = false;
-		private bool isEof = false;
 		private int position;
 
 		public SourceReader(string text)
@@ -28,7 +27,7 @@
 
 		public bool IsEof 
 		{
-			get { return isEof; }
+			get { return currentCharacter == EofChar; }
 		}
 
 		public int Position
@@ -48,7 +47,7 @@
 		/// </summary>
 		public void Next() 
 		{
-			if (marked != -1 && (marked <= this.position) && !isEof)
+			if (marked != -1 && (marked <= this.position) && !IsEof)
 			{
 				buffer.Append(currentCharacter);
 			}
@@ -60,9 +59,7 @@
 				this.currentCharacter = (char)charCode;
 			}
 			else
-			{
-				isEof = true;
-			
+			{		
 				this.currentCharacter = EofChar;
 			}
 

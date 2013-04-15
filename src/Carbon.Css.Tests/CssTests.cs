@@ -44,10 +44,23 @@
 			Assert.AreEqual(1, sheet.Rules.Count);
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("div > h1", style.Selector.ToString());
-			Assert.AreEqual(1, style.Block.Declarations.Count);
-			Assert.AreEqual("width", style.Block.Declarations[0].Name);
-			Assert.AreEqual("100px", style.Block.Declarations[0].Value.ToString());
+			Assert.AreEqual(1, style.Declarations.Count);
+			Assert.AreEqual("width", style.Declarations[0].Name);
+			Assert.AreEqual("100px", style.Declarations[0].Value.ToString());
 			Assert.AreEqual("div > h1 { width: 100px; }", sheet.ToString());
+		}
+
+		[Test]
+		public void ImportSelector()
+		{
+			var sheet = StyleSheet.Parse("@import url(core.css);");
+
+			var style = sheet.Rules[0] as CssRule;
+
+			Assert.AreEqual(1, sheet.Rules.Count);
+			Assert.AreEqual(RuleType.Import, style.Type);
+			Assert.AreEqual("@import", style.Selector.ToString());
+			// Assert.AreEqual(style", "url(core.css)");
 		}
 
 		[Test]
@@ -60,11 +73,11 @@
 			Assert.AreEqual(1, sheet.Rules.Count);
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("#monster", style.Selector.ToString());
-			Assert.AreEqual(2, style.Block.Declarations.Count);
-			Assert.AreEqual("font-color", style.Block.Declarations[0].Name);
-			Assert.AreEqual("red", style.Block.Declarations[0].Value.ToString());
-			Assert.AreEqual("background-color", style.Block.Declarations[1].Name);
-			Assert.AreEqual("url(http://google.com)", style.Block.Declarations[1].Value.ToString());
+			Assert.AreEqual(2, style.Declarations.Count);
+			Assert.AreEqual("font-color", style.Declarations[0].Name);
+			Assert.AreEqual("red", style.Declarations[0].Value.ToString());
+			Assert.AreEqual("background-color", style.Declarations[1].Name);
+			Assert.AreEqual("url(http://google.com)", style.Declarations[1].Value.ToString());
 		}
 
 		[Test]
@@ -74,13 +87,14 @@
 	from {opacity: 1;}
 	to {opacity: 0.25;}
 }");
-
 			Assert.AreEqual(1, sheet.Rules.Count);
 			Assert.AreEqual("@-webkit-keyframes fade", sheet.Rules[0].Selector.Text);
 
-			Assert.AreEqual(@"@-webkit-keyframes fade {  
-from { opacity: 1; }  
-to { opacity: 0.25; }}", sheet.ToString());
+			Assert.AreEqual(
+@"@-webkit-keyframes fade {
+  from { opacity: 1; }
+  to { opacity: 0.25; }
+}", sheet.ToString());
 
 
 
@@ -110,7 +124,7 @@ p { font-color: red; background: url(http://google.com); }
 
 			foreach (var rule in parser.ReadRules())
 			{
-				foreach (var declaration in rule.Block.Declarations)
+				foreach (var declaration in rule.Declarations)
 				{
 					foreach (var value in declaration.Value)
 					{

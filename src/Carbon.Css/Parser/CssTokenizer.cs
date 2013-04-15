@@ -114,7 +114,6 @@
 		{
 			reader.Mark();
 
-			// { (Start declaration)
 			while (reader.Current != ' ' && reader.Current != ';' && reader.Current != '{')
 			{
 				if (reader.IsEof) throw new ParseException("Unexpected EOF reading AtKeyword");
@@ -122,7 +121,7 @@
 				reader.Next();
 			}
 
-			// Followed by a block, string, or ;
+			// Followed by a block ({), string, or ;
 
 			return new Token(TokenKind.AtKeyword, reader.Unmark());
 		}

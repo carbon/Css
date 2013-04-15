@@ -4,6 +4,8 @@
 	{
 		public ImportRule()
 			: base(RuleType.Import, null) { }
+
+		public string Value { get; set; }
 	}
 
 	/*

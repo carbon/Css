@@ -11,6 +11,11 @@
 		private readonly List<CssDeclaration> declarations = new List<CssDeclaration>();
 		private readonly List<CssRule> rules = new List<CssRule>();
 
+		public bool HasDeclarations
+		{
+			get { return declarations.Count > 0; }
+		}
+
 		public IList<CssDeclaration> Declarations
 		{
 			get { return declarations; }
@@ -86,44 +91,6 @@
 		}
 
 		#endregion
-
-		public void WriteTo(TextWriter writer)
-		{
-			writer.Write("{");
-
-			// Write the declarations
-			foreach (var d in declarations)
-			{
-				if (declarations.Count > 1)
-				{
-					writer.WriteLine();
-
-					writer.Write(" ");
-				}
-
-				writer.Write(string.Format(" {0}: {1};", d.Name, d.Value.ToString()));
-
-				if (declarations.Count == 1)
-				{
-					writer.Write(" ");
-				}
-			}
-
-			if (declarations.Count > 1)
-			{
-				writer.WriteLine();
-			}
-
-			// Write the nested rules
-			foreach (var b in rules)
-			{
-				writer.WriteLine("  ");
-
-				b.WriteTo(writer);
-			}
-
-			writer.Write("}");
-		}
 	}
 }
 

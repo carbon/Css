@@ -14,12 +14,12 @@
 	{
 		public bool Matches(CssRule rule)
 		{
-			return (rule.Block.Any(b => b.Name == "opacity"));
+			return (rule.Any(b => b.Name == "opacity"));
 		}
 
 		public ChangeSet[] GetChanges(CssRule rule)
 		{
-			var declaration = rule.Block.Get("opacity");
+			var declaration = rule.Get("opacity");
 			
 			var cssValue = declaration.Value;
 
@@ -35,7 +35,7 @@
 			if (value > -1)
 			{
 				// Remove any existing filters
-				foreach (var filter in rule.Block.FindHavingPropertyName("filter").Where(f => f.Value.ToString().Contains("alpha")))
+				foreach (var filter in rule.FindHavingPropertyName("filter").Where(f => f.Value.ToString().Contains("alpha")))
 				{
 					changes.RemoveList.Add(filter);
 				}
@@ -51,7 +51,7 @@
 	{
 		public bool Matches(CssRule rule)
 		{
-			return rule.Block.Any(d => { 
+			return rule.Any(d => { 
 				var info = CssPropertyInfo.Get(d.Name);
 
 				return info != null && info.Compatibility != null && info.Compatibility.Prefixed != null;
@@ -62,7 +62,7 @@
 		{
 			var changeSets = new List<ChangeSet>();
 
-			foreach (var declaration in rule.Block)
+			foreach (var declaration in rule)
 			{
 				var propInfo = CssPropertyInfo.Get(declaration.Name);
 
@@ -77,7 +77,7 @@
 				foreach (var prefixedName in propInfo.Compatibility.GetPrefixes(declaration.Name))
 				{
 					// Remove existing prefixes
-					changes.RemoveList.AddRange(rule.Block.FindHavingPropertyName(prefixedName));
+					changes.RemoveList.AddRange(rule.FindHavingPropertyName(prefixedName));
 
 					changes.AddList.Add(new CssDeclaration(prefixedName, cssValue));
 				}

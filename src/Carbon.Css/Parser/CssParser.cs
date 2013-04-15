@@ -83,8 +83,8 @@
 
 			switch (tokenizer.Current.Kind)
 			{
-				case TokenKind.BlockStart:	rule.Block = ReadBlock();	break;
-				case TokenKind.Semicolon:	tokenizer.Next();			break; // Read the semicolon 
+				case TokenKind.BlockStart:	ReadBlock(rule);	break; // {
+				case TokenKind.Semicolon:	tokenizer.Next();	break; // ;
 			}
 
 			return rule;
@@ -96,14 +96,15 @@
 
 			tokenizer.Next(); // Read the selector
 
-			return new CssRule(RuleType.Style, new CssSelector(selectorToken.Value)) {
-				Block = ReadBlock()
-			};
+			var rule = new CssRule(RuleType.Style, new CssSelector(selectorToken.Value));
+			
+			ReadBlock(rule);
+
+			return rule;
 		}
 
-		public CssBlock ReadBlock()
+		public CssBlock ReadBlock(CssRule block)
 		{
-			var block = new CssBlock();
 
 			Expect(TokenKind.BlockStart);
 
