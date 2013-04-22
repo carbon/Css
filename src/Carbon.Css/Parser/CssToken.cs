@@ -4,16 +4,30 @@
 	{
 		private readonly TokenKind kind;
 		private readonly string value;
+		private readonly int position;
 
-		public Token(TokenKind kind, string value)
+		public Token(TokenKind kind, char value, int position)
+		{
+			this.kind = kind;
+			this.value = value.ToString();
+			this.position = position;
+		}
+
+		public Token(TokenKind kind, string value, int position)
 		{
 			this.kind = kind;
 			this.value = value;
+			this.position = position;
 		}
 
 		public TokenKind Kind
 		{
 			get { return kind; }
+		}
+
+		public int Position
+		{
+			get { return position; }
 		}
 
 		public string Value
@@ -31,25 +45,15 @@
 	{
 		Whitespace,
 		Comment,
-		Identifier,		// selector or identifer (IDENT)
+		Identifier,	// selector or identifer (IDENT)
 		
-		// Declaration,	// property: value
-
-		/*
-		DeclarationName,			// [property]:
-		DeclarationValue,			// :[value]
-		*/
-
-		Name, 
+		Name,		// name (followed by a :)
 		Value,
 
-		// Identifier, // value
-
+		AtKeyword,	// @{ident}
 		Semicolon,  // ;
 		Colon,		// :
 		BlockStart,	// {
 		BlockEnd,	// }
-
-		AtKeyword	// @{ident}
 	}
 }

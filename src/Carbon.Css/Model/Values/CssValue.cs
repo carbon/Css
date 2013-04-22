@@ -103,6 +103,12 @@
 
 		public static CssValue Parse(string text)
 		{
+			#region Preconditions
+
+			if (text == null) throw new ArgumentNullException("text");
+
+			#endregion
+
 			var majorParts = text.Split(',');
 
 			if (majorParts.Length == 1)

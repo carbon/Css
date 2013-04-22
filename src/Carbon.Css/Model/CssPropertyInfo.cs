@@ -236,9 +236,9 @@
 		public static readonly CssPropertyInfo CounterIncrement = new CssPropertyInfo("counter-increment");
 		public static readonly CssPropertyInfo CounterReset		= new CssPropertyInfo("counter-reset");
 
-		public static readonly CssPropertyInfo Cursor		= new CssPropertyInfo("cursor");
+		public static readonly CssPropertyInfo Cursor		= new CssPropertyInfo("cursor",					CssModule.Core21);
 		public static readonly CssPropertyInfo Direction	= new CssPropertyInfo("direction");
-		public static readonly CssPropertyInfo Display		= new CssPropertyInfo("display");
+		public static readonly CssPropertyInfo Display		= new CssPropertyInfo("display",				CssModule.Core1);
 		
 		public static readonly CssPropertyInfo EmptyCells	= new CssPropertyInfo("empty-cells");
 		public static readonly CssPropertyInfo Filter		= new CssPropertyInfo("filter");
@@ -384,7 +384,7 @@
 		// Text ------------------------------------------------------------------------
 		public static readonly CssPropertyInfo TextAlign				= new CssPropertyInfo("text-align", CssModule.Core1);
 		public static readonly CssPropertyInfo TextAlignLast			= new CssPropertyInfo("text-align-last");
-		public static readonly CssPropertyInfo TextDecoration			= new CssPropertyInfo("text-decoration");
+		public static readonly CssPropertyInfo TextDecoration			= new CssPropertyInfo("text-decoration", CssModule.Core1);
 		public static readonly CssPropertyInfo TextDecorationColor		= new CssPropertyInfo("text-decoration-color");
 		public static readonly CssPropertyInfo TextDecorationLine		= new CssPropertyInfo("text-decoration-line");
 		public static readonly CssPropertyInfo TextDecorationSkip		= new CssPropertyInfo("text-decoration-skip");

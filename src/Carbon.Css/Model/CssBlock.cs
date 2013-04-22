@@ -9,7 +9,6 @@
 	public class CssBlock : ICollection<CssDeclaration>
 	{
 		private readonly List<CssDeclaration> declarations = new List<CssDeclaration>();
-		private readonly List<CssRule> rules = new List<CssRule>();
 
 		public bool HasDeclarations
 		{
@@ -31,12 +30,6 @@
 			return declarations.FirstOrDefault(d => d.Name == name);
 		}
 
-		// Nested rules
-		// { to: { opacity: 1 } }
-		public IList<CssRule> Rules
-		{
-			get { return rules; }
-		}
 
 		public int IndexOf(CssDeclaration declaration)
 		{
@@ -97,5 +90,3 @@
 // A block starts with a left curly brace ({) and ends with the matching right curly brace (}).
 // In between there may be any tokens, except that parentheses (( )), brackets ([ ]), and braces ({ }) must always occur in matching pairs and may be nested.
 // Single (') and double quotes (") must also occur in matching pairs, and characters between them are parsed as a string. See Tokenization above for the definition of a string.
-
-

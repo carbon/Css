@@ -38,7 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Blocks\CssBlock.cs" />
+    <Compile Include="Model\CssBlock.cs" />
     <Compile Include="Model\Modules\CssModule.cs" />
     <Compile Include="Model\Modules\CssModuleType.cs" />
     <Compile Include="Model\Rules\ImportRule.cs" />

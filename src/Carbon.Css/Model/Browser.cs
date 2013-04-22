@@ -1,6 +1,7 @@
-﻿using System;
-namespace Carbon.Css
+﻿namespace Carbon.Css
 {
+	using System;
+
 	public class Browser
 	{
 		private readonly BrowserType type;

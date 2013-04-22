@@ -70,11 +70,11 @@
 		{
 			var sheet = new StyleSheet();
 
-			var cssParser = new CssParser(text);
+			var parser = new CssParser(text);
 
 			int i = 0;
 
-			foreach (var rule in cssParser.ReadRules())
+			foreach (var rule in parser.ReadRules())
 			{
 				// Gather variables in the :root { } selector
 				// http://dev.w3.org/csswg/css-variables/
@@ -91,8 +91,6 @@
 				}
 
 				i++;
-
-				if (i > 1000) throw new Exception("To many");
 
 				sheet.Rules.Add(rule);
 			}

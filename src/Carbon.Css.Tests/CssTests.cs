@@ -50,17 +50,30 @@
 			Assert.AreEqual("div > h1 { width: 100px; }", sheet.ToString());
 		}
 
+
+		[Test]
+		public void LineComment()
+		{
+			var sheet = StyleSheet.Parse(@"// hello
+			hi { hello: test; }");
+
+			Assert.AreEqual("hi { hello: test; }", sheet.ToString());
+		}
+
 		[Test]
 		public void ImportSelector()
 		{
 			var sheet = StyleSheet.Parse("@import url(core.css);");
 
-			var style = sheet.Rules[0] as CssRule;
+			var rule = sheet.Rules[0] as ImportRule;
 
 			Assert.AreEqual(1, sheet.Rules.Count);
-			Assert.AreEqual(RuleType.Import, style.Type);
-			Assert.AreEqual("@import", style.Selector.ToString());
-			// Assert.AreEqual(style", "url(core.css)");
+			Assert.AreEqual(RuleType.Import, rule.Type);
+			Assert.AreEqual("@import", rule.Selector.ToString());
+			Assert.AreEqual("@import url('core.css');", rule.ToString());
+			Assert.AreEqual("url('core.css')", rule.Value.ToString());
+
+			Assert.AreEqual("@import url('core.css');", sheet.ToString());
 		}
 
 		[Test]
@@ -78,6 +91,14 @@
 			Assert.AreEqual("red", style.Declarations[0].Value.ToString());
 			Assert.AreEqual("background-color", style.Declarations[1].Name);
 			Assert.AreEqual("url(http://google.com)", style.Declarations[1].Value.ToString());
+		}
+
+		[Test]
+		public void Unclosed()
+		{
+			var sheet = StyleSheet.Parse("div.wrapper.upgraded .message.enterPaymentDetailsGuts { opacity: 0; position: absolute; width: 740px; height: 280px }");
+
+			sheet.ToString();
 		}
 
 		[Test]
@@ -108,6 +129,147 @@
 				Console.WriteLine(token.Kind + ":" + token.Value);
 			}
 			*/
+		}
+
+		[Test]
+		public void FontFace()
+		{
+			var styles = @"@font-face {
+    font-family: 'CMBilling';
+    src: url('../fonts/cm-billing-webfont.eot');
+    src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/cm-billing-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+		}";
+
+
+			var sheet = StyleSheet.Parse(styles);
+
+
+			Assert.AreEqual(@"@font-face {
+  font-family: 'CMBilling';
+  src: url('../fonts/cm-billing-webfont.eot');
+  src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype')  url('../fonts/cm-billing-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}", sheet.ToString());
+		
+
+			// Test 2
+			StyleSheet.Parse(@"
+/*	Font -------------------------------------------------*/
+
+@font-face {
+    font-family: 'CMBilling';
+    src: url('../fonts/cm-billing-webfont.eot');
+    src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/cm-billing-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Colfax-Thin';
+    src: url('../fonts/ColfaxWebThinSub.eot');
+    src: url('../fonts/ColfaxWebThinSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebThinSub.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Colfax-Thin-Italic';
+    src: url('../fonts/ColfaxWebThinItalicSub.eot');
+    src: url('../fonts/ColfaxWebThinItalicSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebThinItalicSub.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Colfax-Light';
+    src: url('../fonts/ColfaxWebLightSub.eot');
+    src: url('../fonts/ColfaxWebLightSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebLightSub.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Colfax-Light-Italic';
+    src: url('../fonts/ColfaxWebLightItalicSub.eot');
+    src: url('../fonts/ColfaxWebLightItalicSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebLightItalicSub.woff') format('woff');
+    font-weight: 200;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'Colfax';
+    src: url('../fonts/ColfaxWebRegularSub.eot');
+    src: url('../fonts/ColfaxWebRegularSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebRegularSub.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Colfax-Regular-Italic';
+    src: url('../fonts/ColfaxWebRegularItalicSub.eot');
+    src: url('../fonts/ColfaxWebRegularItalicSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebRegularItalicSub.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Colfax-Medium';
+    src: url('../fonts/ColfaxWebMediumSub.eot');
+    src: url('../fonts/ColfaxWebMediumSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebMediumSub.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Colfax-Medium-Italic';
+    src: url('../fonts/ColfaxWebMediumItalicSub.eot');
+    src: url('../fonts/ColfaxWebMediumItalicSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebMediumItalicSub.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'Colfax-Bold';
+    src: url('../fonts/ColfaxWebBoldSub.eot');
+    src: url('../fonts/ColfaxWebBoldSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebBoldSub.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Colfax-Bold-Italic';
+    src: url('../fonts/ColfaxWebBoldItalicSub.eot');
+    src: url('../fonts/ColfaxWebBoldItalicSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebBoldItalicSub.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Colfax-Black';
+    src: url('../fonts/ColfaxWebBlackSub.eot');
+    src: url('../fonts/ColfaxWebBlackSub.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ColfaxWebBlackSub.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}");
 		}
 
 		[Test]
@@ -382,118 +544,6 @@ aside,details { margin:0; padding:0; }
 	display: inline-block;
 }
 
-/*	Font -------------------------------------------------*/
-
-@font-face {
-    font-family: 'CMBilling';
-    src: url('../fonts/cm-billing-webfont.eot');
-    src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/cm-billing-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-
-@font-face {
-    font-family: 'Colfax-Thin';
-    src: url('../fonts/ColfaxWebThinSub.eot');
-    src: url('../fonts/ColfaxWebThinSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebThinSub.woff') format('woff');
-    font-weight: 100;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Colfax-Thin-Italic';
-    src: url('../fonts/ColfaxWebThinItalicSub.eot');
-    src: url('../fonts/ColfaxWebThinItalicSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebThinItalicSub.woff') format('woff');
-    font-weight: 100;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Colfax-Light';
-    src: url('../fonts/ColfaxWebLightSub.eot');
-    src: url('../fonts/ColfaxWebLightSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebLightSub.woff') format('woff');
-    font-weight: 200;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Colfax-Light-Italic';
-    src: url('../fonts/ColfaxWebLightItalicSub.eot');
-    src: url('../fonts/ColfaxWebLightItalicSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebLightItalicSub.woff') format('woff');
-    font-weight: 200;
-    font-style: italic;
-}
-
-
-@font-face {
-    font-family: 'Colfax';
-    src: url('../fonts/ColfaxWebRegularSub.eot');
-    src: url('../fonts/ColfaxWebRegularSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebRegularSub.woff') format('woff');
-    font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Colfax-Regular-Italic';
-    src: url('../fonts/ColfaxWebRegularItalicSub.eot');
-    src: url('../fonts/ColfaxWebRegularItalicSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebRegularItalicSub.woff') format('woff');
-    font-weight: 300;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Colfax-Medium';
-    src: url('../fonts/ColfaxWebMediumSub.eot');
-    src: url('../fonts/ColfaxWebMediumSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebMediumSub.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Colfax-Medium-Italic';
-    src: url('../fonts/ColfaxWebMediumItalicSub.eot');
-    src: url('../fonts/ColfaxWebMediumItalicSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebMediumItalicSub.woff') format('woff');
-    font-weight: 400;
-    font-style: italic;
-}
-
-
-@font-face {
-    font-family: 'Colfax-Bold';
-    src: url('../fonts/ColfaxWebBoldSub.eot');
-    src: url('../fonts/ColfaxWebBoldSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebBoldSub.woff') format('woff');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Colfax-Bold-Italic';
-    src: url('../fonts/ColfaxWebBoldItalicSub.eot');
-    src: url('../fonts/ColfaxWebBoldItalicSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebBoldItalicSub.woff') format('woff');
-    font-weight: 500;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Colfax-Black';
-    src: url('../fonts/ColfaxWebBlackSub.eot');
-    src: url('../fonts/ColfaxWebBlackSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebBlackSub.woff') format('woff');
-    font-weight: 600;
-    font-style: normal;
-}
 
 
 
@@ -1230,7 +1280,7 @@ div.spinner div.bar10 {-webkit-transform:rotate(270deg) translate(0, -142%); -we
 div.spinner div.bar11 {-webkit-transform:rotate(300deg) translate(0, -142%); -webkit-animation-delay: -0.1667s;}
 div.spinner div.bar12 {-webkit-transform:rotate(330deg) translate(0, -142%); -webkit-animation-delay: -0.0833s;}
 
-@font-face fade {
+@animation fade {
 	from {opacity: 1;}
 	to {opacity: 0.25;}
 }

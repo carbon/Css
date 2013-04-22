@@ -1,5 +1,6 @@
 ﻿namespace Carbon.Css
 {
+	using System.Collections.Generic;
 	using System.IO;
 
 	// A StyleRule rule has a selector, and one or more declarations
@@ -25,6 +26,19 @@
 			get { return selector; }
 		}
 
+		#region Children
+
+		private readonly List<CssRule> children = new List<CssRule>();
+
+		// Nested rules
+		// { to: { opacity: 1 } }
+		public List<CssRule> Children
+		{
+			get { return children; }
+		}
+
+		#endregion
+
 		#region Helpers
 
 		public void Expand()
@@ -34,7 +48,7 @@
 
 		#endregion
 
-		public void WriteTo(TextWriter writer, int level = 0)
+		public virtual void WriteTo(TextWriter writer, int level = 0)
 		{
 			// Indent two characters for each level
 			for (int i = 0; i < level; i++)
@@ -77,14 +91,14 @@
 			}
 
 			// Write the nested rules
-			foreach (var b in this.Rules)
+			foreach (var b in this.Children)
 			{
 				writer.WriteLine();
 
 				b.WriteTo(writer, level + 1);
 			}
 
-			if (this.Rules.Count > 0)
+			if (this.Children.Count > 0)
 			{
 				writer.WriteLine();
 			}

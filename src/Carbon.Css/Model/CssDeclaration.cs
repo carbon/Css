@@ -37,6 +37,11 @@
 			get { return value; }
 		}
 
+		public CssPropertyInfo Info
+		{
+			get { return CssPropertyInfo.Get(this.name); }
+		}
+
 		public string Priority
 		{
 			get { return priority; }

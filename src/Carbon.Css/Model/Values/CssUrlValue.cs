@@ -25,6 +25,30 @@
 			get { return value; }
 		}
 
+
+		#region Helpers
+
+		public bool IsPath
+		{
+			get { return !value.Contains(":"); }
+		}
+
+		public string GetAbsolutePath(string basePath) /* /styles/ */
+		{
+			if (!IsPath) throw new ArgumentException("Has scheme:" + value.Split(':')[0]);
+
+			// Already absolute
+			if (value.StartsWith("/")) return value;
+
+			// "http://dev/styles/"
+			var baseUri = new Uri("http://dev/" + basePath.TrimStart('/'));
+
+			// Absolute path
+			return new Uri(baseUri, relativeUri: value).AbsolutePath;
+		}
+
+		#endregion
+
 		public static CssUrlValue Parse(string text)
 		{
 			var value = text.Replace("url", "").Trim('(', ')').Trim('\'', '\"');

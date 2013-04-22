@@ -2,9 +2,9 @@
 
 [assembly: AssemblyTitle("Carbon Css")]
 [assembly: AssemblyProduct("Carbon")]
-[assembly: AssemblyCopyright("© 2012 Jason Nelson")]
+[assembly: AssemblyCopyright("© 2012-2013 Jason Nelson")]
 
-[assembly: AssemblyVersion("0.0.4")]
+[assembly: AssemblyVersion("0.0.6")]
 
 /*
  - CssPropertyInfo
