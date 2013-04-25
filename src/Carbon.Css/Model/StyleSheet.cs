@@ -31,17 +31,10 @@
 			}
 		}
 
-		public void EvaluateVariables(bool removeRootRule = true)
+		public void EvaluateVariables()
 		{
-			CssRule root = null;
-
 			foreach (var rule in rules)
 			{
-				if (rule.Selector.Text == ":root")
-				{
-					root = rule;
-				}
-
 				foreach (var d in rule.Declarations)
 				{
 					foreach(var value in d.Value)
@@ -59,11 +52,6 @@
 					}
 				}
 			}
-
-			if (removeRootRule && root != null)
-			{
-				rules.Remove(root);
-			}
 		}
 
 		public static StyleSheet Parse(string text, bool gatherVaribles = true)
@@ -74,25 +62,18 @@
 
 			int i = 0;
 
-			foreach (var rule in parser.ReadRules())
+			foreach (var node in parser.ReadNodes())
 			{
-				// Gather variables in the :root { } selector
-				// http://dev.w3.org/csswg/css-variables/
-
-				if (rule.Selector.Text == ":root")
+				if (node.Kind == NodeKind.Variable)
 				{
-					foreach (var d in rule.Declarations)
-					{
-						if (d.Name.StartsWith("var-"))
-						{
-							sheet.Variables.Set(d.Name.Substring(4), d.Value);
-						}
-					}
+					var variable = (CssVariable)node;
+
+					sheet.Variables.Set(variable.Name, variable.Value);
 				}
-
-				i++;
-
-				sheet.Rules.Add(rule);
+				else
+				{
+					sheet.Rules.Add((CssRule)node);
+				}
 			}
 
 			return sheet;

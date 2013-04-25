@@ -50,6 +50,7 @@
 		Name,		// name (followed by a :)
 		Value,
 
+		VariableName,		// $
 		AtKeyword,	// @{ident}
 		Semicolon,  // ;
 		Colon,		// :

@@ -3,7 +3,7 @@
 	using System;
 	using System.IO;
 
-	public class CssTokenizer
+	public class CssTokenizer : IDisposable
 	{
 		private readonly SourceReader reader;
 		private readonly LexicalModeContext mode = new LexicalModeContext(LexicalMode.Selector);
@@ -71,11 +71,13 @@
 
 				case '@': return ReadAtKeyword();
 
+				case '$': return ReadVariableKeyword();
+
 				case '/': return ReadComment();
 
-				case ';':								 return new Token(TokenKind.Semicolon,	reader.Read(), reader.Position);
-				case '{': mode.Enter(LexicalMode.Block); return new Token(TokenKind.BlockStart, reader.Read(), reader.Position);
-				case '}': mode.Leave(LexicalMode.Block); return new Token(TokenKind.BlockEnd,	reader.Read(), reader.Position);
+				case ';':									return new Token(TokenKind.Semicolon,	reader.Read(), reader.Position);
+				case '{': mode.Enter(LexicalMode.Block);	return new Token(TokenKind.BlockStart,	reader.Read(), reader.Position);
+				case '}': mode.Leave(LexicalMode.Block);	return new Token(TokenKind.BlockEnd,	reader.Read(), reader.Position);
 			}
 
 			switch (mode.Current)
@@ -112,11 +114,9 @@
 
 		private Token ReadValue()
 		{
-			if(reader.Current == ':') 
+			if (reader.Current == ':')
 			{
-				reader.Next(); /* Read : */
-
-				return new Token(TokenKind.Colon, ":", reader.Position);
+				return new Token(TokenKind.Colon, reader.Read(), reader.Position);
 			}
 
 			reader.Mark();
@@ -131,6 +131,35 @@
 			mode.Leave(LexicalMode.Value);
 
 			return new Token(TokenKind.Value, reader.Unmark(), reader.MarkStart);
+		}
+
+		private Token ReadVariableKeyword()
+		{
+			// $blue
+
+			reader.Mark();
+
+			reader.Next(); // read $
+
+			while (Char.IsLetter(reader.Current))
+			{
+				if (reader.IsEof) throw ParseException.UnexpectedEOF("Variable");
+
+				reader.Next();
+			}
+
+			if (mode.Current == LexicalMode.Value)
+			{
+				mode.Leave(LexicalMode.Value);
+			}
+			else
+			{
+				mode.Enter(LexicalMode.Value);
+			}
+
+			// Followed by a value
+
+			return new Token(TokenKind.VariableName, reader.Unmark(), reader.MarkStart);
 		}
 
 		private Token ReadAtKeyword()
@@ -236,6 +265,12 @@
 			}
 
 			return new Token(TokenKind.Identifier, reader.Unmark(), reader.MarkStart);
+		}
+
+
+		public void Dispose()
+		{
+			reader.Dispose();
 		}
 	}
 }

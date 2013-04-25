@@ -5,7 +5,7 @@
 
 	// A StyleRule rule has a selector, and one or more declarations
 
-	public class CssRule : CssBlock
+	public class CssRule : CssBlock, INode
 	{
 		private readonly RuleType type;
 		private readonly CssSelector selector;
@@ -116,5 +116,14 @@
 				return writer.ToString();
 			}
 		}
+
+		#region INode
+
+		NodeKind INode.Kind
+		{
+			get { return NodeKind.Rule;  }
+		}
+
+		#endregion
 	}
 }

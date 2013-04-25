@@ -38,9 +38,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ast\INode.cs" />
     <Compile Include="Model\CssBlock.cs" />
+    <Compile Include="Model\CssVariable.cs" />
     <Compile Include="Model\Modules\CssModule.cs" />
     <Compile Include="Model\Modules\CssModuleType.cs" />
+    <Compile Include="Ast\NodeKind.cs" />
     <Compile Include="Model\Rules\ImportRule.cs" />
     <Compile Include="Model\Rules\FontFaceRule.cs" />
     <Compile Include="Model\Rules\RuleType.cs" />

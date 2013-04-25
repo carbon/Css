@@ -228,7 +228,7 @@
 		public static readonly CssPropertyInfo ColumnWidth		= new CssPropertyInfo("column-width",		CssModule.Columns3);
 		public static readonly CssPropertyInfo Columns			= new CssPropertyInfo("columns",			CssModule.Columns3);
 		
-		public static readonly CssPropertyInfo Content = new CssPropertyInfo("content", new Compatibility {
+		public static readonly CssPropertyInfo Content = new CssPropertyInfo("content", CssModule.Core21, new Compatibility {
 			Standard = new[] { Browser.Chrome1, Browser.Firefox1, Browser.IE8, Browser.Opera4, Browser.Safari1 }	
 		});
 
@@ -287,7 +287,7 @@
 																});
 
 		public static readonly CssPropertyInfo InlineBoxAlign		= new CssPropertyInfo("inline-box-align");
-		public static readonly CssPropertyInfo Left					= new CssPropertyInfo("left");
+		public static readonly CssPropertyInfo Left					= new CssPropertyInfo("left",					CssModule.Core1);
 		public static readonly CssPropertyInfo LetterSpacing		= new CssPropertyInfo("letter-spacing");
 
 		// Lines
@@ -362,10 +362,10 @@
 		public static readonly CssPropertyInfo PerspectiveOriginX	= new CssPropertyInfo("perspective-origin-x",	CssModule.Transforms3);
 		public static readonly CssPropertyInfo PerspectiveOriginY	= new CssPropertyInfo("perspective-origin-y",	CssModule.Transforms3);
 
-		public static readonly CssPropertyInfo Position = new CssPropertyInfo("position");
+		public static readonly CssPropertyInfo Position = new CssPropertyInfo("position",				CssModule.Core1);
 		public static readonly CssPropertyInfo Quotes = new CssPropertyInfo("quotes");
 		public static readonly CssPropertyInfo Resize = new CssPropertyInfo("resize");
-		public static readonly CssPropertyInfo Right = new CssPropertyInfo("right");
+		public static readonly CssPropertyInfo Right = new CssPropertyInfo("right",						CssModule.Core1);
 
 		// Ruby (Level 3) ------------------------------------------------------------------------------------
 
@@ -403,7 +403,7 @@
 		public static readonly CssPropertyInfo TextUnderlinePosition	= new CssPropertyInfo("text-underline-position");
 		public static readonly CssPropertyInfo TextWrap					= new CssPropertyInfo("text-wrap");
 
-		public static readonly CssPropertyInfo Top						= new CssPropertyInfo("top");
+		public static readonly CssPropertyInfo Top						= new CssPropertyInfo("top",						CssModule.Core1);
 
 		// Transforms (Level 3) -------------------------------------------------------------------------------------------------------------------
 		public static readonly CssPropertyInfo Transform				= new CssPropertyInfo("transform",					CssModule.Transforms3);
@@ -427,7 +427,7 @@
 		});
 
 		public static readonly CssPropertyInfo VerticalAlign	= new CssPropertyInfo("vertical-align", CssModule.Core1);
-		public static readonly CssPropertyInfo Visibility		= new CssPropertyInfo("visibility");
+		public static readonly CssPropertyInfo Visibility		= new CssPropertyInfo("visibility",		CssModule.Core1);
 		public static readonly CssPropertyInfo WhiteSpace		= new CssPropertyInfo("white-space");
 		public static readonly CssPropertyInfo Widows			= new CssPropertyInfo("widows",			CssModule.Core21);
 		public static readonly CssPropertyInfo Width			= new CssPropertyInfo("width",			CssModule.Core1);
@@ -437,7 +437,7 @@
 		public static readonly CssPropertyInfo WordSpacing		= new CssPropertyInfo("word-spacing",	CssModule.Core1);
 		public static readonly CssPropertyInfo WordWrap			= new CssPropertyInfo("word-wrap",		CssModule.Text3);
 		
-		public static readonly CssPropertyInfo ZIndex			= new CssPropertyInfo("z-index");
+		public static readonly CssPropertyInfo ZIndex			= new CssPropertyInfo("z-index", 		CssModule.Core1);
 
 
 

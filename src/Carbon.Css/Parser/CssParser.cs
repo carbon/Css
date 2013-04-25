@@ -4,24 +4,56 @@
 	using System.Collections.Generic;
 	using System.IO;
 
-	public class CssParser
+	public class CssParser : IDisposable
 	{
 		private readonly CssTokenizer tokenizer;
 
-		public CssParser(string text)
+		public CssParser(TextReader textReader)
 		{
-			this.tokenizer = new CssTokenizer(new SourceReader(text));
+			this.tokenizer = new CssTokenizer(new SourceReader(textReader));
 
 			tokenizer.Next();
 		}
 
+		public CssParser(string text)
+		{
+			this.tokenizer = new CssTokenizer(new SourceReader(new StringReader(text)));
+
+			tokenizer.Next();
+		}
+
+
+
 		public IEnumerable<CssRule> ReadRules()
+		{
+			foreach (var node in ReadNodes())
+			{
+				if (node.Kind == NodeKind.Rule)
+				{
+					yield return (CssRule)node;
+				}
+			}
+		}
+
+		public IEnumerable<INode> ReadNodes()
 		{
 			while (!tokenizer.IsEnd)
 			{
 				SkipWhitespaceAndComments();
 
-				yield return ReadRule();
+				yield return ReadNode();
+			}
+		}
+
+		public INode ReadNode()
+		{
+			switch (this.tokenizer.Current.Kind)
+			{
+				case TokenKind.Identifier:		return ReadStyleRule();
+				case TokenKind.AtKeyword:		return ReadAtRule();
+				case TokenKind.VariableName:	return ReadVariable();
+
+				default: throw ParseException.Unexpected(this.tokenizer.Current, "Node");
 			}
 		}
 
@@ -34,6 +66,26 @@
 
 				default: throw ParseException.Unexpected(this.tokenizer.Current, "Rule");
 			}
+		}
+
+		public CssVariable ReadVariable()
+		{
+			var name = tokenizer.Read(TokenKind.VariableName, "Variable");		// read $name
+
+			SkipWhitespaceAndComments();
+
+			tokenizer.Read(TokenKind.Colon, "Variable");						// read :
+
+			SkipWhitespaceAndComments();
+
+			var value = tokenizer.Read(TokenKind.Value, "Variable");
+
+			if (tokenizer.Current.Kind == TokenKind.Semicolon)
+			{
+				tokenizer.Read(); // read;
+			}
+
+			return new CssVariable(name.Value.TrimStart('$'), CssValue.Parse(value.Value));
 		}
 
 		public CssRule ReadAtRule()
@@ -144,17 +196,17 @@
 
 		public CssDeclaration ReadDeclaration()
 		{
-			var nameToken = tokenizer.Read();									// read name
+			var nameToken = tokenizer.Read();					// read name
 
-			tokenizer.Read(TokenKind.Colon, "declaration");						// read :
+			tokenizer.Read(TokenKind.Colon, "declaration");		// read :
 
-			SkipWhitespaceAndComments();										// TODO: read as leading annotation
+			SkipWhitespaceAndComments();						// TODO: read as leading annotation
 
-			var valueToken = tokenizer.Read(TokenKind.Value, "declaration");	// read value
+			var valueToken = tokenizer.Read();					// read value (value or cssvariable)
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{
-				tokenizer.Read();												// read ;
+				tokenizer.Read();								// read ;
 			}
 
 			return new CssDeclaration(nameToken.Value, valueToken.Value);
@@ -166,6 +218,11 @@
 			{
 				tokenizer.Next();
 			}
+		}
+
+		public void Dispose()
+		{
+			tokenizer.Dispose();
 		}
 	}
 }
