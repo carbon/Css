@@ -1,92 +1,83 @@
 ﻿namespace Carbon.Css
 {
-	using System.Collections.Generic;
 	using System.Linq;
 
-	public interface ICssTransform
+	public interface ICssTransformer
 	{
-		bool Matches(CssRule declaration);
-
-		ChangeSet[] GetChanges(CssRule rule);
+		void Transform(CssRule rule);
 	}
 
-	public class IEOpacityTransform : ICssTransform
+	/*
+	public class InlineImports : ICssTransform
 	{
-		public bool Matches(CssRule rule)
+		public bool Transform(CssRule rule)
 		{
-			return (rule.Any(b => b.Name == "opacity"));
+			if (rule.Type != RuleType.Import) return;
 		}
+	}
+	*/
 
-		public ChangeSet[] GetChanges(CssRule rule)
+	public class IEOpacityTransform : ICssTransformer
+	{
+		public void Transform(CssRule rule)
 		{
 			var declaration = rule.Get("opacity");
+
+			if (declaration == null) return;
 			
 			var cssValue = declaration.Value;
 
-			var changes = new ChangeSet();
+			int value;
 
-			changes.Source = declaration;
+			try { value = (int)(double.Parse(cssValue.ToString()) * 100); }
+			catch { return; }
 
-			int value = -1;
-
-			try { value = (int)(float.Parse(cssValue.ToString()) * 100); }
-			catch { }
-
-			if (value > -1)
+			// Remove any existing filters
+			foreach (var filter in rule.FindHavingPropertyName("filter").Where(f => f.Value.ToString().Contains("alpha")).ToArray())
 			{
-				// Remove any existing filters
-				foreach (var filter in rule.FindHavingPropertyName("filter").Where(f => f.Value.ToString().Contains("alpha")))
-				{
-					changes.RemoveList.Add(filter);
-				}
-
-				changes.AddList.Add(new CssDeclaration("filter", string.Format("alpha(opacity={0})", value.ToString())));
+				rule.Remove(filter);
 			}
 
-			return new[] { changes };
+			var index = rule.IndexOf(declaration);
+
+			// Add the filter
+			rule.Insert(index, new CssDeclaration("filter", "alpha(opacity=" + value + ")"));
+			
 		}
 	}
 
-	public class AddVendorPrefixesTransform : ICssTransform
+	public class AddVendorPrefixesTransform : ICssTransformer
 	{
-		public bool Matches(CssRule rule)
+		public void Transform(CssRule rule)
 		{
-			return rule.Any(d => { 
-				var info = CssPropertyInfo.Get(d.Name);
-
-				return info != null && info.Compatibility != null && info.Compatibility.Prefixed != null;
-			});
-		}
-
-		public ChangeSet[] GetChanges(CssRule rule)
-		{
-			var changeSets = new List<ChangeSet>();
-
-			foreach (var declaration in rule)
+			foreach (var declaration in rule.Where(d => IsPrefixed(d)).ToArray())
 			{
-				var propInfo = CssPropertyInfo.Get(declaration.Name);
-
-				if (propInfo == null || propInfo.Compatibility == null || propInfo.Compatibility.Prefixed == null) continue;
+				var index = rule.IndexOf(declaration);
+				var prop = CssPropertyInfo.Get(declaration.Name);
 
 				var cssValue = declaration.Value;
 
-				var changes = new ChangeSet();
-
-				changes.Source = declaration;
-
-				foreach (var prefixedName in propInfo.Compatibility.GetPrefixes(declaration.Name))
+				foreach (var prefixedName in prop.Compatibility.GetPrefixes(declaration.Name))
 				{
 					// Remove existing prefixes
-					changes.RemoveList.AddRange(rule.FindHavingPropertyName(prefixedName));
+					foreach (var remove in rule.FindHavingPropertyName(prefixedName).ToArray())
+					{
+						rule.Remove(remove);
+					}
 
-					changes.AddList.Add(new CssDeclaration(prefixedName, cssValue));
+					// Insert above the rule
+					rule.Insert(index, new CssDeclaration(prefixedName, cssValue));
 				}
-
-				changeSets.Add(changes);
 			}
+		}
 
-			return changeSets.ToArray();
+		public bool IsPrefixed(CssDeclaration d)
+		{
+			var prop = CssPropertyInfo.Get(d.Name);
+
+			if (prop == null || prop.Compatibility == null || prop.Compatibility.Prefixed == null) return false;
+
+			return true;
 		}
 	}
-
 }

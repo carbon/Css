@@ -62,9 +62,9 @@
 			writer.Write("{");
 
 			// Write the declarations
-			foreach (var d in Declarations)
+			foreach (var declaration in declarations)
 			{
-				if (Declarations.Count > 1)
+				if (declarations.Count > 1)
 				{
 					writer.WriteLine();
 
@@ -77,15 +77,15 @@
 					writer.Write(" ");
 				}
 
-				writer.Write(string.Format(" {0}: {1};", d.Name, d.Value.ToString()));
+				writer.Write(string.Format(" {0}: {1};", declaration.Name, declaration.Value.ToString()));
 
-				if (Declarations.Count == 1)
+				if (declarations.Count == 1)
 				{
 					writer.Write(" ");
 				}
 			}
 
-			if (this.Declarations.Count > 1)
+			if (declarations.Count > 1)
 			{
 				writer.WriteLine();
 			}

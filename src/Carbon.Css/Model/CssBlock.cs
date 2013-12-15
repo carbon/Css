@@ -1,23 +1,16 @@
 ﻿namespace Carbon.Css
 {
-	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.IO;
 
-	public class CssBlock : ICollection<CssDeclaration>
+	public class CssBlock : IList<CssDeclaration>
 	{
-		private readonly List<CssDeclaration> declarations = new List<CssDeclaration>();
+		protected readonly List<CssDeclaration> declarations = new List<CssDeclaration>();
 
-		public bool HasDeclarations
+		public bool IsEmpty
 		{
-			get { return declarations.Count > 0; }
-		}
-
-		public IList<CssDeclaration> Declarations
-		{
-			get { return declarations; }
+			get { return declarations.Count != 0; }
 		}
 
 		public IEnumerable<CssDeclaration> FindHavingPropertyName(string propertyName)
@@ -30,13 +23,33 @@
 			return declarations.FirstOrDefault(d => d.Name == name);
 		}
 
+		public int Count
+		{
+			get { return declarations.Count; }
+		}
+
+		#region IList<CssDeclaration> Members
 
 		public int IndexOf(CssDeclaration declaration)
 		{
 			return declarations.IndexOf(declaration);
 		}
 
-		#region ICollection<CssDeclaration> Members
+		public void Insert(int index, CssDeclaration item)
+		{
+			declarations.Insert(index, item);
+		}
+
+		public void RemoveAt(int index)
+		{
+			declarations.RemoveAt(index);
+		}
+
+		public CssDeclaration this[int index]
+		{
+			get { return declarations[index]; }
+			set { declarations[index] = value; }
+		}
 
 		public void Add(CssDeclaration item)
 		{
@@ -89,4 +102,5 @@
 
 // A block starts with a left curly brace ({) and ends with the matching right curly brace (}).
 // In between there may be any tokens, except that parentheses (( )), brackets ([ ]), and braces ({ }) must always occur in matching pairs and may be nested.
-// Single (') and double quotes (") must also occur in matching pairs, and characters between them are parsed as a string. See Tokenization above for the definition of a string.
+// Single (') and double quotes (") must also occur in matching pairs, and characters between them are parsed as a string.
+// See Tokenization above for the definition of a string.

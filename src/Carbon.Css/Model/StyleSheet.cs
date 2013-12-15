@@ -35,9 +35,9 @@
 		{
 			foreach (var rule in rules)
 			{
-				foreach (var d in rule.Declarations)
+				foreach (var delaration in rule)
 				{
-					foreach(var value in d.Value)
+					foreach(var value in delaration.Value)
 					{
 						if (value.Type == CssValueType.Variable)
 						{
@@ -45,10 +45,6 @@
 
 							((CssPrimitiveValue)value).SetText(this.variables.Get(varName).ToString());
 						}
-
-						// System.Console.WriteLine("Variable:" + d.Property.Name + ":" + d.Value.ToString());
-
-						// sheet.Variables.Set(d.Property.Name.Replace("var-", ""), d.Value.ToString());
 					}
 				}
 			}
@@ -59,8 +55,6 @@
 			var sheet = new StyleSheet();
 
 			var parser = new CssParser(text);
-
-			int i = 0;
 
 			foreach (var node in parser.ReadNodes())
 			{

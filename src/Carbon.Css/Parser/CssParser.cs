@@ -181,8 +181,8 @@
 
 				switch (tokenizer.Current.Kind)
 				{
-					case TokenKind.Identifier:	block.Children.Add(ReadRule());				break;
-					case TokenKind.Name:		block.Declarations.Add(ReadDeclaration());	break; // DeclarationName
+					case TokenKind.Identifier:	block.Children.Add(ReadRule());		break;
+					case TokenKind.Name:		block.Add(ReadDeclaration());		break; // DeclarationName
 					case TokenKind.BlockEnd:	break;
 
 					default: throw ParseException.Unexpected(tokenizer.Current, "Block");

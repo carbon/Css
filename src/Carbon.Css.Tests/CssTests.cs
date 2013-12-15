@@ -1,7 +1,7 @@
 ﻿namespace Carbon.Css.Tests
 {
 	using System;
-	using System.Linq;
+	using System.IO;
 
 	using NUnit.Framework;
 
@@ -10,6 +10,15 @@
 	[TestFixture]
 	public class CssTests
 	{
+
+		[Test]
+		public void PathTest()
+		{
+			var key = "/images/hi.gif";
+
+			Assert.AreEqual("/images/", key.Replace(Path.GetFileName(key), ""));
+		}
+
 		[Test]
 		public void Modes()
 		{
@@ -44,9 +53,9 @@
 			Assert.AreEqual(1, sheet.Rules.Count);
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("div > h1", style.Selector.ToString());
-			Assert.AreEqual(1, style.Declarations.Count);
-			Assert.AreEqual("width", style.Declarations[0].Name);
-			Assert.AreEqual("100px", style.Declarations[0].Value.ToString());
+			Assert.AreEqual(1, style.Count);
+			Assert.AreEqual("width", style[0].Name);
+			Assert.AreEqual("100px", style[0].Value.ToString());
 			Assert.AreEqual("div > h1 { width: 100px; }", sheet.ToString());
 		}
 
@@ -86,11 +95,11 @@
 			Assert.AreEqual(1, sheet.Rules.Count);
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("#monster", style.Selector.ToString());
-			Assert.AreEqual(2, style.Declarations.Count);
-			Assert.AreEqual("font-color", style.Declarations[0].Name);
-			Assert.AreEqual("red", style.Declarations[0].Value.ToString());
-			Assert.AreEqual("background-color", style.Declarations[1].Name);
-			Assert.AreEqual("url(http://google.com)", style.Declarations[1].Value.ToString());
+			Assert.AreEqual(2, style.Count);
+			Assert.AreEqual("font-color", style[0].Name);
+			Assert.AreEqual("red", style[0].Value.ToString());
+			Assert.AreEqual("background-color", style[1].Name);
+			Assert.AreEqual("url(http://google.com)", style[1].Value.ToString());
 		}
 
 		[Test]
@@ -286,7 +295,7 @@ p { font-color: red; background: url(http://google.com); }
 
 			foreach (var rule in parser.ReadRules())
 			{
-				foreach (var declaration in rule.Declarations)
+				foreach (var declaration in rule)
 				{
 					foreach (var value in declaration.Value)
 					{

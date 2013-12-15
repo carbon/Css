@@ -29,7 +29,7 @@
 
 		public static readonly CssModule Animations3 = new CssModule(CssModuleType.Animations, 3) {
 			Prefixed = new[] { Browser.Chrome1,  Browser.Firefox5,  Browser.Safari4 },
-			Standard = new[] { Browser.Chrome26, Browser.Firefox20, Browser.IE10 }	
+			Standard = new[] { Browser.Chrome26, Browser.Firefox16, Browser.IE10 }	
 		};
 
 		#endregion

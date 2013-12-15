@@ -52,6 +52,7 @@
 
 		VariableName,		// $
 		AtKeyword,	// @{ident}
+		Comma,		// ,
 		Semicolon,  // ;
 		Colon,		// :
 		BlockStart,	// {
