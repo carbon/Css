@@ -159,7 +159,7 @@
 
 			// Followed by a value
 
-			return new Token(TokenKind.VariableName, reader.Unmark(), reader.MarkStart);
+			return new Token(TokenKind.Variable, reader.Unmark(), reader.MarkStart);
 		}
 
 		private Token ReadAtKeyword()

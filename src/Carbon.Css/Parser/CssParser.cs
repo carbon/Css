@@ -51,7 +51,7 @@
 			{
 				case TokenKind.Identifier:		return ReadStyleRule();
 				case TokenKind.AtKeyword:		return ReadAtRule();
-				case TokenKind.VariableName:	return ReadVariable();
+				case TokenKind.Variable:	return ReadVariable();
 
 				default: throw ParseException.Unexpected(this.tokenizer.Current, "Node");
 			}
@@ -70,7 +70,7 @@
 
 		public CssVariable ReadVariable()
 		{
-			var name = tokenizer.Read(TokenKind.VariableName, "Variable");		// read $name
+			var name = tokenizer.Read(TokenKind.Variable, "Variable");		// read $name
 
 			SkipWhitespaceAndComments();
 

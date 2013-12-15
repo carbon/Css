@@ -48,19 +48,19 @@
 
 						switch (i)
 						{
-							case 0: Top = part; break;
-							case 1: Left = part; Right = part; break;
-							case 3: Bottom = part; break;
+							case 0: Top = part;					break;
+							case 1: Left = part; Right = part;	break;
+							case 3: Bottom = part;				break;
 						}
 					}
 					else
 					{
 						switch (i)
 						{
-							case 0: Top = part; break;
-							case 1: Left = part; break;
-							case 2: Bottom = part; break;
-							case 3: Right = part; break;
+							case 0: Top = part;		break;
+							case 1: Left = part;	break;
+							case 2: Bottom = part;	break;
+							case 3: Right = part;	break;
 						}
 					}
 				}
@@ -72,12 +72,11 @@
 
 				try
 				{
-					switch (property.Split('-')[1])
-					{
-						case "top": Top = part; break;
-						case "left": Left = part; break;
-						case "bottom": Bottom = part; break;
-						case "right": Right = part; break;
+					switch (property.Split('-')[1]) {
+						case "top"		: Top = part;		break;
+						case "left"		: Left = part;		break;
+						case "bottom"	: Bottom = part;	break;
+						case "right"	: Right = part;		break;
 					}
 				}
 

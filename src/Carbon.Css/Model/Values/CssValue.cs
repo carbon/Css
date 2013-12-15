@@ -14,12 +14,10 @@
 		{
 			this.text = text.Trim();
 
-			var first = text[0];
-
-			switch (first)
+			switch (text[0])
 			{
-				case '$': this.type = CssValueType.Variable; break;
-				case 'u': if (text[1] == 'r' && text[2] == 'l') this.type = CssValueType.Url; break;
+				case '$': this.type = CssValueType.Variable;									 break;
+				case 'u': if (text[1] == 'r' && text[2] == 'l') this.type = CssValueType.Url;	 break;
 				case '0': 
 				case '1': 
 				case '2': 

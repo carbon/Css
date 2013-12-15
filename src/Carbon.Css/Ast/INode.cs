@@ -6,6 +6,6 @@
 	{
 		NodeKind Kind { get; }
 
-		void WriteTo(TextWriter writer, int level);
+		void WriteTo(TextWriter writer, int level, CssContext context);
 	}
 }

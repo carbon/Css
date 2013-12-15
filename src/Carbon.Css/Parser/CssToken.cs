@@ -45,17 +45,17 @@
 	{
 		Whitespace,
 		Comment,
-		Identifier,	// selector or identifer (IDENT)
+		Identifier,		// selector or identifer (IDENT)
 		
-		Name,		// name (followed by a :)
+		Name,			// name (followed by a :)
 		Value,
 
-		VariableName,		// $
-		AtKeyword,	// @{ident}
-		Comma,		// ,
-		Semicolon,  // ;
-		Colon,		// :
-		BlockStart,	// {
-		BlockEnd,	// }
+		Variable,		// $name
+		AtKeyword,		// @{ident}
+		Comma,			// ,
+		Semicolon,		// ;
+		Colon,			// :
+		BlockStart,		// {
+		BlockEnd,		// }
 	}
 }

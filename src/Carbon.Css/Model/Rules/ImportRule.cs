@@ -9,7 +9,7 @@
 
 		public CssUrlValue Value { get; set; }
 
-		public override void WriteTo(TextWriter writer, int level = 0)
+		public override void WriteTo(TextWriter writer, int level = 0, CssContext context = null)
 		{
 			// Indent two characters for each level
 			for (int i = 0; i < level; i++)

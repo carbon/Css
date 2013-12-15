@@ -10,7 +10,7 @@
 
 	public class StyleSheet
 	{
-		private readonly VariableBag variables = new VariableBag();
+		private readonly CssContext context = new CssContext();
 		private readonly List<CssRule> rules = new List<CssRule>();
 
 		public List<CssRule> Rules
@@ -18,9 +18,9 @@
 			get { return rules; }
 		}
 
-		public VariableBag Variables
+		public CssContext Context
 		{
-			get { return variables; }
+			get { return context; }
 		}
 
 		public void SetCompatibility(params Browser[] browsers)
@@ -28,25 +28,6 @@
 			foreach (var rule in rules)
 			{
 				rule.Expand();
-			}
-		}
-
-		public void EvaluateVariables()
-		{
-			foreach (var rule in rules)
-			{
-				foreach (var delaration in rule)
-				{
-					foreach(var value in delaration.Value)
-					{
-						if (value.Type == CssValueType.Variable)
-						{
-							var varName = value.ToString().Substring(1);
-
-							((CssPrimitiveValue)value).SetText(this.variables.Get(varName).ToString());
-						}
-					}
-				}
 			}
 		}
 
@@ -62,7 +43,7 @@
 				{
 					var variable = (CssVariable)node;
 
-					sheet.Variables.Set(variable.Name, variable.Value);
+					sheet.Context.Variables.Set(variable.Name, variable.Value);
 				}
 				else
 				{
@@ -84,7 +65,7 @@
 					writer.WriteLine();
 				}
 
-				rule.WriteTo(writer);
+				rule.WriteTo(writer, context: context);
 
 				i++;
 			}

@@ -30,7 +30,7 @@
 			get { return NodeKind.Variable; }
 		}
 
-		void INode.WriteTo(TextWriter writer, int level)
+		void INode.WriteTo(TextWriter writer, int level, CssContext context)
 		{
 			return;
 		}
