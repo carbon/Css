@@ -10,6 +10,13 @@
 	[TestFixture]
 	public class CssTests
 	{
+		[Test]
+		public void ParseValues()
+		{
+			var value = CssValue.Parse("14px");
+
+			Assert.AreEqual("14px", value.ToString());
+		}
 
 		[Test]
 		public void PathTest()
@@ -54,7 +61,7 @@
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("div > h1", style.Selector.ToString());
 			Assert.AreEqual(1, style.Count);
-			Assert.AreEqual("width", style[0].Name);
+			Assert.AreEqual("width", style[0].Name.ToString());
 			Assert.AreEqual("100px", style[0].Value.ToString());
 			Assert.AreEqual("div > h1 { width: 100px; }", sheet.ToString());
 		}
@@ -96,9 +103,9 @@
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("#monster", style.Selector.ToString());
 			Assert.AreEqual(2, style.Count);
-			Assert.AreEqual("font-color", style[0].Name);
+			Assert.AreEqual("font-color", style[0].Name.ToString());
 			Assert.AreEqual("red", style[0].Value.ToString());
-			Assert.AreEqual("background-color", style[1].Name);
+			Assert.AreEqual("background-color", style[1].Name.ToString());
 			Assert.AreEqual("url(http://google.com)", style[1].Value.ToString());
 		}
 
@@ -111,20 +118,24 @@
 		}
 
 		[Test]
-		public void ParseAtRule()
+		public void ParseKeyframesRule()
 		{
-			var sheet = StyleSheet.Parse(@"@-webkit-keyframes fade {
+			var sheet = StyleSheet.Parse(
+@"@-webkit-keyframes fade {
 	from {opacity: 1;}
 	to {opacity: 0.25;}
 }");
-			Assert.AreEqual(1, sheet.Rules.Count);
+
 			Assert.AreEqual("@-webkit-keyframes fade", sheet.Rules[0].Selector.Text);
+
 
 			Assert.AreEqual(
 @"@-webkit-keyframes fade {
   from { opacity: 1; }
   to { opacity: 0.25; }
 }", sheet.ToString());
+
+			Assert.AreEqual(1, sheet.Rules.Count);
 
 
 
@@ -152,14 +163,13 @@
     font-style: normal;
 		}";
 
-
 			var sheet = StyleSheet.Parse(styles);
 
 
 			Assert.AreEqual(@"@font-face {
   font-family: 'CMBilling';
   src: url('../fonts/cm-billing-webfont.eot');
-  src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype')  url('../fonts/cm-billing-webfont.woff') format('woff');
+  src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/cm-billing-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }", sheet.ToString());
@@ -358,6 +368,14 @@ body {
 
 		}
 
+
+		[Test]
+		public void ParseFilter()
+		{
+			StyleSheet.Parse("body { filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9defe', endColorstr='#7fc1e6',GradientType=1 ); } /* IE6-9 fallback on horizontal gradient */");
+
+
+		}
 		
 
 		[Test]
@@ -367,6 +385,7 @@ body {
 
 			var sheet = StyleSheet.Parse(styles);
 
+			Assert.AreEqual(":focus { outline: 0; }", sheet.ToString());
 		}
 
 

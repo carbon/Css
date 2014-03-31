@@ -2,8 +2,18 @@
 {
 	public enum NodeKind
 	{
-		Rule = 1,
-		Comment = 2,
-		Variable = 3
+		Document,
+		Comment,
+		Rule,
+		Expression,
+
+		Selector,
+
+		// Literal
+		Value,
+
+		Name,
+		Literal,
+		Variable
 	}
 }

@@ -41,8 +41,10 @@
 	public enum LexicalMode
 	{
 		Unknown = 0,
-		Block = 1,
-		Value = 2,
-		Selector = 3
+		Rule = 1,
+		Block = 2,
+		Value = 3,
+		Declaration = 4,
+		Selector = 5
 	}
 }

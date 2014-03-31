@@ -15,12 +15,12 @@
 
 		public IEnumerable<CssDeclaration> FindHavingPropertyName(string propertyName)
 		{
-			return declarations.Where(d => d.Name == propertyName);
+			return declarations.Where(d => d.Name.Text == propertyName);
 		}
 
 		public CssDeclaration Get(string name)
 		{
-			return declarations.FirstOrDefault(d => d.Name == name);
+			return declarations.FirstOrDefault(d => d.Name.Text == name);
 		}
 
 		public int Count

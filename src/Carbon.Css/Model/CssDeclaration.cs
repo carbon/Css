@@ -5,14 +5,17 @@
 
 	public class CssDeclaration
 	{
-		private readonly string name;
+		private readonly CssName name;
 		private readonly CssValue value;
 		private readonly string priority;
 
 		public CssDeclaration(string name, string value, string priority = null)
+			: this(new CssName(name), value, priority) { }
+
+		public CssDeclaration(CssName name, string value, string priority = null)
 			: this(name, CssValue.Parse(value), priority) { }
 
-		public CssDeclaration(string name, CssValue value, string priorty = null)
+		public CssDeclaration(CssName name, CssValue value, string priorty = null)
 		{
 			#region Preconditions
 
@@ -26,7 +29,7 @@
 			this.priority = priorty;
 		}
 
-		public string Name
+		public CssName Name
 		{
 			get { return name; }
 		}
@@ -38,7 +41,7 @@
 
 		public CssPropertyInfo Info
 		{
-			get { return CssPropertyInfo.Get(this.name); }
+			get { return CssPropertyInfo.Get(this.name.Text); }
 		}
 
 		public string Priority

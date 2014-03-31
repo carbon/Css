@@ -50,7 +50,7 @@
 
 			Next();
 
-			return current;
+			return c;
 		}
 
 		/// <summary>
@@ -81,12 +81,9 @@
 			return current;
 		}
 
-		public void SkipWhitespace() 
+		public bool IsWhiteSpace
 		{
-			while (Char.IsWhiteSpace(current)) 
-			{
-				Next();
-			}
+			get { return Char.IsWhiteSpace(current); }
 		}
 
 		#region Mark

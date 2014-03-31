@@ -26,6 +26,34 @@ body {
 }", sheet.ToString());
 		}
 
+		[Test]
+		public void VariableTest3()
+		{
+			var context = new CssContext();
+
+			context.Variables.Set("monster", CssPrimitiveValue.Parse("red"));
+
+			var sheet = StyleSheet.Parse(
+@"
+$blue: #dceef7;
+$yellow: #fff5cc;
+
+body { 
+  background-color: $blue;
+  color: $yellow;
+  monster: $monster;
+}
+", context);
+
+
+			Assert.AreEqual(
+@"body {
+  background-color: #dceef7;
+  color: #fff5cc;
+  monster: red;
+}", sheet.ToString());
+		}
+
 
 		[Test]
 		public void VariableTest2()

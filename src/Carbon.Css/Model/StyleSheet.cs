@@ -1,19 +1,23 @@
 ﻿namespace Carbon.Css
 {
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Text;
 
 	using Carbon.Css.Parser;
 	using System.IO;
-	using System;
 
-	public class StyleSheet
+	public class StyleSheet : IStylesheet
 	{
-		private readonly CssContext context = new CssContext();
-		private readonly List<CssRule> rules = new List<CssRule>();
+		private readonly IList<CssRule> rules;
+		private readonly CssContext context;
 
-		public List<CssRule> Rules
+		public StyleSheet(IList<CssRule> rules, CssContext context)
+		{
+			this.rules = rules;
+			this.context = context;
+		}
+
+		public IList<CssRule> Rules
 		{
 			get { return rules; }
 		}
@@ -31,9 +35,14 @@
 			}
 		}
 
-		public static StyleSheet Parse(string text, bool gatherVaribles = true)
+		public static StyleSheet Parse(string text, CssContext context = null)
 		{
-			var sheet = new StyleSheet();
+			if (context == null)
+			{
+				context = new CssContext();
+			}
+
+			var rules = new List<CssRule>();
 
 			var parser = new CssParser(text);
 
@@ -43,15 +52,32 @@
 				{
 					var variable = (CssVariable)node;
 
-					sheet.Context.Variables.Set(variable.Name, variable.Value);
+					context.Variables.Set(variable.Name, variable.Value);
 				}
 				else
 				{
-					sheet.Rules.Add((CssRule)node);
+					rules.Add((CssRule)node);
 				}
 			}
 
-			return sheet;
+			return new StyleSheet(rules, context);
+		}
+
+		public static StyleSheet FromFile(FileInfo file, CssContext context = null)
+		{
+			var text = "";
+
+			using (var reader = file.OpenText())
+			{
+				text = reader.ReadToEnd();
+			}
+
+			return Parse(text, context);
+		}
+
+		public void Compile(TextWriter writer)
+		{
+			WriteTo(writer);
 		}
 
 		public void WriteTo(TextWriter writer)

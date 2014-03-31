@@ -8,9 +8,9 @@
 	public class CssRule : CssBlock, INode
 	{
 		private readonly RuleType type;
-		private readonly CssSelector selector;
+		private readonly ICssSelector selector;
 
-		public CssRule(RuleType type, CssSelector selector)
+		public CssRule(RuleType type, ICssSelector selector)
 		{
 			this.type = type;
 			this.selector = selector;
@@ -21,7 +21,7 @@
 			get { return type; }
 		}
 
-		public CssSelector Selector
+		public ICssSelector Selector
 		{
 			get { return selector; }
 		}

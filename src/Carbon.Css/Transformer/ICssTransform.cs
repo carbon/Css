@@ -53,11 +53,11 @@
 			foreach (var declaration in rule.Where(d => IsPrefixed(d)).ToArray())
 			{
 				var index = rule.IndexOf(declaration);
-				var prop = CssPropertyInfo.Get(declaration.Name);
+				var prop = CssPropertyInfo.Get(declaration.Name.Text);
 
 				var cssValue = declaration.Value;
 
-				foreach (var prefixedName in prop.Compatibility.GetPrefixes(declaration.Name))
+				foreach (var prefixedName in prop.Compatibility.GetPrefixes(declaration.Name.Text))
 				{
 					// Remove existing prefixes
 					foreach (var remove in rule.FindHavingPropertyName(prefixedName).ToArray())
@@ -66,14 +66,14 @@
 					}
 
 					// Insert above the rule
-					rule.Insert(index, new CssDeclaration(prefixedName, cssValue));
+					rule.Insert(index, new CssDeclaration(new CssName(prefixedName), cssValue));
 				}
 			}
 		}
 
 		public bool IsPrefixed(CssDeclaration d)
 		{
-			var prop = CssPropertyInfo.Get(d.Name);
+			var prop = CssPropertyInfo.Get(d.Name.Text);
 
 			if (prop == null || prop.Compatibility == null || prop.Compatibility.Prefixed == null) return false;
 

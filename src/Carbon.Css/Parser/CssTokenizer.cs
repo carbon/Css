@@ -1,20 +1,21 @@
 ﻿namespace Carbon.Css.Parser
 {
 	using System;
-	using System.IO;
 
 	public class CssTokenizer : IDisposable
 	{
 		private readonly SourceReader reader;
-		private readonly LexicalModeContext mode = new LexicalModeContext(LexicalMode.Selector);
+		private readonly LexicalModeContext mode;
 
-		private Token current = null;
+		private Token current;
 
-		public CssTokenizer(SourceReader reader)
+		public CssTokenizer(SourceReader reader, LexicalMode mode = LexicalMode.Selector)
 		{
 			this.reader = reader;
 
 			this.reader.Next(); // Start the reader
+
+			this.mode = new LexicalModeContext(mode);
 		}
 
 		public Token Current
@@ -27,16 +28,16 @@
 			get { return reader.IsEof; }
 		}
 
-		public Token Read(TokenKind expect, string context)
+		public Token Read(TokenKind expect, LexicalMode mode)
 		{
 			var c = current;
 
 			if (current.Kind != expect)
 			{
-				throw new ParseException(string.Format("Expected {0} reading {1}. Was {2}.", expect, context, this.current));
+				throw new ParseException(string.Format("Expected {0} reading {1}. Was {2}.", expect, mode.ToString(), this.current));
 			}
 
-			Next();
+			if(!IsEnd) Next();
 
 			return c;
 		}
@@ -45,7 +46,7 @@
 		{
 			var c = this.current;
 
-			Next();
+			if (!IsEnd) Next();
 
 			return c;
 		}
@@ -59,7 +60,7 @@
 
 		private Token ReadNext()
 		{
-			if (reader.IsEof) return null;
+			if (reader.IsEof) throw new Exception("Cannot read past EOF. Current: " + current.ToString() + ".");
 
 			switch (reader.Current)
 			{
@@ -75,62 +76,75 @@
 
 				case '/': return ReadComment();
 
-				case ';':									return new Token(TokenKind.Semicolon,	reader.Read(), reader.Position);
-				case '{': mode.Enter(LexicalMode.Block);	return new Token(TokenKind.BlockStart,	reader.Read(), reader.Position);
-				case '}': mode.Leave(LexicalMode.Block);	return new Token(TokenKind.BlockEnd,	reader.Read(), reader.Position);
+				case ':': mode.Enter(LexicalMode.Value);					return new Token(TokenKind.Colon,		reader.Read(), reader.Position);
+				case ',':													return new Token(TokenKind.Comma,		reader.Read(), reader.Position);
+				case ';': LeaveValueMode();									return new Token(TokenKind.Semicolon,	reader.Read(), reader.Position);
+				case '{':					mode.Enter(LexicalMode.Block);	return new Token(TokenKind.BlockStart,	reader.Read(), reader.Position);
+				case '}': LeaveValueMode(); mode.Leave(LexicalMode.Block);	return new Token(TokenKind.BlockEnd, reader.Read(), reader.Position);
 			}
 
 			switch (mode.Current)
 			{
-				case LexicalMode.Block:			return ReadName();		// Declaration name
-				case LexicalMode.Value:			return ReadValue();		// Declaration value
-				case LexicalMode.Selector:		return ReadSelector();
-
-				default: throw new Exception("Unexpected lexical mode:" + this.mode);
+				case LexicalMode.Value		: return ReadValue();
+				case LexicalMode.Selector	: return ReadSelectorToken();
+				default						: return ReadName();
 			}
 		}
+
+		private Token ReadSelectorToken()
+		{
+			reader.Mark();
+
+			while (!reader.IsWhiteSpace && reader.Current != '{' && reader.Current != '}' && reader.Current != ';')
+			{
+				if (reader.IsEof) throw ParseException.UnexpectedEOF("Selector");
+
+				reader.Next();
+			}
+
+			return new Token(TokenKind.Name, reader.Unmark(), reader.MarkStart);
+		}
+
 
 		private Token ReadName()
 		{
 			reader.Mark();
 
-			while (reader.Current != ':' && reader.Current != '{')
+			while (!reader.IsWhiteSpace && reader.Current != '{' && reader.Current != '}' && reader.Current != ';' && reader.Current != ':')
 			{
 				if (reader.IsEof) throw ParseException.UnexpectedEOF("Name");
 
 				reader.Next();
 			}
 
-			if (reader.Current == '{')
+			if (mode.Current == LexicalMode.Block)
 			{
-				// We were actually reading a selector instead an @ rule block
 				return new Token(TokenKind.Identifier, reader.Unmark(), reader.MarkStart);
 			}
+			else
+			{
+				return new Token(TokenKind.Name, reader.Unmark(), reader.MarkStart);
+			}
+		}
 
-			mode.Enter(LexicalMode.Value);
-
-			return new Token(TokenKind.Name, reader.Unmark(), reader.MarkStart);
+		private void LeaveValueMode()
+		{
+			if (mode.Current == LexicalMode.Value)
+			{
+				mode.Leave(LexicalMode.Value);
+			}
 		}
 
 		private Token ReadValue()
 		{
-			if (reader.Current == ':')
-			{
-				return new Token(TokenKind.Colon, reader.Read(), reader.Position);
-			}
-
 			reader.Mark();
 
-			while (reader.Current != ';' && reader.Current != '}')
+			while (!reader.IsWhiteSpace && reader.Current != '}' && reader.Current != ';' && !reader.IsEof)
 			{
-				if (reader.IsEof) throw new ParseException("Unexpected EOF reading value");
-
 				reader.Next();
 			}
 
-			mode.Leave(LexicalMode.Value);
-
-			return new Token(TokenKind.Value, reader.Unmark(), reader.MarkStart);
+			return new Token(TokenKind.String, reader.Unmark(), reader.MarkStart);
 		}
 
 		private Token ReadVariableKeyword()
@@ -148,15 +162,6 @@
 				reader.Next();
 			}
 
-			if (mode.Current == LexicalMode.Value)
-			{
-				mode.Leave(LexicalMode.Value);
-			}
-			else
-			{
-				mode.Enter(LexicalMode.Value);
-			}
-
 			// Followed by a value
 
 			return new Token(TokenKind.Variable, reader.Unmark(), reader.MarkStart);
@@ -169,7 +174,7 @@
 
 			reader.Mark();
 
-			while (reader.Current != ' ' && reader.Current != ';' && reader.Current != '{')
+			while (!reader.IsWhiteSpace && reader.Current != ';' && reader.Current != '{' && reader.Current != ':')
 			{
 				if (reader.IsEof) throw new ParseException("Unexpected EOF reading AtKeyword");
 
@@ -185,17 +190,9 @@
 		{
 			reader.Mark();
 
-			while (
-				reader.Current == ' ' ||
-				reader.Current == '\t' ||
-				reader.Current == '\n' ||
-				reader.Current == '\r' ||
-				reader.Current == '\uFEFF'
-			)
+			while (reader.IsWhiteSpace && !reader.IsEof)
 			{
 				reader.Next();
-
-				if (reader.IsEof) break;
 			}
 
 			return new Token(TokenKind.Whitespace, reader.Unmark(), reader.MarkStart);
@@ -244,29 +241,6 @@
 
 			return new Token(TokenKind.Comment, reader.Unmark(), reader.MarkStart);
 		}
-
-		private Token ReadSelector()
-		{
-			reader.Mark();
-			
-			// read until { - block start 
-			while (reader.Current != '{')
-			{
-				if (reader.IsEof) throw ParseException.UnexpectedEOF("Selector");
-
-				if (reader.Current == ';')
-				{
-					// We were reading a value @import url('styles.css');
-
-					return new Token(TokenKind.Value, reader.Unmark(), reader.MarkStart);					
-				}
-
-				reader.Next();
-			}
-
-			return new Token(TokenKind.Identifier, reader.Unmark(), reader.MarkStart);
-		}
-
 
 		public void Dispose()
 		{
