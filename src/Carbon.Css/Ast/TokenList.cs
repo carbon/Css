@@ -5,9 +5,14 @@ using System.Linq;
 
 namespace Carbon.Css
 {
-	public class TokenList : Collection<Token>
+	public class TokenList : Collection<CssToken>
 	{
-		public void AddRange(IEnumerable<Token> tokens)
+		public TokenList() { }
+
+		public TokenList(params CssToken[] tokens)
+			: base(tokens) { }
+
+		public void AddRange(IEnumerable<CssToken> tokens)
 		{
 			if (tokens == null) return;
 
@@ -20,50 +25,6 @@ namespace Carbon.Css
 		public override string ToString()
 		{
 			return string.Join(" ", this.Where(t => !t.IsTrivia).Select(t => t.Text));
-		}
-
-		public IEnumerable<CssPrimitiveValue> ToValues()
-		{
-			var names = new List<CssName>();
-
-			foreach (var token in this)
-			{
-				if (token.IsTrivia) continue;
-
-				if (token.Kind == TokenKind.Comma)
-				{
-					yield return CssPrimitiveValue.Parse(string.Join(" ", names.Select(n => n.Text)));
-				}
-				else
-				{
-					names.Add(new CssName(token.Text));
-				}
-			}
-
-			yield return CssPrimitiveValue.Parse(string.Join(" ", names.Select(n => n.Text)));
-		}
-
-		public IEnumerable<CssSelector> ToSelectors()
-		{
-			var names = new TokenList();
-
-			foreach (var token in this)
-			{
-				if (token.IsTrivia) continue;
-
-				if (token.Kind == TokenKind.Comma)
-				{
-					yield return new CssSelector(names);
-
-					names.Clear();
-				}
-				else
-				{
-					names.Add(token);
-				}
-			}
-
-			yield return new CssSelector(names);
 		}
 	}
 }

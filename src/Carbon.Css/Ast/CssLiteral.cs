@@ -1,7 +1,30 @@
-﻿namespace Carbon.Css.Ast
+﻿namespace Carbon.Css
 {
-	public class CssLiteral
+	using Carbon.Css.Parser;
+
+	public class CssLiteral : CssValue
 	{
+		private string text;
+
+		public CssLiteral(CssToken token)
+			: this(token.Text)
+		{ }
+
+		public CssLiteral(string text)
+			: base(NodeKind.Literal) 
+		{ 
+			this.text = text;
+		}
+
+		public override string Text
+		{
+			get { return text; }
+		}
+
+		public override string ToString()
+		{
+			return Text;
+		}
 	}
 }
 

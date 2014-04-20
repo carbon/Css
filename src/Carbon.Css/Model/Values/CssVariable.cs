@@ -1,15 +1,22 @@
 ﻿namespace Carbon.Css
 {
+	using Carbon.Css.Parser;
 	using System.IO;
 
-	public class CssVariable : INode
+	public class VariableAssignment : INode
 	{
 		private readonly string name;
 		private readonly CssValue value;
 
-		public CssVariable(string name, CssValue value)
+		public VariableAssignment(string name, CssValue value)
 		{
 			this.name = name;
+			this.value = value;
+		}
+
+		public VariableAssignment(CssToken name, CssValue value)
+		{
+			this.name = name.Text;
 			this.value = value;
 		}
 

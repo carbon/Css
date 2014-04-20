@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Carbon.Css
 {
-	public class Whitespace : Collection<Token>
+	public class Whitespace : Collection<CssToken>
 	{
 		public override string ToString()
 		{

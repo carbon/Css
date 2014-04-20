@@ -1,5 +1,6 @@
 ﻿namespace Carbon.Css
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 
@@ -32,7 +33,7 @@
 
 		// Nested rules
 		// { to: { opacity: 1 } }
-		public List<CssRule> Children
+		public new List<CssRule> Children
 		{
 			get { return children; }
 		}
@@ -47,6 +48,12 @@
 		}
 
 		#endregion
+
+
+		public override string Text
+		{
+			get { return ToString(); }
+		}
 
 		public virtual void WriteTo(TextWriter writer, int level = 0, CssContext context = null)
 		{
@@ -78,15 +85,17 @@
 				}
 
 			
-				if (declaration.Value.Type == CssValueType.Variable)
+				var value = declaration.Value;
+
+				if (value.Kind == NodeKind.Identifier)
 				{
-					var varName = declaration.Value.ToString().Substring(1);
+					var varName = value.Text;
 
 					writer.Write(string.Format(" {0}: {1};", declaration.Name, context.Variables.Get(varName).ToString()));
 				}
 				else
 				{
-					writer.Write(string.Format(" {0}: {1};", declaration.Name, declaration.Value.ToString()));
+					writer.Write(string.Format(" {0}: {1};", declaration.Name, value.Text));
 				}
 
 				if (declarations.Count == 1)

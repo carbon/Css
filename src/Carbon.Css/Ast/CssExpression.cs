@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
-namespace Carbon.Css.Ast
+﻿namespace Carbon.Css
 {
-	public class CssExpression
+	public class CssExpression : CssNode
 	{
-		private readonly IList<CssNode> nodes = new List<CssNode>();
+		public CssExpression()
+			: base(NodeKind.Expression) { }
 
-		public CssExpression() { }
 
-		public CssNode Children { get; set; }
+		public override string Text
+		{
+			get { throw new System.NotImplementedException(); }
+		}
 	}
 }

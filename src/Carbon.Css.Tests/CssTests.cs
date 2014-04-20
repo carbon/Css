@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.IO;
+	using System.Linq;
 
 	using NUnit.Framework;
 
@@ -152,6 +153,36 @@
 		}
 
 		[Test]
+		public void CalcTest()
+		{
+			var styles = "main { margin: 0.5in; width: calc(100%/3 - 2*1em - 2*1px); }";
+
+
+
+			Assert.AreEqual(@"main {
+  margin: 0.5in;
+  width: calc(100%/3 - 2*1em - 2*1px);
+}", StyleSheet.Parse(styles).ToString());
+
+		}
+
+		
+		[Test]
+		public void ComponentValues()
+		{
+			Assert.AreEqual("red", CssValue.Parse("red").ToString());
+
+			var value = CssValue.Parse("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset");
+			var value2 = CssValue.Parse(@"""Gill Sans"", Futura, sans-serif");
+
+			Assert.AreEqual("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset", value.Text);
+			Assert.AreEqual(@"""Gill Sans"", Futura, sans-serif", value2.Text);
+		}
+
+
+
+
+		[Test]
 		public void FontFace()
 		{
 			var styles = @"@font-face {
@@ -162,9 +193,28 @@
     font-weight: normal;
     font-style: normal;
 		}";
-
+			
 			var sheet = StyleSheet.Parse(styles);
 
+			var value = sheet.Rules[0][2].Value;
+
+			//  url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/cm-billing-webfont.woff') format('woff')
+
+			var list = value.ToList();
+			var list_1_0 = list[1].ToList();
+
+			Assert.AreEqual(2, list.Count);
+			Assert.AreEqual("url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype')", list[0].ToString());
+
+
+			Assert.AreEqual("url('../fonts/cm-billing-webfont.woff')", list_1_0[0].ToString());
+			Assert.AreEqual("format('woff')",  list_1_0[1].ToString().ToString());
+
+			// Assert.AreEqual(2, list_1_0.Count);
+
+
+
+			// throw new Exception(sheet.ToString());
 
 			Assert.AreEqual(@"@font-face {
   font-family: 'CMBilling';
@@ -305,21 +355,19 @@ p { font-color: red; background: url(http://google.com); }
 
 			foreach (var rule in parser.ReadRules())
 			{
+				/*
 				foreach (var declaration in rule)
 				{
-					foreach (var value in declaration.Value)
+					if (declaration.Value.Kind == NodeKind.Url)
 					{
-						if (value.Type == CssValueType.Url)
-						{
-							((CssPrimitiveValue)value).SetText("url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkAQMAAABKLAcXAAAABlBMVEX/AAAAAP9sof2OAAAAIUlEQVR4nGNgGAWjgFTw//8HJF4Dg8CI5aGGxCgYBcQBAMULD/2Zt2wmAAAAAElFTkSuQmCC)");
-						}
-
-						// Console.WriteLine(token.Type + ":" + token.ToString());
-
+						declaration.Value.SetText("url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkAQMAAABKLAcXAAAABlBMVEX/AAAAAP9sof2OAAAAIUlEQVR4nGNgGAWjgFTw//8HJF4Dg8CI5aGGxCgYBcQBAMULD/2Zt2wmAAAAAElFTkSuQmCC)");
 					}
+
+					// Console.WriteLine(token.Type + ":" + token.ToString());
 				}
 
 				Console.WriteLine(rule);
+				*/
 			}
 
 		}

@@ -3,19 +3,17 @@
 	using System;
 	using System.Text;
 
-	public class CssDeclaration
+	public class CssDeclaration : CssNode
 	{
-		private readonly CssName name;
+		private readonly string name;
 		private readonly CssValue value;
 		private readonly string priority;
 
 		public CssDeclaration(string name, string value, string priority = null)
-			: this(new CssName(name), value, priority) { }
-
-		public CssDeclaration(CssName name, string value, string priority = null)
 			: this(name, CssValue.Parse(value), priority) { }
 
-		public CssDeclaration(CssName name, CssValue value, string priorty = null)
+		public CssDeclaration(string name, CssValue value, string priorty = null)
+			: base(NodeKind.Declaration)
 		{
 			#region Preconditions
 
@@ -29,7 +27,7 @@
 			this.priority = priorty;
 		}
 
-		public CssName Name
+		public string Name
 		{
 			get { return name; }
 		}
@@ -41,12 +39,17 @@
 
 		public CssPropertyInfo Info
 		{
-			get { return CssPropertyInfo.Get(this.name.Text); }
+			get { return CssPropertyInfo.Get(this.name); }
 		}
 
 		public string Priority
 		{
 			get { return priority; }
+		}
+
+		public override string Text
+		{
+			get { return ToString(); }
 		}
 
 		public override string ToString()
@@ -55,7 +58,7 @@
 
 			var sb = new StringBuilder();
 
-			sb.Append(name).Append(": ").Append(Value.ToString());
+			sb.Append(name).Append(": ").Append(value.ToString());
 
 			if (priority != null)
 			{

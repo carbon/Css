@@ -15,13 +15,13 @@
 		{
 			var sb = new StringBuilder();
 
-			Token last = new Token(TokenKind.String, "", 0);
+			CssToken? last = null;
 
 			foreach (var token in tokens)
 			{
 				if (token.IsTrivia) continue;
 
-				if (sb.Length > 0 && last.Kind != TokenKind.Colon)
+				if (sb.Length > 0 && last != null && last.Value.Kind != TokenKind.Colon)
 				{
 					sb.Append(" ");
 				}

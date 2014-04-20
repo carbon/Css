@@ -38,9 +38,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ast\CssFunction.cs" />
     <Compile Include="Ast\CssExpression.cs" />
+    <Compile Include="Ast\CssIdentifier.cs" />
+    <Compile Include="Ast\CssDimension.cs" />
+    <Compile Include="Ast\CssUrl.cs" />
     <Compile Include="Ast\CssLiteral.cs" />
-    <Compile Include="Ast\CssName.cs" />
     <Compile Include="Ast\INode.cs" />
     <Compile Include="Ast\TokenList.cs" />
     <Compile Include="Ast\TriviaNode.cs" />
@@ -55,7 +58,6 @@
     <Compile Include="Model\Rules\ImportRule.cs" />
     <Compile Include="Model\Rules\FontFaceRule.cs" />
     <Compile Include="Model\Rules\RuleType.cs" />
-    <Compile Include="Model\Values\CssValueType.cs" />
     <Compile Include="Model\Values\FontSrcValue.cs" />
     <Compile Include="Parser\CssParser.cs" />
     <Compile Include="Parser\CssToken.cs" />

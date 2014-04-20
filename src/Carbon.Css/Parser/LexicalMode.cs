@@ -45,6 +45,8 @@
 		Block = 2,
 		Value = 3,
 		Declaration = 4,
-		Selector = 5
+		Selector = 5,
+		Assignment = 6,
+		Function = 7
 	}
 }

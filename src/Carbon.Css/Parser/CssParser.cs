@@ -2,26 +2,26 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
 	using System.IO;
-	using System.Linq;
 
 	public class CssParser : IDisposable
 	{
 		private readonly CssTokenizer tokenizer;
+		private readonly LexicalModeContext context = new LexicalModeContext(LexicalMode.Unknown);
 
 		public CssParser(TextReader textReader)
 		{
 			this.tokenizer = new CssTokenizer(new SourceReader(textReader));
-
-			tokenizer.Next();
 		}
 
 		public CssParser(string text)
 		{
 			this.tokenizer = new CssTokenizer(new SourceReader(new StringReader(text)));
+		}
 
-			tokenizer.Next();
+		public CssParser(CssTokenizer tokenizer)
+		{
+			this.tokenizer = tokenizer;
 		}
 
 		public IEnumerable<CssRule> ReadRules()
@@ -49,13 +49,13 @@
 		{
 			switch (tokenizer.Current.Kind)
 			{
-				case TokenKind.AtKeyword:		return ReadAtRule();
-				case TokenKind.Variable:		return ReadVariable();
+				case TokenKind.AtKeyword	: return ReadAtRule();
+				case TokenKind.Dollar		: return ReadAssignment();
 			}
 
-			var span = ReadSpan();
+			var selector = ReadSelector();
 
-			return ReadRuleBlock(span);
+			return ReadRuleBlock(selector);
 		}
 
 		public CssRule ReadRule()
@@ -69,25 +69,155 @@
 			}
 		}
 
-		public CssVariable ReadVariable()
+		public VariableAssignment ReadAssignment()
 		{
-			var name = tokenizer.Read(TokenKind.Variable, LexicalMode.Value);		// read $name
+			tokenizer.Read(TokenKind.Dollar, LexicalMode.Assignment);			// read $
+
+			var name = tokenizer.Read(TokenKind.Name, LexicalMode.Assignment);	// read name
 
 			ReadTrivia();
 
-			tokenizer.Read(TokenKind.Colon, LexicalMode.Value);						// read :
+			tokenizer.Read(TokenKind.Colon, LexicalMode.Assignment);			// read :
 
-			ReadTrivia();
+			ReadTrivia();														// Read trivia
 
-			var value = ReadSpan();
+			var value = ReadValue();
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{
 				tokenizer.Read(); // read;
 			}
 
-			return new CssVariable(name.Text.TrimStart('$'), CssValue.Parse(value));
+			return new VariableAssignment(name, value);
 		}
+
+		// Read comma seperated values
+
+		public CssValue ReadValue()
+		{
+			// : #fffff
+			// : $oranges
+			// : url(file.css);
+
+			var values = new List<CssValue>();
+
+			do
+			{
+				if (tokenizer.Current.Kind == TokenKind.Comma) 	// read the comma & trailing whitespace
+				{					
+					tokenizer.Read();
+				
+					ReadTrivia();
+				}
+
+				values.Add(CssValue.FromComponents(ReadComponents()));
+
+			} while (tokenizer.Current.Kind == TokenKind.Comma);
+
+			var trivia = ReadTrivia(); // Trialing trivia
+
+			if (values.Count == 1) return values[0];
+
+			var list = new CssValueList(values, ValueListSeperator.Comma);
+
+			return list;
+		}
+
+		#region Values
+
+		public IEnumerable<CssValue> ReadComponents()
+		{
+			while (!tokenizer.IsEnd)
+			{
+				yield return ReadLiteral();
+
+				var current = tokenizer.Current;
+
+				if   ( current.Kind == TokenKind.BlockEnd
+					|| current.Kind == TokenKind.Semicolon
+					|| current.Kind == TokenKind.Comma
+					|| current.Kind == TokenKind.RightParenthesis)
+				{
+					break;
+				}
+			}
+		}
+
+		public CssValue ReadLiteral()
+		{
+			if (tokenizer.Current.Kind == TokenKind.Dollar) return ReadIdentifier();
+			
+			var value = tokenizer.Read();	// read value (string or number)
+
+			if (value.Kind == TokenKind.Number && tokenizer.Current.Kind == TokenKind.String)
+			{
+				var unit = tokenizer.Read(); // Read unit
+
+				return new CssDimension(value, unit) {
+					Trailing = ReadTrivia()
+				};
+			}
+
+			if (tokenizer.Current.Kind == TokenKind.LeftParenthesis)
+			{
+				tokenizer.Read(TokenKind.LeftParenthesis, LexicalMode.Function);
+
+				var args = ReadValue();
+
+				tokenizer.Read(TokenKind.RightParenthesis, LexicalMode.Function);
+
+				if (value.Text == "url")
+				{
+					return new CssUrl(value, args) {
+						Trailing = ReadTrivia()
+					};
+				}
+
+				return new CssFunction(value, args) {
+					Trailing = ReadTrivia()
+				};
+			}
+
+			return new CssLiteral(value) {
+				Trailing = ReadTrivia()
+			};
+		}
+
+
+
+		/*
+		public CssFunction ReadFunction()
+		{
+
+			// A functional notation is a type of component value that can represent more complex types or invoke special processing.
+			// The syntax starts with the name of the function immediately followed by a left parenthesis (i.e. a FUNCTION token) followed by the argument(s) 
+			// to the notation followed by a right parenthesis. 
+			// White space is allowed, but optional, immediately inside the parentheses. 
+			// If a function takes a list of arguments, the arguments are separated by a comma (‘,’) with optional whitespace before and after the comma.
+
+
+		}
+		*/
+
+		public CssIdentifier ReadIdentifier()
+		{
+			tokenizer.Read(TokenKind.Dollar, LexicalMode.Value);				// read $
+
+			var name = tokenizer.Read(TokenKind.String, LexicalMode.Value);		// read name
+
+			return new CssIdentifier(name) { 
+				Leading = ReadTrivia()
+			};
+		}
+
+		/*
+		public CssExpression ReadExpression()
+		{
+			
+		}
+		*/
+		
+		#endregion
 
 		public CssRule ReadAtRule()
 		{
@@ -129,7 +259,7 @@
 			switch (tokenizer.Current.Kind)
 			{
 				case TokenKind.BlockStart:	ReadBlock(rule);	break; // {
-				case TokenKind.Semicolon:	tokenizer.Next();	break; // ;
+				case TokenKind.Semicolon:	tokenizer.Read();	break; // ;
 			}
 
 			return rule;
@@ -153,7 +283,7 @@
 		}
 
 
-		public CssName ReadName()
+		public string ReadName()
 		{
 			string name;
 
@@ -169,14 +299,54 @@
 
 			var trivia = ReadTrivia();
 
-			return new CssName(name) {
-				Trailing = trivia
-			};
+			return name;
 		}
+
+
+		public CssSelector ReadSelector()
+		{
+			// #id.hello { } 
+
+			var span = new TokenList();
+
+			while (tokenizer.Current.Kind != TokenKind.BlockStart && !tokenizer.IsEnd)
+			{
+				var token = tokenizer.Read();
+
+				span.Add(token);
+			}
+
+			return new CssSelector(span);
+		}
+
+		/*
+		public IEnumerable<CssSelectorList> ReadSelectors()
+		{
+			var names = new TokenList();
+
+			foreach (var token in this)
+			{
+				if (token.IsTrivia) continue;
+
+				if (token.Kind == TokenKind.Comma)
+				{
+					yield return new CssSelector(names);
+
+					names.Clear();
+				}
+				else
+				{
+					names.Add(token);
+				}
+			}
+
+			yield return new CssSelector(names);
+		}
+		*/
 
 		public CssRule ReadStyleRule()
 		{
-			var selector = new CssSelector(ReadSpan());
+			var selector = ReadSelector(); 
 
 			var rule = new CssRule(RuleType.Style, selector);
 
@@ -185,9 +355,9 @@
 			return rule;
 		}
 
-		public CssRule ReadRuleBlock(TokenList span)
+		public CssRule ReadRuleBlock(CssSelector selector)
 		{
-			var rule = new CssRule(RuleType.Style, new CssSelector(span));
+			var rule = new CssRule(RuleType.Style, selector);
 
 			ReadBlock(rule);
 
@@ -204,28 +374,35 @@
 			{
 				if (tokenizer.IsEnd) throw ParseException.UnexpectedEOF("Block");
 
+				// A list of delarations or blocks
+
 				var span = ReadSpan();
 
 				switch (tokenizer.Current.Kind)
 				{
-					case TokenKind.Colon		: block.Add(ReadDeclarationFromName(span));	break; // DeclarationName
-					case TokenKind.BlockStart	: block.Children.Add(ReadRuleBlock(span));			break;
+					case TokenKind.Colon		: block.Add(ReadDeclarationFromName(span));						break; // DeclarationName
+					case TokenKind.BlockStart	: block.Children.Add(ReadRuleBlock(new CssSelector(span)));		break;
 					case TokenKind.BlockEnd		: break;
+
+					// TODO: Figure out where we missed reading the semicolon TEMP
+					case TokenKind.Semicolon	: tokenizer.Read(); break;
 
 					default: throw ParseException.Unexpected(tokenizer.Current, "Block");
 				}
 			}
 
-			tokenizer.Read();						// read }
+			tokenizer.Read(); // read }
 
-			ReadTrivia();
+			block.Leading = ReadTrivia();
 
 			return block;
 		}
 
 		public CssDeclaration ReadDeclaration()
 		{
-			var name = ReadSpan();											// read name
+			var name = ReadName();											// read name
+
+			ReadTrivia();													// Read trivia
 
 			tokenizer.Read(TokenKind.Colon, LexicalMode.Declaration);		// read :
 
@@ -259,18 +436,8 @@
 
 			ReadTrivia();
 
-			return new CssDeclaration(name.ToString(), value.ToString());
+			return new CssDeclaration(name.ToString(), value);
 		}
-
-		public CssValue ReadValue()
-		{
-			// String or Identifier
-
-			var value = ReadSpan();
-
-			return CssValue.Parse(value.ToString());
-		}
-
 
 		public Whitespace ReadTrivia()
 		{
@@ -278,11 +445,9 @@
 
 			var trivia = new Whitespace();
 
-			while (tokenizer.Current.IsTrivia)
+			while (tokenizer.Current.IsTrivia && !tokenizer.IsEnd)
 			{
-				trivia.Add(tokenizer.Next());
-
-				if (tokenizer.IsEnd) break;
+				trivia.Add(tokenizer.Read());
 			}
 
 			return trivia;

@@ -18,12 +18,17 @@ body {
   color: $yellow;
 }
 ");
+			Assert.AreEqual("#dceef7", sheet.Context.Variables["blue"].ToString());
+
+			Assert.AreEqual(2, sheet.Context.Variables.Count);
 
 			Assert.AreEqual(
 @"body {
   background-color: #dceef7;
   color: #fff5cc;
 }", sheet.ToString());
+
+
 		}
 
 		[Test]
@@ -31,7 +36,7 @@ body {
 		{
 			var context = new CssContext();
 
-			context.Variables.Set("monster", CssPrimitiveValue.Parse("red"));
+			context.Variables["monster"] = CssValue.Parse("red");
 
 			var sheet = StyleSheet.Parse(
 @"
@@ -44,6 +49,7 @@ body {
   monster: $monster;
 }
 ", context);
+
 
 
 			Assert.AreEqual(

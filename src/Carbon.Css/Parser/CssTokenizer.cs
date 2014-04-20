@@ -7,7 +7,7 @@
 		private readonly SourceReader reader;
 		private readonly LexicalModeContext mode;
 
-		private Token current;
+		private CssToken current;
 
 		public CssTokenizer(SourceReader reader, LexicalMode mode = LexicalMode.Selector)
 		{
@@ -16,49 +16,53 @@
 			this.reader.Next(); // Start the reader
 
 			this.mode = new LexicalModeContext(mode);
+
+			this.Next(); // Load the first token
 		}
 
-		public Token Current
+		public CssToken Current
 		{
 			get { return current; }
 		}
 
 		public bool IsEnd
 		{
-			get { return reader.IsEof; }
+			get { return isEnd; }
 		}
 
-		public Token Read(TokenKind expect, LexicalMode mode)
+		public CssToken Read(TokenKind expect, LexicalMode mode)
 		{
-			var c = current;
-
 			if (current.Kind != expect)
 			{
 				throw new ParseException(string.Format("Expected {0} reading {1}. Was {2}.", expect, mode.ToString(), this.current));
 			}
 
-			if(!IsEnd) Next();
-
-			return c;
+			return Read();
 		}
 
-		public Token Read()
+		private bool isEnd = false;
+
+		// Returns the current token and advances to the next
+		public CssToken Read()
 		{
+			if (isEnd) throw new Exception("Already ready the last token");
+
 			var c = this.current;
 
-			if (!IsEnd) Next();
+			if (!reader.IsEof)	Next();
+			else				isEnd = true;
 
 			return c;
 		}
 
-		public Token Next()
+		private CssToken Next()
 		{
 			this.current = ReadNext();
 
 			return this.current;
 		}
 
-		private Token ReadNext()
+		private CssToken ReadNext()
 		{
 			if (reader.IsEof) throw new Exception("Cannot read past EOF. Current: " + current.ToString() + ".");
 
@@ -72,41 +76,41 @@
 
 				case '@': return ReadAtKeyword();
 
-				case '$': return ReadVariableKeyword();
+				case '$': return new CssToken(TokenKind.Dollar, reader.Read(), reader.Position);
 
 				case '/': return ReadComment();
 
-				case ':': mode.Enter(LexicalMode.Value);					return new Token(TokenKind.Colon,		reader.Read(), reader.Position);
-				case ',':													return new Token(TokenKind.Comma,		reader.Read(), reader.Position);
-				case ';': LeaveValueMode();									return new Token(TokenKind.Semicolon,	reader.Read(), reader.Position);
-				case '{':					mode.Enter(LexicalMode.Block);	return new Token(TokenKind.BlockStart,	reader.Read(), reader.Position);
-				case '}': LeaveValueMode(); mode.Leave(LexicalMode.Block);	return new Token(TokenKind.BlockEnd, reader.Read(), reader.Position);
+				case ':': mode.Enter(LexicalMode.Value);					return new CssToken(TokenKind.Colon,		reader.Read(), reader.Position);
+				case ',':													return new CssToken(TokenKind.Comma,		reader.Read(), reader.Position);
+				case ';': LeaveValueMode();									return new CssToken(TokenKind.Semicolon,	reader.Read(), reader.Position);
+				case '{':					mode.Enter(LexicalMode.Block);	return new CssToken(TokenKind.BlockStart,	reader.Read(), reader.Position);
+				case '}': LeaveValueMode(); mode.Leave(LexicalMode.Block);	return new CssToken(TokenKind.BlockEnd,		reader.Read(), reader.Position);
+
+				case '(': return new CssToken(TokenKind.LeftParenthesis,  reader.Read(), reader.Position);
+				case ')': return new CssToken(TokenKind.RightParenthesis, reader.Read(), reader.Position);
+				case '-':
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+					return ReadNumber();
+
 			}
 
 			switch (mode.Current)
 			{
 				case LexicalMode.Value		: return ReadValue();
-				case LexicalMode.Selector	: return ReadSelectorToken();
 				default						: return ReadName();
 			}
 		}
 
-		private Token ReadSelectorToken()
-		{
-			reader.Mark();
-
-			while (!reader.IsWhiteSpace && reader.Current != '{' && reader.Current != '}' && reader.Current != ';')
-			{
-				if (reader.IsEof) throw ParseException.UnexpectedEOF("Selector");
-
-				reader.Next();
-			}
-
-			return new Token(TokenKind.Name, reader.Unmark(), reader.MarkStart);
-		}
-
-
-		private Token ReadName()
+		private CssToken ReadName()
 		{
 			reader.Mark();
 
@@ -119,11 +123,11 @@
 
 			if (mode.Current == LexicalMode.Block)
 			{
-				return new Token(TokenKind.Identifier, reader.Unmark(), reader.MarkStart);
+				return new CssToken(TokenKind.Identifier, reader.Unmark(), reader.MarkStart);
 			}
 			else
 			{
-				return new Token(TokenKind.Name, reader.Unmark(), reader.MarkStart);
+				return new CssToken(TokenKind.Name, reader.Unmark(), reader.MarkStart);
 			}
 		}
 
@@ -135,39 +139,32 @@
 			}
 		}
 
-		private Token ReadValue()
+		private CssToken ReadValue()
 		{
 			reader.Mark();
 
-			while (!reader.IsWhiteSpace && reader.Current != '}' && reader.Current != ';' && !reader.IsEof)
+			while (!reader.IsWhiteSpace 
+				&& reader.Current != '}' && reader.Current != ')' && reader.Current != '(' && reader.Current != ';' && reader.Current != ',' && !reader.IsEof)
 			{
 				reader.Next();
 			}
 
-			return new Token(TokenKind.String, reader.Unmark(), reader.MarkStart);
+			return new CssToken(TokenKind.String, reader.Unmark(), reader.MarkStart);
 		}
 
-		private Token ReadVariableKeyword()
+		private CssToken ReadNumber()
 		{
-			// $blue
-
 			reader.Mark();
 
-			reader.Next(); // read $
-
-			while (Char.IsLetter(reader.Current))
+			while ((Char.IsDigit(reader.Current) || reader.Current == '.' || reader.Current == '-') && !reader.IsEof)
 			{
-				if (reader.IsEof) throw ParseException.UnexpectedEOF("Variable");
-
 				reader.Next();
 			}
 
-			// Followed by a value
+			return new CssToken(TokenKind.Number, reader.Unmark(), reader.MarkStart);
+		}		
 
-			return new Token(TokenKind.Variable, reader.Unmark(), reader.MarkStart);
-		}
-
-		private Token ReadAtKeyword()
+		private CssToken ReadAtKeyword()
 		{
 			// @import
 			// @font
@@ -183,10 +180,10 @@
 
 			// Followed by a block ({), string, or ;
 
-			return new Token(TokenKind.AtKeyword, reader.Unmark(), reader.MarkStart);
+			return new CssToken(TokenKind.AtKeyword, reader.Unmark(), reader.MarkStart);
 		}
 
-		private Token ReadWhitespace()
+		private CssToken ReadWhitespace()
 		{
 			reader.Mark();
 
@@ -195,10 +192,10 @@
 				reader.Next();
 			}
 
-			return new Token(TokenKind.Whitespace, reader.Unmark(), reader.MarkStart);
+			return new CssToken(TokenKind.Whitespace, reader.Unmark(), reader.MarkStart);
 		}
 
-		private Token ReadComment()
+		private CssToken ReadComment()
 		{
 			/* */
 
@@ -223,10 +220,10 @@
 			reader.Read(); // read *
 			reader.Read(); // read /
 
-			return new Token(TokenKind.Comment, reader.Unmark(), reader.MarkStart);
+			return new CssToken(TokenKind.Comment, reader.Unmark(), reader.MarkStart);
 		}
 
-		private Token ReadLineComment()
+		private CssToken ReadLineComment()
 		{
 			// line comment
 
@@ -239,7 +236,7 @@
 				reader.Next();
 			}
 
-			return new Token(TokenKind.Comment, reader.Unmark(), reader.MarkStart);
+			return new CssToken(TokenKind.Comment, reader.Unmark(), reader.MarkStart);
 		}
 
 		public void Dispose()

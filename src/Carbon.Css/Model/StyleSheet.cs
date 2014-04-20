@@ -50,9 +50,9 @@
 			{
 				if (node.Kind == NodeKind.Variable)
 				{
-					var variable = (CssVariable)node;
+					var variable = (VariableAssignment)node;
 
-					context.Variables.Set(variable.Name, variable.Value);
+					context.Variables[variable.Name] = variable.Value;
 				}
 				else
 				{

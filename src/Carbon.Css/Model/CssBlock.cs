@@ -1,12 +1,16 @@
 ﻿namespace Carbon.Css
 {
+	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
 
-	public class CssBlock : IList<CssDeclaration>
+	public class CssBlock : CssNode, IList<CssDeclaration>
 	{
 		protected readonly List<CssDeclaration> declarations = new List<CssDeclaration>();
+
+		public CssBlock() 
+			: base(NodeKind.Block) { }
 
 		public bool IsEmpty
 		{
@@ -15,18 +19,24 @@
 
 		public IEnumerable<CssDeclaration> FindHavingPropertyName(string propertyName)
 		{
-			return declarations.Where(d => d.Name.Text == propertyName);
+			return declarations.Where(d => d.Name == propertyName);
 		}
 
 		public CssDeclaration Get(string name)
 		{
-			return declarations.FirstOrDefault(d => d.Name.Text == name);
+			return declarations.FirstOrDefault(d => d.Name == name);
 		}
 
 		public int Count
 		{
 			get { return declarations.Count; }
 		}
+
+		public override string Text
+		{
+			get { throw new NotImplementedException(); }
+		}
+
 
 		#region IList<CssDeclaration> Members
 

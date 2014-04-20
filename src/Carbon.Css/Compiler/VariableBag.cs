@@ -1,23 +1,23 @@
 ﻿namespace Carbon.Css
 {
+	using System;
 	using System.Collections.Generic;
 
-	public class VariableBag
+	public class VariableBag : Dictionary<string, CssValue>
 	{
-		private readonly IDictionary<string, CssValue> items = new Dictionary<string, CssValue>();
 
 		public CssValue Get(string name)
 		{
 			CssValue value;
-			
-			items.TryGetValue(name, out value);
+
+			if (!TryGetValue(name, out value))
+			{
+				throw new Exception(string.Format("'{0}' not found in variables", name));
+			}
 
 			return value;
 		}
 
-		public void Set(string name, CssValue value)
-		{
-			items[name] = value;
-		}
+		
 	}
 }

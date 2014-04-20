@@ -1,19 +1,19 @@
 ﻿namespace Carbon.Css.Parser
 {
-	public struct Token
+	public struct CssToken
 	{
 		private readonly TokenKind kind;
 		private readonly string text;
 		private readonly int position;
 
-		public Token(TokenKind kind, char value, int position)
+		public CssToken(TokenKind kind, char value, int position)
 		{
 			this.kind = kind;
 			this.text = value.ToString();
 			this.position = position;
 		}
 
-		public Token(TokenKind kind, string value, int position)
+		public CssToken(TokenKind kind, string value, int position)
 		{
 			this.kind = kind;
 			this.text = value;
@@ -35,7 +35,6 @@
 			get { return text; }
 		}
 
-
 		public override string ToString()
 		{
 			return Kind + ": " + "'" + Text + "'";
@@ -53,8 +52,6 @@
 
 	public enum TokenKind
 	{
-		Whitespace,
-		Comment,
 		Identifier,		// selector or identifer (IDENT)
 		
 		Name,			// name (followed by a :)
@@ -62,18 +59,30 @@
 		// Values
 		String,
 		Number,
+
 		Percentage,		// {number}%
 		Dimension,		// {number}px
-		Variable,		// $name
+		
 		Uri,			// uri({string})
 
+		Dollar,			// ${variableName}
 
 		AtKeyword,		// @{ident}
 		Comma,			// ,
 		Semicolon,		// ;
 		Colon,			// :
+
 		BlockStart,		// {
 		BlockEnd,		// }
+
+		LeftParenthesis,	// (
+		RightParenthesis,	// )
+
+
+
+		// Trivia
+		Whitespace,
+		Comment,
 	}
 }
 
