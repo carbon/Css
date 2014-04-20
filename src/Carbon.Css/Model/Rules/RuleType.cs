@@ -9,6 +9,11 @@
 		Media = 4,
 		FontFace = 5,
 		Page = 6,
-		Keyframes = 7
+		Keyframes = 7,
+
+
+
+		// 20
+		Mixin = 20
 	}
 }

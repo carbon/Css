@@ -67,7 +67,7 @@
 
 		Dollar,			// ${variableName}
 
-		AtKeyword,		// @{ident}
+		AtSymbol,		// @{ident}
 		Comma,			// ,
 		Semicolon,		// ;
 		Colon,			// :

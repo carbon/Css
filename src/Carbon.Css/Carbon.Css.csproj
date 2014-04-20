@@ -50,6 +50,9 @@
     <Compile Include="Model\CssBlock.cs" />
     <Compile Include="Model\CssContext.cs" />
     <Compile Include="Ast\CssNode.cs" />
+    <Compile Include="Sass\CssParameter.cs" />
+    <Compile Include="Sass\IncludeNode.cs" />
+    <Compile Include="Sass\MixinNode.cs" />
     <Compile Include="Model\Values\CssVariable.cs" />
     <Compile Include="Comptability\Modules\CssModule.cs" />
     <Compile Include="Comptability\Modules\CssModuleType.cs" />

@@ -74,7 +74,7 @@
  				case '\uFEFF':
 				case ' ': return ReadWhitespace();
 
-				case '@': return ReadAtKeyword();
+				case '@': return new CssToken(TokenKind.AtSymbol, reader.Read(), reader.Position);
 
 				case '$': return new CssToken(TokenKind.Dollar, reader.Read(), reader.Position);
 
@@ -88,7 +88,8 @@
 
 				case '(': return new CssToken(TokenKind.LeftParenthesis,  reader.Read(), reader.Position);
 				case ')': return new CssToken(TokenKind.RightParenthesis, reader.Read(), reader.Position);
-				case '-':
+				
+				// case '-': // Conflicts with -webkit
 				case '0':
 				case '1':
 				case '2':
@@ -114,7 +115,8 @@
 		{
 			reader.Mark();
 
-			while (!reader.IsWhiteSpace && reader.Current != '{' && reader.Current != '}' && reader.Current != ';' && reader.Current != ':')
+			while (!reader.IsWhiteSpace 
+				&& reader.Current != '{' && reader.Current != '}' && reader.Current != '(' && reader.Current != ')' && reader.Current != ';' && reader.Current != ':')
 			{
 				if (reader.IsEof) throw ParseException.UnexpectedEOF("Name");
 
@@ -162,25 +164,6 @@
 			}
 
 			return new CssToken(TokenKind.Number, reader.Unmark(), reader.MarkStart);
-		}		
-
-		private CssToken ReadAtKeyword()
-		{
-			// @import
-			// @font
-
-			reader.Mark();
-
-			while (!reader.IsWhiteSpace && reader.Current != ';' && reader.Current != '{' && reader.Current != ':')
-			{
-				if (reader.IsEof) throw new ParseException("Unexpected EOF reading AtKeyword");
-
-				reader.Next();
-			}
-
-			// Followed by a block ({), string, or ;
-
-			return new CssToken(TokenKind.AtKeyword, reader.Unmark(), reader.MarkStart);
 		}
 
 		private CssToken ReadWhitespace()

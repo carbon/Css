@@ -12,6 +12,9 @@
 		public CssBlock() 
 			: base(NodeKind.Block) { }
 
+		public CssBlock(NodeKind kind)
+			: base(kind) { }
+
 		public bool IsEmpty
 		{
 			get { return declarations.Count != 0; }

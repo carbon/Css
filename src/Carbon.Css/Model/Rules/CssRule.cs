@@ -12,9 +12,16 @@
 		private readonly ICssSelector selector;
 
 		public CssRule(RuleType type, ICssSelector selector)
+			: base(NodeKind.Rule)
 		{
 			this.type = type;
 			this.selector = selector;
+		}
+
+		public CssRule(RuleType type, NodeKind kind)
+			: base(kind) 
+		{	
+			this.type = type;
 		}
 
 		public RuleType Type
@@ -67,6 +74,41 @@
 
 			// Block Start	
 			writer.Write("{");
+
+			var includes = new List<IncludeNode>();
+
+			foreach (var declaration in declarations)
+			{
+				if (declaration.Kind == NodeKind.Include)
+				{
+					includes.Add((IncludeNode)declaration);
+				}
+			}
+
+			foreach (var include in includes)
+			{
+				var index = declarations.IndexOf(include);
+
+				if (index == -1)
+				{
+					throw new Exception("invalid index");
+				}
+
+
+				MixinNode mixin;
+
+				if (!context.Mixins.TryGetValue(include.Name, out mixin))
+				{
+					throw new Exception(string.Format("Mixin '{0}' not registered", include.Name));
+				}
+
+				declarations.InsertRange(index, mixin.Execute(include.Args, context));
+			}
+
+			foreach (var include in includes)
+			{
+				declarations.Remove(include);
+			}
 
 			// Write the declarations
 			foreach (var declaration in declarations)
@@ -135,14 +177,5 @@
 				return writer.ToString();
 			}
 		}
-
-		#region INode
-
-		NodeKind INode.Kind
-		{
-			get { return NodeKind.Rule;  }
-		}
-
-		#endregion
 	}
 }

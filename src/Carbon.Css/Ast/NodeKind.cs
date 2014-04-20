@@ -21,7 +21,11 @@
 		ValueList,
 		Dimension,
 		Url,
-		Literal	// StringLiteral & NumberLiteral
+		Literal,	// StringLiteral & NumberLiteral
+
+		// Sass Extensions
+		Mixin,
+		Include
 
 	}
 }

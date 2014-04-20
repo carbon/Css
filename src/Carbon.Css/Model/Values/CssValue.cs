@@ -2,6 +2,7 @@
 {
 	using Carbon.Css.Parser;
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
@@ -9,7 +10,7 @@
 	// Component Values 
 	// Comma seperated list of a component values
 
-	public class CssValueList : CssValue
+	public class CssValueList : CssValue, IEnumerable<CssValue>
 	{
 		private readonly IList<CssValue> values;
 		private ValueListSeperator seperator;
@@ -35,6 +36,20 @@
 		{
 			return values;
 		}
+
+		#region IEnumerator
+
+		IEnumerator<CssValue> IEnumerable<CssValue>.GetEnumerator()
+		{
+			return values.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return values.GetEnumerator();
+		}
+
+		#endregion
 	}
 
 	public enum ValueListSeperator

@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="CssTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScssTests.cs" />
     <Compile Include="VariableTests.cs" />
   </ItemGroup>
   <ItemGroup>

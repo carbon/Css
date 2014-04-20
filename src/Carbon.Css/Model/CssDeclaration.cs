@@ -12,7 +12,7 @@
 		public CssDeclaration(string name, string value, string priority = null)
 			: this(name, CssValue.Parse(value), priority) { }
 
-		public CssDeclaration(string name, CssValue value, string priorty = null)
+		public CssDeclaration(string name, CssValue value, string priority = null)
 			: base(NodeKind.Declaration)
 		{
 			#region Preconditions
@@ -24,8 +24,16 @@
 
 			this.name = name;
 			this.value = value;
-			this.priority = priorty;
+			this.priority = priority;
 		}
+
+		public CssDeclaration(string name, CssValue value, NodeKind kind)
+			: base(kind)
+		{
+			this.name = name;
+			this.value = value;
+		}
+
 
 		public string Name
 		{

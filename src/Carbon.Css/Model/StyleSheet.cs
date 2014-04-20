@@ -5,6 +5,7 @@
 
 	using Carbon.Css.Parser;
 	using System.IO;
+	using System;
 
 	public class StyleSheet : IStylesheet
 	{
@@ -53,6 +54,12 @@
 					var variable = (VariableAssignment)node;
 
 					context.Variables[variable.Name] = variable.Value;
+				}
+				else if(node.Kind == NodeKind.Mixin)
+				{
+					var mixin = (MixinNode)node;
+
+					context.Mixins.Add(mixin.Name, mixin);
 				}
 				else
 				{
