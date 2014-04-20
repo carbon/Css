@@ -8,7 +8,7 @@
 		private CssToken unit;
 
 		public CssDimension(CssToken number, CssToken unit)
-			: base(NodeKind.Literal)
+			: base(GetDimensionKind(unit.Text))
 		{
 			this.number = number;
 			this.unit	= unit;
@@ -22,6 +22,34 @@
 		public override string ToString()
 		{
 			return Text;
+		}
+
+
+		public static NodeKind GetDimensionKind(string a)
+		{
+			switch (a)
+			{
+				case "cm": 
+				case "mm": 
+				case "in":
+				case "pt": 
+				case "pc": 
+				case "px": return NodeKind.Length;
+
+				case "deg"  :
+				case "rad"  :
+				case "grad" : return NodeKind.Angle;
+
+				case "ms" :
+				case "s"  : return NodeKind.Time;
+
+				case "hz"  :
+				case "khz" : return NodeKind.Frequency;
+
+				case "%"   : return NodeKind.Percent;
+
+				default	   : return NodeKind.Dimension;
+			}
 		}
 	}
 }

@@ -3,7 +3,7 @@ namespace Carbon.Css
 {
 	public class CssContext
 	{
-		private readonly VariableBag variables = new VariableBag();
+		private readonly Dictionary<string, CssValue> variables = new Dictionary<string,CssValue>();
 		private readonly Dictionary<string, MixinNode> mixins = new Dictionary<string, MixinNode>();
 
 		private readonly CssContext parent;
@@ -17,7 +17,7 @@ namespace Carbon.Css
 
 		public CssFormatting Formatting { get; set; }
 
-		public VariableBag Variables
+		public Dictionary<string, CssValue> Variables
 		{
 			get { return variables;  }
 		}
@@ -31,12 +31,12 @@ namespace Carbon.Css
 				return value;
 			}
 
-			if (parent != null)
+			if (parent != null && parent.Variables.TryGetValue(name, out value))
 			{
-				variables.TryGetValue(name, out value);
+				return value;
 			}
 
-			return value;
+			return new CssLiteral("undefined");
 		}
 
 		public Dictionary<string, MixinNode> Mixins

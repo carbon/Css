@@ -38,42 +38,43 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ast\CssFunction.cs" />
+    <Compile Include="Ast\Values\CssFunction.cs" />
     <Compile Include="Ast\CssExpression.cs" />
-    <Compile Include="Ast\CssIdentifier.cs" />
-    <Compile Include="Ast\CssDimension.cs" />
-    <Compile Include="Ast\CssUrl.cs" />
-    <Compile Include="Ast\CssLiteral.cs" />
-    <Compile Include="Ast\INode.cs" />
+    <Compile Include="Ast\Values\CssVariable.cs" />
+    <Compile Include="Ast\Values\CssDimension.cs" />
+    <Compile Include="Ast\Values\CssUrl.cs" />
+    <Compile Include="Ast\Values\CssLiteral.cs" />
     <Compile Include="Ast\TokenList.cs" />
     <Compile Include="Ast\TriviaNode.cs" />
+    <Compile Include="Ast\Values\CssValueList.cs" />
+    <Compile Include="Evaluator\CssWriter.cs" />
     <Compile Include="Model\CssBlock.cs" />
     <Compile Include="Model\CssContext.cs" />
     <Compile Include="Ast\CssNode.cs" />
     <Compile Include="Sass\CssParameter.cs" />
     <Compile Include="Sass\IncludeNode.cs" />
     <Compile Include="Sass\MixinNode.cs" />
-    <Compile Include="Model\Values\CssVariable.cs" />
+    <Compile Include="Ast\Values\CssAssignment.cs" />
     <Compile Include="Comptability\Modules\CssModule.cs" />
     <Compile Include="Comptability\Modules\CssModuleType.cs" />
     <Compile Include="Ast\NodeKind.cs" />
-    <Compile Include="Model\Rules\StyleRule.cs" />
-    <Compile Include="Model\Rules\ImportRule.cs" />
-    <Compile Include="Model\Rules\FontFaceRule.cs" />
-    <Compile Include="Model\Rules\RuleType.cs" />
-    <Compile Include="Model\Values\FontSrcValue.cs" />
+    <Compile Include="Ast\Rules\StyleRule.cs" />
+    <Compile Include="Ast\Rules\ImportRule.cs" />
+    <Compile Include="Ast\Rules\FontFaceRule.cs" />
+    <Compile Include="Ast\Rules\RuleType.cs" />
+    <Compile Include="Ast\Values\FontSrcValue.cs" />
     <Compile Include="Parser\CssParser.cs" />
     <Compile Include="Parser\CssToken.cs" />
     <Compile Include="Parser\CssTokenizer.cs" />
     <Compile Include="Comptability\Browser.cs" />
     <Compile Include="Model\CssDeclaration.cs" />
     <Compile Include="Model\CssPropertyInfo.cs" />
-    <Compile Include="Model\Rules\CssRule.cs" />
+    <Compile Include="Ast\Rules\CssRule.cs" />
     <Compile Include="Model\CssSelector.cs" />
-    <Compile Include="Model\Values\CssValue.cs" />
+    <Compile Include="Ast\Values\CssValue.cs" />
     <Compile Include="Model\StyleSheet.cs" />
-    <Compile Include="Model\Values\CssPadding.cs" />
-    <Compile Include="Model\Values\CssUrlValue.cs" />
+    <Compile Include="Ast\Values\CssPadding.cs" />
+    <Compile Include="Ast\Values\CssUrlValue.cs" />
     <Compile Include="Parser\LexicalMode.cs" />
     <Compile Include="Parser\ParseException.cs" />
     <Compile Include="Parser\SourceReader.cs" />
@@ -84,7 +85,6 @@
     <Compile Include="Resolver\Include.cs" />
     <Compile Include="Transformer\CssTransformer.cs" />
     <Compile Include="Transformer\ICssTransform.cs" />
-    <Compile Include="Compiler\VariableBag.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

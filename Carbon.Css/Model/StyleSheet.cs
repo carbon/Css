@@ -49,9 +49,9 @@
 
 			foreach (var node in parser.ReadNodes())
 			{
-				if (node.Kind == NodeKind.Variable)
+				if (node.Kind == NodeKind.Assignment)
 				{
-					var variable = (VariableAssignment)node;
+					var variable = (CssAssignment)node;
 
 					context.Variables[variable.Name] = variable.Value;
 				}
@@ -87,18 +87,20 @@
 			WriteTo(writer);
 		}
 
-		public void WriteTo(TextWriter writer)
+		public void WriteTo(TextWriter textWriter)
 		{
+			var writer = new CssWriter(textWriter, context);
+
 			var i = 0;
 
 			foreach (var rule in rules)
 			{
 				if (i != 0)
 				{
-					writer.WriteLine();
+					textWriter.WriteLine();
 				}
 
-				rule.WriteTo(writer, context: context);
+				writer.WriteRule(rule);
 
 				i++;
 			}

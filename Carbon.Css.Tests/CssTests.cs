@@ -62,8 +62,10 @@
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("div > h1", style.Selector.ToString());
 			Assert.AreEqual(1, style.Count);
-			Assert.AreEqual("width", style[0].Name.ToString());
-			Assert.AreEqual("100px", style[0].Value.ToString());
+
+			var x = (CssDeclaration)style[0];
+			Assert.AreEqual("width", x.Name.ToString());
+			Assert.AreEqual("100px", x.Value.ToString());
 			Assert.AreEqual("div > h1 { width: 100px; }", sheet.ToString());
 		}
 
@@ -88,7 +90,7 @@
 			Assert.AreEqual(RuleType.Import, rule.Type);
 			Assert.AreEqual("@import", rule.Selector.ToString());
 			Assert.AreEqual("@import url('core.css');", rule.ToString());
-			Assert.AreEqual("url('core.css')", rule.Value.ToString());
+			Assert.AreEqual("url('core.css')", rule.Url.ToString());
 
 			Assert.AreEqual("@import url('core.css');", sheet.ToString());
 		}
@@ -104,10 +106,14 @@
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("#monster", style.Selector.ToString());
 			Assert.AreEqual(2, style.Count);
-			Assert.AreEqual("font-color", style[0].Name.ToString());
-			Assert.AreEqual("red", style[0].Value.ToString());
-			Assert.AreEqual("background-color", style[1].Name.ToString());
-			Assert.AreEqual("url(http://google.com)", style[1].Value.ToString());
+
+			var x = (CssDeclaration)style[0];
+			var y = (CssDeclaration)style[1];
+
+			Assert.AreEqual("font-color", x.Name.ToString());
+			Assert.AreEqual("red", x.Value.ToString());
+			Assert.AreEqual("background-color", y.Name.ToString());
+			Assert.AreEqual("url(http://google.com)", y.Value.ToString());
 		}
 
 		[Test]
@@ -128,7 +134,6 @@
 }");
 
 			Assert.AreEqual("@-webkit-keyframes fade", sheet.Rules[0].Selector.Text);
-
 
 			Assert.AreEqual(
 @"@-webkit-keyframes fade {
@@ -196,7 +201,7 @@
 			
 			var sheet = StyleSheet.Parse(styles);
 
-			var value = sheet.Rules[0][2].Value;
+			var value = ((CssDeclaration)sheet.Rules[0][2]).Value;
 
 			//  url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/cm-billing-webfont.woff') format('woff')
 

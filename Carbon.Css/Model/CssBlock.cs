@@ -5,34 +5,34 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
-	public class CssBlock : CssNode, IList<CssDeclaration>
+	public class CssBlock : CssNode, IList<CssNode>
 	{
-		protected readonly List<CssDeclaration> declarations = new List<CssDeclaration>();
-
 		public CssBlock() 
 			: base(NodeKind.Block) { }
 
 		public CssBlock(NodeKind kind)
 			: base(kind) { }
 
+		// Name or Selector
+
 		public bool IsEmpty
 		{
-			get { return declarations.Count != 0; }
+			get { return children.Count != 0; }
 		}
 
-		public IEnumerable<CssDeclaration> FindHavingPropertyName(string propertyName)
+		public IEnumerable<CssDeclaration> FindDeclaration(string propertyName)
 		{
-			return declarations.Where(d => d.Name == propertyName);
+			return children.OfType<CssDeclaration>().Where(d => d.Name == propertyName);
 		}
 
 		public CssDeclaration Get(string name)
 		{
-			return declarations.FirstOrDefault(d => d.Name == name);
+			return children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
 		}
 
 		public int Count
 		{
-			get { return declarations.Count; }
+			get { return children.Count; }
 		}
 
 		public override string Text
@@ -41,72 +41,72 @@
 		}
 
 
-		#region IList<CssDeclaration> Members
+		#region IList<CssNode> Members
 
-		public int IndexOf(CssDeclaration declaration)
+		public int IndexOf(CssNode node)
 		{
-			return declarations.IndexOf(declaration);
+			return children.IndexOf(node);
 		}
 
-		public void Insert(int index, CssDeclaration item)
+		public void Insert(int index, CssNode item)
 		{
-			declarations.Insert(index, item);
+			children.Insert(index, item);
 		}
 
 		public void RemoveAt(int index)
 		{
-			declarations.RemoveAt(index);
+			children.RemoveAt(index);
 		}
 
-		public CssDeclaration this[int index]
+		public CssNode this[int index]
 		{
-			get { return declarations[index]; }
-			set { declarations[index] = value; }
+			get { return children[index]; }
+			set { children[index] = value; }
 		}
 
-		public void Add(CssDeclaration item)
+		public void Add(CssNode item)
 		{
-			declarations.Add(item);
+			children.Add(item);
 		}
 
-		void ICollection<CssDeclaration>.Clear()
+		void ICollection<CssNode>.Clear()
 		{
-			declarations.Clear();
+			children.Clear();
 		}
 
-		bool ICollection<CssDeclaration>.Contains(CssDeclaration item)
+		bool ICollection<CssNode>.Contains(CssNode item)
 		{
-			return declarations.Contains(item);
+			return children.Contains(item);
 		}
 
-		void ICollection<CssDeclaration>.CopyTo(CssDeclaration[] array, int arrayIndex)
+		void ICollection<CssNode>.CopyTo(CssNode[] array, int arrayIndex)
 		{
-			declarations.CopyTo(array, arrayIndex);
+			children.CopyTo(array, arrayIndex);
 		}
 
-		int ICollection<CssDeclaration>.Count
+		int ICollection<CssNode>.Count
 		{
-			get { return declarations.Count; }
+			get { return children.Count; }
 		}
 
-		bool ICollection<CssDeclaration>.IsReadOnly
+		bool ICollection<CssNode>.IsReadOnly
 		{
 			get { return false; }
 		}
 
-		public bool Remove(CssDeclaration item)
+		public bool Remove(CssNode item)
 		{
-			return declarations.Remove(item);
+			return children.Remove(item);
 		}
 
-		IEnumerator<CssDeclaration> IEnumerable<CssDeclaration>.GetEnumerator()
+		IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator()
 		{
-			return declarations.GetEnumerator();
+			return children.GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return declarations.GetEnumerator();
+			return children.GetEnumerator();
 		}
 
 		#endregion

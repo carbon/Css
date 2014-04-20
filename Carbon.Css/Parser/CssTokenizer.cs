@@ -76,7 +76,7 @@
 
 				case '@': return new CssToken(TokenKind.AtSymbol, reader.Read(), reader.Position);
 
-				case '$': return new CssToken(TokenKind.Dollar, reader.Read(), reader.Position);
+				case '$': mode.Enter(LexicalMode.Symbol);					return new CssToken(TokenKind.Dollar, reader.Read(), reader.Position);
 
 				case '/': return ReadComment();
 
@@ -106,9 +106,28 @@
 
 			switch (mode.Current)
 			{
+				case LexicalMode.Symbol		: return ReadSymbol();
 				case LexicalMode.Value		: return ReadValue();
 				default						: return ReadName();
 			}
+		}
+
+		private CssToken ReadSymbol()
+		{
+			reader.Mark();
+
+			while (!reader.IsWhiteSpace
+				&& reader.Current != '{' && reader.Current != '}' && reader.Current != '(' && reader.Current != ')' 
+				&& reader.Current != ';' && reader.Current != ':' && reader.Current != ',')
+			{
+				if (reader.IsEof) throw ParseException.UnexpectedEOF("Name");
+
+				reader.Next();
+			}
+
+			mode.Leave(LexicalMode.Symbol);
+
+			return new CssToken(TokenKind.Name, reader.Unmark(), reader.MarkStart);
 		}
 
 		private CssToken ReadName()
@@ -116,21 +135,15 @@
 			reader.Mark();
 
 			while (!reader.IsWhiteSpace 
-				&& reader.Current != '{' && reader.Current != '}' && reader.Current != '(' && reader.Current != ')' && reader.Current != ';' && reader.Current != ':')
+				&& reader.Current != '{' && reader.Current != '}' && reader.Current != '(' && reader.Current != ')' 
+				&& reader.Current != ';' && reader.Current != ':' && reader.Current != ',')
 			{
 				if (reader.IsEof) throw ParseException.UnexpectedEOF("Name");
 
 				reader.Next();
 			}
 
-			if (mode.Current == LexicalMode.Block)
-			{
-				return new CssToken(TokenKind.Identifier, reader.Unmark(), reader.MarkStart);
-			}
-			else
-			{
-				return new CssToken(TokenKind.Name, reader.Unmark(), reader.MarkStart);
-			}
+			return new CssToken(TokenKind.Name, reader.Unmark(), reader.MarkStart);
 		}
 
 		private void LeaveValueMode()

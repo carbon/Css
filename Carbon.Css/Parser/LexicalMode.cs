@@ -38,7 +38,7 @@
 		}
 	}
 
-	public enum LexicalMode
+	public enum LexicalMode : byte
 	{
 		Unknown = 0,
 		Rule = 1,
@@ -47,6 +47,10 @@
 		Declaration = 4,
 		Selector = 5,
 		Assignment = 6,
-		Function = 7
+		Function = 7,
+
+		Symbol = 10,
+
+		Mixin = 20
 	}
 }

@@ -1,25 +1,32 @@
 ﻿namespace Carbon.Css
 {
 	using System.IO;
+	using System.Text;
 
 	public class ImportRule : CssRule
 	{
 		public ImportRule()
 			: base(RuleType.Import, new CssSelector("@import")) { }
 
-		public CssUrlValue Value { get; set; }
+		public CssUrlValue Url { get; set; }
 
-		public override void WriteTo(TextWriter writer, int level = 0, CssContext context = null)
+		public override string Text
 		{
-			// Indent two characters for each level
-			for (int i = 0; i < level; i++)
+			get
 			{
-				writer.Write("  ");
-			}
+				var sb = new StringBuilder();
 
-			// TODO: normalize value
-			writer.Write("@import " + Value.ToString() + ';');
+				new CssWriter(new StringWriter(sb), new CssContext()).WriteImportRule(this);
+
+				return sb.ToString();
+			}
 		}
+
+		public override string ToString()
+		{
+			return Text;
+		}
+
 	}
 
 	/*

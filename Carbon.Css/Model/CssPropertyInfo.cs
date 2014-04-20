@@ -193,7 +193,7 @@
 		public static readonly CssPropertyInfo BorderTopWidth			= new CssPropertyInfo("border-top-width",		CssModule.Core1);
 		public static readonly CssPropertyInfo BorderWidth				= new CssPropertyInfo("border-width",			CssModule.Core1);
 
-		public static readonly CssPropertyInfo Bottom					= new CssPropertyInfo("bottom");
+		public static readonly CssPropertyInfo Bottom					= new CssPropertyInfo("bottom",					CssModule.Core1);
 		public static readonly CssPropertyInfo BoxDecorationBreak		= new CssPropertyInfo("box-decoration-break");
 
 		public static readonly CssPropertyInfo BoxShadow = new CssPropertyInfo("box-shadow", CssModule.UI(3), new Compatibility {
@@ -212,10 +212,10 @@
 		public static readonly CssPropertyInfo BreakInside	= new CssPropertyInfo("break-inside");
 
 
-		public static readonly CssPropertyInfo CaptionSide = new CssPropertyInfo("caption-side");
-		public static readonly CssPropertyInfo Clear = new CssPropertyInfo("clear");
-		public static readonly CssPropertyInfo Clip = new CssPropertyInfo("clip");
-		public static readonly CssPropertyInfo Color = new CssPropertyInfo("color", CssModule.Core1);
+		public static readonly CssPropertyInfo CaptionSide		= new CssPropertyInfo("caption-side");
+		public static readonly CssPropertyInfo Clear			= new CssPropertyInfo("clear");
+		public static readonly CssPropertyInfo Clip				= new CssPropertyInfo("clip");
+		public static readonly CssPropertyInfo Color			= new CssPropertyInfo("color", CssModule.Core1);
 
 		public static readonly CssPropertyInfo ColumnCount		= new CssPropertyInfo("column-count",		CssModule.Columns3);
 		public static readonly CssPropertyInfo ColumnFill		= new CssPropertyInfo("column-fill",		CssModule.Columns3);

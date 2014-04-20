@@ -36,7 +36,7 @@
 			}
 		}
 
-		public IEnumerable<INode> ReadNodes()
+		public IEnumerable<CssNode> ReadNodes()
 		{
 			while (!tokenizer.IsEnd)
 			{
@@ -46,7 +46,7 @@
 			}
 		}
 
-		public INode ReadNode()
+		public CssNode ReadNode()
 		{
 			switch (tokenizer.Current.Kind)
 			{
@@ -63,14 +63,14 @@
 		{
 			switch(this.tokenizer.Current.Kind)
 			{
-				case TokenKind.Identifier	: return ReadStyleRule();
-				case TokenKind.AtSymbol		: return ReadAtRule();
+				case TokenKind.Name		: return ReadStyleRule();
+				case TokenKind.AtSymbol	: return ReadAtRule();
 
 				default: throw ParseException.Unexpected(this.tokenizer.Current, "Rule");
 			}
 		}
 
-		public VariableAssignment ReadAssignment()
+		public CssAssignment ReadAssignment()
 		{
 			tokenizer.Read(TokenKind.Dollar, LexicalMode.Assignment);			// read $
 
@@ -89,7 +89,7 @@
 				tokenizer.Read(); // read;
 			}
 
-			return new VariableAssignment(name, value);
+			return new CssAssignment(name, value);
 		}
 
 
@@ -147,11 +147,11 @@
 
 		public CssValue ReadLiteral()
 		{
-			if (tokenizer.Current.Kind == TokenKind.Dollar) return ReadIdentifier();
+			if (tokenizer.Current.Kind == TokenKind.Dollar) return ReadVariable();
 			
 			var value = tokenizer.Read();	// read value (string or number)
 
-			if (value.Kind == TokenKind.Number && tokenizer.Current.Kind == TokenKind.String)
+			if (value.Kind == TokenKind.Number && (tokenizer.Current.Kind == TokenKind.String || tokenizer.Current.Kind == TokenKind.Name))
 			{
 				var unit = tokenizer.Read(); // Read unit
 
@@ -201,13 +201,13 @@
 		}
 		*/
 
-		public CssIdentifier ReadIdentifier()
+		public CssVariable ReadVariable()
 		{
 			tokenizer.Read(TokenKind.Dollar, LexicalMode.Value);				// read $
 
-			var name = tokenizer.Read(TokenKind.String, LexicalMode.Value);		// read name
+			var symbol = tokenizer.Read(TokenKind.Name, LexicalMode.Value);		// read symbol
 
-			return new CssIdentifier(name) { 
+			return new CssVariable(symbol) { 
 				Leading = ReadTrivia()
 			};
 		}
@@ -239,11 +239,11 @@
 
 			switch (atName.Text)
 			{
-				case "charset"			: ruleType = RuleType.Charset;	break;
-				case "import"			: return ReadImportRule();		
-				case "font-face"		: ruleType = RuleType.FontFace;	break;
-				case "media"			: ruleType = RuleType.Media;		break;
-				case "page"			: ruleType = RuleType.Page;		break;
+				case "charset"				: ruleType = RuleType.Charset;	break;
+				case "import"				: return ReadImportRule();		
+				case "font-face"			: ruleType = RuleType.FontFace;	break;
+				case "media"				: ruleType = RuleType.Media;		break;
+				case "page"					: ruleType = RuleType.Page;		break;
 
 				case "-webkit-keyframes"	:
 				case "keyframes"			: ruleType = RuleType.Keyframes;	break;
@@ -252,7 +252,7 @@
 
 			var selector = new CssSelector("@" + atName.Text);
 
-			if (tokenizer.Current.Kind == TokenKind.Name || tokenizer.Current.Kind == TokenKind.Identifier)
+			if (tokenizer.Current.Kind == TokenKind.Name)
 			{
 				var x = ReadSpan();
 
@@ -276,7 +276,7 @@
 			var value = ReadValue();
 
 			var rule = new ImportRule {
-				Value = CssUrlValue.Parse(value.ToString())
+				Url = CssUrlValue.Parse(value.ToString())
 			};
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
@@ -373,15 +373,16 @@
 
 		public MixinNode ReadMixinBody()
 		{
-			var name = tokenizer.Read(TokenKind.Name, LexicalMode.Unknown);
+			var name = tokenizer.Read(); // name or string
 
-			IList<CssParameter> parameters = new List<CssParameter>();
+			ReadTrivia();
+
+			var parameters = new List<CssParameter>();
 
 			if(tokenizer.Current.Kind == TokenKind.LeftParenthesis)
 			{
 				parameters = ReadParameterList();
 			}
-
 
 			tokenizer.Read(TokenKind.BlockStart, LexicalMode.Block);	// read {
 
@@ -417,21 +418,22 @@
 				{
 					tokenizer.Read(); // Read the colon
 
-					@default = ReadValue();
+					@default = CssValue.FromComponents(ReadComponents());
 				}
+
+				ReadTrivia();
 
 				if(tokenizer.Current.Kind == TokenKind.Comma)
 				{
 					tokenizer.Read();
-
-					ReadTrivia();
 				}
+
+				ReadTrivia();
 
 				list.Add(new CssParameter(name.Text, @default));
 			}
 
 			tokenizer.Read(TokenKind.RightParenthesis, LexicalMode.Unknown); // read )
-
 
 			ReadTrivia();
 
@@ -452,6 +454,8 @@
 			ReadTrivia();
 
 			var name = tokenizer.Read(); // Read the name
+
+			ReadTrivia();
 
 			CssValue args = null;
 
@@ -546,7 +550,7 @@
 
 			ReadTrivia();													// TODO: read as leading annotation
 
-			var value = ReadValue();										// read value (value or cssvariable)
+			var value = ReadValue();										// read value (value or valuelist)
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{
@@ -555,7 +559,7 @@
 
 			ReadTrivia();
 
-			return new CssDeclaration(name.ToString(), value.ToString());
+			return new CssDeclaration(name.ToString(), value);
 		}
 
 
@@ -619,3 +623,21 @@
 		}
 	}
 }
+
+/*
+stylesheet  : [ CDO | CDC | S | statement ]*;
+statement   : ruleset | at-rule;
+at-rule     : ATKEYWORD S* any* [ block | ';' S* ];
+block       : '{' S* [ any | block | ATKEYWORD S* | ';' S* ]* '}' S*;
+ruleset     : selector? '{' S* declaration? [ ';' S* declaration? ]* '}' S*;
+selector    : any+;
+declaration : property S* ':' S* value;
+property    : IDENT;
+value       : [ any | block | ATKEYWORD S* ]+;
+any         : [ IDENT | NUMBER | PERCENTAGE | DIMENSION | STRING
+              | DELIM | URI | HASH | UNICODE-RANGE | INCLUDES
+              | DASHMATCH | ':' | FUNCTION S* [any|unused]* ')'
+              | '(' S* [any|unused]* ')' | '[' S* [any|unused]* ']'
+              ] S*;
+unused      : block | ATKEYWORD S* | ';' S* | CDO S* | CDC S*;
+*/

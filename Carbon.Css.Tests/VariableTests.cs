@@ -62,6 +62,39 @@ body {
 
 
 		[Test]
+		public void VariableTest4()
+		{
+			var context = new CssContext();
+
+			context.Variables["monster"] = CssValue.Parse("purple");
+
+			var sheet = StyleSheet.Parse(
+@"
+$blue: #dceef7;
+$yellow: #fff5cc;
+$padding: 10px;
+$padding-right: 20px;
+body { 
+  background-color: $blue;
+  color: $yellow;
+  monster: $monster;
+  padding: $padding $padding-right $padding $padding;
+}
+", context);
+
+
+
+			Assert.AreEqual(
+@"body {
+  background-color: #dceef7;
+  color: #fff5cc;
+  monster: purple;
+  padding: 10px 20px 10px 10px;
+}", sheet.ToString());
+		}
+
+
+		[Test]
 		public void VariableTest2()
 		{
 			var styles =

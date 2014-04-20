@@ -33,7 +33,7 @@
 			catch { return; }
 
 			// Remove any existing filters
-			foreach (var filter in rule.FindHavingPropertyName("filter").Where(f => f.Value.ToString().Contains("alpha")).ToArray())
+			foreach (var filter in rule.FindDeclaration("filter").Where(f => f.Value.ToString().Contains("alpha")).ToArray())
 			{
 				rule.Remove(filter);
 			}
@@ -50,7 +50,7 @@
 	{
 		public void Transform(CssRule rule)
 		{
-			foreach (var declaration in rule.Where(d => IsPrefixed(d)).ToArray())
+			foreach (var declaration in rule.OfType<CssDeclaration>().Where(d => IsPrefixed(d)).ToArray())
 			{
 				var index = rule.IndexOf(declaration);
 				var prop = CssPropertyInfo.Get(declaration.Name);
@@ -60,7 +60,7 @@
 				foreach (var prefixedName in prop.Compatibility.GetPrefixes(declaration.Name))
 				{
 					// Remove existing prefixes
-					foreach (var remove in rule.FindHavingPropertyName(prefixedName).ToArray())
+					foreach (var remove in rule.FindDeclaration(prefixedName).ToArray())
 					{
 						rule.Remove(remove);
 					}

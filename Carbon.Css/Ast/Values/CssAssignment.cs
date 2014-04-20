@@ -3,18 +3,20 @@
 	using Carbon.Css.Parser;
 	using System.IO;
 
-	public class VariableAssignment : INode
+	public class CssAssignment : CssNode
 	{
 		private readonly string name;
 		private readonly CssValue value;
 
-		public VariableAssignment(string name, CssValue value)
+		public CssAssignment(string name, CssValue value)
+			: base(NodeKind.Assignment)
 		{
 			this.name = name;
 			this.value = value;
 		}
 
-		public VariableAssignment(CssToken name, CssValue value)
+		public CssAssignment(CssToken name, CssValue value)
+			: base(NodeKind.Assignment)
 		{
 			this.name = name.Text;
 			this.value = value;
@@ -30,18 +32,9 @@
 			get { return value; }
 		}
 
-		#region Node
-
-		NodeKind INode.Kind
+		public override string Text
 		{
-			get { return NodeKind.Variable; }
+			get { return ""; }
 		}
-
-		void INode.WriteTo(TextWriter writer, int level, CssContext context)
-		{
-			return;
-		}
-
-		#endregion
 	}
 }

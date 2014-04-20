@@ -7,3 +7,12 @@ Z:\Workspace\Carbon\Css\src\Carbon.Css.Tests\bin\Debug\Carbon.Css.pdb
 Z:\Workspace\Carbon\Css\src\Carbon.Css.Tests\bin\Debug\nunit.framework.xml
 Z:\Workspace\Carbon\Css\src\Carbon.Css.Tests\obj\Debug\Cadmium.Css.Tests.dll
 Z:\Workspace\Carbon\Css\src\Carbon.Css.Tests\obj\Debug\Cadmium.Css.Tests.pdb
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\Cadmium.Css.Tests.dll
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\Cadmium.Css.Tests.pdb
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\Carbon.Css.dll
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\nunit.framework.dll
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\Carbon.Css.pdb
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\nunit.framework.xml
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\obj\Debug\Carbon.Css.Tests.csprojResolveAssemblyReference.cache
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\obj\Debug\Cadmium.Css.Tests.dll
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\obj\Debug\Cadmium.Css.Tests.pdb

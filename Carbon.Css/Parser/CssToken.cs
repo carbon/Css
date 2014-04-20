@@ -52,7 +52,7 @@
 
 	public enum TokenKind
 	{
-		Identifier,		// selector or identifer (IDENT)
+		// Identifier,		// selector or identifer (IDENT)
 		
 		Name,			// name (followed by a :)
 
