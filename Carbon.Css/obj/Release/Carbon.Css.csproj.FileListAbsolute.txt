@@ -1,8 +1,0 @@
-Z:\Workspace\Carbon\Css\release\Carbon.Css.dll
-Z:\Workspace\Carbon\Css\release\Carbon.Css.pdb
-Z:\Workspace\Carbon\Css\src\Carbon.Css\obj\Release\Carbon.Css.dll
-Z:\Workspace\Carbon\Css\src\Carbon.Css\obj\Release\Carbon.Css.pdb
-Z:\Workspace\Carbon\Css\src\Carbon.Css\obj\Release\Carbon.Css.csprojResolveAssemblyReference.cache
-Z:\Workspace\Carbon\Css\Carbon.Css\obj\Release\Carbon.Css.csprojResolveAssemblyReference.cache
-Z:\Workspace\Carbon\Css\Carbon.Css\obj\Release\Carbon.Css.dll
-Z:\Workspace\Carbon\Css\Carbon.Css\obj\Release\Carbon.Css.pdb
