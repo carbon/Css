@@ -16,6 +16,14 @@
 
 		Selector,
 		
+
+		// Rules
+		/*
+		StyleRule,
+		ImportRule,
+		AnimationRule,
+		*/
+
 		// Values
 		Assignment,
 		Variable,
@@ -39,7 +47,6 @@
 		// Sass Extensions
 		Mixin,
 		Include
-
 	}
 }
 

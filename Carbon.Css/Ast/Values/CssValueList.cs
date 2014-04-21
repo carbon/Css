@@ -10,6 +10,8 @@
 
 	public class CssValueList : CssValue
 	{
+		private readonly List<CssNode> children = new List<CssNode>();
+
 		private ValueListSeperator seperator;
 
 		public CssValueList(ValueListSeperator seperator = ValueListSeperator.Comma)
@@ -34,6 +36,12 @@
 		public override string Text
 		{
 			get { return ToString(); }
+		}
+
+
+		public override IList<CssNode> Children
+		{
+			get { return children; }
 		}
 
 		public override string ToString()

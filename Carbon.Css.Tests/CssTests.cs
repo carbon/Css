@@ -56,9 +56,9 @@
 		{
 			var sheet = StyleSheet.Parse("div > h1 { width: 100px; }");
 
-			var style = sheet.Rules[0] as CssRule;
+			var style = sheet.Children[0] as CssRule;
 
-			Assert.AreEqual(1, sheet.Rules.Count);
+			Assert.AreEqual(1, sheet.Children.Count);
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("div > h1", style.Selector.ToString());
 			Assert.AreEqual(1, style.Count);
@@ -68,7 +68,6 @@
 			Assert.AreEqual("100px", x.Value.ToString());
 			Assert.AreEqual("div > h1 { width: 100px; }", sheet.ToString());
 		}
-
 
 		[Test]
 		public void LineComment()
@@ -84,9 +83,9 @@
 		{
 			var sheet = StyleSheet.Parse("@import url(core.css);");
 
-			var rule = sheet.Rules[0] as ImportRule;
+			var rule = sheet.Children[0] as ImportRule;
 
-			Assert.AreEqual(1, sheet.Rules.Count);
+			Assert.AreEqual(1, sheet.Children.Count);
 			Assert.AreEqual(RuleType.Import, rule.Type);
 			Assert.AreEqual("@import", rule.Selector.ToString());
 			Assert.AreEqual("@import url('core.css');", rule.ToString());
@@ -100,9 +99,9 @@
 		{
 			var sheet = StyleSheet.Parse("#monster { font-color: red; background-color: url(http://google.com); }");
 
-			var style = sheet.Rules[0] as CssRule;
+			var style = sheet.Children[0] as CssRule;
 
-			Assert.AreEqual(1, sheet.Rules.Count);
+			Assert.AreEqual(1, sheet.Children.Count);
 			Assert.AreEqual(RuleType.Style, style.Type);
 			Assert.AreEqual("#monster", style.Selector.ToString());
 			Assert.AreEqual(2, style.Count);
@@ -133,7 +132,7 @@
 	to {opacity: 0.25;}
 }");
 
-			Assert.AreEqual("@-webkit-keyframes fade", sheet.Rules[0].Selector.Text);
+			Assert.AreEqual("@-webkit-keyframes fade", (sheet.Children[0] as CssRule).Selector.Text);
 
 			Assert.AreEqual(
 @"@-webkit-keyframes fade {
@@ -141,7 +140,7 @@
   to { opacity: 0.25; }
 }", sheet.ToString());
 
-			Assert.AreEqual(1, sheet.Rules.Count);
+			Assert.AreEqual(1, sheet.Children.Count);
 
 
 
@@ -201,7 +200,7 @@
 			
 			var sheet = StyleSheet.Parse(styles);
 
-			var value = ((CssDeclaration)sheet.Rules[0][2]).Value;
+			var value = ((CssDeclaration)((CssRule)sheet.Children[0])[2]).Value;
 
 			//  url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/cm-billing-webfont.woff') format('woff')
 
@@ -410,6 +409,8 @@ body {
 
 
 			sheet.SetCompatibility(Browser.Chrome1);
+
+			sheet.ExecuteRewriters();
 
 			Assert.AreEqual(@"body {
   -moz-transform: rotate(90);

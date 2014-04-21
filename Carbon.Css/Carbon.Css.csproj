@@ -48,6 +48,8 @@
     <Compile Include="Ast\TriviaNode.cs" />
     <Compile Include="Ast\Values\CssValueList.cs" />
     <Compile Include="Evaluator\CssWriter.cs" />
+    <Compile Include="Helpers\SourceLocation.cs" />
+    <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Model\CssBlock.cs" />
     <Compile Include="Model\CssContext.cs" />
     <Compile Include="Ast\CssNode.cs" />
@@ -83,7 +85,8 @@
     <Compile Include="Resolver\IStylesheet.cs" />
     <Compile Include="Resolver\IStyleSheetResolver.cs" />
     <Compile Include="Resolver\Include.cs" />
-    <Compile Include="Transformer\CssTransformer.cs" />
+    <Compile Include="Transformer\Rewriter.cs" />
+    <Compile Include="Transformer\ExpandNestedStylesRewriter.cs" />
     <Compile Include="Transformer\ICssTransform.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

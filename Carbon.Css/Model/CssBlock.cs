@@ -7,6 +7,8 @@
 
 	public class CssBlock : CssNode, IList<CssNode>
 	{
+		protected readonly List<CssNode> children = new List<CssNode>();
+
 		public CssBlock() 
 			: base(NodeKind.Block) { }
 
@@ -18,6 +20,11 @@
 		public bool IsEmpty
 		{
 			get { return children.Count != 0; }
+		}
+
+		public override IList<CssNode> Children
+		{
+			get { return children; }
 		}
 
 		public IEnumerable<CssDeclaration> FindDeclaration(string propertyName)
@@ -39,7 +46,6 @@
 		{
 			get { throw new NotImplementedException(); }
 		}
-
 
 		#region IList<CssNode> Members
 
@@ -64,9 +70,11 @@
 			set { children[index] = value; }
 		}
 
-		public void Add(CssNode item)
+		public void Add(CssNode node)
 		{
-			children.Add(item);
+			node.Parent = this;
+
+			children.Add(node);
 		}
 
 		void ICollection<CssNode>.Clear()

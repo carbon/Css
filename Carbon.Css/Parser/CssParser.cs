@@ -66,32 +66,82 @@
 				case TokenKind.Name		: return ReadStyleRule();
 				case TokenKind.AtSymbol	: return ReadAtRule();
 
-				default: throw ParseException.Unexpected(this.tokenizer.Current, "Rule");
+				default: throw new UnexpectedTokenException(LexicalMode.Rule, tokenizer.Current);
 			}
 		}
 
-		public CssAssignment ReadAssignment()
-		{
-			tokenizer.Read(TokenKind.Dollar, LexicalMode.Assignment);			// read $
+		#region At Rules
 
-			var name = tokenizer.Read(TokenKind.Name, LexicalMode.Assignment);	// read name
+		public CssRule ReadAtRule()
+		{
+			// ATKEYWORD S* any* [ block | ';' S* ];
+			// @{keyword} ... 
+
+			// @import "subs.css";
+			// @media print {
+
+			tokenizer.Read(TokenKind.AtSymbol, LexicalMode.Rule);	// Read @
+
+			var ruleType = RuleType.Unknown;
+
+			var atName = tokenizer.Read();	// read name or string
 
 			ReadTrivia();
 
-			tokenizer.Read(TokenKind.Colon, LexicalMode.Assignment);			// read :
+			switch (atName.Text)
+			{
+				case "charset": ruleType = RuleType.Charset; break;
+				case "import": return ReadImportRule();
+				case "font-face": ruleType = RuleType.FontFace; break;
+				case "media": ruleType = RuleType.Media; break;
+				case "page": ruleType = RuleType.Page; break;
 
-			ReadTrivia();														// Read trivia
+				case "-webkit-keyframes":
+				case "keyframes": ruleType = RuleType.Keyframes; break;
+				case "mixin": return ReadMixinBody();
+			}
 
+			var selector = new CssSelector("@" + atName.Text);
+
+			if (tokenizer.Current.Kind == TokenKind.Name)
+			{
+				var x = ReadSpan();
+
+				selector = new CssSelector("@" + atName.Text + " " + x.ToString());
+			}
+
+			var rule = new CssRule(ruleType, selector);
+
+			switch (tokenizer.Current.Kind)
+			{
+				case TokenKind.BlockStart: ReadBlock(rule); break; // {
+				case TokenKind.Semicolon: tokenizer.Read(); break; // ;
+			}
+
+			return rule;
+		}
+
+
+		public CssRule ReadImportRule()
+		{
 			var value = ReadValue();
+
+			var rule = new ImportRule
+			{
+				Url = CssUrlValue.Parse(value.ToString())
+			};
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{
-				tokenizer.Read(); // read;
+				tokenizer.Read();
 			}
 
-			return new CssAssignment(name, value);
+			rule.Trailing = ReadTrivia();
+
+			return rule;
 		}
 
+		#endregion
 
 		#region Values
 
@@ -221,92 +271,31 @@
 		
 		#endregion
 
-		public CssRule ReadAtRule()
+		#region Variables
+
+		public CssAssignment ReadAssignment()
 		{
-			// ATKEYWORD S* any* [ block | ';' S* ];
-			// @{keyword} ... 
+			tokenizer.Read(TokenKind.Dollar, LexicalMode.Assignment);			// read $
 
-			// @import "subs.css";
-			// @media print {
-
-			tokenizer.Read(TokenKind.AtSymbol, LexicalMode.Rule);	// Read @
-
-			var ruleType = RuleType.Unknown;
-
-			var atName = tokenizer.Read();	// read name or string
+			var name = tokenizer.Read(TokenKind.Name, LexicalMode.Assignment);	// read name
 
 			ReadTrivia();
 
-			switch (atName.Text)
-			{
-				case "charset"				: ruleType = RuleType.Charset;	break;
-				case "import"				: return ReadImportRule();		
-				case "font-face"			: ruleType = RuleType.FontFace;	break;
-				case "media"				: ruleType = RuleType.Media;		break;
-				case "page"					: ruleType = RuleType.Page;		break;
+			tokenizer.Read(TokenKind.Colon, LexicalMode.Assignment);			// read :
 
-				case "-webkit-keyframes"	:
-				case "keyframes"			: ruleType = RuleType.Keyframes;	break;
-				case "mixin"				: return ReadMixinBody();
-			}
+			ReadTrivia();														// Read trivia
 
-			var selector = new CssSelector("@" + atName.Text);
-
-			if (tokenizer.Current.Kind == TokenKind.Name)
-			{
-				var x = ReadSpan();
-
-				selector = new CssSelector("@" + atName.Text + " " + x.ToString());
-			}
-
-			var rule = new CssRule(ruleType, selector);
-
-			switch (tokenizer.Current.Kind)
-			{
-				case TokenKind.BlockStart:	ReadBlock(rule);	break; // {
-				case TokenKind.Semicolon:	tokenizer.Read();	break; // ;
-			}
-
-			return rule;
-		}
-
-
-		public CssRule ReadImportRule()
-		{
 			var value = ReadValue();
-
-			var rule = new ImportRule {
-				Url = CssUrlValue.Parse(value.ToString())
-			};
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{
-				tokenizer.Read();
+				tokenizer.Read(); // read;
 			}
 
-			return rule;
+			return new CssAssignment(name, value);
 		}
 
-
-		public string ReadName()
-		{
-			string name;
-
-			// Allow leading : on selector identifiers
-			if (tokenizer.Current.Kind == TokenKind.Colon)
-			{
-				name = tokenizer.Read().Text + tokenizer.Read().Text;
-			}
-			else
-			{
-				name = tokenizer.Read().Text;
-			}
-
-			var trivia = ReadTrivia();
-
-			return name;
-		}
-
+		#endregion
 
 		public CssSelector ReadSelector()
 		{
@@ -518,18 +507,18 @@
 					}
 				}
 
-				var span = ReadSpan();
+				var statement = ReadSpan();
 
 				switch (tokenizer.Current.Kind)
 				{
-					case TokenKind.Colon		: block.Add(ReadDeclarationFromName(span));						break; // DeclarationName
-					case TokenKind.BlockStart	: block.Children.Add(ReadRuleBlock(new CssSelector(span)));		break;
+					case TokenKind.Colon		: block.Add(ReadDeclarationFromName(statement));		break; // DeclarationName
+					case TokenKind.BlockStart	: block.Add(ReadRuleBlock(new CssSelector(statement)));	break;
 					case TokenKind.BlockEnd		: break;
 
 					// TODO: Figure out where we missed reading the semicolon TEMP
 					case TokenKind.Semicolon	: tokenizer.Read(); break;
 
-					default: throw ParseException.Unexpected(tokenizer.Current, "Block");
+					default: throw new UnexpectedTokenException(LexicalMode.Block, tokenizer.Current);
 				}
 			}
 
@@ -594,6 +583,26 @@
 
 			return trivia;
 		}
+
+		public string ReadName()
+		{
+			string name;
+
+			// Allow leading : on selector identifiers
+			if (tokenizer.Current.Kind == TokenKind.Colon)
+			{
+				name = tokenizer.Read().Text + tokenizer.Read().Text;
+			}
+			else
+			{
+				name = tokenizer.Read().Text;
+			}
+
+			var trivia = ReadTrivia();
+
+			return name;
+		}
+
 
 		public TokenList ReadSpan()
 		{

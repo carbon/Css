@@ -1,39 +1,56 @@
 ﻿namespace Carbon.Css
 {
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Text;
 
 	using Carbon.Css.Parser;
 	using System.IO;
-	using System;
+	using Carbon.Css.Helpers;
 
-	public class StyleSheet : IStylesheet
+	public class StyleSheet : CssNode, IStylesheet
 	{
-		private readonly IList<CssRule> rules;
+		private readonly List<CssNode> children;
 		private readonly CssContext context;
 
-		public StyleSheet(IList<CssRule> rules, CssContext context)
+		public StyleSheet(List<CssNode> children, CssContext context)
+			: base(NodeKind.Document)
 		{
-			this.rules = rules;
+			this.children = children;
 			this.context = context;
 		}
 
-		public IList<CssRule> Rules
+		public StyleSheet(CssContext context)
+			: base(NodeKind.Document)
 		{
-			get { return rules; }
+			this.children = new List<CssNode>();
+			this.context = context;
 		}
+
+		public void AddChild(CssNode node)
+		{
+			node.Parent = this;
+
+			children.Add(node);
+		}
+
+		public override IList<CssNode> Children
+		{
+			get { return children; }
+		}
+
+		#region Helpers
+
+		public IList<CssRule> GetRules()
+		{
+			return children.OfType<CssRule>().ToList(); 
+		}
+
+		#endregion
 
 		public CssContext Context
 		{
 			get { return context; }
-		}
-
-		public void SetCompatibility(params Browser[] browsers)
-		{
-			foreach (var rule in rules)
-			{
-				rule.Expand();
-			}
 		}
 
 		public static StyleSheet Parse(string text, CssContext context = null)
@@ -42,6 +59,8 @@
 			{
 				context = new CssContext();
 			}
+
+			var sheet = new StyleSheet(context);
 
 			var rules = new List<CssRule>();
 
@@ -63,11 +82,11 @@
 				}
 				else
 				{
-					rules.Add((CssRule)node);
+					sheet.AddChild(node);
 				}
 			}
 
-			return new StyleSheet(rules, context);
+			return sheet;
 		}
 
 		public static StyleSheet FromFile(FileInfo file, CssContext context = null)
@@ -79,7 +98,19 @@
 				text = reader.ReadToEnd();
 			}
 
-			return Parse(text, context);
+
+			try
+			{
+				return Parse(text, context);
+			}
+			catch (UnexpectedTokenException ex)
+			{
+				ex.Location = TextHelper.GetLocation(text, ex.Position);
+
+				ex.Lines = TextHelper.GetLinesAround(text, ex.Location.Line, 3).ToList();
+
+				throw ex;
+			}
 		}
 
 		public void Compile(TextWriter writer)
@@ -87,23 +118,77 @@
 			WriteTo(writer);
 		}
 
+		#region Transformers
+
+		private readonly RewriterCollection rewriters = new RewriterCollection();
+
+		public void SetCompatibility(params Browser[] browsers)
+		{
+			rewriters.Add(new IEOpacityTransform());
+			rewriters.Add(new AddVendorPrefixesTransform());
+		}
+
+		public void AllowNestedRules()
+		{
+			rewriters.Add(new ExpandNestedStylesRewriter());
+		}
+
+		public void AddRewriter(ICssTransformer rewriter)
+		{
+			rewriters.Add(rewriter);
+		}
+
+		public void ExecuteRewriters()
+		{
+			var index = 0;
+
+			foreach (var node in children.ToList())
+			{
+				foreach (var rewriter in rewriters)
+				{
+					var rule = node as CssRule;
+
+					if (rule != null)
+					{
+						rewriter.Transform(rule, index);
+					}
+				}
+
+				index++;
+			}
+			
+			
+		}
+
+		#endregion
+		
 		public void WriteTo(TextWriter textWriter)
 		{
 			var writer = new CssWriter(textWriter, context);
 
 			var i = 0;
 
-			foreach (var rule in rules)
+			foreach (var node in children)
 			{
-				if (i != 0)
+				var rule = node as CssRule;
+
+				if (rule != null)
 				{
-					textWriter.WriteLine();
+					if (i != 0)
+					{
+						textWriter.WriteLine();
+					}
+
+					writer.WriteRule(rule);
+
+					i++;
 				}
-
-				writer.WriteRule(rule);
-
-				i++;
 			}
+		}
+
+		public override string Text
+		{
+			get { return ToString(); }
 		}
 
 		public override string ToString()

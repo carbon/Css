@@ -11,6 +11,13 @@
 		private char current;
 		private int position;
 
+		public SourceReader(string text)
+		{
+			this.textReader = new StringReader(text);
+
+			current = '.';
+		}
+
 		public SourceReader(TextReader textReader) 
 		{
 			this.textReader = textReader;
@@ -98,7 +105,7 @@
 			get { return markStart; }
 		}
 	
-		public void Mark(bool appendCurrent = true)
+		public int Mark(bool appendCurrent = true)
 		{
 			markStart = this.position;
 			marked = this.position;
@@ -107,6 +114,8 @@
 			{
 				marked++;
 			}
+
+			return this.position;
 	
 		}
 

@@ -34,7 +34,7 @@
 		{
 			if (current.Kind != expect)
 			{
-				throw new ParseException(string.Format("Expected {0} reading {1}. Was {2}.", expect, mode.ToString(), this.current));
+				throw new UnexpectedTokenException(mode, expect, current);
 			}
 
 			return Read();

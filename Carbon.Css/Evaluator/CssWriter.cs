@@ -60,7 +60,8 @@ using System.Linq;
 
 		#region Mixins
 
-		public void Evaulate(IncludeNode include, CssRule rule)
+		// Expand Include Nodes
+		public void ExpandInclude(IncludeNode include, CssRule rule)
 		{
 			var index = rule.Children.IndexOf(include);
 
@@ -108,7 +109,7 @@ using System.Linq;
 				variable.Value = c.GetVariable(variable.Symbol);
 			
 			}
-			else if(node.Children.Count > 0)
+			else if (node.HasChildren)
 			{
 				foreach (var n in node.Children)
 				{
@@ -174,17 +175,18 @@ using System.Linq;
 
 			var copy = rule.Children.ToList();
 
-			// Evaulate includes
+			// Expand includes
 			foreach (var include in rule.Children.OfType<IncludeNode>().ToArray())
 			{
-				Evaulate(include, rule);
+				ExpandInclude(include, rule);
 			}
+
 
 			var condenced = false;
 			var count = 0;
 
 			// Write the declarations
-			foreach (var node in rule.Children)
+			foreach (var node in rule.Children) // TODO: Change to an immutable list?
 			{
 				if (node.Kind == NodeKind.Include) continue;
 

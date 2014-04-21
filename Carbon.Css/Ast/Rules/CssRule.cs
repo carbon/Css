@@ -35,16 +35,6 @@
 		{
 			get { return selector; }
 		}
-	
-
-		#region Helpers
-
-		public void Expand()
-		{
-			new DefaultRuleTransformer().Transform(this);
-		}
-
-		#endregion
 
 		public override string Text
 		{

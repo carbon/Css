@@ -4,7 +4,7 @@
 
 	public interface ICssTransformer
 	{
-		void Transform(CssRule rule);
+		void Transform(CssRule rule, int index);
 	}
 
 	/*
@@ -17,9 +17,10 @@
 	}
 	*/
 
+
 	public class IEOpacityTransform : ICssTransformer
 	{
-		public void Transform(CssRule rule)
+		public void Transform(CssRule rule, int ruleIndex)
 		{
 			var declaration = rule.Get("opacity");
 
@@ -48,7 +49,7 @@
 
 	public class AddVendorPrefixesTransform : ICssTransformer
 	{
-		public void Transform(CssRule rule)
+		public void Transform(CssRule rule, int ruleIndex)
 		{
 			foreach (var declaration in rule.OfType<CssDeclaration>().Where(d => IsPrefixed(d)).ToArray())
 			{

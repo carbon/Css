@@ -6,9 +6,7 @@
 	public abstract class CssNode : IEnumerable<CssNode>
 	{
 		private readonly NodeKind kind;
-		private readonly CssNode parent;
-
-		protected readonly List<CssNode> children = new List<CssNode>();
+		private CssNode parent;
 
 		public CssNode(NodeKind kind, CssNode parent = null)
 		{
@@ -21,28 +19,41 @@
 			get { return kind; }
 		}
 
+		// Replace with tostring or span
 		public abstract string Text { get; }
 
-
-		public List<CssNode> Children
+		public CssNode Parent
 		{
-			get { return children; }
+			get { return parent; }
+			set { parent = value; }
 		}
 
 		internal Whitespace Leading { get; set; }
 
 		internal Whitespace Trailing { get; set; }
 
+		// ChildNodes
+
+		public virtual IList<CssNode> Children
+		{
+			get { return new CssNode[0]; }
+		}
+
+		public bool HasChildren
+		{
+			get { return Children != null && Children.Count > 0; }
+		}
+
 		#region IEnumerator
 
 		IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator()
 		{
-			return children.GetEnumerator();
+			return Children.GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return children.GetEnumerator();
+			return Children.GetEnumerator();
 		}
 
 		#endregion

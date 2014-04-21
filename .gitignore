@@ -7,3 +7,15 @@ src/Carbon.Css/.DS_Store
 /src/Carbon.Css.v11.suo
 /src/Carbon.Css.Tests/bin/
 /release/
+/Carbon.Css/obj/Release/Carbon.Css.pdb
+/Carbon.Css/obj/Release/Carbon.Css.dll
+/Carbon.Css/obj/Debug/Carbon.Css.pdb
+/Carbon.Css/obj/Debug/Carbon.Css.dll
+
+/Carbon.Css/bin/Debug/Carbon.Css.pdb
+/Carbon.Css/bin/Debug/Carbon.Css.dll
+
+/Carbon.Css.Tests/obj/Debug/Carbon.Css.Tests.csprojResolveAssemblyReference.cache
+
+/Carbon.Css.Tests/obj/Debug/Cadmium.Css.Tests.pdb
+/Carbon.Css.Tests/obj/Debug/Cadmium.Css.Tests.dll
