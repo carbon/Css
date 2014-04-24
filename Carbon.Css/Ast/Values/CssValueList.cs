@@ -38,6 +38,12 @@
 			get { return ToString(); }
 		}
 
+		public void Add(CssNode node)
+		{
+			node.Parent = this;
+
+			children.Add(node);
+		}
 
 		public override IList<CssNode> Children
 		{

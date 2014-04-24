@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	public class CssModule : Compatibility
+	public class CssModule : CssCompatibility
 	{
 		private readonly CssModuleType type;
 		private readonly float level;
@@ -23,7 +23,7 @@
 
 		public static readonly CssModule Core1		= new CssModule(CssModuleType.Core, 1)			{ Standard = new[] { Browser.IE6, Browser.Chrome1, Browser.Firefox1, Browser.Safari1 } };
 		public static readonly CssModule Css2		= new CssModule(CssModuleType.Core, 2)			{ Standard = new[] { Browser.IE7, Browser.Chrome1, Browser.Firefox1, Browser.Safari1 } };
-		public static readonly CssModule Core21		= new CssModule(CssModuleType.Core, 2.1f)		{ Standard = new[] { Browser.IE8, Browser.Chrome1, Browser.Firefox1, Browser.Safari1 } };
+		public static readonly CssModule Core2_1	= new CssModule(CssModuleType.Core, 2.1f)		{ Standard = new[] { Browser.IE8, Browser.Chrome1, Browser.Firefox1, Browser.Safari1 } };
 
 		#region Animations
 
@@ -81,14 +81,19 @@
 
 		#region Transforms
 
+		// IE: prefixed(9), standard(10)
+
 		public static readonly CssModule Transforms3 = new CssModule(CssModuleType.Transforms, 3) {
 			Prefixed = new[] { Browser.Chrome10, Browser.Firefox(3.5f), Browser.IE9, Browser.Opera(10.5f), Browser.Safari4 },
-			Standard = new[] { Browser.Chrome26, Browser.IE10 }
+			Standard = new[] { Browser.Chrome36, Browser.IE10, Browser.Firefox16 }
 		};
 
 		#endregion
 
 		#region Transitions
+
+		// Unsupported in IE9
+		// Standard in IE10
 
 		public static readonly CssModule Transitions3 = new CssModule(CssModuleType.Transitions, 3) {
 			Prefixed = new[] { Browser.Chrome1, Browser.Firefox4, Browser.Opera(10.6f), Browser.Safari3 },

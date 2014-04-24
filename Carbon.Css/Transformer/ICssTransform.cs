@@ -2,7 +2,7 @@
 {
 	using System.Linq;
 
-	public interface ICssTransformer
+	public interface ICssTransformer // Rename ICssRewriter
 	{
 		void Transform(CssRule rule, int index);
 	}
@@ -17,68 +17,5 @@
 	}
 	*/
 
-
-	public class IEOpacityTransform : ICssTransformer
-	{
-		public void Transform(CssRule rule, int ruleIndex)
-		{
-			var declaration = rule.Get("opacity");
-
-			if (declaration == null) return;
-			
-			var cssValue = declaration.Value;
-
-			int value;
-
-			try { value = (int)(double.Parse(cssValue.ToString()) * 100); }
-			catch { return; }
-
-			// Remove any existing filters
-			foreach (var filter in rule.FindDeclaration("filter").Where(f => f.Value.ToString().Contains("alpha")).ToArray())
-			{
-				rule.Remove(filter);
-			}
-
-			var index = rule.IndexOf(declaration);
-
-			// Add the filter
-			rule.Insert(index, new CssDeclaration("filter", "alpha(opacity=" + value + ")"));
-			
-		}
-	}
-
-	public class AddVendorPrefixesTransform : ICssTransformer
-	{
-		public void Transform(CssRule rule, int ruleIndex)
-		{
-			foreach (var declaration in rule.OfType<CssDeclaration>().Where(d => IsPrefixed(d)).ToArray())
-			{
-				var index = rule.IndexOf(declaration);
-				var prop = CssPropertyInfo.Get(declaration.Name);
-
-				var cssValue = declaration.Value;
-
-				foreach (var prefixedName in prop.Compatibility.GetPrefixes(declaration.Name))
-				{
-					// Remove existing prefixes
-					foreach (var remove in rule.FindDeclaration(prefixedName).ToArray())
-					{
-						rule.Remove(remove);
-					}
-
-					// Insert above the rule
-					rule.Insert(index, new CssDeclaration(prefixedName, cssValue));
-				}
-			}
-		}
-
-		public bool IsPrefixed(CssDeclaration d)
-		{
-			var prop = CssPropertyInfo.Get(d.Name);
-
-			if (prop == null || prop.Compatibility == null || prop.Compatibility.Prefixed == null) return false;
-
-			return true;
-		}
-	}
+	
 }

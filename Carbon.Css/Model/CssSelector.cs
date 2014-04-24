@@ -19,19 +19,21 @@
 
 			foreach (var token in tokens)
 			{
+				/*
 				if (token.IsTrivia) continue;
 
 				if (sb.Length > 0 && last != null && last.Value.Kind != TokenKind.Colon)
 				{
 					sb.Append(" ");
 				}
+				*/
 
 				sb.Append(token.Text);
 
 				last = token;
 			}
 
-			this.text = sb.ToString();
+			this.text = sb.ToString().Trim();
 
 		}
 

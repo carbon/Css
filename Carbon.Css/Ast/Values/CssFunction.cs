@@ -1,6 +1,7 @@
 ﻿namespace Carbon.Css
 {
 	using Carbon.Css.Parser;
+	using System.Collections.Generic;
 
 	public class CssFunction : CssValue
 	{
@@ -19,9 +20,20 @@
 			get { return name.Text; }
 		}
 
+		public CssValue Args
+		{
+			get { return args; }
+		}
+
 		public override string Text
 		{
 			get { return name.Text + "(" + args.Text + ")"; }
+		}
+
+		// Add Children to allow recussive variable binding
+		public override IList<CssNode> Children
+		{
+			get { return new[] { Args }; }
 		}
 
 		public override string ToString()

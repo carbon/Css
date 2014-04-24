@@ -90,15 +90,15 @@
 
 			switch (atName.Text)
 			{
-				case "charset": ruleType = RuleType.Charset; break;
-				case "import": return ReadImportRule();
-				case "font-face": ruleType = RuleType.FontFace; break;
-				case "media": ruleType = RuleType.Media; break;
-				case "page": ruleType = RuleType.Page; break;
+				case "charset"		: ruleType = RuleType.Charset; break;
+				case "import"		: return ReadImportRule();
+				case "font-face"	: ruleType = RuleType.FontFace; break;
+				case "media"		: return ReadMediaRule();
+				case "page"			: ruleType = RuleType.Page; break;
 
-				case "-webkit-keyframes":
-				case "keyframes": ruleType = RuleType.Keyframes; break;
-				case "mixin": return ReadMixinBody();
+				case "-webkit-keyframes"	:
+				case "keyframes"			: ruleType = RuleType.Keyframes; break;
+				case "mixin"				: return ReadMixinBody();
 			}
 
 			var selector = new CssSelector("@" + atName.Text);
@@ -120,6 +120,32 @@
 
 			return rule;
 		}
+
+		public CssRule ReadMediaRule()
+		{
+			// @media only screen and (min-width : 1600px) {
+
+			var span = new TokenList();
+
+			while (tokenizer.Current.Kind != TokenKind.BlockStart && !tokenizer.IsEnd)
+			{
+				var token = tokenizer.Read();
+
+				span.Add(token);
+			}
+
+
+			var rule = new CssRule(RuleType.Media, new CssSelector("@media " + span.ToString().Trim()));
+
+			ReadBlock(rule);
+
+			return rule;
+
+			
+
+		
+		}
+
 
 
 		public CssRule ReadImportRule()
@@ -201,13 +227,24 @@
 			
 			var value = tokenizer.Read();	// read value (string or number)
 
-			if (value.Kind == TokenKind.Number && (tokenizer.Current.Kind == TokenKind.String || tokenizer.Current.Kind == TokenKind.Name))
+			if (value.Kind == TokenKind.Number)
 			{
-				var unit = tokenizer.Read(); // Read unit
+				var hasUnit = (tokenizer.Current.Kind == TokenKind.String || tokenizer.Current.Kind == TokenKind.Name);
 
-				return new CssDimension(value, unit) {
-					Trailing = ReadTrivia()
-				};
+				if (hasUnit)
+				{
+					var unit = tokenizer.Read(); // Read unit
+
+					return new CssDimension(value, unit) {
+						Trailing = ReadTrivia()
+					};
+				}
+				else
+				{
+					return new CssNumber(value) {
+						Trailing = ReadTrivia()
+					};
+				}
 			}
 
 			if (tokenizer.Current.Kind == TokenKind.LeftParenthesis)
@@ -230,7 +267,7 @@
 				};
 			}
 
-			return new CssLiteral(value) {
+			return new CssString(value) {
 				Trailing = ReadTrivia()
 			};
 		}
@@ -548,9 +585,8 @@
 
 			ReadTrivia();
 
-			return new CssDeclaration(name.ToString(), value);
+			return new CssDeclaration(name, value);
 		}
-
 
 		public CssDeclaration ReadDeclarationFromName(TokenList name)
 		{

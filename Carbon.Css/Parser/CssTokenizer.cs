@@ -76,20 +76,30 @@
 
 				case '@': return new CssToken(TokenKind.AtSymbol, reader.Read(), reader.Position);
 
-				case '$': mode.Enter(LexicalMode.Symbol);					return new CssToken(TokenKind.Dollar, reader.Read(), reader.Position);
+				case '$': mode.Enter(LexicalMode.Symbol);							return new CssToken(TokenKind.Dollar, reader.Read(), reader.Position);
 
-				case '/': return ReadComment();
+				case '/':
+					var peek = reader.Peek();
 
-				case ':': mode.Enter(LexicalMode.Value);					return new CssToken(TokenKind.Colon,		reader.Read(), reader.Position);
-				case ',':													return new CssToken(TokenKind.Comma,		reader.Read(), reader.Position);
-				case ';': LeaveValueMode();									return new CssToken(TokenKind.Semicolon,	reader.Read(), reader.Position);
-				case '{':					mode.Enter(LexicalMode.Block);	return new CssToken(TokenKind.BlockStart,	reader.Read(), reader.Position);
-				case '}': LeaveValueMode(); mode.Leave(LexicalMode.Block);	return new CssToken(TokenKind.BlockEnd,		reader.Read(), reader.Position);
+					if (peek == '/' || peek == '*')
+						return ReadComment();
+					else
+						break;
+
+				case ':': mode.Enter(LexicalMode.Value);							return new CssToken(TokenKind.Colon,		reader.Read(), reader.Position);
+				case ',':															return new CssToken(TokenKind.Comma,		reader.Read(), reader.Position);
+				case ';': LeaveValueMode();											return new CssToken(TokenKind.Semicolon,	reader.Read(), reader.Position);
+				case '{':					mode.Enter(LexicalMode.Block);			return new CssToken(TokenKind.BlockStart,	reader.Read(), reader.Position);
+				case '}': LeaveValueMode(); mode.Leave(LexicalMode.Block, this);	return new CssToken(TokenKind.BlockEnd,		reader.Read(), reader.Position);
 
 				case '(': return new CssToken(TokenKind.LeftParenthesis,  reader.Read(), reader.Position);
 				case ')': return new CssToken(TokenKind.RightParenthesis, reader.Read(), reader.Position);
 				
-				// case '-': // Conflicts with -webkit
+				case '-': 
+					if (Char.IsDigit(reader.Peek())) 
+						return ReadNumber();
+					else 
+						break;
 				case '0':
 				case '1':
 				case '2':
@@ -136,12 +146,20 @@
 
 			while (!reader.IsWhiteSpace 
 				&& reader.Current != '{' && reader.Current != '}' && reader.Current != '(' && reader.Current != ')' 
-				&& reader.Current != ';' && reader.Current != ':' && reader.Current != ',')
+				&& reader.Current != ';' && reader.Current != ',')
 			{
 				if (reader.IsEof) throw ParseException.UnexpectedEOF("Name");
 
+				if (reader.Current == ':')
+				{
+					var peek = reader.Peek();
+
+					if (!(peek  >= 'a' && peek <= 'z')) break;
+				}
+
 				reader.Next();
 			}
+
 
 			return new CssToken(TokenKind.Name, reader.Unmark(), reader.MarkStart);
 		}
@@ -150,7 +168,7 @@
 		{
 			if (mode.Current == LexicalMode.Value)
 			{
-				mode.Leave(LexicalMode.Value);
+				mode.Leave(LexicalMode.Value, this);
 			}
 		}
 
@@ -158,8 +176,8 @@
 		{
 			reader.Mark();
 
-			while (!reader.IsWhiteSpace 
-				&& reader.Current != '}' && reader.Current != ')' && reader.Current != '(' && reader.Current != ';' && reader.Current != ',' && !reader.IsEof)
+			while (!reader.IsWhiteSpace && reader.Current != '{' && reader.Current != '}' 
+				&& reader.Current != ')' && reader.Current != '(' && reader.Current != ';' && reader.Current != ',' && !reader.IsEof)
 			{
 				reader.Next();
 			}
@@ -171,7 +189,10 @@
 		{
 			reader.Mark();
 
-			while ((Char.IsDigit(reader.Current) || reader.Current == '.' || reader.Current == '-') && !reader.IsEof)
+			// Read a leading '-'
+			if(reader.Current == '-') reader.Next();
+
+			while ((Char.IsDigit(reader.Current) || reader.Current == '.') && !reader.IsEof)
 			{
 				reader.Next();
 			}

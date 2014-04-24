@@ -38,12 +38,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ast\Rules\MediaRule.cs" />
+    <Compile Include="Ast\Values\CssColor.cs" />
     <Compile Include="Ast\Values\CssFunction.cs" />
     <Compile Include="Ast\CssExpression.cs" />
+    <Compile Include="Ast\Values\StringNumber.cs" />
     <Compile Include="Ast\Values\CssVariable.cs" />
     <Compile Include="Ast\Values\CssDimension.cs" />
     <Compile Include="Ast\Values\CssUrl.cs" />
-    <Compile Include="Ast\Values\CssLiteral.cs" />
+    <Compile Include="Ast\Values\CssString.cs" />
     <Compile Include="Ast\TokenList.cs" />
     <Compile Include="Ast\TriviaNode.cs" />
     <Compile Include="Ast\Values\CssValueList.cs" />
@@ -57,8 +60,8 @@
     <Compile Include="Sass\IncludeNode.cs" />
     <Compile Include="Sass\MixinNode.cs" />
     <Compile Include="Ast\Values\CssAssignment.cs" />
-    <Compile Include="Comptability\Modules\CssModule.cs" />
-    <Compile Include="Comptability\Modules\CssModuleType.cs" />
+    <Compile Include="Comptability\CssModule.cs" />
+    <Compile Include="Comptability\CssModuleType.cs" />
     <Compile Include="Ast\NodeKind.cs" />
     <Compile Include="Ast\Rules\StyleRule.cs" />
     <Compile Include="Ast\Rules\ImportRule.cs" />
@@ -70,7 +73,7 @@
     <Compile Include="Parser\CssTokenizer.cs" />
     <Compile Include="Comptability\Browser.cs" />
     <Compile Include="Model\CssDeclaration.cs" />
-    <Compile Include="Model\CssPropertyInfo.cs" />
+    <Compile Include="Comptability\CssPropertyInfo.cs" />
     <Compile Include="Ast\Rules\CssRule.cs" />
     <Compile Include="Model\CssSelector.cs" />
     <Compile Include="Ast\Values\CssValue.cs" />
@@ -85,6 +88,8 @@
     <Compile Include="Resolver\IStylesheet.cs" />
     <Compile Include="Resolver\IStyleSheetResolver.cs" />
     <Compile Include="Resolver\Include.cs" />
+    <Compile Include="Transformer\AddVenderPrefixes.cs" />
+    <Compile Include="Transformer\IEOpacityTransfomer.cs" />
     <Compile Include="Transformer\Rewriter.cs" />
     <Compile Include="Transformer\ExpandNestedStylesRewriter.cs" />
     <Compile Include="Transformer\ICssTransform.cs" />

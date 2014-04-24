@@ -2,16 +2,16 @@
 {
 	using Carbon.Css.Parser;
 
-	public class CssLiteral : CssValue
+	public class CssString : CssValue
 	{
 		private string text;
 
-		public CssLiteral(CssToken token)
+		public CssString(CssToken token)
 			: this(token.Text)
 		{ }
 
-		public CssLiteral(string text)
-			: base(NodeKind.Literal) 
+		public CssString(string text)
+			: base(NodeKind.String) 
 		{ 
 			this.text = text;
 		}

@@ -11,7 +11,6 @@
 		{
 			if (rule.Type != RuleType.Style) return;
 
-
 			var styleSheet = rule.Parent as StyleSheet;
 
 			if (styleSheet == null) return;
@@ -28,7 +27,6 @@
 
 		public void Expand(CssRule rule, int index, StyleSheet styleSheet)
 		{
-
 			foreach (var nestedRule in rule.Children.OfType<CssRule>().ToArray())
 			{
 				Expand(
@@ -38,8 +36,6 @@
 					styleSheet	: styleSheet
 				);
 			}
-
-			// TODO: Recusive
 		}
 
 
@@ -57,8 +53,6 @@
 					var childRule = (CssRule)childNode;
 
 					Expand(childRule, nested, styleSheet, ref index);
-
-					
 				}
 				else
 				{

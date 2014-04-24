@@ -28,6 +28,30 @@
 		}
 
 		[Test]
+		public void MediaQuery()
+		{
+			string text = @"@media only screen and (min-width : 1600px) {
+  .projects { -webkit-column-count: 3; }
+  .main {   margin-left: 240px; }
+  .projectDetails-bottom { display: none; }
+  .contactForm { width: 760px; margin: 0 auto; }
+}";
+
+			var css = StyleSheet.Parse(text);
+
+
+			Assert.AreEqual(@"@media only screen and ( min-width : 1600 px ) {
+  .projects { -webkit-column-count: 3; }
+  .main { margin-left: 240px; }
+  .projectDetails-bottom { display: none; }
+  .contactForm {
+    width: 760px;
+    margin: 0 auto;
+}
+}", css.ToString());
+		}
+
+		[Test]
 		public void Modes()
 		{
 			var mode = new LexicalModeContext(LexicalMode.Selector);
@@ -377,6 +401,15 @@ p { font-color: red; background: url(http://google.com); }
 		}
 
 		[Test]
+		public void CssValueTypes()
+		{
+			Assert.AreEqual(NodeKind.Number, CssValue.Parse("123").Kind);
+			Assert.AreEqual(NodeKind.Number, CssValue.Parse("-123").Kind);
+			Assert.AreEqual(NodeKind.Number, CssValue.Parse("123.5").Kind);
+		}
+
+
+		[Test]
 		public void Declares()
 		{
 			Assert.AreEqual("font-size: 14px", new CssDeclaration("font-size", "14px").ToString());
@@ -408,7 +441,9 @@ body {
 ");
 
 
-			sheet.SetCompatibility(Browser.Chrome1);
+			sheet.SetCompatibility(Browser.Chrome1, Browser.Safari1, Browser.Firefox1, Browser.Opera4, Browser.IE9);
+
+
 
 			sheet.ExecuteRewriters();
 
@@ -439,7 +474,18 @@ body {
 
 			var sheet = StyleSheet.Parse(styles);
 
+
 			Assert.AreEqual(":focus { outline: 0; }", sheet.ToString());
+
+
+			var styles2 = @".projects li:first-child { background-color: orange; }";
+			var styles3 = @".projects li:first-child a { background-color: orange; }";
+
+			Assert.AreEqual(".projects li:first-child { background-color: orange; }", StyleSheet.Parse(styles2).ToString());
+
+			Assert.AreEqual(".projects li:first-child a { background-color: orange; }", StyleSheet.Parse(styles3).ToString());
+
+
 		}
 
 

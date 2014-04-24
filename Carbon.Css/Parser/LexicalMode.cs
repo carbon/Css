@@ -23,9 +23,9 @@
 			current = mode;
 		}
 
-		public void Leave(LexicalMode mode)
+		public void Leave(LexicalMode mode, CssTokenizer tokenizer = null)
 		{
-			if (current != mode) throw new Exception("Current mode is:" + current + ". Leaving " + mode + ".");
+			if (current != mode) throw new UnexpectedModeChange(current, mode, (tokenizer == null) ? 0 : tokenizer.Current.Position);
 
 			modes.Pop();
 

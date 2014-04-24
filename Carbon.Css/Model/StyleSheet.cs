@@ -103,7 +103,7 @@
 			{
 				return Parse(text, context);
 			}
-			catch (UnexpectedTokenException ex)
+			catch (ParseException ex)
 			{
 				ex.Location = TextHelper.GetLocation(text, ex.Position);
 
@@ -122,10 +122,11 @@
 
 		private readonly RewriterCollection rewriters = new RewriterCollection();
 
-		public void SetCompatibility(params Browser[] browsers)
+		public void SetCompatibility(params Browser[] targets)
 		{
-			rewriters.Add(new IEOpacityTransform());
-			rewriters.Add(new AddVendorPrefixesTransform());
+			// rewriters.Add(new IEOpacityTransform());
+
+			rewriters.Add(new AddVendorPrefixesTransform(targets));
 		}
 
 		public void AllowNestedRules()

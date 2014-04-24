@@ -4,38 +4,53 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
-	public class Compatibility
+	public class CssCompatibility
 	{
-		public Compatibility() { }
+		public static readonly CssCompatibility Unknown = new CssCompatibility();
+
+		public CssCompatibility() { }
 
 		public Browser[] Prefixed { get; set; }
 
 		public Browser[] Standard { get; set; }
 
-		public IEnumerable<string> GetPrefixes(string name)
+		/*
+		public bool RequiresPrefix(Browser browser)
 		{
-			if (Prefixed == null) yield break;
+			// Check if it's standard
 
-			foreach (var prefix in Prefixed.Select(p => p.Prefix).Distinct().OrderByDescending(o => o))
-			{
-				yield return prefix + name;
-			}
+			if (Prefixed == null) return false;
+
+			var prefix = Prefixed.FirstOrDefault(p => p.Type == browser.Type);
+
+			if (prefix == null) return true;
+
+			return true; // browser.Version >= prefix.Version;
 		}
+		*/
+
+
+		public bool HasPatches
+		{
+			get { return Prefixed != null; }
+		}
+
+		// Rewrite
 	}
 
 	public class CssPropertyInfo
 	{
 		private readonly string name;
 		private readonly CssModule module;
-		private readonly Compatibility compatibility;
+		private readonly CssCompatibility compatibility;
 
 		public CssPropertyInfo(string name)
 			: this(name, null, null) { }
 
-		public CssPropertyInfo(string name, Compatibility compatibility)
+		public CssPropertyInfo(string name, CssCompatibility compatibility)
 			: this(name, null, compatibility) { }
 
-		public CssPropertyInfo(string name, CssModule module = null, Compatibility compatibility = null)
+		public CssPropertyInfo(string name, CssModule module = null, CssCompatibility compatibility = null)
 		{
 			#region Preconditions
 
@@ -80,9 +95,9 @@
 			get { return module; }
 		}
 
-		public Compatibility Compatibility
+		public CssCompatibility Compatibility
 		{
-			get { return compatibility; }
+			get { return compatibility ?? Carbon.Css.CssCompatibility.Unknown; }
 		}
 
 		public override int GetHashCode()
@@ -137,7 +152,7 @@
 		public static readonly CssPropertyInfo AnimationPlayState		= new CssPropertyInfo("animation-play-state",		CssModule.Animations3);
 		public static readonly CssPropertyInfo AnimationTimingFunction	= new CssPropertyInfo("animation-timing-function",	CssModule.Animations3);
 
-		public static readonly CssPropertyInfo Appearance				= new CssPropertyInfo("appearance", new Compatibility { Prefixed = new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari3 } });
+		public static readonly CssPropertyInfo Appearance				= new CssPropertyInfo("appearance", new CssCompatibility { Prefixed = new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari3 } });
 
 		public static readonly CssPropertyInfo BackfaceVisibility		= new CssPropertyInfo("backface-visibility", CssModule.Transforms3);
 
@@ -147,13 +162,13 @@
 		public static readonly CssPropertyInfo BackgroundClip			= new CssPropertyInfo("background-clip",		CssModule.BackgroundsAndBorders3);
 		public static readonly CssPropertyInfo BackgroundColor			= new CssPropertyInfo("background-color",		CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundImage			= new CssPropertyInfo("background-image",		CssModule.Core1);
-		public static readonly CssPropertyInfo BackgroundOrigin			= new CssPropertyInfo("background-origin",		CssModule.BackgroundsAndBorders3, new Compatibility { Standard = new[] { Browser.Chrome1, Browser.Firefox4, Browser.IE9, Browser.Safari3 } });
+		public static readonly CssPropertyInfo BackgroundOrigin			= new CssPropertyInfo("background-origin",		CssModule.BackgroundsAndBorders3, new CssCompatibility { Standard = new[] { Browser.Chrome1, Browser.Firefox4, Browser.IE9, Browser.Safari3 } });
 		public static readonly CssPropertyInfo BackgroundPosition		= new CssPropertyInfo("background-position",	CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundRepeat			= new CssPropertyInfo("background-repeat",		CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundSize			= new CssPropertyInfo("background-size",		CssModule.BackgroundsAndBorders3);
 
 		// Borders -------------------------------------------------------------------------------------------------------
-		public static readonly Compatibility BorderImageCompatibility = new Compatibility {
+		public static readonly CssCompatibility BorderImageCompatibility = new CssCompatibility {
 			Prefixed = new[] { Browser.Chrome7, Browser.Firefox(3.5f), Browser.Safari3 },
 			Standard = new[] { Browser.Firefox(15) }
 		};
@@ -196,14 +211,17 @@
 		public static readonly CssPropertyInfo Bottom					= new CssPropertyInfo("bottom",					CssModule.Core1);
 		public static readonly CssPropertyInfo BoxDecorationBreak		= new CssPropertyInfo("box-decoration-break");
 
-		public static readonly CssPropertyInfo BoxShadow = new CssPropertyInfo("box-shadow", CssModule.UI(3), new Compatibility {
+		public static readonly CssPropertyInfo BoxShadow = new CssPropertyInfo("box-shadow", CssModule.UI(3), new CssCompatibility {
 			Prefixed = new[] { Browser.Chrome1, Browser.Firefox(3.5f), Browser.Safari(3.1f) },
 			Standard = new[] { Browser.Chrome10, Browser.IE9, Browser.Opera(10.5f), Browser.Safari(5.1f) }
 		});
 
-		public static readonly CssPropertyInfo BoxSizing = new CssPropertyInfo("box-sizing", CssModule.UI(3), new Compatibility { 
-			Prefixed = new[] { Browser.Chrome1, Browser.Firefox1, Browser.IE8, Browser.Safari3 },
-			Standard = new[] { Browser.Chrome10, Browser.IE9, Browser.Opera(7), Browser.Safari(5.1f) }
+		
+		// -ms-box-sizing in IE8 (Browser.IE8) [Move minimum target to IE9)
+
+		public static readonly CssPropertyInfo BoxSizing = new CssPropertyInfo("box-sizing", CssModule.UI(3), new CssCompatibility { 
+			Prefixed = new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari3 },
+			Standard = new[] { Browser.Chrome10, Browser.Firefox29, Browser.IE9, Browser.Opera(7), Browser.Safari(5.1f) }
 		});
 
 		// Breaks
@@ -228,7 +246,7 @@
 		public static readonly CssPropertyInfo ColumnWidth		= new CssPropertyInfo("column-width",		CssModule.Columns3);
 		public static readonly CssPropertyInfo Columns			= new CssPropertyInfo("columns",			CssModule.Columns3);
 		
-		public static readonly CssPropertyInfo Content = new CssPropertyInfo("content", CssModule.Core21, new Compatibility {
+		public static readonly CssPropertyInfo Content = new CssPropertyInfo("content", CssModule.Core2_1, new CssCompatibility {
 			Standard = new[] { Browser.Chrome1, Browser.Firefox1, Browser.IE8, Browser.Opera4, Browser.Safari1 }	
 		});
 
@@ -236,7 +254,7 @@
 		public static readonly CssPropertyInfo CounterIncrement = new CssPropertyInfo("counter-increment");
 		public static readonly CssPropertyInfo CounterReset		= new CssPropertyInfo("counter-reset");
 
-		public static readonly CssPropertyInfo Cursor		= new CssPropertyInfo("cursor",					CssModule.Core21);
+		public static readonly CssPropertyInfo Cursor		= new CssPropertyInfo("cursor",					CssModule.Core2_1);
 		public static readonly CssPropertyInfo Direction	= new CssPropertyInfo("direction");
 		public static readonly CssPropertyInfo Display		= new CssPropertyInfo("display",				CssModule.Core1);
 		
@@ -268,7 +286,7 @@
 		public static readonly CssPropertyInfo FontWeight		= new CssPropertyInfo("font-weight",		CssModule.Core1);
 
 		// Grids ---------------------------------------------------------------------------------------
-		public static readonly Compatibility GridComptability	= new Compatibility { Prefixed = new[] { Browser.IE10 } };
+		public static readonly CssCompatibility GridComptability	= new CssCompatibility { Prefixed = new[] { Browser.IE10 } };
 
 		public static readonly CssPropertyInfo GridColumns			= new CssPropertyInfo("grid-columns",	GridComptability);
 		public static readonly CssPropertyInfo GridRows				= new CssPropertyInfo("grid-rows",		GridComptability);
@@ -282,7 +300,7 @@
 		public static readonly CssPropertyInfo HyphenateLines		= new CssPropertyInfo("hyphenate-lines");
 		public static readonly CssPropertyInfo HyphenateResource	= new CssPropertyInfo("hyphenate-resource");
 
-		public static readonly CssPropertyInfo Hyphens				= new CssPropertyInfo("hyphens", new CssModule(CssModuleType.Text, 3), new Compatibility {
+		public static readonly CssPropertyInfo Hyphens				= new CssPropertyInfo("hyphens", new CssModule(CssModuleType.Text, 3), new CssCompatibility {
 																	Prefixed = new[] { Browser.Chrome13, Browser.Firefox6, Browser.IE10, Browser.Safari(5.1f) },
 																});
 
@@ -314,33 +332,33 @@
 		public static readonly CssPropertyInfo MarqueeSpeed		= new CssPropertyInfo("marquee-speed");
 		public static readonly CssPropertyInfo MarqueeStyle		= new CssPropertyInfo("marquee-style");
 
-		public static readonly CssPropertyInfo MaxHeight		= new CssPropertyInfo("max-height",		CssModule.Core21);
-		public static readonly CssPropertyInfo MaxWidth			= new CssPropertyInfo("max-width",		CssModule.Core21);
+		public static readonly CssPropertyInfo MaxHeight		= new CssPropertyInfo("max-height",		CssModule.Core2_1);
+		public static readonly CssPropertyInfo MaxWidth			= new CssPropertyInfo("max-width",		CssModule.Core2_1);
 
-		public static readonly CssPropertyInfo MinHeight		= new CssPropertyInfo("min-height",		CssModule.Core21);
-		public static readonly CssPropertyInfo MinWidth			= new CssPropertyInfo("min-width",		CssModule.Core21);
+		public static readonly CssPropertyInfo MinHeight		= new CssPropertyInfo("min-height",		CssModule.Core2_1);
+		public static readonly CssPropertyInfo MinWidth			= new CssPropertyInfo("min-width",		CssModule.Core2_1);
 
 		// <= IE8 filter: alpha(opacity=xx)
 		// IE8 introduced -ms-filter, which is synonymous with filter. Both are gone in IE10
 		public static readonly CssPropertyInfo Opacity = new CssPropertyInfo("opacity",					CssModule.Color3);
 
-		public static readonly CssPropertyInfo Orphans = new CssPropertyInfo("orphans", new CssModule(CssModuleType.Core, 2.1f), new Compatibility {
+		public static readonly CssPropertyInfo Orphans = new CssPropertyInfo("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility {
 			Standard = new[] { Browser.IE8, Browser.Opera(9.2f) }	
 		});
 
 		// Outlines -------------------------------------------------------------------------------
-		public static readonly CssPropertyInfo Outline			= new CssPropertyInfo("outline",		CssModule.Core21);
-		public static readonly CssPropertyInfo OutlineColor		= new CssPropertyInfo("outline-color",	CssModule.Core21);
-		public static readonly CssPropertyInfo OutlineOffset	= new CssPropertyInfo("outline-offset", CssModule.Core21);
-		public static readonly CssPropertyInfo OutlineStyle		= new CssPropertyInfo("outline-style",	CssModule.Core21);
-		public static readonly CssPropertyInfo OutlineWidth		= new CssPropertyInfo("outline-width",	CssModule.Core21);
+		public static readonly CssPropertyInfo Outline			= new CssPropertyInfo("outline",		CssModule.Core2_1);
+		public static readonly CssPropertyInfo OutlineColor		= new CssPropertyInfo("outline-color",	CssModule.Core2_1);
+		public static readonly CssPropertyInfo OutlineOffset	= new CssPropertyInfo("outline-offset", CssModule.Core2_1);
+		public static readonly CssPropertyInfo OutlineStyle		= new CssPropertyInfo("outline-style",	CssModule.Core2_1);
+		public static readonly CssPropertyInfo OutlineWidth		= new CssPropertyInfo("outline-width",	CssModule.Core2_1);
 
 		// Overflow -------------------------------------------------------------------------------
-		public static readonly CssPropertyInfo Overflow			= new CssPropertyInfo("overflow",		CssModule.Core21);
+		public static readonly CssPropertyInfo Overflow			= new CssPropertyInfo("overflow",		CssModule.Core2_1);
 		public static readonly CssPropertyInfo OverflowStyle	= new CssPropertyInfo("overflow-style");
 		public static readonly CssPropertyInfo OverflowWrap		= new CssPropertyInfo("overflow-wrap");
-		public static readonly CssPropertyInfo OverflowX		= new CssPropertyInfo("overflow-x",		CssModule.Core21);
-		public static readonly CssPropertyInfo OverflowY		= new CssPropertyInfo("overflow-y",		CssModule.Core21);
+		public static readonly CssPropertyInfo OverflowX		= new CssPropertyInfo("overflow-x",		CssModule.Core2_1);
+		public static readonly CssPropertyInfo OverflowY		= new CssPropertyInfo("overflow-y",		CssModule.Core2_1);
 
 		// Padding -----------------------------------------------------------------------------------------------
 		public static readonly CssPropertyInfo Padding			= new CssPropertyInfo("padding",		CssModule.Core1);
@@ -379,7 +397,7 @@
 		public static readonly CssPropertyInfo Size						= new CssPropertyInfo("size");
 		public static readonly CssPropertyInfo Speak					= new CssPropertyInfo("speak");
 
-		public static readonly CssPropertyInfo TableLayout				= new CssPropertyInfo("table-layout", CssModule.Core21);
+		public static readonly CssPropertyInfo TableLayout				= new CssPropertyInfo("table-layout", CssModule.Core2_1);
 
 		// Text ------------------------------------------------------------------------
 		public static readonly CssPropertyInfo TextAlign				= new CssPropertyInfo("text-align", CssModule.Core1);
@@ -397,7 +415,7 @@
 		public static readonly CssPropertyInfo TextIndent				= new CssPropertyInfo("text-indent", CssModule.Core1);
 		public static readonly CssPropertyInfo TextJustify				= new CssPropertyInfo("text-justify");
 		public static readonly CssPropertyInfo TextOutline				= new CssPropertyInfo("text-outline");
-		public static readonly CssPropertyInfo TextShadow				= new CssPropertyInfo("text-shadow", new Compatibility { Standard = new[] { Browser.Chrome(2), Browser.Firefox(3.5f), Browser.IE10, Browser.Safari(1.1f) } });
+		public static readonly CssPropertyInfo TextShadow				= new CssPropertyInfo("text-shadow", new CssCompatibility { Standard = new[] { Browser.Chrome(2), Browser.Firefox(3.5f), Browser.IE10, Browser.Safari(1.1f) } });
 		public static readonly CssPropertyInfo TextSpaceCollapse		= new CssPropertyInfo("text-space-collapse");
 		public static readonly CssPropertyInfo TextTransform			= new CssPropertyInfo("text-transform", CssModule.Core1);
 		public static readonly CssPropertyInfo TextUnderlinePosition	= new CssPropertyInfo("text-underline-position");
@@ -422,14 +440,14 @@
 		public static readonly CssPropertyInfo UnicodeBidi		= new CssPropertyInfo("unicode-bidi");
 		public static readonly CssPropertyInfo UnicodeRange		= new CssPropertyInfo("unicode-range");
 		
-		public static readonly CssPropertyInfo UserSelect = new CssPropertyInfo("user-select", new Compatibility {
+		public static readonly CssPropertyInfo UserSelect = new CssPropertyInfo("user-select", new CssCompatibility {
 			Prefixed = new[] { Browser.Chrome1, Browser.Firefox1, Browser.IE10, Browser.Safari3 }	
 		});
 
 		public static readonly CssPropertyInfo VerticalAlign	= new CssPropertyInfo("vertical-align", CssModule.Core1);
 		public static readonly CssPropertyInfo Visibility		= new CssPropertyInfo("visibility",		CssModule.Core1);
 		public static readonly CssPropertyInfo WhiteSpace		= new CssPropertyInfo("white-space");
-		public static readonly CssPropertyInfo Widows			= new CssPropertyInfo("widows",			CssModule.Core21);
+		public static readonly CssPropertyInfo Widows			= new CssPropertyInfo("widows",			CssModule.Core2_1);
 		public static readonly CssPropertyInfo Width			= new CssPropertyInfo("width",			CssModule.Core1);
 
 		// Words

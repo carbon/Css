@@ -13,7 +13,17 @@
 			this.version = version;
 		}
 
-		public string Prefix
+		public BrowserType Type
+		{
+			get { return type; }
+		}
+
+		public float Version
+		{
+			get { return version; }
+		}
+
+		public BrowserPrefix Prefix
 		{
 			get { return GetPrefix(type); }
 		}
@@ -48,6 +58,7 @@
 		public static readonly Browser Chrome10 = Chrome(10);
 		public static readonly Browser Chrome13 = Chrome(13);
 		public static readonly Browser Chrome26 = Chrome(26);
+		public static readonly Browser Chrome36 = Chrome(36);
 
 		public static readonly Browser Firefox1  = Firefox(1);
 		public static readonly Browser Firefox4  = Firefox(4);
@@ -58,6 +69,7 @@
 		public static readonly Browser Firefox16 = Firefox(16);
 		public static readonly Browser Firefox20 = Firefox(20);
 		public static readonly Browser Firefox21 = Firefox(21);
+		public static readonly Browser Firefox29 = Firefox(29);
 
 		public static readonly Browser IE6  = IE(6);
 		public static readonly Browser IE7  = IE(7);
@@ -76,20 +88,45 @@
 		public static readonly Browser Safari5 = Safari(5);
 		public static readonly Browser Safari6 = Safari(6);
 
-		public static string GetPrefix(BrowserType type)
+		public static BrowserPrefix GetPrefix(BrowserType type)
 		{
 			switch (type)
 			{
-				case BrowserType.Chrome:	return "-webkit-";
-				case BrowserType.Firefox:	return "-moz-";
-				case BrowserType.IE:		return "-ms-";
-				case BrowserType.Opera:		return "-o-";
-				case BrowserType.Safari:	return "-webkit-";
+				case BrowserType.Chrome:	return BrowserPrefix.Chrome;
+				case BrowserType.Firefox:	return BrowserPrefix.Firefox;
+				case BrowserType.IE:		return BrowserPrefix.IE;
+				case BrowserType.Opera:		return BrowserPrefix.Opera;
+				case BrowserType.Safari:	return BrowserPrefix.Webkit;
 
 				default:					throw new Exception("Unexpected browser: " + type);
 			}
 		}
+	}
 
+	public struct BrowserPrefix
+	{
+		private readonly string text;
+
+		public static readonly BrowserPrefix Chrome		= new BrowserPrefix("-webkit-");
+		public static readonly BrowserPrefix Firefox	= new BrowserPrefix("-moz-");
+		public static readonly BrowserPrefix IE			= new BrowserPrefix("-ms-");
+		public static readonly BrowserPrefix Opera		= new BrowserPrefix("-o-");
+		public static readonly BrowserPrefix Webkit		= new BrowserPrefix("-webkit-");
+
+		public BrowserPrefix(string text)
+		{
+			this.text = text;
+		}
+
+		public string Text
+		{
+			get { return text; }
+		}
+
+		public static implicit operator String(BrowserPrefix d)
+		{
+			return d.Text;
+		} 
 	}
 
 	public enum BrowserType

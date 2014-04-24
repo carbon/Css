@@ -9,9 +9,36 @@
 		public ParseException(string message)
 			: base(message) { }
 
+		public virtual int Position
+		{
+			get { return Position; }
+		}
+
+		public SourceLocation Location { get; set; }
+
+		public IList<LineInfo> Lines { get; set; }
+
 		public static ParseException UnexpectedEOF(string context)
 		{
 			return new ParseException(string.Format("Unexpected EOF reading '{0}'.", context));
+		}
+	}
+
+	public class UnexpectedModeChange : ParseException
+	{
+		// "Current mode is:" + current + ". Leaving " + mode + "."
+
+		private int position;
+
+		public UnexpectedModeChange(LexicalMode currentMode, LexicalMode leavingMode, int position)
+			: base(String.Format("Unexpected mode change. Expected {0}. Was {1}.", currentMode.ToString(), leavingMode.ToString()))
+		{
+			this.position = position;
+		}
+		
+		public override int Position
+		{
+			get { return position; }
 		}
 	}
 
@@ -42,14 +69,9 @@
 			get { return token; }
 		}
 
-		public int Position
+		public override int Position
 		{
 			get { return token.Position; }
 		}
-
-
-		public SourceLocation Location { get; set; }
-
-		public IList<LineInfo> Lines { get; set; }
 	}
 }

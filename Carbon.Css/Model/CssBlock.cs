@@ -37,6 +37,11 @@
 			return children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
 		}
 
+		public int RemoveAll(Predicate<CssNode> match)
+		{
+			return children.RemoveAll(match);
+		}
+
 		public int Count
 		{
 			get { return children.Count; }
@@ -46,6 +51,7 @@
 		{
 			get { throw new NotImplementedException(); }
 		}
+
 
 		#region IList<CssNode> Members
 

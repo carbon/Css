@@ -16,6 +16,18 @@ using System.Linq;
 			this.context = context;
 		}
 
+
+		public void WriteValue(CssNode value)
+		{
+			switch(value.Kind)
+			{
+				case NodeKind.Variable	: WriteVariable((CssVariable)value);	break;
+				case NodeKind.ValueList	: WriteValueList((CssValueList)value);	break;
+				case NodeKind.Function	: WriteFunction((CssFunction)value);	break;
+				default					: writer.Write(value.Text);				break;
+			}
+		}
+
 		public void WriteValueList(CssValueList list)
 		{
 			var i = 0;
@@ -27,17 +39,21 @@ using System.Linq;
 					writer.Write(list.Seperator == ValueListSeperator.Space ? " " : ", ");
 				}
 
-				if (value.Kind == NodeKind.Variable)
-				{
-					WriteVariable((CssVariable)value);
-				}
-				else
-				{
-					writer.Write(value.Text);
-				}
+				WriteValue(value);
 
 				i++;
 			}
+		}
+
+		public void WriteFunction(CssFunction function)
+		{
+			// {name}({args})
+
+			writer.Write(function.Name);
+
+			writer.Write("(");
+			WriteValue(function.Args);
+			writer.Write(")");
 		}
 
 		public void WriteVariable(CssVariable variable)
@@ -46,7 +62,6 @@ using System.Linq;
 			{
 				variable.Value = context.GetVariable(variable.Symbol);
 			}
-
 
 			writer.Write(variable.Value.Text);
 		}
@@ -207,26 +222,11 @@ using System.Linq;
 						writer.Write(" ");
 					}
 
-					var value = declaration.Value;
-
 					writer.Write(" ");
 					writer.Write(declaration.Name);
 					writer.Write(": ");
 
-					if (value.Kind == NodeKind.Variable)
-					{
-						WriteVariable((CssVariable)value);
-					}
-					else if (value.Kind == NodeKind.ValueList)
-					{
-						var valueList = (CssValueList)value;
-
-						WriteValueList(valueList);
-					}
-					else
-					{
-						writer.Write(value.Text);
-					}
+					WriteValue(declaration.Value);
 
 					writer.Write(";");
 

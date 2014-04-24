@@ -30,7 +30,8 @@
 		PrimitiveValue, //?
 		ValueList,
 		Url,
-		Literal,	// StringLiteral & NumberLiteral
+		Number,
+		String,
 		Color,
 
 		// Dimensions

@@ -29,11 +29,13 @@
 		}
 		*/
 
+		
 		[Test]
 		public void NestedStyleRewriterTest()
 		{
 			var sheet = StyleSheet.Parse(
 @"nav {
+  display: block;
   ul {
     margin: 0;
     padding: 0;
@@ -49,12 +51,14 @@
   }
 }");
 
+
 			sheet.AddRewriter(new ExpandNestedStylesRewriter());
 
 			sheet.ExecuteRewriters();
 
 			Assert.AreEqual(
-@"nav ul {
+@"nav { display: block; }
+nav ul {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -67,6 +71,7 @@ nav a {
 }", sheet.ToString());
 
 		}
+
 
 		[Test]
 		public void NestedStyleRecursiveRewriterTest()

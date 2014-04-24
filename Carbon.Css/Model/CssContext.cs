@@ -36,7 +36,7 @@ namespace Carbon.Css
 				return value;
 			}
 
-			return new CssLiteral("undefined");
+			return new CssString("");
 		}
 
 		public Dictionary<string, MixinNode> Mixins
