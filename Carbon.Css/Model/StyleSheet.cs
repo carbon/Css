@@ -141,11 +141,11 @@
 
 		public void ExecuteRewriters()
 		{
-			var index = 0;
-
-			foreach (var node in children.ToList())
+			foreach (var rewriter in rewriters)
 			{
-				foreach (var rewriter in rewriters)
+				var index = 0;
+
+				foreach (var node in children.ToList())
 				{
 					var rule = node as CssRule;
 
@@ -153,9 +153,9 @@
 					{
 						rewriter.Transform(rule, index);
 					}
-				}
 
-				index++;
+					index++;
+				}
 			}
 			
 			

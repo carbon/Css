@@ -77,7 +77,9 @@
 		{
 			var parts = new List<string>();
 
-			parts.Add(nested.Selector.ToString());
+			var selector = nested.Selector.ToString();
+
+			parts.Add(selector);
 
 			CssRule current = nested;
 
@@ -86,12 +88,29 @@
 				parts.Add(current.Selector.ToString());
 
 				if (parts.Count > 5) throw new Exception(string.Format("Cannot nest more than 5 levels deep. Was {0}. ", string.Join(" ", parts)));
-
 			}
 
-			parts.Reverse();
+			var sb = new StringBuilder();
 
-			return new CssSelector(string.Join(" ", parts));
+			for (var i = parts.Count; --i >= 0; )
+			{
+				var part = parts[i];
+				
+				if (part.Contains('&'))
+				{
+					part = part.Replace("&", sb.ToString());
+
+					sb.Clear();
+				}
+				if (i != parts.Count)
+				{
+					sb.Append(' ');
+				}
+
+				sb.Append(part);
+			}
+
+			return new CssSelector(sb.ToString());
 		}
 	}
 }

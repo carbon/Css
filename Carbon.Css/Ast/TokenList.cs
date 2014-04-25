@@ -22,6 +22,11 @@ namespace Carbon.Css
 			}
 		}
 
+		public string RawText
+		{
+			get { return string.Join("", this.Select(t => t.Text)); }
+		}
+
 		public override string ToString()
 		{
 			return string.Join(" ", this.Where(t => !t.IsTrivia).Select(t => t.Text));

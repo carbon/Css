@@ -135,7 +135,7 @@
 			}
 
 
-			var rule = new CssRule(RuleType.Media, new CssSelector("@media " + span.ToString().Trim()));
+			var rule = new CssRule(RuleType.Media, new CssSelector("@media " + span.RawText.Trim()));
 
 			ReadBlock(rule);
 
