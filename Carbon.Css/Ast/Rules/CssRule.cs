@@ -11,13 +11,11 @@
 	public class CssRule : CssBlock
 	{
 		private readonly RuleType type;
-		private readonly ICssSelector selector;
-
-		public CssRule(RuleType type, ICssSelector selector)
+		
+		public CssRule(RuleType type)
 			: base(NodeKind.Rule)
 		{
 			this.type = type;
-			this.selector = selector;
 		}
 
 		public CssRule(RuleType type, NodeKind kind)
@@ -29,11 +27,6 @@
 		public RuleType Type
 		{
 			get { return type; }
-		}
-
-		public ICssSelector Selector
-		{
-			get { return selector; }
 		}
 
 		public override string Text

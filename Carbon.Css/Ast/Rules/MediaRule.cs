@@ -4,7 +4,18 @@
 
 	public class MediaRule : CssRule
 	{
-		public MediaRule(string text)
-			: base(RuleType.Media, new CssSelector(text)) { }
+		private readonly string ruleText;
+
+		public MediaRule(string ruleText)
+			: base(RuleType.Media) {
+
+			this.ruleText = ruleText;
+		}
+
+		public string RuleText
+		{
+			get { return ruleText; }
+		}
+
 	}
 }

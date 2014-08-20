@@ -36,6 +36,11 @@
 			return double.Parse(text);
 		}
 
+		public override CssNode Clone()
+		{
+			return new CssNumber(text);
+		}
+
 		public override string ToString()
 		{
 			return Text;

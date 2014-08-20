@@ -1,0 +1,48 @@
+﻿@mixin column($count, $gap) {
+  -webkit-column-count: $count;
+     -moz-column-count: $count;
+      -ms-column-count: $count;
+          column-count: $count;
+  -webkit-column-gap: $gap;
+     -moz-column-gap: $gap;
+      -ms-column-gap: $gap;
+          column-gap: $gap;
+}
+
+
+@mixin transform($property) {
+  -webkit-transform: $property;
+     -moz-transform: $property;
+      -ms-transform: $property;
+          transform: $property;
+}
+
+@mixin transition($property, $duration, $function, $delay: 0) {
+  -webkit-transition: $property $duration $function $delay;
+     -moz-transition: $property $duration $function $delay;
+      -ms-transition: $property $duration $function $delay;
+          transition: $property $duration $function $delay;
+}
+
+@mixin prefix-transition($property, $duration, $function, $delay: 0) {
+  -webkit-transition: -webkit-$property $duration $function $delay;
+     -moz-transition:    -moz-$property $duration $function $delay;
+      -ms-transition:     -ms-$property $duration $function $delay;
+          transition:         $property $duration $function $delay;
+}
+
+@mixin gradient-linear($start, $end) {
+  background-image: -webkit-gradient(linear, left top, left bottom, from($start), to($end));
+  background-image: -webkit-linear-gradient(top, $start, $end);
+  background-image: -moz-linear-gradient(top, $start, $end);
+  background-image: -o-linear-gradient(top, $start, $end);
+  background-image: -ms-linear-gradient(top, $start, $end);
+  background-image: linear-gradient(top, $start, $end);
+}
+
+@mixin box-sizing($property) {
+  -webkit-box-sizing: $property;
+     -moz-box-sizing: $property;
+      -ms-box-sizing: $property;
+          box-sizing: $property;
+}

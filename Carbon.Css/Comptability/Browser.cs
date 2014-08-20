@@ -2,7 +2,7 @@
 {
 	using System;
 
-	public class Browser
+	public struct Browser
 	{
 		private readonly BrowserType type;
 		private readonly float version;
@@ -54,6 +54,7 @@
 		}
 
 		public static readonly Browser Chrome1  = Chrome(1);
+		public static readonly Browser Chrome4	= Chrome(4);
 		public static readonly Browser Chrome7  = Chrome(7);
 		public static readonly Browser Chrome10 = Chrome(10);
 		public static readonly Browser Chrome13 = Chrome(13);
@@ -92,8 +93,8 @@
 		{
 			switch (type)
 			{
-				case BrowserType.Chrome:	return BrowserPrefix.Chrome;
-				case BrowserType.Firefox:	return BrowserPrefix.Firefox;
+				case BrowserType.Chrome:	return BrowserPrefix.Webkit;
+				case BrowserType.Firefox:	return BrowserPrefix.Moz;
 				case BrowserType.IE:		return BrowserPrefix.IE;
 				case BrowserType.Opera:		return BrowserPrefix.Opera;
 				case BrowserType.Safari:	return BrowserPrefix.Webkit;
@@ -101,40 +102,73 @@
 				default:					throw new Exception("Unexpected browser: " + type);
 			}
 		}
+
+		public override string ToString()
+		{
+			return type + "/" + version;
+		}
 	}
 
 	public struct BrowserPrefix
 	{
-		private readonly string text;
+		public static readonly BrowserPrefix Moz	= new BrowserPrefix(BrowserPrefixKind.Moz);
+		public static readonly BrowserPrefix IE		= new BrowserPrefix(BrowserPrefixKind.Ms);
+		public static readonly BrowserPrefix Opera	= new BrowserPrefix(BrowserPrefixKind.O);
+		public static readonly BrowserPrefix Webkit	= new BrowserPrefix(BrowserPrefixKind.Webkit);
 
-		public static readonly BrowserPrefix Chrome		= new BrowserPrefix("-webkit-");
-		public static readonly BrowserPrefix Firefox	= new BrowserPrefix("-moz-");
-		public static readonly BrowserPrefix IE			= new BrowserPrefix("-ms-");
-		public static readonly BrowserPrefix Opera		= new BrowserPrefix("-o-");
-		public static readonly BrowserPrefix Webkit		= new BrowserPrefix("-webkit-");
+		private readonly BrowserPrefixKind kind;
 
-		public BrowserPrefix(string text)
+		public BrowserPrefix(BrowserPrefixKind kind)
 		{
-			this.text = text;
+			this.kind = kind;
+		}
+
+		public BrowserPrefixKind Kind
+		{
+			get { return kind; }
 		}
 
 		public string Text
 		{
-			get { return text; }
+			get
+			{
+				switch (kind)
+				{
+					case BrowserPrefixKind.Moz	  : return "-moz-";
+					case BrowserPrefixKind.Ms	  : return "-ms-";
+					case BrowserPrefixKind.Webkit : return "-webkit-";
+					case BrowserPrefixKind.O      : return "-o-";
+					default						  : return "";
+				}
+
+			}
 		}
 
 		public static implicit operator String(BrowserPrefix d)
 		{
 			return d.Text;
-		} 
+		}
 	}
 
-	public enum BrowserType
+
+	[Flags]
+	public enum BrowserPrefixKind : byte
 	{
-		IE,
-		Firefox,
-		Safari,
-		Chrome,
-		Opera
+		None = 0,
+		Moz = 1,
+		Ms = 2,
+		O = 4,
+		Webkit = 8
+	}
+
+	[Flags]
+	public enum BrowserType : byte
+	{
+		Unknown = 0,
+		IE		= 1,
+		Firefox = 2,
+		Safari	= 4,
+		Chrome	= 8,
+		Opera	= 16
 	}
 }

@@ -1,0 +1,253 @@
+﻿/*project*/
+.details {
+  padding: 30px 80px;
+  margin: 15px;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  text-align: left;
+/*  border: 1px solid rgba(0, 0, 0, 0.10);*/
+
+  h4 {
+    display: inline-block;
+    width: 20%;
+    opacity: .3;
+    vertical-align: top;
+    margin: 1em 0;
+    line-height: 1.4em;
+    
+  }
+
+  p {
+    display: inline-block;
+    vertical-align: top;
+    margin: 1em 0;
+  }
+
+  a {
+    color: #333;
+    text-decoration: none;
+    transition: color .3s ease, border .3s ease;
+    display: inline-block;
+  }
+
+  hr {
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    margin: 30px 0 0;
+  }
+
+  li {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    display: block;
+    padding: .5em;
+    line-height: 1.4em;
+    
+
+    &:first-child {
+      border-top: none;
+    &:last-child {
+       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  
+  .description {
+    p {
+      font-size: 1.2em;
+      line-height: 1.6;
+      margin-top: 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.details li p {
+  max-width: 78%;
+}
+
+.details li p a {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.details.color1 { background-color: none; }
+
+.details ul {
+  -webkit-column-count: 2;
+}
+
+.projectSingle {
+  .piece {
+    padding: 15px;
+
+    .pieceWrapper {
+      position: relative;
+      margin: 0 auto;
+      border-radius: 2px;
+
+      .captionLink {
+        display: inline;
+        width: 30px; height: 30px;
+        right: 10px;
+        bottom: 10px;
+        position: absolute;
+        z-index: 9999;
+        opacity: 0;
+        cursor: pointer;
+        transition: opacity .5s ease;
+
+        &:after {
+          display: block;
+          content: '';
+          width: 30px; height: 30px;
+          background: url('../img/plusIcon.svg') center center no-repeat rgba( 0,  0, 0, 0.3);
+          background-size: 40%;
+          position: absolute;
+          border-radius: 50%;
+        }
+      }
+
+      &:hover .captionLink { opacity: 1; }
+    }
+  }
+}
+
+.pieceWrapper {
+  .center {
+    position: relative;
+    top: 50%;
+    margin-top: 10px;
+    transform: translateY(-60%);
+    transition: margin 0.3s ease;
+
+    h2 { border-bottom: transparent; }
+  }
+
+  a:hover {
+    .center {
+      transform: translateY(-60%);
+      transition: margin 0.3s ease;
+      margin-top: 0px;
+
+      h2 {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+}
+
+.hovering {
+  .title {
+    background-color: rgba( 18,  52, 128, 0.8);
+    color: #fff;
+    transition: background-color .3s ease;
+  }
+  
+  .center { pointer-events: none; }
+
+  .captionLink:after {
+    background: url('../img/plusIcon.svg') center center no-repeat rgba( 0,  0, 0, 0) !important;
+    background-size: 40% !important;
+  }
+}
+
+
+.nextProject {
+  display: block;
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 0;
+  margin: 0;
+/*  border-radius: 2px;*/
+  overflow: hidden;
+  padding: 5em 2em;
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  text-decoration: none;
+  
+  /*la*/
+/*  @include gradient-linear(rgba(251, 216, 137, 0.30), rgba(246, 160, 98, 0.30));*/
+  
+  /*dream*/
+/*  @include gradient-linear(rgba(145, 230, 215, 0.30), rgba(79, 105, 199, 0.30));*/
+  
+  /*unicorn*/
+/*  @include gradient-linear(rgba(255, 117, 165, 0.30), rgba(152, 112, 237, 0.30));*/
+  
+/*  background-color: rgba(  52, 52, 52, 0.4);*/
+  background-color: rgba( 42,  45,  53, 0.4);
+  
+}
+
+.nextProject {
+  .bg {
+    background-size: cover;
+    background-position: center;
+/*    -webkit-filter: blur(5px);
+    transform: scale(1.1);*/
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -5;
+  }
+  
+  p {
+    display: inline;
+    line-height: 1.4em;
+    font-size: 1.5em;
+    opacity: .5;
+    margin-right: .2em;
+  }
+  .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    top: 3px;
+  }
+  &:hover .title {
+    background: none !important;
+  }
+}
+
+
+li .caption a {
+    color: white;
+    display: inline;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 1px;
+    -webkit-transition: border .3s ease;
+}
+
+li .caption a:hover {
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+
+
+
+/*.projectSmall .info {
+  padding: 5% 10% !important;
+}
+
+.projectSmall .info ul li {}
+
+.projectSmall .info h4, 
+.projectSmall .info p {
+  display: inline-block;
+}
+
+.projectSmall .info .description {
+  padding-bottom: 5%;
+}*/
+

@@ -50,6 +50,7 @@
 		{
 			switch (tokenizer.Current.Kind)
 			{
+				case TokenKind.Directive: return ReadDirective();
 				case TokenKind.AtSymbol	: return ReadAtRule();
 				case TokenKind.Dollar	: return ReadAssignment();
 			}
@@ -57,6 +58,22 @@
 			var selector = ReadSelector();
 
 			return ReadRuleBlock(selector);
+		}
+
+		public CssRule ReadDirective()
+		{
+			var text = tokenizer.Current.Text;
+
+			tokenizer.Read();
+
+			var parts = text.Substring(3).TrimStart().Split(new[] { ' ' }, 2);
+
+
+			//= support Safari 5.1
+			return new CssDirective { 
+				Name = parts[0].Trim(),
+				Value = parts[1].Trim()
+			};
 		}
 
 		public CssRule ReadRule()
@@ -92,25 +109,21 @@
 			{
 				case "charset"		: ruleType = RuleType.Charset; break;
 				case "import"		: return ReadImportRule();
-				case "font-face"	: ruleType = RuleType.FontFace; break;
+				case "font-face"	: return ReadFontFaceRule();
 				case "media"		: return ReadMediaRule();
 				case "page"			: ruleType = RuleType.Page; break;
-
-				case "-webkit-keyframes"	:
-				case "keyframes"			: ruleType = RuleType.Keyframes; break;
-				case "mixin"				: return ReadMixinBody();
+				case "keyframes"	: return ReadKeyframesRule();
+				case "mixin"		: return ReadMixinBody();
 			}
-
-			var selector = new CssSelector("@" + atName.Text);
+			
+			var selectorText = "";
 
 			if (tokenizer.Current.Kind == TokenKind.Name)
 			{
-				var x = ReadSpan();
-
-				selector = new CssSelector("@" + atName.Text + " " + x.ToString());
+				selectorText = ReadSpan().ToString();
 			}
 
-			var rule = new CssRule(ruleType, selector);
+			var rule = new AtRule(atName.Text, ruleType, selectorText);
 
 			switch (tokenizer.Current.Kind)
 			{
@@ -121,7 +134,7 @@
 			return rule;
 		}
 
-		public CssRule ReadMediaRule()
+		public CssRule ReadKeyframesRule()
 		{
 			// @media only screen and (min-width : 1600px) {
 
@@ -134,16 +147,49 @@
 				span.Add(token);
 			}
 
-
-			var rule = new CssRule(RuleType.Media, new CssSelector("@media " + span.RawText.Trim()));
+			var rule = new KeyframesRule(span.RawText.Trim());
 
 			ReadBlock(rule);
 
 			return rule;
+		}
 
+		public CssRule ReadMediaRule()
+		{
+			// @media {
+
+			var span = new TokenList();
+
+			while (tokenizer.Current.Kind != TokenKind.BlockStart && !tokenizer.IsEnd)
+			{
+				var token = tokenizer.Read();
+
+				span.Add(token);
+			}
+
+			var rule = new MediaRule(span.RawText.Trim());
+
+			ReadBlock(rule);
+
+			return rule;
+		}
+
+		public CssRule ReadFontFaceRule()
+		{
+			// @font-face {
+
+			while (tokenizer.Current.Kind != TokenKind.BlockStart && !tokenizer.IsEnd)
+			{
+				tokenizer.Read();
+			}
+
+			var rule = new FontFaceRule();
 			
+			// Declarations
 
-		
+			ReadBlock(rule);
+
+			return rule;
 		}
 
 
@@ -262,7 +308,7 @@
 					};
 				}
 
-				return new CssFunction(value, args) {
+				return new CssFunction(value.Text, args) {
 					Trailing = ReadTrivia()
 				};
 			}
@@ -329,6 +375,8 @@
 				tokenizer.Read(); // read;
 			}
 
+			ReadTrivia();
+
 			return new CssAssignment(name, value);
 		}
 
@@ -375,11 +423,9 @@
 		}
 		*/
 
-		public CssRule ReadStyleRule()
+		public StyleRule ReadStyleRule()
 		{
-			var selector = ReadSelector(); 
-
-			var rule = new CssRule(RuleType.Style, selector);
+			var rule = new StyleRule(ReadSelector());
 
 			ReadBlock(rule);
 
@@ -510,10 +556,9 @@
 
 		#endregion
 
-
 		public CssRule ReadRuleBlock(CssSelector selector)
 		{
-			var rule = new CssRule(RuleType.Style, selector);
+			var rule = new StyleRule(selector);
 
 			ReadBlock(rule);
 
@@ -522,13 +567,13 @@
 
 		public CssBlock ReadBlock(CssRule block)
 		{
-			tokenizer.Read(TokenKind.BlockStart, LexicalMode.Block);	// read {
+			var blockStart = tokenizer.Read(TokenKind.BlockStart, LexicalMode.Block);	// read {
 
 			ReadTrivia();
 
 			while (tokenizer.Current.Kind != TokenKind.BlockEnd)
 			{
-				if (tokenizer.IsEnd) throw ParseException.UnexpectedEOF("Block");
+				if (tokenizer.IsEnd) throw new UnbalancedBlock(LexicalMode.Block, blockStart);
 
 				// A list of delarations or blocks
 
@@ -561,7 +606,7 @@
 
 			tokenizer.Read(); // read }
 
-			block.Leading = ReadTrivia();
+			block.Trailing = ReadTrivia();
 
 			return block;
 		}

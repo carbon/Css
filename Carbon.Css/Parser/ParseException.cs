@@ -6,12 +6,17 @@
 
 	public class ParseException : Exception
 	{
-		public ParseException(string message)
-			: base(message) { }
+		private readonly int position = 0;
 
-		public virtual int Position
+		public ParseException(string message, int position = 0)
+			: base(message) { 
+		
+			this.position = position;
+		}
+
+		public int Position
 		{
-			get { return Position; }
+			get { return position; }
 		}
 
 		public SourceLocation Location { get; set; }
@@ -35,11 +40,14 @@
 		{
 			this.position = position;
 		}
-		
-		public override int Position
-		{
-			get { return position; }
-		}
+	}
+
+	public class UnbalancedBlock : ParseException
+	{
+		// "Current mode is:" + current + ". Leaving " + mode + "."
+
+		public UnbalancedBlock(LexicalMode currentMode, CssToken startToken)
+			: base("The block is unclosed, '}' expected", startToken.Position) { }
 	}
 
 	public class UnexpectedTokenException : ParseException
@@ -53,13 +61,13 @@
 		}
 
 		public UnexpectedTokenException(LexicalMode mode, TokenKind expectedKind, CssToken token)
-			: base(String.Format("Unexpected token reading {0}. Expected '{1}'. Was '{2}'.", mode, expectedKind, token.Kind))
+			: base(String.Format("Unexpected token reading {0}. Expected '{1}'. Was '{2}'.", mode, expectedKind, token.Kind), token.Position)
 		{
 			this.token = token;
 		}
 
 		public UnexpectedTokenException(CssToken token)
-			: base(String.Format("Unexpected token. Was '{0}:{1}'.", token.Kind, token.Text))
+			: base(String.Format("Unexpected token. Was '{0}:{1}'.", token.Kind, token.Text), token.Position)
 		{
 			this.token = token;
 		}
@@ -67,11 +75,6 @@
 		public CssToken Token
 		{
 			get { return token; }
-		}
-
-		public override int Position
-		{
-			get { return token.Position; }
 		}
 	}
 }

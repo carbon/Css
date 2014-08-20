@@ -6,7 +6,7 @@
 	public class ImportRule : CssRule
 	{
 		public ImportRule()
-			: base(RuleType.Import, new CssSelector("@import")) { }
+			: base(RuleType.Import) { }
 
 		public CssUrlValue Url { get; set; }
 

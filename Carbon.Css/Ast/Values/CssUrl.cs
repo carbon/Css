@@ -4,7 +4,7 @@ namespace Carbon.Css
 	public class CssUrl : CssFunction
 	{
 		public CssUrl(CssToken name, CssValue value)
-			: base(name, value)
+			: base(name.Text, value)
 		{ }
 
 		

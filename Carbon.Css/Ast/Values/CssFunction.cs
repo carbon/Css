@@ -5,10 +5,10 @@
 
 	public class CssFunction : CssValue
 	{
-		private CssToken name;
+		private string name;
 		private CssValue args;
 
-		public CssFunction(CssToken name, CssValue args)
+		public CssFunction(string name, CssValue args)
 			: base(NodeKind.Function)
 		{
 			this.name = name;
@@ -17,7 +17,7 @@
 
 		public string Name
 		{
-			get { return name.Text; }
+			get { return name; }
 		}
 
 		public CssValue Args
@@ -27,13 +27,18 @@
 
 		public override string Text
 		{
-			get { return name.Text + "(" + args.Text + ")"; }
+			get { return name + "(" + args.Text + ")"; }
 		}
 
 		// Add Children to allow recussive variable binding
 		public override IList<CssNode> Children
 		{
 			get { return new[] { Args }; }
+		}
+
+		public override CssNode Clone()
+		{
+			return new CssFunction(name, args);
 		}
 
 		public override string ToString()

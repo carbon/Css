@@ -78,9 +78,8 @@
 		LeftParenthesis,	// (
 		RightParenthesis,	// )
 
-
-
 		// Trivia
+		Directive,			// //= *
 		Whitespace,
 		Comment,
 	}

@@ -7,6 +7,11 @@
 
 	public class ExpandNestedStylesRewriter : ICssTransformer
 	{
+		public int Order
+		{
+			get { return 1; }
+		}
+
 		public void Transform(CssRule rule, int index)
 		{
 			if (rule.Type != RuleType.Style) return;
@@ -27,7 +32,7 @@
 
 		public void Expand(CssRule rule, int index, StyleSheet styleSheet)
 		{
-			foreach (var nestedRule in rule.Children.OfType<CssRule>().ToArray())
+			foreach (var nestedRule in rule.Children.OfType<StyleRule>().ToArray())
 			{
 				Expand(
 					nested		: nestedRule,
@@ -39,18 +44,15 @@
 		}
 
 
-		public void Expand(CssRule nested, CssRule parent, StyleSheet styleSheet, ref int index)
+		public void Expand(StyleRule nested, CssRule parent, StyleSheet styleSheet, ref int index)
 		{
-			var newRule = new CssRule(
-				type		: RuleType.Style,
-				selector	: GetSelector(nested)
-			);
+			var newRule = new StyleRule(GetSelector(nested));
 
 			foreach (var childNode in nested.Children.ToArray())
 			{
-				if (childNode is CssRule)
+				if (childNode is StyleRule)
 				{
-					var childRule = (CssRule)childNode;
+					var childRule = (StyleRule)childNode;
 
 					Expand(childRule, nested, styleSheet, ref index);
 				}
@@ -73,7 +75,7 @@
 			return;
 		}
 
-		public CssSelector GetSelector(CssRule nested)
+		public CssSelector GetSelector(StyleRule nested)
 		{
 			var parts = new List<string>();
 
@@ -81,13 +83,16 @@
 
 			parts.Add(selector);
 
-			CssRule current = nested;
+			StyleRule current = nested;
 
-			while ((current = current.Parent as CssRule) != null)
+			while ((current = current.Parent as StyleRule) != null)
 			{
 				parts.Add(current.Selector.ToString());
 
-				if (parts.Count > 5) throw new Exception(string.Format("Cannot nest more than 5 levels deep. Was {0}. ", string.Join(" ", parts)));
+				if (parts.Count > 6)
+				{
+					throw new Exception(string.Format("Cannot nest more than 6 levels deep. Was {0}. ", string.Join(" ", parts)));
+				}
 			}
 
 			var sb = new StringBuilder();
@@ -107,10 +112,28 @@
 					sb.Append(' ');
 				}
 
-				sb.Append(part);
+				// h1, h2, h3
+
+				var split = part.Split(',');
+
+				if (split.Length > 1)
+				{
+					var parentSelector = sb.ToString();
+
+					sb.Append(split[0].Trim());
+
+					foreach(var a in split.Skip(1))
+					{
+						sb.Append(", " + parentSelector + a.Trim());
+					}
+				}
+				else
+				{
+					sb.Append(part);
+				}
 			}
 
-			return new CssSelector(sb.ToString());
+			return new CssSelector(sb.ToString().Trim());
 		}
 	}
 }

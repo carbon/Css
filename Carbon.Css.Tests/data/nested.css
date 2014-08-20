@@ -1,0 +1,65 @@
+﻿#networkLinks .block {
+  .edit {
+    opacity: 0;
+    position: absolute;
+    top: 0; bottom: 0; right: 20px;
+    margin: auto 0;
+    width: 26px; height: 26px;
+    text-align: center;
+    background: #3ea9f5;
+    cursor: pointer;
+    border-radius: 100%;
+    z-index: 105;
+    transition: margin 0.1s ease-out, opacity 0.1s ease-out;
+
+    &:before {
+      font-family: 'carbonmade';
+      font-size: 12px;
+      line-height: 26px;
+      color: #fff;
+      text-align: center;
+    }
+  }
+
+  .destroy {
+    display: none;
+    position: absolute;
+    top: 0; bottom: 0; right: 60px;
+    margin: auto 0;
+    width: 26px; height: 26px;
+    cursor: pointer;
+    border-radius: 100%;
+    text-align: center;
+    z-index: 105;
+
+    &:before {
+      font-family: 'carbonmade';
+      font-size: 17px;
+      line-height: 26px;
+      color: rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    &:hover:before { color: rgba(0,0,0,0.25); }
+  }
+
+  .input  {
+    background-color: #fff;
+    box-shadow: inset 0 0 0 1px #e6e6e6;
+    color: #222;
+    height: 40px;
+    line-height: 24px;
+    padding: 5px 6px 5px 165px;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+
+  .emptyGuts,
+  .populatedGuts,
+  .editGuts {
+    cursor: default;
+    z-index: 100;
+  }
+
+  .controls { padding: 5px 0 10px 210px; }
+}

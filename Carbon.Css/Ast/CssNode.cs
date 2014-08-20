@@ -1,5 +1,6 @@
 ﻿namespace Carbon.Css
 {
+	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 
@@ -42,6 +43,13 @@
 		public bool HasChildren
 		{
 			get { return Children != null && Children.Count > 0; }
+		}
+
+		public virtual CssNode Clone()
+		{
+			throw new Exception(this.Kind + "/" + this.GetType().Name);
+
+			throw new NotImplementedException();
 		}
 
 		#region IEnumerator

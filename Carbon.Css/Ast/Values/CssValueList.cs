@@ -50,6 +50,11 @@
 			get { return children; }
 		}
 
+		public override CssNode Clone()
+		{
+			return new CssValueList(this.children.Select(c => c.Clone()), this.seperator);
+		}
+
 		public override string ToString()
 		{
 			return string.Join(seperator == ValueListSeperator.Space ? " " : ", ", children.Select(t => t.ToString()));

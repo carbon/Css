@@ -7,10 +7,51 @@
 	using NUnit.Framework;
 
 	using Carbon.Css.Parser;
+	using System.Reflection;
 
 	[TestFixture]
 	public class CssTests
 	{
+		public static readonly string ExecutingAssemblyCodeBasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+
+		public FileInfo GetTestFile(string name)
+		{
+			return new FileInfo(ExecutingAssemblyCodeBasePath.Replace("file:\\", "") + "\\..\\..\\data\\" + name);
+		}
+
+
+		[Test]
+		public void ParseProject()
+		{
+			
+
+		
+
+			Assert.Throws<UnbalancedBlock>(() => {
+
+				StyleSheet.Parse(File.ReadAllText(GetTestFile("project.css").FullName));
+
+			});
+			
+		}
+
+		[Test]
+		public void ParseMixins()
+		{
+			var ss = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins.css").FullName));
+
+			Assert.AreEqual(6, ss.Context.Mixins.Count);
+
+			var fontText = File.ReadAllText(GetTestFile("fonts.css").FullName);
+
+			var ss2 = StyleSheet.Parse(fontText, ss.Context);
+
+			ss.AddRewriter(new ExpandNestedStylesRewriter());
+			ss.AddRewriter(new AddVendorPrefixesTransform(new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari1 }));
+
+			ss.ExecuteRewriters();
+		}
+	
 		[Test]
 		public void ParseValues()
 		{
@@ -30,7 +71,8 @@
 		[Test]
 		public void MediaQuery()
 		{
-			string text = @"@media only screen and (min-width : 1600px) {
+			string text = @"
+@media only screen and (min-width : 1600px) {
   .projects { -webkit-column-count: 3; }
   .main {   margin-left: 240px; }
   .projectDetails-bottom { display: none; }
@@ -40,14 +82,16 @@
 			var css = StyleSheet.Parse(text);
 
 
-			Assert.AreEqual(@"@media only screen and ( min-width : 1600 px ) {
+
+			Assert.AreEqual(
+@"@media only screen and (min-width : 1600px) {
   .projects { -webkit-column-count: 3; }
   .main { margin-left: 240px; }
   .projectDetails-bottom { display: none; }
   .contactForm {
     width: 760px;
     margin: 0 auto;
-}
+  }
 }", css.ToString());
 		}
 
@@ -80,7 +124,7 @@
 		{
 			var sheet = StyleSheet.Parse("div > h1 { width: 100px; }");
 
-			var style = sheet.Children[0] as CssRule;
+			var style = sheet.Children[0] as StyleRule;
 
 			Assert.AreEqual(1, sheet.Children.Count);
 			Assert.AreEqual(RuleType.Style, style.Type);
@@ -91,6 +135,33 @@
 			Assert.AreEqual("width", x.Name.ToString());
 			Assert.AreEqual("100px", x.Value.ToString());
 			Assert.AreEqual("div > h1 { width: 100px; }", sheet.ToString());
+		}
+
+		[Test]
+		public void DirivitiveComment()
+		{
+			var sheet = StyleSheet.Parse(
+@"//= support Firefox >= 5
+//= support Chrome >= 1
+div { transition: width: 5px; }"
+);
+
+
+			Assert.AreEqual(
+				expected: @"div { transition: width: 5px; }", 
+				actual: sheet.ToString()
+			);
+
+			sheet.ExecuteRewriters();
+
+			Assert.AreEqual(
+				expected: @"div {
+  -moz-transition: width: 5px;
+  -webkit-transition: width: 5px;
+  transition: width: 5px;
+}",
+				actual: sheet.ToString()
+			);
 		}
 
 		[Test]
@@ -111,7 +182,6 @@
 
 			Assert.AreEqual(1, sheet.Children.Count);
 			Assert.AreEqual(RuleType.Import, rule.Type);
-			Assert.AreEqual("@import", rule.Selector.ToString());
 			Assert.AreEqual("@import url('core.css');", rule.ToString());
 			Assert.AreEqual("url('core.css')", rule.Url.ToString());
 
@@ -123,7 +193,7 @@
 		{
 			var sheet = StyleSheet.Parse("#monster { font-color: red; background-color: url(http://google.com); }");
 
-			var style = sheet.Children[0] as CssRule;
+			var style = sheet.Children[0] as StyleRule;
 
 			Assert.AreEqual(1, sheet.Children.Count);
 			Assert.AreEqual(RuleType.Style, style.Type);
@@ -156,7 +226,10 @@
 	to {opacity: 0.25;}
 }");
 
-			Assert.AreEqual("@-webkit-keyframes fade", (sheet.Children[0] as CssRule).Selector.Text);
+			var atRule =  (sheet.Children[0] as AtRule);
+
+			Assert.AreEqual("-webkit-keyframes",atRule.AtName);
+			Assert.AreEqual("fade", atRule.SelectorText);
 
 			Assert.AreEqual(
 @"@-webkit-keyframes fade {
@@ -180,6 +253,8 @@
 			*/
 		}
 
+	
+
 		[Test]
 		public void CalcTest()
 		{
@@ -193,6 +268,20 @@
 }", StyleSheet.Parse(styles).ToString());
 
 		}
+
+
+		[Test]
+		public void ColorTests()
+		{
+			Assert.AreEqual("red", CssValue.Parse("red").ToString());
+
+			var value = StyleSheet.Parse(@"body { background-color: rgba(#ffffff, 0.5) }");
+
+
+			Assert.AreEqual("body { background-color: rgba(255, 255, 255, 0.5); }", value.ToString());
+		
+		}
+
 
 		
 		[Test]
@@ -430,32 +519,9 @@ p { font-color: red; background: url(http://google.com); }
 			Console.WriteLine(CssPropertyInfo.Get("-non-standards"));
 		}
 
-		[Test]
-		public void Transform()
-		{
-			var sheet = StyleSheet.Parse(
-@"
-body { 
-  transform: rotate(90);
-}
-");
+		
 
 
-			sheet.SetCompatibility(Browser.Chrome1, Browser.Safari1, Browser.Firefox1, Browser.Opera4, Browser.IE9);
-
-
-
-			sheet.ExecuteRewriters();
-
-			Assert.AreEqual(@"body {
-  -moz-transform: rotate(90);
-  -ms-transform: rotate(90);
-  -o-transform: rotate(90);
-  -webkit-transform: rotate(90);
-  transform: rotate(90);
-}", sheet.ToString());
-
-		}
 
 
 		[Test]

@@ -4,6 +4,12 @@
 
 	public class IEOpacityTransform : ICssTransformer
 	{
+		public int Order
+		{
+			get { return 3; }
+		}
+
+
 		public void Transform(CssRule rule, int ruleIndex)
 		{
 			var declaration = rule.Get("opacity");

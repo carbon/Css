@@ -45,9 +45,10 @@
 		Dimension,
 
 
-		// Sass Extensions
-		Mixin,
-		Include
+		// Extensions
+		Directive,
+		Mixin, // Sass
+		Include // Sass
 	}
 }
 

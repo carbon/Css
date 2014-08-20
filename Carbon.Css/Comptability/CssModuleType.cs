@@ -4,19 +4,14 @@
 	{
 		Animations,
 
-		// http://www.w3.org/TR/css3-background/#background-position
-		BackgroundsAndBorders,
-
+		BackgroundsAndBorders,	// http://www.w3.org/TR/css3-background/#background-position
 		Core,
 		Color,
 		Columns,
-
-		// http://dev.w3.org/csswg/css3-fonts/
-		Fonts,
-		
+		Fonts,					// http://dev.w3.org/csswg/css3-fonts/
+		Masking,				// http://dev.w3.org/fxtf/masking/
 		Ruby,
 		UI,
-
 		Text,
 		Transitions,
 		Transforms

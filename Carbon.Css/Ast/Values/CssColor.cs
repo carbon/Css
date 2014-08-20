@@ -1,7 +1,25 @@
 ﻿namespace Carbon.Css
 {
-	public class CssColor
+	public class CssColor : CssValue
 	{
+		private readonly string value;
+
+		public CssColor(string value)
+			: base(NodeKind.Color)
+		{
+			this.value = value;
+		}
+
+		public override string Text
+		{
+			get { return value; }
+		}
+
+		public override string ToString()
+		{
+			return value;
+		}
+
 	}
 }
 
@@ -9,3 +27,4 @@
 // rgba
 // hsla
 // #hex
+// named (purple, yellow, orange)

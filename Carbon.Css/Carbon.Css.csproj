@@ -38,11 +38,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ast\Rules\AtRule.cs" />
+    <Compile Include="Ast\Rules\KeyframesRule.cs" />
     <Compile Include="Ast\Rules\MediaRule.cs" />
     <Compile Include="Ast\Values\CssColor.cs" />
     <Compile Include="Ast\Values\CssFunction.cs" />
     <Compile Include="Ast\CssExpression.cs" />
-    <Compile Include="Ast\Values\StringNumber.cs" />
+    <Compile Include="Ast\Values\CssNumber.cs" />
     <Compile Include="Ast\Values\CssVariable.cs" />
     <Compile Include="Ast\Values\CssDimension.cs" />
     <Compile Include="Ast\Values\CssUrl.cs" />
@@ -50,12 +52,22 @@
     <Compile Include="Ast\TokenList.cs" />
     <Compile Include="Ast\TriviaNode.cs" />
     <Compile Include="Ast\Values\CssValueList.cs" />
+    <Compile Include="Color\Bgra.cs" />
+    <Compile Include="Color\Hsla.cs" />
+    <Compile Include="Color\Hsv.cs" />
+    <Compile Include="Color\IColor.cs" />
+    <Compile Include="Color\WebColor.cs" />
+    <Compile Include="Comptability\CssPropertyType.cs" />
     <Compile Include="Evaluator\CssWriter.cs" />
     <Compile Include="Helpers\SourceLocation.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
+    <Compile Include="Model\CssDirective.cs" />
+    <Compile Include="_\LinearGradient.cs" />
     <Compile Include="Model\CssBlock.cs" />
     <Compile Include="Model\CssContext.cs" />
     <Compile Include="Ast\CssNode.cs" />
+    <Compile Include="Parser\CssResolver.cs" />
+    <Compile Include="Resolver\Directive.cs" />
     <Compile Include="Sass\CssParameter.cs" />
     <Compile Include="Sass\IncludeNode.cs" />
     <Compile Include="Sass\MixinNode.cs" />
@@ -94,6 +106,7 @@
     <Compile Include="Transformer\ExpandNestedStylesRewriter.cs" />
     <Compile Include="Transformer\ICssTransform.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -60,6 +60,11 @@
 			get { return ToString(); }
 		}
 
+		public override CssNode Clone()
+		{
+			return new CssDeclaration(name, (CssValue)value.Clone(), priority);
+		}
+
 		public override string ToString()
 		{
 			// color: red !important

@@ -3,7 +3,7 @@
 	public class FontFaceRule : CssRule
 	{
 		public FontFaceRule()
-			: base(RuleType.FontFace, null) { }
+			: base(RuleType.FontFace) { }
 	}
 
 	/*

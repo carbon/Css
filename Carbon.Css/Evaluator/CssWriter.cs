@@ -1,21 +1,136 @@
 ﻿namespace Carbon.Css
 {
+	using Carbon.Css.Color;
+	using Carbon.Css.Parser;
 	using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
 
 	public class CssWriter
 	{
 		private readonly TextWriter writer;
 		private readonly CssContext context;
+		private readonly ICssResolver resolver;
 
-		public CssWriter(TextWriter writer, CssContext context)
+		public CssWriter(TextWriter writer, CssContext context, ICssResolver resolver = null)
 		{
+			#region Preconditions
+
+			if (context == null) throw new ArgumentNullException("context");
+
+			#endregion
+
 			this.writer = writer;
 			this.context = context;
+			this.resolver = resolver;
 		}
 
+		int includeCount = 0;
+
+		public void WriteRoot(StyleSheet sheet)
+		{
+			includeCount++;
+
+			if (includeCount > 100) throw new Exception("Exceded includeLimit of 100");
+
+			var i = 0;
+
+			foreach (var child in sheet.Children)
+			{
+				var rule = child as CssRule;
+
+				if (rule == null) continue;
+
+				if (i != 0) writer.WriteLine();
+
+				i++;
+
+				if (rule.Type == RuleType.Import)
+				{
+					var importRule = ((ImportRule)rule);
+
+					if (!importRule.Url.IsPath || resolver == null)
+					{
+						WriteImportRule(importRule);
+
+						continue;
+					}
+
+					// var relativePath = importRule.Url;
+					var absolutePath = importRule.Url.GetAbsolutePath(resolver.ScopedPath);
+
+					// Assume to be scss if there is no extension
+					if (!absolutePath.Contains('.')) absolutePath += ".scss";
+
+					writer.Write(Environment.NewLine + "/* " + absolutePath.TrimStart('/') + " */" + Environment.NewLine);
+
+					var text = resolver.GetText(absolutePath.TrimStart('/'));
+
+					if (text != null)
+					{
+						if (Path.GetExtension(absolutePath) == ".scss")
+						{
+							try
+							{
+								var css = StyleSheet.Parse(text, context);
+
+								// Apply the rewriters to the child
+
+								foreach (var rewriter in sheet.Rewriters)
+								{
+									css.Rewriters.Add(rewriter);
+								}
+
+								css.ExecuteRewriters();
+
+								WriteRoot(css);
+							}
+							catch (ParseException ex)
+							{
+								// response.StatusCode = 500;
+
+								writer.WriteLine("body, html { background-color: red !important; }");
+								writer.WriteLine("body * { display: none; }");
+
+								writer.WriteLine(string.Format("/* --- Parse Error in '{0}':{1} ", absolutePath, ex.Message));
+
+								if(ex.Lines != null)
+								{
+									foreach (var line in ex.Lines)
+									{
+										writer.Write(string.Format("{0}. ", line.Number.ToString().PadLeft(5)));
+
+										if (line.Number == ex.Location.Line)
+										{
+											writer.Write("* ");
+										}
+
+										writer.WriteLine(line.Text);
+									}
+								}
+
+								writer.Write("*/");
+
+								return;
+							}
+						}
+						else
+						{
+							writer.Write(text);	
+						}
+					}
+					else
+					{
+						writer.Write("/* NOT FOUND */" + Environment.NewLine);
+					}
+				}
+				else
+				{
+					WriteRule(rule);
+				}
+			}
+		}
 
 		public void WriteValue(CssNode value)
 		{
@@ -49,11 +164,64 @@ using System.Linq;
 		{
 			// {name}({args})
 
+			// If rgba & args = 2
+
+			if (function.Name == "rgba")
+			{
+				var args = GetArgs(function.Args).ToArray();
+
+				if (args.Length == 2 && args[0].ToString().StartsWith("#"))
+				{
+					var colorText = args[0].ToString();
+
+					var color = WebColor.Parse(colorText);
+
+					writer.Write(string.Format("rgba({0}, {1}, {2}, {3})", color.R, color.G, color.B, args[1].ToString()));
+
+					return;
+				}
+			}
+
 			writer.Write(function.Name);
 
 			writer.Write("(");
+
 			WriteValue(function.Args);
+			
 			writer.Write(")");
+		}
+
+		public IEnumerable<CssValue> GetArgs(CssValue value)
+		{
+			switch(value.Kind)
+			{
+				case NodeKind.Variable:
+					var x = (CssVariable)value;
+
+					yield return context.GetVariable(x.Symbol);	
+					
+					break;
+				case NodeKind.ValueList:
+					{
+						var list = (CssValueList)value;
+
+						if (list.Seperator == ValueListSeperator.Space) yield return list;
+
+						// Break out comma seperated values
+						foreach (var v in list)
+						{
+							foreach (var item in GetArgs((CssValue)v))
+							{
+								yield return item;
+							}
+						}
+					}
+					
+					break;
+				case NodeKind.Function	: yield return value;	break;
+				default					: yield return value;	break;
+			}
+		
 		}
 
 		public void WriteVariable(CssVariable variable)
@@ -76,7 +244,7 @@ using System.Linq;
 		#region Mixins
 
 		// Expand Include Nodes
-		public void ExpandInclude(IncludeNode include, CssRule rule)
+		public void ExpandInclude(IncludeNode include, CssBlock rule)
 		{
 			var index = rule.Children.IndexOf(include);
 
@@ -97,7 +265,6 @@ using System.Linq;
 
 				BindVariables(node, childContext);
 
-
 				rule.Children.Insert(index + i, node);
 
 				i++;
@@ -106,8 +273,6 @@ using System.Linq;
 
 		public void BindVariables(CssNode node, CssContext c)
 		{
-		
-
 			if (node.Kind == NodeKind.Declaration)
 			{
 				var declaration = (CssDeclaration)node;
@@ -175,33 +340,85 @@ using System.Linq;
 		{
 			Indent(level);
 
-			if(rule.Type == RuleType.Import) 
+			switch (rule.Type)
 			{
-				WriteImportRule((ImportRule)rule);
+				case RuleType.Import	: WriteImportRule((ImportRule)rule);				break;
+				case RuleType.Media		: WriteMediaRule((MediaRule)rule, level);			break;
+				case RuleType.Style		: WriteStyleRule((StyleRule)rule, level);			break;
+				case RuleType.FontFace	: WriteFontFaceRule((FontFaceRule)rule, level);		break;
+				case RuleType.Keyframes	: WriteKeyframesRule((KeyframesRule)rule, level);	break;
 
-				return;
+				// Unknown rules
+				default:
+					{
+						if (rule is AtRule)
+						{
+							WriteAtRule((AtRule)rule, level);
+						}
+					}
+
+					break;
 			}
+		}
 
+		public void WriteAtRule(AtRule rule, int level)
+		{
+			writer.Write("@{0} {1} ", rule.AtName, rule.SelectorText);
+
+			WriteBlock(rule, level);
+		}
+
+		public void WriteStyleRule(StyleRule rule, int level)
+		{
 			// Write the selector
 			writer.Write(rule.Selector.ToString() + " ");
 
+			WriteBlock(rule, level);
+		}
+
+		public void WriteMediaRule(MediaRule rule, int level)
+		{
+			// Write the selector
+			writer.Write("@media {0} ", rule.RuleText);
+
+			WriteBlock(rule, level);
+		}
+
+
+		public void WriteFontFaceRule(FontFaceRule rule, int level)
+		{
+			// Write the selector
+			writer.Write("@font-face ");
+
+			WriteBlock(rule, level);
+		}
+
+		public void WriteKeyframesRule(KeyframesRule rule, int level)
+		{
+			// Write the selector
+			writer.Write("@keyframes {0} ", rule.Name);
+
+			WriteBlock(rule, level);
+		}
+
+		public void WriteBlock(CssBlock block, int level)
+		{
 			// Block Start	
 			writer.Write("{");
 
-			var copy = rule.Children.ToList();
+			var copy = block.Children.ToList();
 
 			// Expand includes
-			foreach (var include in rule.Children.OfType<IncludeNode>().ToArray())
+			foreach (var include in block.Children.OfType<IncludeNode>().ToArray())
 			{
-				ExpandInclude(include, rule);
+				ExpandInclude(include, block);
 			}
-
 
 			var condenced = false;
 			var count = 0;
 
 			// Write the declarations
-			foreach (var node in rule.Children) // TODO: Change to an immutable list?
+			foreach (var node in block.Children) // TODO: Change to an immutable list?
 			{
 				if (node.Kind == NodeKind.Include) continue;
 
@@ -209,7 +426,7 @@ using System.Linq;
 				{
 					var declaration = (CssDeclaration)node;
 
-					if (rule.Children.Count == 1)
+					if (block.Children.Count == 1)
 					{
 						condenced = true;
 					}
@@ -254,6 +471,11 @@ using System.Linq;
 				writer.Write(" ");
 			}
 
+			else
+			{
+				Indent(level);
+			}
+
 			// Block End
 			writer.Write("}");
 		}
@@ -279,5 +501,11 @@ using System.Linq;
 
 		// WriteValue(CssValue)
 
+	}
+
+	public enum WriterStyle
+	{
+		Pretty = 1,  
+		OneRulePerLine = 2
 	}
 }

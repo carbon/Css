@@ -246,6 +246,8 @@
 
 			reader.Next(); // read /
 
+			bool isDirective = reader.Current == '=';
+
 			while (reader.Current != '\n' && reader.Current != '\r')
 			{
 				if (reader.IsEof) break;
@@ -253,7 +255,7 @@
 				reader.Next();
 			}
 
-			return new CssToken(TokenKind.Comment, reader.Unmark(), reader.MarkStart);
+			return new CssToken(isDirective ? TokenKind.Directive : TokenKind.Comment, reader.Unmark(), reader.MarkStart);
 		}
 
 		public void Dispose()

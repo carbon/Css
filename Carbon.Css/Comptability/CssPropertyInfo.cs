@@ -4,35 +4,89 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
+	// TODO: Make immutable
+
+	public struct CompatibilityTable
+	{
+		public float Chrome { get; set; }
+
+		public float Firefox { get; set; }
+
+		public float IE { get; set; }
+
+		public float Opera { get; set; }
+
+		public float Safari { get; set; }
+	}
+
 	public class CssCompatibility
 	{
 		public static readonly CssCompatibility Unknown = new CssCompatibility();
 
-		public CssCompatibility() { }
+		private readonly CompatibilityTable prefixed;
+		private readonly CompatibilityTable standard;
 
-		public Browser[] Prefixed { get; set; }
 
-		public Browser[] Standard { get; set; }
+		public CssCompatibility(CompatibilityTable? prefixed = null, CompatibilityTable? standard = null)
+		{
+			this.prefixed = prefixed ?? new CompatibilityTable();
+			this.standard = standard ?? new CompatibilityTable();
+		}
 
-		/*
-		public bool RequiresPrefix(Browser browser)
+		public bool HasValuePatches { get; set; }
+
+		public CompatibilityTable Prefixed
+		{
+			get { return prefixed; }
+		}
+
+		public CompatibilityTable Standard
+		{
+			get { return standard; }
+		}
+
+		public bool IsPrefixed(Browser browser)
 		{
 			// Check if it's standard
+			switch (browser.Type)
+			{
+				case BrowserType.Chrome		: return prefixed.Chrome > 0f	&& !IsStandard(browser);
+				case BrowserType.Firefox	: return prefixed.Firefox > 0f	&& !IsStandard(browser);
+				case BrowserType.IE			: return prefixed.IE > 0f		&& !IsStandard(browser);
+				case BrowserType.Opera		: return prefixed.Opera > 0f	&& !IsStandard(browser);
+				case BrowserType.Safari		: return prefixed.Safari > 0f	&& !IsStandard(browser);
+			}
 
-			if (Prefixed == null) return false;
-
-			var prefix = Prefixed.FirstOrDefault(p => p.Type == browser.Type);
-
-			if (prefix == null) return true;
-
-			return true; // browser.Version >= prefix.Version;
+			return false; 
 		}
-		*/
+
+		public bool IsStandard(Browser browser)
+		{
+			// Check if it's standard
+			switch (browser.Type)
+			{
+				case BrowserType.Chrome		: return standard.Safari != 0 && standard.Chrome <= browser.Version;
+				case BrowserType.Firefox	: return standard.Firefox != 0 && standard.Firefox <= browser.Version; 
+				case BrowserType.IE			: return standard.IE != 0 && standard.IE <= browser.Version; 
+				case BrowserType.Opera		: return standard.Opera != 0 && standard.Opera <= browser.Version; 
+				case BrowserType.Safari		: return standard.Safari != 0 && standard.Safari <= browser.Version; 
+			}
+
+			return false;
+		}
 
 
 		public bool HasPatches
 		{
-			get { return Prefixed != null; }
+			get 
+			{
+				return
+					prefixed.Chrome > 0 ||
+					prefixed.Firefox > 0 ||
+					prefixed.IE > 0 ||
+					prefixed.Safari > 0;
+					 
+			}
 		}
 
 		// Rewrite
@@ -124,9 +178,6 @@
 
 
 
-
-
-
 		public static CssPropertyInfo Get(string name)
 		{
 			CssPropertyInfo propertyInfo;
@@ -152,36 +203,49 @@
 		public static readonly CssPropertyInfo AnimationPlayState		= new CssPropertyInfo("animation-play-state",		CssModule.Animations3);
 		public static readonly CssPropertyInfo AnimationTimingFunction	= new CssPropertyInfo("animation-timing-function",	CssModule.Animations3);
 
-		public static readonly CssPropertyInfo Appearance				= new CssPropertyInfo("appearance", new CssCompatibility { Prefixed = new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari3 } });
+		public static readonly CssPropertyInfo Appearance = new CssPropertyInfo("appearance", new CssCompatibility(
+			prefixed: new CompatibilityTable { Chrome = 1, Firefox = 1, Safari = 3 }
+		));
+		
+		public static readonly CssPropertyInfo Azimuth					= new CssPropertyInfo("azimuth", CssModule.Core2_1);
 
 		public static readonly CssPropertyInfo BackfaceVisibility		= new CssPropertyInfo("backface-visibility", CssModule.Transforms3);
 
 		// Backgrounds
 		public static readonly CssPropertyInfo Background				= new CssPropertyInfo("background",				CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundAttachment		= new CssPropertyInfo("background-attachment",	CssModule.Core1);
-		public static readonly CssPropertyInfo BackgroundClip			= new CssPropertyInfo("background-clip",		CssModule.BackgroundsAndBorders3);
+
+		public static readonly CssPropertyInfo BackgroundClip			= new CssPropertyInfo("background-clip",		CssModule.BackgroundsAndBorders3, new CssCompatibility(
+			prefixed: new CompatibilityTable { Chrome = 4, Firefox = 4, Safari = 4 },
+			standard: new CompatibilityTable { Firefox = 4, IE = 9 }	
+		));
+
 		public static readonly CssPropertyInfo BackgroundColor			= new CssPropertyInfo("background-color",		CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundImage			= new CssPropertyInfo("background-image",		CssModule.Core1);
-		public static readonly CssPropertyInfo BackgroundOrigin			= new CssPropertyInfo("background-origin",		CssModule.BackgroundsAndBorders3, new CssCompatibility { Standard = new[] { Browser.Chrome1, Browser.Firefox4, Browser.IE9, Browser.Safari3 } });
+		
+		public static readonly CssPropertyInfo BackgroundOrigin			= new CssPropertyInfo("background-origin",		CssModule.BackgroundsAndBorders3, new CssCompatibility(
+			standard: new CompatibilityTable { Chrome = 1, Firefox = 4, IE = 9, Safari = 3 }
+		));
+
 		public static readonly CssPropertyInfo BackgroundPosition		= new CssPropertyInfo("background-position",	CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundRepeat			= new CssPropertyInfo("background-repeat",		CssModule.Core1);
 		public static readonly CssPropertyInfo BackgroundSize			= new CssPropertyInfo("background-size",		CssModule.BackgroundsAndBorders3);
 
 		// Borders -------------------------------------------------------------------------------------------------------
-		public static readonly CssCompatibility BorderImageCompatibility = new CssCompatibility {
-			Prefixed = new[] { Browser.Chrome7, Browser.Firefox(3.5f), Browser.Safari3 },
-			Standard = new[] { Browser.Firefox(15) }
-		};
+		public static readonly CssCompatibility BorderImageCompatibility = new CssCompatibility(
+			prefixed: new CompatibilityTable { Chrome = 7, Firefox = 3.5f, Safari = 3 },
+			standard: new CompatibilityTable { Chrome = 16, Firefox = 15, IE = 11, Safari = 6.1f }
+		);
 
 		public static readonly CssPropertyInfo Border					= new CssPropertyInfo("border",					CssModule.Core1);
 		public static readonly CssPropertyInfo BorderBottom				= new CssPropertyInfo("border-bottom",			CssModule.Core1);
-		public static readonly CssPropertyInfo BorderBottomColor		= new CssPropertyInfo("border-bottom-color");
+		public static readonly CssPropertyInfo BorderBottomColor		= new CssPropertyInfo("border-bottom-color",	CssModule.Core1);
 		public static readonly CssPropertyInfo BorderBottomLeftRadius	= new CssPropertyInfo("border-bottom-left-radius");
 		public static readonly CssPropertyInfo BorderBottomRightRadius	= new CssPropertyInfo("border-bottom-right-radius");
 		public static readonly CssPropertyInfo BorderBottomStyle		= new CssPropertyInfo("border-bottom-style");
 		public static readonly CssPropertyInfo BorderBottomWidth		= new CssPropertyInfo("border-bottom-width");
 		public static readonly CssPropertyInfo BorderCollapse			= new CssPropertyInfo("border-collapse");
-		public static readonly CssPropertyInfo BorderColor				= new CssPropertyInfo("border-color");
+		public static readonly CssPropertyInfo BorderColor				= new CssPropertyInfo("border-color",			CssModule.Core1);
 		public static readonly CssPropertyInfo BorderImage				= new CssPropertyInfo("border-image",			BorderImageCompatibility);
 		public static readonly CssPropertyInfo BorderImageOutset		= new CssPropertyInfo("border-image-outset",	BorderImageCompatibility);
 		public static readonly CssPropertyInfo BorderImageRepeat		= new CssPropertyInfo("border-image-repeat",	BorderImageCompatibility);
@@ -211,18 +275,15 @@
 		public static readonly CssPropertyInfo Bottom					= new CssPropertyInfo("bottom",					CssModule.Core1);
 		public static readonly CssPropertyInfo BoxDecorationBreak		= new CssPropertyInfo("box-decoration-break");
 
-		public static readonly CssPropertyInfo BoxShadow = new CssPropertyInfo("box-shadow", CssModule.UI(3), new CssCompatibility {
-			Prefixed = new[] { Browser.Chrome1, Browser.Firefox(3.5f), Browser.Safari(3.1f) },
-			Standard = new[] { Browser.Chrome10, Browser.IE9, Browser.Opera(10.5f), Browser.Safari(5.1f) }
-		});
+		public static readonly CssPropertyInfo BoxShadow				= new CssPropertyInfo("box-shadow", CssModule.UI(3), new CssCompatibility(
+			prefixed: new CompatibilityTable { Chrome = 1, Firefox = 3.5f, Safari = 3.1f },
+			standard: new CompatibilityTable { Chrome = 10, Firefox = 4, IE = 9, Safari = 5.1f }
+		));
 
-		
-		// -ms-box-sizing in IE8 (Browser.IE8) [Move minimum target to IE9)
-
-		public static readonly CssPropertyInfo BoxSizing = new CssPropertyInfo("box-sizing", CssModule.UI(3), new CssCompatibility { 
-			Prefixed = new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari3 },
-			Standard = new[] { Browser.Chrome10, Browser.Firefox29, Browser.IE9, Browser.Opera(7), Browser.Safari(5.1f) }
-		});
+		public static readonly CssPropertyInfo BoxSizing = new CssPropertyInfo("box-sizing", CssModule.UI(3), new CssCompatibility(
+			prefixed: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 8, Safari = 3 },
+			standard: new CompatibilityTable { Chrome = 10, Firefox = 29, IE = 9, Safari = 5.1f }
+		));
 
 		// Breaks
 		public static readonly CssPropertyInfo BreakAfter	= new CssPropertyInfo("break-after");
@@ -232,7 +293,14 @@
 
 		public static readonly CssPropertyInfo CaptionSide		= new CssPropertyInfo("caption-side");
 		public static readonly CssPropertyInfo Clear			= new CssPropertyInfo("clear");
+
 		public static readonly CssPropertyInfo Clip				= new CssPropertyInfo("clip");
+
+		// TODO: Confirm support
+		public static readonly CssPropertyInfo ClipPath			= new CssPropertyInfo("clip-path", new CssCompatibility(
+			prefixed: new CompatibilityTable { Safari = 5.1f }			// Nightly support
+		));
+
 		public static readonly CssPropertyInfo Color			= new CssPropertyInfo("color", CssModule.Core1);
 
 		public static readonly CssPropertyInfo ColumnCount		= new CssPropertyInfo("column-count",		CssModule.Columns3);
@@ -246,9 +314,7 @@
 		public static readonly CssPropertyInfo ColumnWidth		= new CssPropertyInfo("column-width",		CssModule.Columns3);
 		public static readonly CssPropertyInfo Columns			= new CssPropertyInfo("columns",			CssModule.Columns3);
 		
-		public static readonly CssPropertyInfo Content = new CssPropertyInfo("content", CssModule.Core2_1, new CssCompatibility {
-			Standard = new[] { Browser.Chrome1, Browser.Firefox1, Browser.IE8, Browser.Opera4, Browser.Safari1 }	
-		});
+		public static readonly CssPropertyInfo Content			= new CssPropertyInfo("content", CssModule.Core2_1);
 
 		// Counters ---------------------------------------------------------------------------------------
 		public static readonly CssPropertyInfo CounterIncrement = new CssPropertyInfo("counter-increment");
@@ -286,7 +352,7 @@
 		public static readonly CssPropertyInfo FontWeight		= new CssPropertyInfo("font-weight",		CssModule.Core1);
 
 		// Grids ---------------------------------------------------------------------------------------
-		public static readonly CssCompatibility GridComptability	= new CssCompatibility { Prefixed = new[] { Browser.IE10 } };
+		public static readonly CssCompatibility GridComptability	= new CssCompatibility(prefixed: new CompatibilityTable { IE = 10 });
 
 		public static readonly CssPropertyInfo GridColumns			= new CssPropertyInfo("grid-columns",	GridComptability);
 		public static readonly CssPropertyInfo GridRows				= new CssPropertyInfo("grid-rows",		GridComptability);
@@ -299,10 +365,12 @@
 		public static readonly CssPropertyInfo HyphenateCharacter	= new CssPropertyInfo("hyphenate-character", CssModule.Text3);
 		public static readonly CssPropertyInfo HyphenateLines		= new CssPropertyInfo("hyphenate-lines");
 		public static readonly CssPropertyInfo HyphenateResource	= new CssPropertyInfo("hyphenate-resource");
+																	
+		public static readonly CssPropertyInfo Hyphens				= new CssPropertyInfo("hyphens", new CssModule(CssModuleType.Text, 3), new CssCompatibility(
+																		prefixed: new CompatibilityTable { Chrome = 13, Firefox = 6, IE = 10, Safari = 5.1f }
+																	));
 
-		public static readonly CssPropertyInfo Hyphens				= new CssPropertyInfo("hyphens", new CssModule(CssModuleType.Text, 3), new CssCompatibility {
-																	Prefixed = new[] { Browser.Chrome13, Browser.Firefox6, Browser.IE10, Browser.Safari(5.1f) },
-																});
+																	// https://developer.mozilla.org/en-US/docs/Web/CSS/hyphens
 
 		public static readonly CssPropertyInfo InlineBoxAlign		= new CssPropertyInfo("inline-box-align");
 		public static readonly CssPropertyInfo Left					= new CssPropertyInfo("left",					CssModule.Core1);
@@ -342,9 +410,9 @@
 		// IE8 introduced -ms-filter, which is synonymous with filter. Both are gone in IE10
 		public static readonly CssPropertyInfo Opacity = new CssPropertyInfo("opacity",					CssModule.Color3);
 
-		public static readonly CssPropertyInfo Orphans = new CssPropertyInfo("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility {
-			Standard = new[] { Browser.IE8, Browser.Opera(9.2f) }	
-		});
+		public static readonly CssPropertyInfo Orphans = new CssPropertyInfo("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility(
+			standard: new CompatibilityTable { IE = 8 }	
+		));
 
 		// Outlines -------------------------------------------------------------------------------
 		public static readonly CssPropertyInfo Outline			= new CssPropertyInfo("outline",		CssModule.Core2_1);
@@ -415,7 +483,12 @@
 		public static readonly CssPropertyInfo TextIndent				= new CssPropertyInfo("text-indent", CssModule.Core1);
 		public static readonly CssPropertyInfo TextJustify				= new CssPropertyInfo("text-justify");
 		public static readonly CssPropertyInfo TextOutline				= new CssPropertyInfo("text-outline");
-		public static readonly CssPropertyInfo TextShadow				= new CssPropertyInfo("text-shadow", new CssCompatibility { Standard = new[] { Browser.Chrome(2), Browser.Firefox(3.5f), Browser.IE10, Browser.Safari(1.1f) } });
+
+		public static readonly CssPropertyInfo TextShadow				= new CssPropertyInfo("text-shadow", new CssCompatibility(
+			standard: new CompatibilityTable { Chrome = 2, Firefox = 3.5f, IE = 10, Safari = 4f  }
+		));
+
+		
 		public static readonly CssPropertyInfo TextSpaceCollapse		= new CssPropertyInfo("text-space-collapse");
 		public static readonly CssPropertyInfo TextTransform			= new CssPropertyInfo("text-transform", CssModule.Core1);
 		public static readonly CssPropertyInfo TextUnderlinePosition	= new CssPropertyInfo("text-underline-position");
@@ -440,9 +513,9 @@
 		public static readonly CssPropertyInfo UnicodeBidi		= new CssPropertyInfo("unicode-bidi");
 		public static readonly CssPropertyInfo UnicodeRange		= new CssPropertyInfo("unicode-range");
 		
-		public static readonly CssPropertyInfo UserSelect = new CssPropertyInfo("user-select", new CssCompatibility {
-			Prefixed = new[] { Browser.Chrome1, Browser.Firefox1, Browser.IE10, Browser.Safari3 }	
-		});
+		public static readonly CssPropertyInfo UserSelect = new CssPropertyInfo("user-select", new CssCompatibility(
+			prefixed: new CompatibilityTable{ Chrome = 1, Firefox = 1, IE = 10, Safari = 3 }	
+		));
 
 		public static readonly CssPropertyInfo VerticalAlign	= new CssPropertyInfo("vertical-align", CssModule.Core1);
 		public static readonly CssPropertyInfo Visibility		= new CssPropertyInfo("visibility",		CssModule.Core1);
@@ -470,7 +543,8 @@
 			{ "animation-play-state",		AnimationPlayState },
 			{ "animation-timing-function",	AnimationTimingFunction },
 
-			{ "appearance", Appearance },
+			{ "appearance",		Appearance },
+			{ "azimuth",	Azimuth },
 			{ "backface-visibility", BackfaceVisibility },
 			{ "background", Background },
 			{ "background-attachment", BackgroundAttachment },
@@ -524,6 +598,7 @@
 			{ "caption-side", CaptionSide },
 			{ "clear", Clear },
 			{ "clip", Clip },
+			{ "clip-path", ClipPath },
 			{ "color", Color },
 			{ "column-count", ColumnCount },
 			{ "column-fill", ColumnFill },

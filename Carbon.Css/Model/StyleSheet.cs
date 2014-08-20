@@ -7,6 +7,7 @@
 	using Carbon.Css.Parser;
 	using System.IO;
 	using Carbon.Css.Helpers;
+	using System;
 
 	public class StyleSheet : CssNode, IStylesheet
 	{
@@ -66,6 +67,8 @@
 
 			var parser = new CssParser(text);
 
+			var browsers = new List<Browser>();
+
 			foreach (var node in parser.ReadNodes())
 			{
 				if (node.Kind == NodeKind.Assignment)
@@ -80,10 +83,33 @@
 
 					context.Mixins.Add(mixin.Name, mixin);
 				}
+				else if (node.Kind == NodeKind.Directive)
+				{
+					var directive = (CssDirective)node;
+
+					if (directive.Name == "support")
+					{
+						
+						var parts = directive.Value.Split(' ');
+
+						var browserType = (BrowserType)Enum.Parse(typeof(BrowserType), parts[0].Trim(), true);
+						// var compare = parts[1].Trim();
+						var browserVersion = float.Parse(parts.Last().Trim(' ', '+'));
+
+						browsers.Add(new Browser(browserType, browserVersion));
+					}
+				}
 				else
 				{
 					sheet.AddChild(node);
+
+					// TODO: Transform here?
 				}
+			}
+
+			if (browsers.Count > 0)
+			{
+				sheet.SetCompatibility(browsers.ToArray());
 			}
 
 			return sheet;
@@ -97,7 +123,6 @@
 			{
 				text = reader.ReadToEnd();
 			}
-
 
 			try
 			{
@@ -122,9 +147,13 @@
 
 		private readonly RewriterCollection rewriters = new RewriterCollection();
 
+		private bool cs = false;
+
 		public void SetCompatibility(params Browser[] targets)
 		{
-			// rewriters.Add(new IEOpacityTransform());
+			if (cs) return;
+
+			cs = true;
 
 			rewriters.Add(new AddVendorPrefixesTransform(targets));
 		}
@@ -139,9 +168,14 @@
 			rewriters.Add(rewriter);
 		}
 
+		public RewriterCollection Rewriters
+		{
+			get { return rewriters; }
+		}
+
 		public void ExecuteRewriters()
 		{
-			foreach (var rewriter in rewriters)
+			foreach (var rewriter in rewriters.OrderBy(r => r.Order))
 			{
 				var index = 0;
 
@@ -157,34 +191,22 @@
 					index++;
 				}
 			}
-			
-			
 		}
 
 		#endregion
-		
+
+		private ICssResolver resolver;
+
+		public void SetResolver(ICssResolver resolver)
+		{
+			this.resolver = resolver;
+		}
+
 		public void WriteTo(TextWriter textWriter)
 		{
-			var writer = new CssWriter(textWriter, context);
+			var writer = new CssWriter(textWriter, context, resolver);
 
-			var i = 0;
-
-			foreach (var node in children)
-			{
-				var rule = node as CssRule;
-
-				if (rule != null)
-				{
-					if (i != 0)
-					{
-						textWriter.WriteLine();
-					}
-
-					writer.WriteRule(rule);
-
-					i++;
-				}
-			}
+			writer.WriteRoot(this);
 		}
 
 		public override string Text

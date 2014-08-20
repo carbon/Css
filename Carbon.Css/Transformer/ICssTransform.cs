@@ -5,6 +5,8 @@
 	public interface ICssTransformer // Rename ICssRewriter
 	{
 		void Transform(CssRule rule, int index);
+
+		int Order { get; }
 	}
 
 	/*

@@ -6,6 +6,16 @@
 	public class VariableTests
 	{
 		[Test]
+		public void ParseVariables()
+		{
+			var text = @"$color: red;
+			
+			";
+
+			Assert.AreEqual(1, StyleSheet.Parse(text).Context.Variables.Count);
+		}
+
+		[Test]
 		public void VariableTest1()
 		{
 			var sheet = StyleSheet.Parse(

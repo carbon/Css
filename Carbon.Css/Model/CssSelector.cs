@@ -28,13 +28,19 @@
 				}
 				*/
 
-				sb.Append(token.Text);
+				if (token.IsTrivia)
+				{
+					sb.Append(" ");
+				}
+				else
+				{
+					sb.Append(token.Text);
+				}
 
 				last = token;
 			}
 
 			this.text = sb.ToString().Trim();
-
 		}
 
 		public CssSelector(string text)
