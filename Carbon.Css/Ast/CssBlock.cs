@@ -7,13 +7,19 @@
 
 	public class CssBlock : CssNode, IList<CssNode>
 	{
-		protected readonly List<CssNode> children = new List<CssNode>();
-
-		public CssBlock() 
-			: base(NodeKind.Block) { }
+		protected readonly List<CssNode> children;
 
 		public CssBlock(NodeKind kind)
-			: base(kind) { }
+			: base(kind) 
+		{
+			this.children = new List<CssNode>();
+		}
+
+		public CssBlock(NodeKind kind, List<CssNode> children)
+			: base(kind)
+		{
+			this.children = children;
+		}
 
 		// Name or Selector
 
@@ -37,7 +43,7 @@
 			return children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
 		}
 
-		public int RemoveAll(Predicate<CssNode> match)
+		public int RemoveMatching(Predicate<CssNode> match)
 		{
 			return children.RemoveAll(match);
 		}

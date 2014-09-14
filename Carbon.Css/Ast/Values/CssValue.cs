@@ -2,12 +2,9 @@
 {
 	using Carbon.Css.Parser;
 	using System;
-	using System.Collections;
 	using System.Collections.Generic;
 	using System.IO;
-	using System.Linq;
 
-	
 	// Single value
 	public abstract class CssValue : CssNode
 	{

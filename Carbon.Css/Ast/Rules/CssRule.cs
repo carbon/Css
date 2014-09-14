@@ -40,7 +40,7 @@
 
 			using (var sw = new StringWriter(sb))
 			{
-				new CssWriter(sw, new CssContext());
+				new CssWriter(sw);
 
 				return sb.ToString();
 			}

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Colors\WebColorTests.cs" />
     <Compile Include="CssTests.cs" />
     <Compile Include="AnimationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

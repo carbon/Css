@@ -5,15 +5,11 @@
 	using System.Linq;
 
 	// Directive
-
-	/*
-	
-	*/
-	public class AddVendorPrefixesTransform : ICssTransformer
+	public class AddPrefixes : ICssTransformer
 	{
 		private readonly Browser[] targets;
 
-		public AddVendorPrefixesTransform(IList<Browser> targets)
+		public AddPrefixes(IList<Browser> targets)
 		{
 			this.targets = targets.OrderByDescending(t => t.Prefix.Text).ToArray(); // Reverse the list
 		}

@@ -8,7 +8,7 @@
 
 		public override string Text
 		{
-			get { throw new System.NotImplementedException(); }
+			get { return ""; }
 		}
 	}
 }

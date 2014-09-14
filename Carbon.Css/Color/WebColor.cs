@@ -47,12 +47,12 @@
 			return new WebColor(r, g, b, alpha);
 		}
 
-		public WebColor(byte red, byte green, byte blue, float alpha = 1)
+		public WebColor(byte r, byte g, byte b, float a = 1)
 		{
-			this.r = red;
-			this.g = green;
-			this.b = blue;
-			this.alpha = alpha;
+			this.r = r;
+			this.g = g;
+			this.b = b;
+			this.alpha = a;
 		}
 
 		public string ToHex()
@@ -100,18 +100,25 @@
 			#endregion
 
 
-			if (hex.StartsWith("rgba"))
+			if (hex.StartsWith("rgba("))
 			{
-				// rgba(197, 20, 37, 0.3))
+				// rgba(197, 20, 37, 0.3)
 
-				var parts = hex.Replace("rgba(", "").TrimEnd(')').Split(',');
+				var parts = hex.Substring(5).TrimEnd(')').Split(',');
 
 				if (parts.Length != 4) throw new Exception("Must be 4 parts");
 
-				return new WebColor(Byte.Parse(parts[0]), Byte.Parse(parts[1]), Byte.Parse(parts[2]));
+				return new WebColor(
+					r: Byte.Parse(parts[0]),
+					g: Byte.Parse(parts[1]), 
+					b: Byte.Parse(parts[2]), 
+					a: float.Parse(parts[3])
+				);
 			}
 			
 			// 000000
+
+			// TODO: Support 3 char hex
 
 			hex = hex.TrimStart('#');
 

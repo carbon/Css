@@ -47,7 +47,7 @@
 			var ss2 = StyleSheet.Parse(fontText, ss.Context);
 
 			ss.AddRewriter(new ExpandNestedStylesRewriter());
-			ss.AddRewriter(new AddVendorPrefixesTransform(new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari1 }));
+			ss.AddRewriter(new AddPrefixes(new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari1 }));
 
 			ss.ExecuteRewriters();
 		}
@@ -238,19 +238,6 @@ div { transition: width: 5px; }"
 }", sheet.ToString());
 
 			Assert.AreEqual(1, sheet.Children.Count);
-
-
-
-			/*
-			var tokenizer = new CssTokenizer(new SourceReader(sheet.ToString()));
-
-			Token token;
-
-			while ((token = tokenizer.Next()) != null)
-			{
-				Console.WriteLine(token.Kind + ":" + token.Value);
-			}
-			*/
 		}
 
 	

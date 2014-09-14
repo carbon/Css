@@ -12,19 +12,16 @@
 
 		public override string Text
 		{
-			get
-			{
-				var sb = new StringBuilder();
-
-				new CssWriter(new StringWriter(sb), new CssContext()).WriteImportRule(this);
-
-				return sb.ToString();
-			}
+			get { return ToString(); }
 		}
 
 		public override string ToString()
 		{
-			return Text;
+			var sb = new StringBuilder();
+
+			new CssWriter(new StringWriter(sb)).WriteImportRule(this);
+
+			return sb.ToString();
 		}
 
 	}

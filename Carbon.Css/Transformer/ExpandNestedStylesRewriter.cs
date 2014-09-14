@@ -107,10 +107,8 @@
 
 					sb.Clear();
 				}
-				if (i != parts.Count)
-				{
-					sb.Append(' ');
-				}
+
+				if (i != parts.Count) sb.Append(' ');
 
 				// h1, h2, h3
 

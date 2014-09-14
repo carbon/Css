@@ -155,7 +155,7 @@
 
 			cs = true;
 
-			rewriters.Add(new AddVendorPrefixesTransform(targets));
+			rewriters.Add(new AddPrefixes(targets));
 		}
 
 		public void AllowNestedRules()

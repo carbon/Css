@@ -17,17 +17,12 @@
 		Selector,
 		
 
-		// Rules
-		/*
-		StyleRule,
-		ImportRule,
-		AnimationRule,
-		*/
+		// Rules?
 
 		// Values
 		Assignment,
 		Variable,
-		PrimitiveValue, //?
+		PrimitiveValue, // ?
 		ValueList,
 		Url,
 		Number,

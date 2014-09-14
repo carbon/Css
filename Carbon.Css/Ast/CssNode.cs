@@ -20,7 +20,6 @@
 			get { return kind; }
 		}
 
-		// Replace with tostring or span
 		public abstract string Text { get; }
 
 		public CssNode Parent
@@ -48,8 +47,6 @@
 		public virtual CssNode Clone()
 		{
 			throw new Exception(this.Kind + "/" + this.GetType().Name);
-
-			throw new NotImplementedException();
 		}
 
 		#region IEnumerator

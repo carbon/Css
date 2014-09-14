@@ -4,21 +4,16 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
-	public class MixinNode : CssRule
+	public class MixinNode : CssBlock
 	{
 		private readonly string name;
 		private readonly IList<CssParameter> parameters;
 
-		public MixinNode(string name, IList<CssParameter> parameters, IList<CssNode> children)
-			: base(RuleType.Mixin, NodeKind.Mixin)
+		public MixinNode(string name, IList<CssParameter> parameters, List<CssNode> children)
+			: base(NodeKind.Mixin, children)
 		{
 			this.name = name;
 			this.parameters = parameters;
-
-			foreach (var child in children)
-			{
-				this.children.Add(child);
-			}
 		}
 
 		public string Name

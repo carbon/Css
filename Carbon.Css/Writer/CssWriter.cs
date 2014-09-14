@@ -13,7 +13,7 @@
 		private readonly CssContext context;
 		private readonly ICssResolver resolver;
 
-		public CssWriter(TextWriter writer, CssContext context, ICssResolver resolver = null)
+		public CssWriter(TextWriter writer, CssContext context = null, ICssResolver resolver = null)
 		{
 			#region Preconditions
 
@@ -22,7 +22,7 @@
 			#endregion
 
 			this.writer = writer;
-			this.context = context;
+			this.context = context ?? new CssContext();
 			this.resolver = resolver;
 		}
 
@@ -210,10 +210,7 @@
 						// Break out comma seperated values
 						foreach (var v in list)
 						{
-							foreach (var item in GetArgs((CssValue)v))
-							{
-								yield return item;
-							}
+							foreach (var item in GetArgs((CssValue)v)) yield return item;
 						}
 					}
 					
@@ -239,7 +236,6 @@
 			// TODO: normalize value
 			writer.Write("@import " + rule.Url.ToString() + ';');
 		}
-
 
 		#region Mixins
 
@@ -335,7 +331,6 @@
 
 		#endregion
 
-
 		public void WriteRule(CssRule rule, int level = 0)
 		{
 			Indent(level);
@@ -350,20 +345,22 @@
 
 				// Unknown rules
 				default:
-					{
-						if (rule is AtRule)
-						{
-							WriteAtRule((AtRule)rule, level);
-						}
-					}
-
+					if (rule is AtRule) WriteAtRule((AtRule)rule, level);
+					
 					break;
 			}
 		}
 
 		public void WriteAtRule(AtRule rule, int level)
 		{
-			writer.Write("@{0} {1} ", rule.AtName, rule.SelectorText);
+			writer.Write("@" + rule.AtName);
+
+			if (rule.SelectorText != null)
+			{
+				writer.Write(" " + rule.SelectorText);
+			}
+
+			writer.Write(" ");
 
 			WriteBlock(rule, level);
 		}
@@ -387,24 +384,21 @@
 
 		public void WriteFontFaceRule(FontFaceRule rule, int level)
 		{
-			// Write the selector
-			writer.Write("@font-face ");
+			writer.Write("@font-face "); // Selector
 
 			WriteBlock(rule, level);
 		}
 
 		public void WriteKeyframesRule(KeyframesRule rule, int level)
 		{
-			// Write the selector
-			writer.Write("@keyframes {0} ", rule.Name);
+			writer.Write("@keyframes {0} ", rule.Name); // Selector
 
 			WriteBlock(rule, level);
 		}
 
 		public void WriteBlock(CssBlock block, int level)
 		{
-			// Block Start	
-			writer.Write("{");
+			writer.Write("{"); // Block Start	
 
 			var copy = block.Children.ToList();
 
@@ -476,8 +470,7 @@
 				Indent(level);
 			}
 
-			// Block End
-			writer.Write("}");
+			writer.Write("}"); // Block end
 		}
 
 		#region Helpers
@@ -492,15 +485,6 @@
 		}
 
 		#endregion
-
-		// WriteUrl
-
-		// WriteBlock();
-
-		// WriteDeclaration();
-
-		// WriteValue(CssValue)
-
 	}
 
 	public enum WriterStyle

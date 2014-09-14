@@ -5,7 +5,7 @@
 
 	public class StyleRule : CssRule
 	{
-		private readonly ICssSelector selector;
+		private readonly CssSelector selector;
 
 		public StyleRule(CssSelector selector)
 			: base(RuleType.Style) {
@@ -17,11 +17,10 @@
 			: this(new CssSelector(selectorText)) { }
 
 
-		public ICssSelector Selector
+		public CssSelector Selector
 		{
 			get { return selector; }
 		}
-
 
 		public override CssNode Clone()
 		{
@@ -41,7 +40,7 @@
 
 			using (var sw = new StringWriter(sb))
 			{
-				var writer = new CssWriter(sw, new CssContext());
+				var writer = new CssWriter(sw);
 
 				writer.WriteStyleRule(this, 0);
 

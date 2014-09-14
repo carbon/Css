@@ -1,13 +1,11 @@
 ﻿namespace Carbon.Css
 {
-	using Carbon.Css.Parser;
 	using System;
-	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
-	using System.Linq;
 	using System.Text;
 
-	public class CssSelector : ICssSelector
+	using Carbon.Css.Parser;
+
+	public class CssSelector
 	{
 		private readonly string text;
 
@@ -19,15 +17,6 @@
 
 			foreach (var token in tokens)
 			{
-				/*
-				if (token.IsTrivia) continue;
-
-				if (sb.Length > 0 && last != null && last.Value.Kind != TokenKind.Colon)
-				{
-					sb.Append(" ");
-				}
-				*/
-
 				if (token.IsTrivia)
 				{
 					sb.Append(" ");
@@ -63,25 +52,6 @@
 		{
 			return text;
 		}
-	}
-
-	public class CssSelectorList : Collection<CssSelector>, ICssSelector
-	{
-		public string Text
-		{
-			get { return ToString(); }
-		}
-
-		public override string ToString()
-		{
-			return string.Join(", ", this.Select(item => item.Text));
-		}
-	}
-
-
-	public interface ICssSelector
-	{
-		string Text { get; }
 	}
 
 	// #id

@@ -15,7 +15,6 @@
 
 			sheet.SetCompatibility(Browser.Chrome1, Browser.Safari1);
 
-
 			sheet.ExecuteRewriters();
 
 			Assert.AreEqual(@"main {

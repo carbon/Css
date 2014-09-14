@@ -60,14 +60,14 @@
 			return ReadRuleBlock(selector);
 		}
 
-		public CssRule ReadDirective()
+		public CssNode ReadDirective()
 		{
 			var text = tokenizer.Current.Text;
 
 			tokenizer.Read();
 
+			// READ: //=
 			var parts = text.Substring(3).TrimStart().Split(new[] { ' ' }, 2);
-
 
 			//= support Safari 5.1
 			return new CssDirective { 
@@ -76,7 +76,7 @@
 			};
 		}
 
-		public CssRule ReadRule()
+		public CssNode ReadRule()
 		{
 			switch(this.tokenizer.Current.Kind)
 			{
@@ -89,7 +89,7 @@
 
 		#region At Rules
 
-		public CssRule ReadAtRule()
+		public CssNode ReadAtRule()
 		{
 			// ATKEYWORD S* any* [ block | ';' S* ];
 			// @{keyword} ... 
@@ -392,36 +392,14 @@
 			{
 				var token = tokenizer.Read();
 
+				// Consider multiselectors
+				// if (token.Kind == TokenKind.Comma) ;
+
 				span.Add(token);
 			}
 
 			return new CssSelector(span);
 		}
-
-		/*
-		public IEnumerable<CssSelectorList> ReadSelectors()
-		{
-			var names = new TokenList();
-
-			foreach (var token in this)
-			{
-				if (token.IsTrivia) continue;
-
-				if (token.Kind == TokenKind.Comma)
-				{
-					yield return new CssSelector(names);
-
-					names.Clear();
-				}
-				else
-				{
-					names.Add(token);
-				}
-			}
-
-			yield return new CssSelector(names);
-		}
-		*/
 
 		public StyleRule ReadStyleRule()
 		{
@@ -433,8 +411,6 @@
 		}
 
 		#region Mixins
-
-		// @mixin sexy-border($color, $width: 1in) {
 
 		/*
 		@mixin left($dist) {
@@ -456,11 +432,11 @@
 				parameters = ReadParameterList();
 			}
 
-			tokenizer.Read(TokenKind.BlockStart, LexicalMode.Block);	// read {
+			tokenizer.Read(TokenKind.BlockStart, LexicalMode.Block); // Read {
 
 			ReadTrivia();
 
-			var declarations = ReadDeclartions().ToArray();
+			var declarations = ReadDeclartions().OfType<CssNode>().ToList();
 
 			tokenizer.Read(); // read }
 
@@ -523,6 +499,8 @@
 
 		public IncludeNode ReadInclude()
 		{
+			// @include name(args)
+
 			ReadTrivia();
 
 			var name = tokenizer.Read(); // Read the name
@@ -550,8 +528,6 @@
 			return new IncludeNode(name.Text, args) {
 				Leading = ReadTrivia()
 			};
-
-			// @include name(args)
 		}
 
 		#endregion
@@ -567,7 +543,7 @@
 
 		public CssBlock ReadBlock(CssRule block)
 		{
-			var blockStart = tokenizer.Read(TokenKind.BlockStart, LexicalMode.Block);	// read {
+			var blockStart = tokenizer.Read(TokenKind.BlockStart, LexicalMode.Block); // Read {
 
 			ReadTrivia();
 
@@ -615,7 +591,7 @@
 		{
 			var name = ReadName();											// read name
 
-			ReadTrivia();													// Read trivia
+			ReadTrivia();													// read trivia
 
 			tokenizer.Read(TokenKind.Colon, LexicalMode.Declaration);		// read :
 

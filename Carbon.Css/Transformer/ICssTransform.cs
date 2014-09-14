@@ -2,22 +2,10 @@
 {
 	using System.Linq;
 
-	public interface ICssTransformer // Rename ICssRewriter
+	public interface ICssTransformer
 	{
 		void Transform(CssRule rule, int index);
 
 		int Order { get; }
 	}
-
-	/*
-	public class InlineImports : ICssTransform
-	{
-		public bool Transform(CssRule rule)
-		{
-			if (rule.Type != RuleType.Import) return;
-		}
-	}
-	*/
-
-	
 }

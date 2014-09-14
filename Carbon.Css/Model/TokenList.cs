@@ -15,11 +15,8 @@ namespace Carbon.Css
 		public void AddRange(IEnumerable<CssToken> tokens)
 		{
 			if (tokens == null) return;
-
-			foreach (var token in tokens)
-			{
-				this.Add(token);
-			}
+			
+			this.AddRange(tokens);
 		}
 
 		public string RawText

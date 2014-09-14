@@ -21,15 +21,16 @@
 						}
 						";
 
-			var mixin = StyleSheet.Parse(text);
+			var sheet = StyleSheet.Parse(text);
 
+			Assert.AreEqual(1, sheet.Context.Mixins.Count);
 
-			Assert.AreEqual(1, mixin.Context.Mixins.Count);
+			Assert.AreEqual(@"main {
+  margin-left: 50px;
+  float: left;
+  apples: bananas;
+}", sheet.ToString());
 
-			// throw new Exception(mixin.ToString());
-
-			// Assert.AreEqual("", mixin.ToString());
-		
 
 		}
 
