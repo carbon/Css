@@ -34,11 +34,6 @@
 			get { return ToString(); }
 		}
 
-		public bool IsEmpty
-		{
-			get { return children == null || children.Count == 0; }
-		}
-
 		public override string ToString()
 		{
 			var sb = new StringBuilder();

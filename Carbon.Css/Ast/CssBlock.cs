@@ -23,9 +23,9 @@
 
 		// Name or Selector
 
-		public bool IsEmpty
+		public bool Childless
 		{
-			get { return children.Count != 0; }
+			get { return children.Count == 0; }
 		}
 
 		public override IList<CssNode> Children

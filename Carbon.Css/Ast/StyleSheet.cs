@@ -209,7 +209,7 @@
 						}
 
 						// Remove the rule if we've moved all it's children up
-						if (rule.IsEmpty) this.RemoveChild(rule);
+						if (rule.Childless) this.RemoveChild(rule);
 					}
 				}
 			}

@@ -272,20 +272,17 @@
 
 		public void WriteStyleRule(StyleRule rule, int level)
 		{
-			// Write the selector
-			writer.Write(rule.Selector.ToString() + " ");
+			writer.Write(rule.Selector.ToString() + " "); // Write selector
 
 			WriteBlock(rule, level);
 		}
 
 		public void WriteMediaRule(MediaRule rule, int level)
 		{
-			// Write the selector
-			writer.Write("@media {0} ", rule.RuleText);
+			writer.Write("@media {0} ", rule.RuleText); // Write selector
 
 			WriteBlock(rule, level);
 		}
-
 
 		public void WriteFontFaceRule(FontFaceRule rule, int level)
 		{
@@ -296,7 +293,7 @@
 
 		public void WriteKeyframesRule(KeyframesRule rule, int level)
 		{
-			writer.Write("@keyframes {0} ", rule.Name); // Selector
+			writer.Write("@keyframes {0} ", rule.Name); // Write selector
 
 			WriteBlock(rule, level);
 		}
