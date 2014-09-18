@@ -4,8 +4,8 @@
 
 	public class CssDimension : CssValue
 	{
-		private CssToken number;
-		private CssToken unit;
+		private readonly CssToken number;
+		private readonly CssToken unit;
 
 		public CssDimension(CssToken number, CssToken unit)
 			: base(GetDimensionKind(unit.Text))
@@ -13,6 +13,7 @@
 			this.number = number;
 			this.unit	= unit;
 		}
+
 
 		public override string Text
 		{
@@ -24,6 +25,10 @@
 			return Text;
 		}
 
+		public override CssNode Clone()
+		{
+			return this;
+		}
 
 		public static NodeKind GetDimensionKind(string a)
 		{

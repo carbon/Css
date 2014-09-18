@@ -7,9 +7,16 @@
 
 	public class ExpandNestedStylesRewriter : ICssTransformer
 	{
+		private readonly CssContext context;
+
+		public ExpandNestedStylesRewriter(CssContext context)
+		{
+			this.context = context;
+		}
+
 		public int Order
 		{
-			get { return 1; }
+			get { return 2; }
 		}
 
 		public void Transform(CssRule rule, int index)
@@ -32,6 +39,18 @@
 
 		public void Expand(CssRule rule, int index, StyleSheet styleSheet)
 		{
+			if (rule.All(r => r.Kind == NodeKind.Declaration)) return;
+
+			foreach (var includeNode in rule.Children.OfType<IncludeNode>().ToArray())
+			{
+				ExpandInclude(
+					includeNode,
+					rule
+				);
+
+				rule.Children.Remove(includeNode);
+			}
+
 			foreach (var nestedRule in rule.Children.OfType<StyleRule>().ToArray())
 			{
 				Expand(
@@ -133,5 +152,108 @@
 
 			return new CssSelector(sb.ToString().Trim());
 		}
+
+
+		#region Includes
+
+		public void ExpandInclude(IncludeNode include, CssBlock rule)
+		{
+			context.IncludeCount++;
+
+			if (context.IncludeCount > 1000) throw new Exception("Exceded include count of 1,000");
+
+			MixinNode mixin;
+
+			if (!context.Mixins.TryGetValue(include.Name, out mixin))
+			{
+				throw new Exception(string.Format("Mixin '{0}' not registered", include.Name));
+			}
+
+			var index = rule.Children.IndexOf(include);
+
+			var childContext = GetContext(mixin.Parameters, include.Args);
+
+			var i = 0;
+
+			var ss = (StyleSheet)rule.Parent;
+
+			foreach (var node in mixin.Children)
+			{
+				// Bind variables
+
+				if (node is IncludeNode) continue;
+
+				BindVariables(node, childContext);
+
+				rule.Insert(i + 1, node.Clone());
+
+				i++;
+			}
+
+		}
+
+		public void BindVariables(CssNode node, CssContext c)
+		{
+			if (node.Kind == NodeKind.Declaration)
+			{
+				var declaration = (CssDeclaration)node;
+
+				// TODO: Remove
+				// throw new Exception(declaration.Value.Kind.ToString() + ":" + declaration.Value.ToString());
+
+				BindVariables(declaration.Value, c);
+			}
+			else if (node.Kind == NodeKind.Variable)
+			{
+				var variable = (CssVariable)node;
+
+				variable.Value = c.GetVariable(variable.Symbol);
+
+			}
+			else if (node.HasChildren)
+			{
+				foreach (var n in node.Children)
+				{
+					BindVariables(n, c);
+				}
+			}
+		}
+
+		public CssContext GetContext(IList<CssParameter> paramaters, CssValue args)
+		{
+			var list = new List<CssValue>();
+
+			if (args != null)
+			{
+				var valueList = args as CssValueList;
+
+				if (valueList == null)
+				{
+					list.Add(args); // Single Value
+				}
+
+				if (valueList != null && valueList.Seperator == ValueListSeperator.Comma)
+				{
+					list.AddRange(valueList.Children.OfType<CssValue>());
+				}
+			}
+
+			var child = new CssContext(context);
+
+			var i = 0;
+
+			foreach (var p in paramaters)
+			{
+				var val = (list != null && list.Count >= i + 1) ? list[i] : p.Default;
+
+				child.Variables.Add(p.Name, val);
+
+				i++;
+			}
+
+			return child;
+		}
+
+		#endregion
 	}
 }

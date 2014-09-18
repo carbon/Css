@@ -10,29 +10,14 @@
 	using System.Reflection;
 
 	[TestFixture]
-	public class CssTests
+	public class CssTests : FixtureBase
 	{
-		public static readonly string ExecutingAssemblyCodeBasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
-
-		public FileInfo GetTestFile(string name)
-		{
-			return new FileInfo(ExecutingAssemblyCodeBasePath.Replace("file:\\", "") + "\\..\\..\\data\\" + name);
-		}
-
-
 		[Test]
 		public void ParseProject()
 		{
-			
-
-		
-
 			Assert.Throws<UnbalancedBlock>(() => {
-
 				StyleSheet.Parse(File.ReadAllText(GetTestFile("project.css").FullName));
-
 			});
-			
 		}
 
 		[Test]
@@ -46,7 +31,8 @@
 
 			var ss2 = StyleSheet.Parse(fontText, ss.Context);
 
-			ss.AddRewriter(new ExpandNestedStylesRewriter());
+			ss.AllowNestedRules();
+
 			ss.AddRewriter(new AddPrefixes(new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari1 }));
 
 			ss.ExecuteRewriters();
@@ -282,8 +268,6 @@ div { transition: width: 5px; }"
 			Assert.AreEqual("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset", value.Text);
 			Assert.AreEqual(@"""Gill Sans"", Futura, sans-serif", value2.Text);
 		}
-
-
 
 
 		[Test]

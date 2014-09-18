@@ -1,11 +1,78 @@
 ﻿namespace Carbon.Css
 {
+	using Carbon.Css.Parser;
+	using Carbon.Css.Tests;
 	using NUnit.Framework;
 	using System;
+	using System.IO;
 
 	[TestFixture]
-	public class MixinTests
+	public class MixinTests : FixtureBase
 	{
+		[Test]
+		public void ParseMixin3()
+		{
+			var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
+
+			Assert.AreEqual(13, mixins.Context.Mixins.Count);
+
+
+			var ss = StyleSheet.Parse(@".happy {
+				@include dl-horizontal;
+				font-size: 15px;
+			} ", mixins.Context);
+
+			ss.AllowNestedRules();
+
+			ss.ExecuteRewriters();
+
+			Assert.AreEqual(
+@".happy { font-size: 15px; }
+.happy dt {
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  float: left;
+  width:   7.5em;
+}
+.happy dd { padding-left: (   7.5em +   0.625em; }", ss.ToString());
+		}
+
+		[Test]
+		public void ParseMixin4()
+		{
+			var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
+
+			Assert.AreEqual(13, mixins.Context.Mixins.Count);
+
+
+			var ss = StyleSheet.Parse(@".happy {
+				@include li-horizontal;
+			} ", mixins.Context);
+
+
+			ss.AllowNestedRules();
+
+			ss.ExecuteRewriters();
+
+			Assert.AreEqual(@".happy li h5 {
+  position: inherit;
+  text-align: left;
+  display: inline-block;
+  margin-right:   0.625em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: inherit;
+}
+.happy li p {
+  display: inline;
+  padding-left: 0;
+}
+.happy li { padding-bottom: 1em; }", ss.ToString());
+		}
+
 		[Test]
 		public void ParseMixin()
 		{
@@ -21,15 +88,19 @@
 						}
 						";
 
-			var sheet = StyleSheet.Parse(text);
+			var ss = StyleSheet.Parse(text);
 
-			Assert.AreEqual(1, sheet.Context.Mixins.Count);
+			ss.AllowNestedRules();
+
+			ss.ExecuteRewriters();
+
+			Assert.AreEqual(1, ss.Context.Mixins.Count);
 
 			Assert.AreEqual(@"main {
   margin-left: 50px;
   float: left;
   apples: bananas;
-}", sheet.ToString());
+}", ss.ToString());
 
 
 		}
@@ -38,15 +109,15 @@
 		[Test]
 		public void ParseMixin2()
 		{
-			var text = @"@mixin round($radius) {
-							border-radius: $radius;
-							-webkit-border-radius: $radius;
-						}
+			var text = 
+			@"@mixin round($radius) {
+				border-radius: $radius;
+				-webkit-border-radius: $radius;
+			}
 
-						main { 
-							@include round(50px, 20px);
-						}
-						";
+			main { 
+				@include round(50px, 20px);
+			}";
 
 			var ss = StyleSheet.Parse(text);
 
@@ -65,6 +136,11 @@
 			Assert.AreEqual(ValueListSeperator.Comma, args.Seperator);
 
 			Assert.AreEqual(1, ss.Context.Mixins.Count);
+
+			ss.AllowNestedRules();
+
+			ss.ExecuteRewriters();
+
 
 			Assert.AreEqual(@"main {
   border-radius: 50px;

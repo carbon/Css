@@ -9,8 +9,8 @@
 		private readonly string name;
 		private readonly IList<CssParameter> parameters;
 
-		public MixinNode(string name, IList<CssParameter> parameters, List<CssNode> children)
-			: base(NodeKind.Mixin, children)
+		public MixinNode(string name, IList<CssParameter> parameters)
+			: base(NodeKind.Mixin)
 		{
 			this.name = name;
 			this.parameters = parameters;

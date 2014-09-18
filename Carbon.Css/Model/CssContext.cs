@@ -17,6 +17,9 @@ namespace Carbon.Css
 
 		public CssFormatting Formatting { get; set; }
 
+
+		public int IncludeCount { get; set; }
+
 		public Dictionary<string, CssValue> Variables
 		{
 			get { return variables;  }

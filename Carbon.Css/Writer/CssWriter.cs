@@ -15,12 +15,6 @@
 
 		public CssWriter(TextWriter writer, CssContext context = null, ICssResolver resolver = null)
 		{
-			#region Preconditions
-
-			if (context == null) throw new ArgumentNullException("context");
-
-			#endregion
-
 			this.writer = writer;
 			this.context = context ?? new CssContext();
 			this.resolver = resolver;
@@ -48,81 +42,15 @@
 
 				if (rule.Type == RuleType.Import)
 				{
-					var importRule = ((ImportRule)rule);
+					var importRule = (ImportRule)rule;
 
 					if (!importRule.Url.IsPath || resolver == null)
 					{
 						WriteImportRule(importRule);
-
-						continue;
-					}
-
-					// var relativePath = importRule.Url;
-					var absolutePath = importRule.Url.GetAbsolutePath(resolver.ScopedPath);
-
-					// Assume to be scss if there is no extension
-					if (!absolutePath.Contains('.')) absolutePath += ".scss";
-
-					writer.Write(Environment.NewLine + "/* " + absolutePath.TrimStart('/') + " */" + Environment.NewLine);
-
-					var text = resolver.GetText(absolutePath.TrimStart('/'));
-
-					if (text != null)
-					{
-						if (Path.GetExtension(absolutePath) == ".scss")
-						{
-							try
-							{
-								var css = StyleSheet.Parse(text, context);
-
-								// Apply the rewriters to the child
-
-								foreach (var rewriter in sheet.Rewriters)
-								{
-									css.Rewriters.Add(rewriter);
-								}
-
-								css.ExecuteRewriters();
-
-								WriteRoot(css);
-							}
-							catch (ParseException ex)
-							{
-								// response.StatusCode = 500;
-
-								writer.WriteLine("body, html { background-color: red !important; }");
-								writer.WriteLine("body * { display: none; }");
-
-								writer.WriteLine(string.Format("/* --- Parse Error in '{0}':{1} ", absolutePath, ex.Message));
-
-								if(ex.Lines != null)
-								{
-									foreach (var line in ex.Lines)
-									{
-										writer.Write(string.Format("{0}. ", line.Number.ToString().PadLeft(5)));
-
-										if (line.Number == ex.Location.Line)
-										{
-											writer.Write("* ");
-										}
-
-										writer.WriteLine(line.Text);
-									}
-								}
-
-								writer.Write("*/");
-
-								return;
-							}
-						}
-						else
-						{
-							writer.Write(text);	
-						}
 					}
 					else
 					{
-						writer.Write("/* NOT FOUND */" + Environment.NewLine);
+						InlineImport(importRule, sheet);
 					}
 				}
 				else
@@ -132,6 +60,77 @@
 			}
 		}
 
+
+		public void InlineImport(ImportRule importRule, StyleSheet sheet)
+		{
+			// var relativePath = importRule.Url;
+			var absolutePath = importRule.Url.GetAbsolutePath(resolver.ScopedPath);
+
+			// Assume to be scss if there is no extension
+			if (!absolutePath.Contains('.')) absolutePath += ".scss";
+
+			writer.Write(Environment.NewLine + "/* " + absolutePath.TrimStart('/') + " */" + Environment.NewLine);
+
+			var text = resolver.GetText(absolutePath.TrimStart('/'));
+
+			if (text != null)
+			{
+				if (Path.GetExtension(absolutePath) == ".scss")
+				{
+					try
+					{
+						var css = StyleSheet.Parse(text, context);
+
+						// Apply the rewriters to the child
+
+						foreach (var rewriter in sheet.Rewriters)
+						{
+							css.Rewriters.Add(rewriter);
+						}
+
+						css.ExecuteRewriters();
+
+						WriteRoot(css);
+					}
+					catch (ParseException ex)
+					{
+						// response.StatusCode = 500;
+
+						writer.WriteLine("body, html { background-color: red !important; }");
+						writer.WriteLine("body * { display: none; }");
+
+						writer.WriteLine(string.Format("/* --- Parse Error in '{0}':{1} ", absolutePath, ex.Message));
+
+						if (ex.Lines != null)
+						{
+							foreach (var line in ex.Lines)
+							{
+								writer.Write(string.Format("{0}. ", line.Number.ToString().PadLeft(5)));
+
+								if (line.Number == ex.Location.Line)
+								{
+									writer.Write("* ");
+								}
+
+								writer.WriteLine(line.Text);
+							}
+						}
+
+						writer.Write("*/");
+
+						return;
+					}
+				}
+				else
+				{
+					writer.Write(text);
+				}
+			}
+			else
+			{
+				writer.Write("/* NOT FOUND */" + Environment.NewLine);
+			}
+		}
 		public void WriteValue(CssNode value)
 		{
 			switch(value.Kind)
@@ -237,100 +236,6 @@
 			writer.Write("@import " + rule.Url.ToString() + ';');
 		}
 
-		#region Mixins
-
-		// Expand Include Nodes
-		public void ExpandInclude(IncludeNode include, CssBlock rule)
-		{
-			var index = rule.Children.IndexOf(include);
-
-			MixinNode mixin;
-
-			if (!context.Mixins.TryGetValue(include.Name, out mixin))
-			{
-				throw new Exception(string.Format("Mixin '{0}' not registered", include.Name));
-			}
-			
-			var childContext = GetContext(mixin.Parameters, include.Args);
-
-			var i = 0;
-
-			foreach(var node in mixin.Children)
-			{
-				// Bind variables
-
-				BindVariables(node, childContext);
-
-				rule.Children.Insert(index + i, node);
-
-				i++;
-			}
-		}
-
-		public void BindVariables(CssNode node, CssContext c)
-		{
-			if (node.Kind == NodeKind.Declaration)
-			{
-				var declaration = (CssDeclaration)node;
-
-				// TODO: Remove
-				// throw new Exception(declaration.Value.Kind.ToString() + ":" + declaration.Value.ToString());
-
-				BindVariables(declaration.Value, c);
-			}
-			else if (node.Kind == NodeKind.Variable)
-			{
-				var variable = (CssVariable)node;
-
-				variable.Value = c.GetVariable(variable.Symbol);
-			
-			}
-			else if (node.HasChildren)
-			{
-				foreach (var n in node.Children)
-				{
-					BindVariables(n, c);
-				}
-			}
-		}
-
-		public CssContext GetContext(IList<CssParameter> paramaters, CssValue args)
-		{
-			var list = new List<CssValue>();
-
-			if(args != null)
-			{
-				var valueList = args as CssValueList;
-
-				if(valueList == null)
-				{
-					list.Add(args); // Single Value
-				}
-
-				if (valueList != null && valueList.Seperator == ValueListSeperator.Comma)
-				{
-					list.AddRange(valueList.Children.OfType<CssValue>());
-				}
-			}
-
-			var child = new CssContext(context);
-
-			var i = 0;
-
-			foreach (var p in paramaters)
-			{
-				var val = (list != null && list.Count >= i + 1) ? list[i] : p.Default;
-
-				child.Variables.Add(p.Name, val);
-			
-				i++;
-			}
-
-			return child;
-		}
-
-		#endregion
-
 		public void WriteRule(CssRule rule, int level = 0)
 		{
 			Indent(level);
@@ -399,14 +304,6 @@
 		public void WriteBlock(CssBlock block, int level)
 		{
 			writer.Write("{"); // Block Start	
-
-			var copy = block.Children.ToList();
-
-			// Expand includes
-			foreach (var include in block.Children.OfType<IncludeNode>().ToArray())
-			{
-				ExpandInclude(include, block);
-			}
 
 			var condenced = false;
 			var count = 0;

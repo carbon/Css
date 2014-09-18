@@ -160,7 +160,7 @@
 
 		public void AllowNestedRules()
 		{
-			rewriters.Add(new ExpandNestedStylesRewriter());
+			rewriters.Add(new ExpandNestedStylesRewriter(this.context));
 		}
 
 		public void AddRewriter(ICssTransformer rewriter)

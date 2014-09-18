@@ -27,8 +27,7 @@
   }
 }");
 
-
-			sheet.AddRewriter(new ExpandNestedStylesRewriter());
+			sheet.AllowNestedRules();
 
 			sheet.ExecuteRewriters();
 
@@ -291,8 +290,7 @@ nav a {
 }");
 
 
-
-			sheet.AddRewriter(new ExpandNestedStylesRewriter());
+			sheet.AllowNestedRules();
 
 			sheet.ExecuteRewriters();
 

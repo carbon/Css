@@ -29,6 +29,12 @@
 		// When bound
 		public CssValue Value { get; set; }
 
+
+		public override CssNode Clone()
+		{
+			return new CssVariable(text) { Value = Value };
+		}
+
 		public override string ToString()
 		{
 			if (Value != null) return Value.ToString();

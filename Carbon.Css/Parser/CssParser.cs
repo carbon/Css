@@ -432,17 +432,12 @@
 				parameters = ReadParameterList();
 			}
 
-			tokenizer.Read(TokenKind.BlockStart, LexicalMode.Block); // Read {
+			var mixin = new MixinNode(name.Text, parameters);
 
-			ReadTrivia();
+			ReadBlock(mixin);
 
-			var declarations = ReadDeclartions().OfType<CssNode>().ToList();
-
-			tokenizer.Read(); // read }
-
-			return new MixinNode(name.Text, parameters, declarations) {
-				Trailing = ReadTrivia()
-			};
+			return mixin;
+			
 		}
 
 		public List<CssParameter> ReadParameterList()
@@ -541,7 +536,7 @@
 			return rule;
 		}
 
-		public CssBlock ReadBlock(CssRule block)
+		public CssBlock ReadBlock(CssBlock block)
 		{
 			var blockStart = tokenizer.Read(TokenKind.BlockStart, LexicalMode.Block); // Read {
 

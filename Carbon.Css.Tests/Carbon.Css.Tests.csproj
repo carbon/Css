@@ -49,6 +49,7 @@
     <Compile Include="Colors\WebColorTests.cs" />
     <Compile Include="CssTests.cs" />
     <Compile Include="AnimationTests.cs" />
+    <Compile Include="FixtureBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MixinTests.cs" />
     <Compile Include="ScssTests.cs" />
@@ -70,6 +71,7 @@
   <ItemGroup>
     <Content Include="data\fonts.css" />
     <Content Include="data\mixins.css" />
+    <Content Include="data\mixins2.css" />
     <Content Include="data\nested.css" />
     <Content Include="data\project.css" />
   </ItemGroup>

@@ -58,7 +58,6 @@
 			get { throw new NotImplementedException(); }
 		}
 
-
 		#region IList<CssNode> Members
 
 		public int IndexOf(CssNode node)
@@ -68,6 +67,8 @@
 
 		public void Insert(int index, CssNode item)
 		{
+			item.Parent = this;
+
 			children.Insert(index, item);
 		}
 

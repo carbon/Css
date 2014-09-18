@@ -16,7 +16,7 @@
 
 		public int Order
 		{
-			get { return 2; }
+			get { return 3; }
 		}
 
 		public void Transform(CssRule rule, int ruleIndex)
