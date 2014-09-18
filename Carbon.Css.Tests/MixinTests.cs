@@ -22,7 +22,7 @@
 				font-size: 15px;
 			} ", mixins.Context);
 
-			ss.AllowNestedRules();
+			ss.Context.AllowNestedRules();
 
 			ss.ExecuteRewriters();
 
@@ -52,7 +52,7 @@
 			} ", mixins.Context);
 
 
-			ss.AllowNestedRules();
+			ss.Context.AllowNestedRules();
 
 			ss.ExecuteRewriters();
 
@@ -92,7 +92,7 @@
 
 			var ss = StyleSheet.Parse(text);
 
-			ss.AllowNestedRules();
+			ss.Context.AllowNestedRules();
 
 			ss.ExecuteRewriters();
 
@@ -139,7 +139,7 @@
 
 			Assert.AreEqual(1, ss.Context.Mixins.Count);
 
-			ss.AllowNestedRules();
+			ss.Context.AllowNestedRules();
 
 			ss.ExecuteRewriters();
 

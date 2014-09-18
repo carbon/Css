@@ -81,13 +81,6 @@
 					{
 						var css = StyleSheet.Parse(text, context);
 
-						// Apply the rewriters to the child
-
-						foreach (var rewriter in sheet.Rewriters)
-						{
-							css.Rewriters.Add(rewriter);
-						}
-
 						css.ExecuteRewriters();
 
 						WriteRoot(css);

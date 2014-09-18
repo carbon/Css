@@ -27,7 +27,7 @@
   }
 }");
 
-			sheet.AllowNestedRules();
+			sheet.Context.AllowNestedRules();
 
 			sheet.ExecuteRewriters();
 
@@ -72,7 +72,7 @@ nav a {
 
 			var sheet = StyleSheet.Parse("a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
 
-			sheet.SetCompatibility(Browser.Chrome1, Browser.Safari5);
+			sheet.Context.SetCompatibility(Browser.Chrome1, Browser.Safari5);
 			sheet.ExecuteRewriters();
 
 			Assert.AreEqual(@"a {
@@ -173,9 +173,9 @@ nav a {
   }
 }");
 
-			sheet.AllowNestedRules();
+			sheet.Context.AllowNestedRules();
 
-			sheet.SetCompatibility(Browser.Chrome26, Browser.Safari5);
+			sheet.Context.SetCompatibility(Browser.Chrome26, Browser.Safari5);
 
 			sheet.ExecuteRewriters();
 
@@ -290,7 +290,7 @@ nav a {
 }");
 
 
-			sheet.AllowNestedRules();
+			sheet.Context.AllowNestedRules();
 
 			sheet.ExecuteRewriters();
 

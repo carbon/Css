@@ -13,7 +13,7 @@
 		{
 			var sheet = StyleSheet.Parse("main { animation: rotate 1.5s infinite linear; }");
 
-			sheet.SetCompatibility(Browser.Chrome1, Browser.Safari1);
+			sheet.Context.SetCompatibility(Browser.Chrome1, Browser.Safari1);
 
 			sheet.ExecuteRewriters();
 

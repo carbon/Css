@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-namespace Carbon.Css
+﻿namespace Carbon.Css
 {
+	using System.Collections.Generic;
+	using System.Linq;
+
 	public class CssContext
 	{
 		private readonly Dictionary<string, CssValue> variables = new Dictionary<string,CssValue>();
@@ -51,6 +53,40 @@ namespace Carbon.Css
 		{
 			get { return parent; }
 		}
+
+
+
+		#region Rewriters
+
+		private readonly RewriterCollection rewriters = new RewriterCollection();
+
+		private bool cs = false;
+
+		public void SetCompatibility(params Browser[] targets)
+		{
+			if (cs) return;
+
+			cs = true;
+
+			rewriters.Add(new AddPrefixes(targets));
+		}
+
+		public void AllowNestedRules()
+		{
+			rewriters.Add(new SassRewriter(this));
+		}
+
+		public void AddRewriter(ICssRewriter rewriter)
+		{
+			rewriters.Add(rewriter);
+		}
+
+		public RewriterCollection Rewriters
+		{
+			get { return rewriters; }
+		}
+
+		#endregion
 	}
 
 	public enum CssFormatting

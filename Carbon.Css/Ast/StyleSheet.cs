@@ -127,7 +127,7 @@
 
 			if (browsers.Count > 0)
 			{
-				sheet.SetCompatibility(browsers.ToArray());
+				sheet.Context.SetCompatibility(browsers.ToArray());
 			}
 
 			return sheet;
@@ -161,39 +161,17 @@
 			WriteTo(writer);
 		}
 
-		#region Transformers
+		private ICssResolver resolver;
 
-		private readonly RewriterCollection rewriters = new RewriterCollection();
-
-		private bool cs = false;
-
-		public void SetCompatibility(params Browser[] targets)
+		public void SetResolver(ICssResolver resolver)
 		{
-			if (cs) return;
-
-			cs = true;
-
-			rewriters.Add(new AddPrefixes(targets));
+			this.resolver = resolver;
 		}
 
-		public void AllowNestedRules()
-		{
-			rewriters.Add(new SassRewriter(this.context));
-		}
-
-		public void AddRewriter(ICssRewriter rewriter)
-		{
-			rewriters.Add(rewriter);
-		}
-
-		public RewriterCollection Rewriters
-		{
-			get { return rewriters; }
-		}
 
 		public void ExecuteRewriters()
 		{
-			foreach (var rewriter in rewriters.OrderBy(r => r.Order))
+			foreach (var rewriter in context.Rewriters.OrderBy(r => r.Order))
 			{
 				var index = 0;
 
@@ -213,15 +191,6 @@
 					}
 				}
 			}
-		}
-
-		#endregion
-
-		private ICssResolver resolver;
-
-		public void SetResolver(ICssResolver resolver)
-		{
-			this.resolver = resolver;
 		}
 
 		public void WriteTo(TextWriter textWriter)

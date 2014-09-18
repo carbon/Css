@@ -31,9 +31,9 @@
 
 			var ss2 = StyleSheet.Parse(fontText, ss.Context);
 
-			ss.AllowNestedRules();
+			ss.Context.AllowNestedRules();
 
-			ss.AddRewriter(new AddPrefixes(new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari1 }));
+			ss.Context.AddRewriter(new AddPrefixes(new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari1 }));
 
 			ss.ExecuteRewriters();
 		}

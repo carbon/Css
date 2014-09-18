@@ -14,9 +14,9 @@ namespace Carbon.Css
 		{
 			var ss = StyleSheet.Parse(File.ReadAllText(GetTestFile("nested.css").FullName));
 
-			ss.AllowNestedRules();
+			ss.Context.AllowNestedRules();
 
-			ss.SetCompatibility(Browser.Chrome1, Browser.Safari1);
+			ss.Context.SetCompatibility(Browser.Chrome1, Browser.Safari1);
 
 
 			ss.ExecuteRewriters();
@@ -58,7 +58,7 @@ body {
 ");
 
 
-			sheet.SetCompatibility(Browser.Chrome1, Browser.Safari1, Browser.Firefox1, Browser.IE9);
+			sheet.Context.SetCompatibility(Browser.Chrome1, Browser.Safari1, Browser.Firefox1, Browser.IE9);
 
 			sheet.ExecuteRewriters();
 
