@@ -17,13 +17,13 @@
 			get { return name; }
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
 			var rule = new KeyframesRule(this.name);
 
 			foreach (var x in children)
 			{
-				rule.Add(x.Clone());
+				rule.Add(x.CloneNode());
 			}
 
 			return rule;

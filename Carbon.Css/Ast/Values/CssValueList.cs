@@ -50,9 +50,9 @@
 			get { return children; }
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
-			return new CssValueList(this.children.Select(c => c.Clone()), this.seperator);
+			return new CssValueList(this.children.Select(c => c.CloneNode()), this.seperator);
 		}
 
 		public override string ToString()

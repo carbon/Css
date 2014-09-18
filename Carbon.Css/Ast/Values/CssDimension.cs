@@ -25,7 +25,7 @@
 			return Text;
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
 			return this;
 		}

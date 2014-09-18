@@ -30,7 +30,7 @@
 		public CssValue Value { get; set; }
 
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
 			return new CssVariable(text) { Value = Value };
 		}

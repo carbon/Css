@@ -22,13 +22,13 @@
 			get { return selector; }
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
 			var clone = new StyleRule(selector.Text);
 
 			foreach(var child in Children)
 			{
-				clone.Add(child.Clone());
+				clone.Add(child.CloneNode());
 			}
 
 			return clone;

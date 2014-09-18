@@ -36,7 +36,7 @@
 			get { return new[] { Args }; }
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
 			return new CssFunction(name, args);
 		}

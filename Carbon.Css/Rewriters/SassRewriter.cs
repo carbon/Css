@@ -169,7 +169,7 @@
 
 				BindVariables(node, childContext);
 
-				rule.Insert(i + 1, node.Clone());
+				rule.Insert(i + 1, node.CloneNode());
 
 				i++;
 			}

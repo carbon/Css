@@ -16,7 +16,7 @@
 			this.text = text;
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
 			return new CssString(text);
 		}

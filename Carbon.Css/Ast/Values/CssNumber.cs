@@ -36,7 +36,7 @@
 			return double.Parse(text);
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
 			return new CssNumber(text);
 		}

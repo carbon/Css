@@ -51,7 +51,7 @@
 			get { return ""; }
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
 			throw new NotImplementedException();
 		}

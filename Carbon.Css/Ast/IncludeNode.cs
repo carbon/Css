@@ -35,7 +35,7 @@
 			get { return ""; }
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
 			return new IncludeNode(name, args);
 		}

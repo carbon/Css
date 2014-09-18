@@ -44,7 +44,7 @@
 
 		public abstract string Text { get; }
 
-		public abstract CssNode Clone();
+		public abstract CssNode CloneNode();
 
 		#region IEnumerator
 

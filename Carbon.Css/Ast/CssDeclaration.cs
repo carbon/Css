@@ -60,9 +60,9 @@
 			get { return ToString(); }
 		}
 
-		public override CssNode Clone()
+		public override CssNode CloneNode()
 		{
-			return new CssDeclaration(name, (CssValue)value.Clone(), priority);
+			return new CssDeclaration(name, (CssValue)value.CloneNode(), priority);
 		}
 
 		public override string ToString()
