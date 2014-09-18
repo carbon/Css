@@ -118,9 +118,16 @@
 			
 			// 000000
 
-			// TODO: Support 3 char hex
-
+			
 			hex = hex.TrimStart('#');
+
+			// Support 3 letter hexes
+			if (hex.Length == 3)
+			{
+				var newHex = new string(new[] { hex[0], hex[0], hex[1], hex[1], hex[2],  hex[2] });
+
+				hex = newHex;
+			}
 
 			try
 			{
