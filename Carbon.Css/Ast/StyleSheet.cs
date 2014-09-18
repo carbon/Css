@@ -205,6 +205,11 @@
 			get { return ToString(); }
 		}
 
+		public override CssNode Clone()
+		{
+			throw new NotImplementedException();
+		}
+
 		public override string ToString()
 		{
 			var sb = new StringBuilder();

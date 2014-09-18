@@ -24,7 +24,6 @@
 		private readonly CompatibilityTable prefixed;
 		private readonly CompatibilityTable standard;
 
-
 		public CssCompatibility(CompatibilityTable? prefixed = null, CompatibilityTable? standard = null)
 		{
 			this.prefixed = prefixed ?? new CompatibilityTable();
@@ -120,16 +119,6 @@
 			}
 		}
 
-		public string Vendor
-		{
-			get
-			{
-				if (name.StartsWith("-")) return name.Substring(1);
-
-				return null;
-			}
-		}
-
 		public bool IsStandard
 		{
 			get { return Module != null; }
@@ -171,8 +160,6 @@
 		{
 			return this.name;
 		}
-
-
 
 		public static CssPropertyInfo Get(string name)
 		{

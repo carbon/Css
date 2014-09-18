@@ -20,6 +20,10 @@
 			return value;
 		}
 
+		public override CssNode Clone()
+		{
+			return new CssColor(value);
+		}
 	}
 }
 

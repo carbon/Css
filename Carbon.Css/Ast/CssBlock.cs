@@ -41,11 +41,6 @@
 			return children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
 		}
 
-		public int RemoveMatching(Predicate<CssNode> match)
-		{
-			return children.RemoveAll(match);
-		}
-
 		public int Count
 		{
 			get { return children.Count; }
@@ -53,7 +48,12 @@
 
 		public override string Text
 		{
-			get { throw new NotImplementedException(); }
+			get { return ""; }
+		}
+
+		public override CssNode Clone()
+		{
+			throw new NotImplementedException();
 		}
 
 		#region IList<CssNode> Members

@@ -34,6 +34,11 @@
 		{
 			get { return ""; }
 		}
+
+		public override CssNode Clone()
+		{
+			return new IncludeNode(name, args);
+		}
 	}
 }
 

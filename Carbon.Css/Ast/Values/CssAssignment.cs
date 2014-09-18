@@ -1,6 +1,7 @@
 ﻿namespace Carbon.Css
 {
 	using Carbon.Css.Parser;
+	using System;
 	using System.IO;
 
 	public class CssAssignment : CssNode
@@ -35,6 +36,11 @@
 		public override string Text
 		{
 			get { return ""; }
+		}
+
+		public override CssNode Clone()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

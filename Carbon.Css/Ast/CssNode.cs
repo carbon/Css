@@ -20,8 +20,6 @@
 			get { return kind; }
 		}
 
-		public abstract string Text { get; }
-
 		public CssNode Parent
 		{
 			get { return parent; }
@@ -44,10 +42,9 @@
 			get { return Children != null && Children.Count > 0; }
 		}
 
-		public virtual CssNode Clone()
-		{
-			throw new Exception(this.Kind + "/" + this.GetType().Name);
-		}
+		public abstract string Text { get; }
+
+		public abstract CssNode Clone();
 
 		#region IEnumerator
 
