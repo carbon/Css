@@ -2,13 +2,13 @@
 {
 	using System;
 
-	public class IncludeNode : CssDeclaration
+	public class IncludeNode : CssNode
 	{
 		private readonly string name;
 		private readonly CssValue args;
 
 		public IncludeNode(string name, CssValue args)
-			: base(name, args, NodeKind.Include)
+			: base(NodeKind.Include)
 		{
 			#region Preconditions
 
@@ -20,7 +20,7 @@
 			this.args = args;
 		}
 
-		public new string Name
+		public string Name
 		{
 			get { return name; }
 		}
@@ -28,6 +28,11 @@
 		public CssValue Args
 		{
 			get { return args; }
+		}
+
+		public override string Text
+		{
+			get { return ""; }
 		}
 	}
 }

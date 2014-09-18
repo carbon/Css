@@ -1,13 +1,11 @@
-﻿using System.Text;
-namespace Carbon.Css
+﻿namespace Carbon.Css.Tests
 {
-	using NUnit.Framework;
-	using System;
 	using System.IO;
-	using System.Reflection;
+
+	using NUnit.Framework;
 
 	[TestFixture]
-	public class VendorTests
+	public class VendorTests : FixtureBase
 	{
 		[Test]
 		public void Nested()
@@ -70,18 +68,6 @@ body {
 }", sheet.ToString());
 
 		}
-
-		#region Helpers
-
-		public static readonly string ExecutingAssemblyCodeBasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
-
-
-		public FileInfo GetTestFile(string name)
-		{
-			return new FileInfo(ExecutingAssemblyCodeBasePath.Replace("file:\\", "") + "\\..\\..\\data\\" + name);
-		}
-
-		#endregion
 	}
 
 

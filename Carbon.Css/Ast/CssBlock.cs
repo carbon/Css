@@ -21,8 +21,6 @@
 			this.children = children;
 		}
 
-		// Name or Selector
-
 		public bool Childless
 		{
 			get { return children.Count == 0; }

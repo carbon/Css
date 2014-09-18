@@ -138,7 +138,6 @@
 			return new CssSelector(sb.ToString().Trim());
 		}
 
-
 		#region Includes
 
 		public void ExpandInclude(IncludeNode include, CssBlock rule)

@@ -1,7 +1,6 @@
 ﻿namespace Carbon.Css
 {
 	using NUnit.Framework;
-	using System;
 
 	[TestFixture]
 	public class ScssTests
@@ -288,8 +287,6 @@ nav a {
     b { color: red; }
   }
 }");
-
-
 			sheet.Context.AllowNestedRules();
 
 			sheet.ExecuteRewriters();
