@@ -2,7 +2,7 @@
 {
 	using System.Collections.ObjectModel;
 
-	public class RewriterCollection : Collection<ICssTransformer>
+	public class RewriterCollection : Collection<ICssRewriter>
 	{
 	}
 }

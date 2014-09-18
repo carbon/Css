@@ -5,7 +5,7 @@
 	using System.Linq;
 
 	// Directive
-	public class AddPrefixes : ICssTransformer
+	public class AddPrefixes : ICssRewriter
 	{
 		private readonly Browser[] targets;
 
@@ -19,7 +19,7 @@
 			get { return 3; }
 		}
 
-		public void Transform(CssRule rule, int ruleIndex)
+		public IEnumerable<CssRule> Rewrite(CssRule rule)
 		{
 			if (rule.Type == RuleType.Keyframes)
 			{
@@ -47,7 +47,7 @@
 					rule.Parent.Children.Insert(index, newRule);
 				}
 
-				return;
+				yield break;
 			}
 
 			Expand(rule);
@@ -149,7 +149,6 @@
 			}
 
 			return list;
-			
 		}
 	}
 }

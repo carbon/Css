@@ -56,6 +56,8 @@
 
 			ss.ExecuteRewriters();
 
+			// throw new Exception(ss.ToString()); 
+
 			Assert.AreEqual(@".happy li h5 {
   position: inherit;
   text-align: left;

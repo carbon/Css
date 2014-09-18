@@ -5,11 +5,11 @@
 	using System.Linq;
 	using System.Text;
 
-	public class ExpandNestedStylesRewriter : ICssTransformer
+	public class SassRewriter : ICssRewriter
 	{
 		private readonly CssContext context;
 
-		public ExpandNestedStylesRewriter(CssContext context)
+		public SassRewriter(CssContext context)
 		{
 			this.context = context;
 		}
@@ -19,27 +19,11 @@
 			get { return 2; }
 		}
 
-		public void Transform(CssRule rule, int index)
+		public IEnumerable<CssRule> Rewrite(CssRule rule)
 		{
-			if (rule.Type != RuleType.Style) return;
-
-			var styleSheet = rule.Parent as StyleSheet;
-
-			if (styleSheet == null) return;
-
-			Expand(rule, index, styleSheet);
-
-			// Remove the rule if we've moved all it's children up
-			if (rule.Children.Count == 0)
-			{
-				styleSheet.Children.Remove(rule);
-			}
+			if (rule.Type != RuleType.Style) yield break;
 			
-		}
-
-		public void Expand(CssRule rule, int index, StyleSheet styleSheet)
-		{
-			if (rule.All(r => r.Kind == NodeKind.Declaration)) return;
+			if (rule.All(r => r.Kind == NodeKind.Declaration)) yield break;
 
 			foreach (var includeNode in rule.Children.OfType<IncludeNode>().ToArray())
 			{
@@ -53,17 +37,20 @@
 
 			foreach (var nestedRule in rule.Children.OfType<StyleRule>().ToArray())
 			{
-				Expand(
+				var newRules = Expand(
 					nested		: nestedRule,
-					parent		: rule,
-					index		: ref index,
-					styleSheet	: styleSheet
+					parent		: rule
 				);
+
+				foreach (var r in newRules)
+				{
+					yield return r;
+				}
 			}
 		}
 
 
-		public void Expand(StyleRule nested, CssRule parent, StyleSheet styleSheet, ref int index)
+		public IEnumerable<CssRule> Expand(StyleRule nested, CssRule parent)
 		{
 			var newRule = new StyleRule(GetSelector(nested));
 
@@ -73,7 +60,10 @@
 				{
 					var childRule = (StyleRule)childNode;
 
-					Expand(childRule, nested, styleSheet, ref index);
+					foreach (var r in Expand(childRule, nested))
+					{
+						yield return r;
+					}
 				}
 				else
 				{
@@ -81,17 +71,12 @@
 				}
 			}
 
-			// Remove from parent node after it's been processed
-			parent.Remove(nested);
+			parent.Remove(nested); // Remove from parent node after it's been processed
 
 			if (newRule.Children.Count > 0)
 			{
-				index++;
-
-				styleSheet.Children.Insert(index, newRule);
+				yield return newRule;
 			}
-
-			return;
 		}
 
 		public CssSelector GetSelector(StyleRule nested)
@@ -108,9 +93,9 @@
 			{
 				parts.Add(current.Selector.ToString());
 
-				if (parts.Count > 6)
+				if (parts.Count > 5)
 				{
-					throw new Exception(string.Format("Cannot nest more than 6 levels deep. Was {0}. ", string.Join(" ", parts)));
+					throw new Exception(string.Format("Cannot nest more than 5 levels deep. Was {0}. ", string.Join(" ", parts)));
 				}
 			}
 

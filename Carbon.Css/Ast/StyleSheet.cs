@@ -28,12 +28,30 @@
 			this.context = context;
 		}
 
+		#region Children
+
+		public void RemoveChild(CssNode node)
+		{
+			node.Parent = null;
+
+			children.Remove(node);
+		}
+
 		public void AddChild(CssNode node)
 		{
 			node.Parent = this;
 
 			children.Add(node);
 		}
+
+		public void InsertChild(int index, CssNode node)
+		{
+			node.Parent = this;
+
+			children.Insert(index, node);
+		}
+
+		#endregion
 
 		public override IList<CssNode> Children
 		{
@@ -160,10 +178,10 @@
 
 		public void AllowNestedRules()
 		{
-			rewriters.Add(new ExpandNestedStylesRewriter(this.context));
+			rewriters.Add(new SassRewriter(this.context));
 		}
 
-		public void AddRewriter(ICssTransformer rewriter)
+		public void AddRewriter(ICssRewriter rewriter)
 		{
 			rewriters.Add(rewriter);
 		}
@@ -179,16 +197,20 @@
 			{
 				var index = 0;
 
-				foreach (var node in children.ToList())
+				foreach (var node in children.ToArray())
 				{
 					var rule = node as CssRule;
 
 					if (rule != null)
 					{
-						rewriter.Transform(rule, index);
-					}
+						foreach (var a in rewriter.Rewrite(rule))
+						{
+							this.InsertChild(++index, a);
+						}
 
-					index++;
+						// Remove the rule if we've moved all it's children up
+						if (rule.IsEmpty) this.RemoveChild(rule);
+					}
 				}
 			}
 		}

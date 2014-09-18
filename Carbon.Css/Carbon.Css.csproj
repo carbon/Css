@@ -99,11 +99,11 @@
     <Compile Include="Resolver\IStylesheet.cs" />
     <Compile Include="Resolver\IStyleSheetResolver.cs" />
     <Compile Include="Resolver\Include.cs" />
-    <Compile Include="Transformer\AddVenderPrefixes.cs" />
-    <Compile Include="Transformer\IEOpacityTransfomer.cs" />
-    <Compile Include="Transformer\Rewriter.cs" />
-    <Compile Include="Transformer\ExpandNestedStylesRewriter.cs" />
-    <Compile Include="Transformer\ICssTransform.cs" />
+    <Compile Include="Rewriters\AddVenderPrefixes.cs" />
+    <Compile Include="Rewriters\IEOpacityTransfomer.cs" />
+    <Compile Include="Rewriters\Rewriter.cs" />
+    <Compile Include="Rewriters\SassRewriter.cs" />
+    <Compile Include="Rewriters\ICssTransform.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
