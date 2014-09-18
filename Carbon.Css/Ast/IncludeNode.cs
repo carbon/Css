@@ -37,6 +37,4 @@
 	}
 }
 
-// TODO: Don't inhert from Css Delaration
-
 // @include box-emboss(0.8, 0.05);

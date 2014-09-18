@@ -54,7 +54,7 @@
 		#region Color
 
 		public static CssModule Color3 = new CssModule(CssModuleType.Columns, 3f,
-			standard: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 9, Opera = 9, Safari = 1.2f }
+			standard: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 9, Safari = 1.2f }
 		);
 
 		#endregion
@@ -102,7 +102,7 @@
 		// IE: prefixed(9), standard(10)
 
 		public static readonly CssModule Transforms3 = new CssModule(CssModuleType.Transforms, 3,
-			prefixed: new CompatibilityTable { Chrome = 10, Firefox = 3.5f, IE = 9, Opera = 10.5f, Safari = 4 },
+			prefixed: new CompatibilityTable { Chrome = 10, Firefox = 3.5f, IE = 9,  Safari = 4 },
 			standard: new CompatibilityTable { Chrome = 36, Firefox = 16, IE = 10  }
 		);
 
@@ -114,7 +114,7 @@
 		// Standard in IE10
 
 		public static readonly CssModule Transitions3 = new CssModule(CssModuleType.Transitions, 3,
-			prefixed: new CompatibilityTable { Chrome = 1, Firefox = 4, Opera = 10.6f, Safari = 3 },
+			prefixed: new CompatibilityTable { Chrome = 1, Firefox = 4,  Safari = 3 },
 			standard: new CompatibilityTable { Chrome = 26, Firefox = 20, IE = 10 }
 		) { HasValuePatches = true };
 

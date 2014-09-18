@@ -14,8 +14,6 @@
 
 		public float IE { get; set; }
 
-		public float Opera { get; set; }
-
 		public float Safari { get; set; }
 	}
 
@@ -53,7 +51,6 @@
 				case BrowserType.Chrome		: return prefixed.Chrome > 0f	&& !IsStandard(browser);
 				case BrowserType.Firefox	: return prefixed.Firefox > 0f	&& !IsStandard(browser);
 				case BrowserType.IE			: return prefixed.IE > 0f		&& !IsStandard(browser);
-				case BrowserType.Opera		: return prefixed.Opera > 0f	&& !IsStandard(browser);
 				case BrowserType.Safari		: return prefixed.Safari > 0f	&& !IsStandard(browser);
 			}
 
@@ -68,7 +65,6 @@
 				case BrowserType.Chrome		: return standard.Safari != 0 && standard.Chrome <= browser.Version;
 				case BrowserType.Firefox	: return standard.Firefox != 0 && standard.Firefox <= browser.Version; 
 				case BrowserType.IE			: return standard.IE != 0 && standard.IE <= browser.Version; 
-				case BrowserType.Opera		: return standard.Opera != 0 && standard.Opera <= browser.Version; 
 				case BrowserType.Safari		: return standard.Safari != 0 && standard.Safari <= browser.Version; 
 			}
 

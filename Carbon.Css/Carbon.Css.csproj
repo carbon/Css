@@ -67,8 +67,8 @@
     <Compile Include="Model\CssContext.cs" />
     <Compile Include="Ast\CssNode.cs" />
     <Compile Include="Parser\CssResolver.cs" />
-    <Compile Include="Sass\CssParameter.cs" />
-    <Compile Include="Sass\IncludeNode.cs" />
+    <Compile Include="Model\CssParameter.cs" />
+    <Compile Include="Ast\IncludeNode.cs" />
     <Compile Include="Ast\MixinNode.cs" />
     <Compile Include="Ast\Values\CssAssignment.cs" />
     <Compile Include="Comptability\CssModule.cs" />

@@ -1,10 +1,11 @@
-﻿using Carbon.Css.Parser;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-
-namespace Carbon.Css
+﻿namespace Carbon.Css
 {
+
+	using Carbon.Css.Parser;
+	using System.Collections.Generic;
+	using System.Collections.ObjectModel;
+	using System.Linq;
+
 	public class TokenList : Collection<CssToken>
 	{
 		public TokenList() { }
