@@ -21,11 +21,12 @@
 
 		public IEnumerable<CssRule> Rewrite(CssRule rule)
 		{
+			
 			if (rule.Type == RuleType.Keyframes)
 			{
-				var keyframes = (KeyframesRule)rule;
+				var ss = (StyleSheet)rule.Parent;
 
-				// TODO: Add -webkit & moz versions
+				var keyframes = (KeyframesRule)rule;
 
 				if (targets.Any(a => a.Type == BrowserType.Firefox && a.Version < 16))
 				{
@@ -33,9 +34,8 @@
 
 					var newRule = GetPrefixedKeyframeRule(keyframes, Browser.Firefox1);
 
-					rule.Parent.Children.Insert(index, newRule);
+					ss.InsertChild(index, newRule);
 				}
-
 
 				// -webkit
 				if (targets.Any(a => a.Type == BrowserType.Safari))
@@ -44,7 +44,7 @@
 
 					var newRule = GetPrefixedKeyframeRule(keyframes, Browser.Safari1);
 
-					rule.Parent.Children.Insert(index, newRule);
+					ss.InsertChild(index, newRule);
 				}
 
 				yield break;
@@ -65,7 +65,6 @@
 				{
 					var prop = CssPropertyInfo.Get(c2.Name);
 
-
 					var name = (prop.Compatibility.HasPatches) ? browser.Prefix + c2.Name : c2.Name;
 
 					a.Add(new CssDeclaration(name, GetPatchedValueFor(c2.Value, browser)));
@@ -74,19 +73,21 @@
 				newRule.Add(a);
 			}
 
-
 			return newRule;
 		}
 
 		public void Expand(CssRule rule)
 		{
+			var index = -1;
+
 			foreach (var declaration in rule.Children.OfType<CssDeclaration>().ToList())
 			{
 				var prop = CssPropertyInfo.Get(declaration.Name);
 
 				if (!prop.Compatibility.HasPatches) continue;
 
-				var index = rule.IndexOf(declaration);
+				index = -1;
+				
 				var cssValue = declaration.Value;
 
 				var prefixes = BrowserPrefixKind.None;
@@ -113,6 +114,9 @@
 						: cssValue;
 
 					var patchedDeclaration = new CssDeclaration(fullName, patchedValue);
+
+					// Lazily calculate the index
+					if (index == -1) index = rule.IndexOf(declaration);
 
 					// Insert above the rule
 					rule.Insert(index, patchedDeclaration);

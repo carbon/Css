@@ -27,7 +27,7 @@
 
 		public override CssNode CloneNode()
 		{
-			return this;
+			return new CssDimension(number, unit);
 		}
 
 		public static NodeKind GetDimensionKind(string a)

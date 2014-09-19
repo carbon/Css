@@ -1,5 +1,6 @@
 ﻿namespace Carbon.Css
 {
+	using System.Collections.Generic;
 	using System.IO;
 	using System.Text;
 
@@ -15,6 +16,17 @@
 
 		public StyleRule(string selectorText)
 			: this(new CssSelector(selectorText)) { }
+
+		public StyleRule(string selectorText, IList<CssNode> children)
+			: this(new CssSelector(selectorText)) 
+		{
+				foreach (var child in children)
+				{
+					child.Parent = this;
+
+					base.Children.Add(child);
+				}
+		}
 
 
 		public CssSelector Selector

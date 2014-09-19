@@ -1,0 +1,227 @@
+﻿// -----------------------------
+// Mixins
+// -----------------------------
+
+
+// Table of Contents
+// -----------------------------
+// Fonts
+// Columns
+// Lists
+// Social Links
+// -----------------------------
+
+
+// Fonts
+
+@mixin serif($fontWeight : 300) {
+  font-family: 'Merriweather', serif;
+  font-weight: $fontWeight;
+}
+
+@mixin sans-serif($fontWeight : 400) {
+  font-family: 'Karla', serif;
+  font-weight: $fontWeight;
+}
+
+
+// Columns
+
+@mixin columns($columnCount, $columnGap) {
+  column-count: $columnCount;
+  column-gap: $columnGap;
+}
+
+// Border Radius
+
+@mixin radius($radius : 0.125em) {
+  border-radius: $radius;
+}
+
+
+
+// Lists
+
+@mixin dl-horizontal($dlSpacing : 7.5em, $dlGap : 0.625em) {
+  dt {
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: left;
+    width: $dlSpacing;
+  }
+  dd {
+    padding-left: ($dlSpacing + $dlGap);
+  }
+}
+
+@mixin li-horizontal($liGap : 0.625em) {
+  @include li-noStyle;
+  
+  li {
+    padding-bottom: 1em;
+    h5 {
+      position: inherit;
+      text-align: left;
+      display: inline-block;
+      margin-right: $liGap;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      width: inherit;
+    }
+    p {
+      display: inline;
+      padding-left: 0;
+    }
+  }
+}
+
+@mixin li-horizontalTab($width : 5em, $liGap : 0.625em) {
+  li {
+    position: relative;
+    h5 {
+      width: $width;
+      display: inline-block;
+      position: absolute;
+      top: 0; left: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    p {
+      display: inline-block;
+      padding-left: ($width + $liGap);
+    }
+  }
+}
+
+@mixin li-zebra ($paddingTop : 0.625em, $paddingLeft : 0.313em, $bg-color : $darkText, $shade : .05) {
+  li {
+    padding: $paddingTop $paddingLeft;
+    padding-bottom: $paddingTop !important;
+    &:nth-child(odd) {
+      background-color: rgba($bg-color, $shade);
+    }
+    h5 {
+      top: $paddingTop !important; left: $paddingLeft !important;
+    }
+    p {
+      margin: 0 !important;
+    }
+  }
+}
+
+
+@mixin li-inline {
+  padding: 0;
+  li {
+    display: inline-block;
+    margin-right: 5px;
+  }
+}
+
+@mixin li-noStyle {
+  list-style: none;
+  padding: 0;
+}
+
+@mixin li-separated($character : '\b7') {
+  @include li-noStyle;
+  li {
+    display: inline-block;
+    
+    &:after {
+      content: $character;
+      margin: 0 0 0 5px; 
+    }
+    
+    &:last-child:after {
+      content: none;
+    }
+  }
+}
+
+
+// Social Links
+
+@mixin links-circle {
+  @include li-inline;
+  font-family: 'social';
+  a {
+    font-size: 2.5em;
+    border-bottom: none !important;
+    -webkit-font-smoothing: antialiased;
+    i { display: none; }
+  }
+  .behance a:before    { content: "\e60c"; }
+  .carbonmade a:before { content: "\e60d"; }
+  .dribbble a:before   { content: "\e60e"; }
+  .etsy a:before       { content: "\e60f"; }
+  .facebook a:before   { content: "\e610"; }
+  .flickr a:before     { content: "\e611"; }
+  .github a:before     { content: "\e612"; }
+  .googlePlus a:before { content: "\e613"; }
+  .instagram a:before  { content: "\e614"; }
+  .custom a:before     { content: "\e615"; }
+  .linkedIn a:before   { content: "\e616"; }
+  .pinterest a:before  { content: "\e617"; }
+  .portfolio a:before  { content: "\e618"; }
+  .tumblr a:before     { content: "\e619"; }
+  .twitter a:before    { content: "\e61a"; }
+  .vimeo a:before      { content: "\e61b"; }
+  .vine a:before       { content: "\e61c"; }
+}
+
+@mixin links-icon {
+  @include li-inline;
+  font-family: 'social';
+  a {
+    font-size: 2.5em;
+    line-height: 1;
+    border-bottom: none !important;
+    position: relative;
+    left: -.2em;
+    -webkit-font-smoothing: antialiased;
+    i { display: none; }
+  }
+  .behance a:before    { content: "\e61d"; }
+  .carbonmade a:before { content: "\e61e"; }
+  .dribbble a:before   { content: "\e61f"; }
+  .etsy a:before       { content: "\e620"; }
+  .facebook a:before   { content: "\e621"; }
+  .flickr a:before     { content: "\e622"; }
+  .github a:before     { content: "\e623"; }
+  .googlePlus a:before { content: "\e624"; }
+  .instagram a:before  { content: "\e625"; }
+  .custom a:before     { content: "\e626"; }
+  .linkedIn a:before   { content: "\e627"; }
+  .pinterest a:before  { content: "\e628"; }
+  .portfolio a:before  { content: "\e629"; }
+  .tumblr a:before     { content: "\e62a"; }
+  .twitter a:before    { content: "\e62b"; }
+  .vimeo a:before      { content: "\e62c"; }
+  .vine a:before       { content: "\e62d"; }
+}
+
+@mixin links-colored {
+  .behance a:hover    { color: #1769FF; border-bottom: 1px solid rgba($darkText, .4); }
+  .carbonmade a:hover { color: #A982ED; border-bottom: 1px solid rgba($darkText, .4); }
+  .dribbble a:hover   { color: #ea4c89; border-bottom: 1px solid rgba($darkText, .4); }
+  .etsy a:hover       { color: #CF5619; border-bottom: 1px solid rgba($darkText, .4); }
+  .facebook a:hover   { color: #3C599B; border-bottom: 1px solid rgba($darkText, .4); }
+  .flickr a:hover     { color: #0664db; border-bottom: 1px solid rgba($darkText, .4); }
+  .github a:hover     { color: #4183c4; border-bottom: 1px solid rgba($darkText, .4); }
+  .googlePlus a:hover { color: #dd4b39; border-bottom: 1px solid rgba($darkText, .4); }
+  .instagram a:hover  { color: #1c5380; border-bottom: 1px solid rgba($darkText, .4); }
+  .custom a:hover     { color: #A982ED; border-bottom: 1px solid rgba($darkText, .4); }
+  .linkedIn a:hover   { color: #1779B3; border-bottom: 1px solid rgba($darkText, .4); }
+  .pinterest a:hover  { color: #CA242D; border-bottom: 1px solid rgba($darkText, .4); }
+  .portfolio a:hover  { color: #A982ED; border-bottom: 1px solid rgba($darkText, .4); }
+  .tumblr a:hover     { color: #38465C; border-bottom: 1px solid rgba($darkText, .4); }
+  .twitter a:hover    { color: #55acee; border-bottom: 1px solid rgba($darkText, .4); }
+  .vimeo a:hover      { color: #4bf;    border-bottom: 1px solid rgba($darkText, .4); }
+  .vine a:hover       { color: #1BB48A; border-bottom: 1px solid rgba($darkText, .4); }
+}
+

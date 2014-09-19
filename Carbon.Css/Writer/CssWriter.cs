@@ -279,7 +279,7 @@
 
 		public void WriteFontFaceRule(FontFaceRule rule, int level)
 		{
-			writer.Write("@font-face "); // Selector
+			writer.Write("@font-face "); // Write selector
 
 			WriteBlock(rule, level);
 		}
@@ -351,7 +351,6 @@
 			{
 				writer.Write(" ");
 			}
-
 			else
 			{
 				Indent(level);

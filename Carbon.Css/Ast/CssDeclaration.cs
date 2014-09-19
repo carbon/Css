@@ -34,7 +34,6 @@
 			this.value = value;
 		}
 
-
 		public string Name
 		{
 			get { return name; }
@@ -71,7 +70,10 @@
 
 			var sb = new StringBuilder();
 
-			sb.Append(name).Append(": ").Append(value.ToString());
+			sb
+				.Append(name)
+				.Append(": ")
+				.Append(value.ToString());
 
 			if (priority != null)
 			{

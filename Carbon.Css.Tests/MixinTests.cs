@@ -10,6 +10,112 @@
 	public class MixinTests : FixtureBase
 	{
 		[Test]
+		public void ParseMixin30()
+		{
+			var ss = StyleSheet.Parse(@"@mixin dl-horizontal($dlSpacing : 7.5em, $dlGap : 0.625em) {
+  dt {
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: left;
+    width: $dlSpacing;
+  }
+  dd {
+    padding-left: $dlSpacing;
+  }
+}
+
+
+.left .awards dl,
+.left .exhibitions dl {
+  @include dl-horizontal(3.75em, 0.625em);
+}
+");
+
+			Assert.AreEqual(1, ss.Context.Mixins.Count);
+
+			Assert.AreEqual("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
+			Assert.AreEqual(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
+
+
+			ss.Context.AllowNestedRules();
+
+			ss.ExecuteRewriters();
+
+			// throw new Exception(ss.ToString());
+
+			Assert.AreEqual(@".left .awards dl dt {
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  float: left;
+  width: 3.75em;
+}
+.left .awards dl dd { padding-left: 3.75em; }
+.left .exhibitions dl dt {
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  float: left;
+  width: 3.75em;
+}
+.left .exhibitions dl dd { padding-left: 3.75em; }", ss.ToString());
+		}
+
+		[Test]
+		public void ParseMixin7()
+		{
+			var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
+
+			Assert.AreEqual(13, mixins.Context.Mixins.Count);
+
+
+			var ss = StyleSheet.Parse(@".happy {
+				@include li-horizontal;
+				font-size: 15px;
+				oranges: a;
+			} ", mixins.Context);
+
+			ss.Context.AllowNestedRules();
+
+			ss.ExecuteRewriters();
+
+
+			/*
+			 list-style: none;
+			padding: 0;
+			*/
+
+
+
+			Assert.AreEqual(
+@".happy {
+  list-style: none;
+  padding: 0;
+  font-size: 15px;
+  oranges: a;
+}
+.happy li h5 {
+  position: inherit;
+  text-align: left;
+  display: inline-block;
+  margin-right:   0.625em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: inherit;
+}
+.happy li p {
+  display: inline;
+  padding-left: 0;
+}
+.happy li { padding-bottom: 1em; }", ss.ToString());
+		}
+
+		[Test]
 		public void ParseMixin3()
 		{
 			var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
@@ -56,9 +162,12 @@
 
 			ss.ExecuteRewriters();
 
-			// throw new Exception(ss.ToString()); 
 
-			Assert.AreEqual(@".happy li h5 {
+			Assert.AreEqual(@".happy {
+  list-style: none;
+  padding: 0;
+}
+.happy li h5 {
   position: inherit;
   text-align: left;
   display: inline-block;

@@ -72,6 +72,7 @@
     <Content Include="data\fonts.css" />
     <Content Include="data\mixins.css" />
     <Content Include="data\mixins2.css" />
+    <Content Include="data\mixins3.css" />
     <Content Include="data\nested.css" />
     <Content Include="data\project.css" />
   </ItemGroup>

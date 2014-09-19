@@ -25,6 +25,37 @@
 			
 			if (rule.All(r => r.Kind == NodeKind.Declaration)) yield break;
 
+			var selector = ((StyleRule)rule).Selector;
+
+			if (selector.Text.Contains(","))
+			{
+
+				// Split on comma and clone
+
+				var selectors = selector.Text.Split(',');
+				
+			
+				foreach(var s in selectors)
+				{
+					var children = rule.CloneNode().Children;
+
+					foreach (var a in Rewrite(new StyleRule(s.Trim(), children)))
+					{
+						yield return a;
+					}
+					
+				}
+
+				
+
+				
+		
+
+				rule.Children.Clear();
+
+				yield break;
+			}
+
 			foreach (var includeNode in rule.Children.OfType<IncludeNode>().ToArray())
 			{
 				ExpandInclude(
@@ -93,9 +124,9 @@
 			{
 				parts.Add(current.Selector.ToString());
 
-				if (parts.Count > 5)
+				if (parts.Count > 6)
 				{
-					throw new Exception(string.Format("Cannot nest more than 5 levels deep. Was {0}. ", string.Join(" ", parts)));
+					throw new Exception(string.Format("Cannot nest more than 6 levels deep. Was {0}. ", string.Join(" ", parts)));
 				}
 			}
 
@@ -161,11 +192,19 @@
 
 			var ss = (StyleSheet)rule.Parent;
 
-			foreach (var node in mixin.Children)
+			foreach (var node in mixin.Children.ToArray())
 			{
 				// Bind variables
 
-				if (node is IncludeNode) continue;
+				if (node is IncludeNode)
+				{
+					ExpandInclude(
+						(IncludeNode)node,
+						rule
+					);
+
+					mixin.Children.Remove(node);
+				}
 
 				BindVariables(node, childContext);
 
