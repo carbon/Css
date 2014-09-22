@@ -20,8 +20,7 @@
 		}
 
 		public IEnumerable<CssRule> Rewrite(CssRule rule)
-		{
-			
+		{	
 			if (rule.Type == RuleType.Keyframes)
 			{
 				var ss = (StyleSheet)rule.Parent;

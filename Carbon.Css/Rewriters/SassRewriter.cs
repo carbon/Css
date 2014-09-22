@@ -21,11 +21,11 @@
 
 		public IEnumerable<CssRule> Rewrite(CssRule rule)
 		{
-			if (rule.Type != RuleType.Style) yield break;
+			var styleRule = rule as StyleRule;
+
+			if (styleRule == null) yield break;
 
 			if (rule.All(r => r.Kind == NodeKind.Declaration)) yield break;
-
-			var styleRule = (StyleRule)rule;
 
 			// Expand styles if it's a multiselector
 			if (styleRule.Selector.Count > 1)
@@ -72,7 +72,6 @@
 
 			}
 		}
-
 
 		public IEnumerable<CssRule> Expand(StyleRule rule, CssRule parent)
 		{
