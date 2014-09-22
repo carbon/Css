@@ -63,7 +63,7 @@
 
 				foreach (var c2 in child.OfType<CssDeclaration>())
 				{
-					var prop = CssPropertyInfo.Get(c2.Name);
+					var prop = c2.Info;
 
 					var name = (prop.Compatibility.HasPatches) ? browser.Prefix + c2.Name : c2.Name;
 
@@ -82,7 +82,7 @@
 
 			foreach (var declaration in rule.Children.OfType<CssDeclaration>().ToList())
 			{
-				var prop = CssPropertyInfo.Get(declaration.Name);
+				var prop = declaration.Info;
 
 				if (!prop.Compatibility.HasPatches) continue;
 

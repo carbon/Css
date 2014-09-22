@@ -1,13 +1,16 @@
 ﻿namespace Carbon.Css
 {
 	using System;
+	using System.Linq;
 	using System.Text;
 
 	using Carbon.Css.Parser;
+	using System.Collections.Generic;
+	using System.Collections;
 
-	public class CssSelector
+	public class CssSelector : IEnumerable<string>
 	{
-		private readonly string text;
+		private readonly List<string> parts;
 
 		public CssSelector(TokenList tokens)
 		{
@@ -29,7 +32,7 @@
 				last = token;
 			}
 
-			this.text = sb.ToString().Trim();
+			this.parts = new List<string>(sb.ToString().Split(',').Select(t => t.Trim()));
 		}
 
 		public CssSelector(string text)
@@ -40,21 +43,49 @@
 
 			#endregion
 
-			this.text = text;
+			if (text.Contains(','))
+			{
+				this.parts = new List<string>(text.Split(',').Select(t => t.Trim()));
+			}
+			else
+			{
+				this.parts = new List<string>(new[] { text });
+			}
+		}
+
+		public int Count
+		{
+			get { return parts.Count; }
 		}
 
 		public string Text
 		{
-			get { return text; }
+			get 
+			{
+				if (parts.Count == 1) return parts[0];
+
+				return string.Join(", ", parts); 
+			}
 		}
 
 		public override string ToString()
 		{
-			return text;
+			return Text;
+		}
+
+
+		public IEnumerator<string> GetEnumerator()
+		{
+			return parts.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return parts.GetEnumerator();
 		}
 	}
 
 	// #id
 	// .className
-	// .className, .anotherName
+	// .className, .anotherName			(Multiselector or group)
 }

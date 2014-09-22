@@ -22,39 +22,31 @@
 		public IEnumerable<CssRule> Rewrite(CssRule rule)
 		{
 			if (rule.Type != RuleType.Style) yield break;
-			
+
 			if (rule.All(r => r.Kind == NodeKind.Declaration)) yield break;
 
-			var selector = ((StyleRule)rule).Selector;
+			var styleRule = (StyleRule)rule;
 
-			if (selector.Text.Contains(","))
+			// Expand styles if it's a multiselector
+			if (styleRule.Selector.Count > 1)
 			{
-
-				// Split on comma and clone
-
-				var selectors = selector.Text.Split(',');
-				
-			
-				foreach(var s in selectors)
+				foreach (var s in styleRule.Selector)
 				{
 					var children = rule.CloneNode().Children;
 
-					foreach (var a in Rewrite(new StyleRule(s.Trim(), children)))
+					foreach (var a in Rewrite(new StyleRule(s, children)))
 					{
 						yield return a;
 					}
-					
 				}
-
-				
-
-				
-		
 
 				rule.Children.Clear();
 
+				// TODO: Figure out how to combine back together
+
 				yield break;
 			}
+
 
 			foreach (var includeNode in rule.Children.OfType<IncludeNode>().ToArray())
 			{
@@ -69,29 +61,30 @@
 			foreach (var nestedRule in rule.Children.OfType<StyleRule>().ToArray())
 			{
 				var newRules = Expand(
-					nested		: nestedRule,
-					parent		: rule
+					rule   : nestedRule,
+					parent : rule
 				);
 
 				foreach (var r in newRules)
 				{
 					yield return r;
 				}
+
 			}
 		}
 
 
-		public IEnumerable<CssRule> Expand(StyleRule nested, CssRule parent)
+		public IEnumerable<CssRule> Expand(StyleRule rule, CssRule parent)
 		{
-			var newRule = new StyleRule(GetSelector(nested));
+			var newRule = new StyleRule(GetSelector(rule));
 
-			foreach (var childNode in nested.Children.ToArray())
+			foreach (var childNode in rule.Children.ToArray())
 			{
 				if (childNode is StyleRule)
 				{
 					var childRule = (StyleRule)childNode;
 
-					foreach (var r in Expand(childRule, nested))
+					foreach (var r in Expand(childRule, rule))
 					{
 						yield return r;
 					}
@@ -102,7 +95,7 @@
 				}
 			}
 
-			parent.Remove(nested); // Remove from parent node after it's been processed
+			parent.Remove(rule); // Remove from parent node after it's been processed
 
 			if (newRule.Children.Count > 0)
 			{

@@ -5,7 +5,7 @@
 
 	public class CssDeclaration : CssNode
 	{
-		private readonly string name;
+		private readonly CssProperty property;
 		private readonly CssValue value;
 		private readonly string priority;
 
@@ -22,21 +22,29 @@
 
 			#endregion
 
-			this.name = name;
 			this.value = value;
 			this.priority = priority;
+			this.property = CssProperty.Get(name);
 		}
 
 		public CssDeclaration(string name, CssValue value, NodeKind kind)
 			: base(kind)
 		{
-			this.name = name;
+			this.property = CssProperty.Get(name);
 			this.value = value;
+		}
+
+		public CssDeclaration(CssProperty property, CssValue value, string priority)
+			: base(NodeKind.Declaration)
+		{
+			this.property = property;
+			this.value = value;
+			this.priority = priority;
 		}
 
 		public string Name
 		{
-			get { return name; }
+			get { return property.Name; }
 		}
 
 		public CssValue Value
@@ -44,9 +52,9 @@
 			get { return value; }
 		}
 
-		public CssPropertyInfo Info
+		public CssProperty Info
 		{
-			get { return CssPropertyInfo.Get(this.name); }
+			get { return property; }
 		}
 
 		public string Priority
@@ -61,7 +69,7 @@
 
 		public override CssNode CloneNode()
 		{
-			return new CssDeclaration(name, (CssValue)value.CloneNode(), priority);
+			return new CssDeclaration(property, (CssValue)value.CloneNode(), priority);
 		}
 
 		public override string ToString()
@@ -71,7 +79,7 @@
 			var sb = new StringBuilder();
 
 			sb
-				.Append(name)
+				.Append(property.Name)
 				.Append(": ")
 				.Append(value.ToString());
 

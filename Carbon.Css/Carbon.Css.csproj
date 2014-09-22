@@ -84,7 +84,7 @@
     <Compile Include="Parser\CssTokenizer.cs" />
     <Compile Include="Comptability\Browser.cs" />
     <Compile Include="Ast\CssDeclaration.cs" />
-    <Compile Include="Comptability\CssPropertyInfo.cs" />
+    <Compile Include="Comptability\CssProperty.cs" />
     <Compile Include="Ast\Rules\CssRule.cs" />
     <Compile Include="Model\CssSelector.cs" />
     <Compile Include="Ast\Values\CssValue.cs" />

@@ -1,33 +1,125 @@
 ﻿namespace Carbon.Css
 {
+	using Carbon.Css.Tests;
 	using NUnit.Framework;
 	using System;
 
 	[TestFixture]
-	public class AnimationTests
+	public class AnimationTests : FixtureBase
 	{
-
-
-		[Test]
-		public void AnimationTest()
-		{
-			var sheet = StyleSheet.Parse("main { animation: rotate 1.5s infinite linear; }");
-
-			sheet.Context.SetCompatibility(Browser.Chrome1, Browser.Safari1);
-
-			sheet.ExecuteRewriters();
-
-			Assert.AreEqual(@"main {
-  -webkit-animation: rotate 1.5s infinite linear;
-  animation: rotate 1.5s infinite linear;
-}", sheet.ToString());
-
-		}
-
 		[Test]
 		public void BeforeSyntax()
 		{
 			// &:before { content: "("; }
+		}
+
+		[Test]
+		public void Test53()
+		{
+			var ss = StyleSheet.FromFile(GetTestFile("test53.css"));
+
+			ss.Context.AllowNestedRules();
+
+			ss.ExecuteRewriters();
+
+			throw new Exception(ss.ToString());
+
+
+		}
+
+		[Test]
+		public void Test51()
+		{
+			var ss = StyleSheet.Parse(@"
+//= support Safari >= 5
+.block ::-webkit-input-placeholder { color: #cfcece ; font-weight: 400; }
+.block      :-ms-input-placeholder { color: #cfcece ; font-weight: 400; }
+.block          ::-moz-placeholder { color: #cfcece ; font-weight: 400; }
+.block           :-moz-placeholder { color: #cfcece ; font-weight: 400; }
+
+
+@keyframes domainProcessing {
+ 0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+ 50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+ 100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+}");
+
+
+			ss.ExecuteRewriters();
+			ss.Context.AllowNestedRules();
+
+			Assert.AreEqual(
+@".block ::-webkit-input-placeholder {
+  color: #cfcece;
+  font-weight: 400;
+}
+.block :-ms-input-placeholder {
+  color: #cfcece;
+  font-weight: 400;
+}
+.block ::-moz-placeholder {
+  color: #cfcece;
+  font-weight: 400;
+}
+.block :-moz-placeholder {
+  color: #cfcece;
+  font-weight: 400;
+}
+@-webkit-keyframes domainProcessing {
+  0% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+  50% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+  100% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+}
+@keyframes domainProcessing {
+  0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+  50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+}", ss.ToString());
+
+
+
+		}
+
+		[Test]
+		public void Test50()
+		{
+			var ss = StyleSheet.Parse(
+@"//= support Safari >= 5
+@keyframes domainProcessing2 {
+ 0% { border-color: rgba(248, 202, 92, 0.4); }
+ 20% { border-color: rgba(248, 202, 92, 0.2); }
+ 100% { border-color: rgba(248, 202, 92, 0.2); }
+}
+
+@keyframes domainProcessing {
+ 0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+ 50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+ 100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+}");
+
+			ss.ExecuteRewriters();
+
+			Assert.AreEqual(
+@"@-webkit-keyframes domainProcessing2 {
+  0% { border-color: rgba(248, 202, 92, 0.4); }
+  20% { border-color: rgba(248, 202, 92, 0.2); }
+  100% { border-color: rgba(248, 202, 92, 0.2); }
+}
+@keyframes domainProcessing2 {
+  0% { border-color: rgba(248, 202, 92, 0.4); }
+  20% { border-color: rgba(248, 202, 92, 0.2); }
+  100% { border-color: rgba(248, 202, 92, 0.2); }
+}
+@-webkit-keyframes domainProcessing {
+  0% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+  50% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+  100% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+}
+@keyframes domainProcessing {
+  0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+  50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+}", ss.ToString());
 		}
 
 		[Test]

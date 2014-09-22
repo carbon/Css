@@ -265,9 +265,23 @@
 
 		public void WriteStyleRule(StyleRule rule, int level)
 		{
-			writer.Write(rule.Selector.ToString() + " "); // Write selector
+			WriteSelector(rule.Selector); // Write selector
 
 			WriteBlock(rule, level);
+		}
+
+		public void WriteSelector(CssSelector selector)
+		{
+			if(selector.Count == 1) 
+			{
+				writer.Write(selector.Text);
+			}
+			else
+			{
+				writer.Write(string.Join("," + Environment.NewLine, selector));
+			}
+
+			writer.Write(" ");
 		}
 
 		public void WriteMediaRule(MediaRule rule, int level)

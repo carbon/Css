@@ -181,6 +181,8 @@
 
 					if (rule != null)
 					{
+						index = this.children.IndexOf(node);
+
 						foreach (var a in rewriter.Rewrite(rule))
 						{
 							this.InsertChild(++index, a);

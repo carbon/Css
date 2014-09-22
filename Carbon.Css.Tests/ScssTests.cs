@@ -211,7 +211,8 @@ nav a {
   margin-bottom: 2em;
 }
 .form textarea { height: 10em !important; }
-.form input,  .form textarea {
+.form input,
+.form textarea {
   display: block;
   font-size: 22px;
   line-height: 40px;

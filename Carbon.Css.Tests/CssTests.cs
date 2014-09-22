@@ -484,10 +484,10 @@ p { font-color: red; background: url(http://google.com); }
 		public void PropertiesA()
 		{
 			// Console.WriteLine(CssPropertyInfo.BoxSizing.GetPrefixedPropertyNames().Length.ToString());
-			Console.WriteLine(CssPropertyInfo.Get("font-size"));
-			Console.WriteLine(CssPropertyInfo.Get("box-sizing"));
-			Console.WriteLine(CssPropertyInfo.Get("-webkit-box-sizing"));
-			Console.WriteLine(CssPropertyInfo.Get("-non-standards"));
+			Console.WriteLine(CssProperty.Get("font-size"));
+			Console.WriteLine(CssProperty.Get("box-sizing"));
+			Console.WriteLine(CssProperty.Get("-webkit-box-sizing"));
+			Console.WriteLine(CssProperty.Get("-non-standards"));
 		}
 
 		

@@ -10,6 +10,27 @@
 	public class MixinTests : FixtureBase
 	{
 		[Test]
+		public void MixinTest15()
+		{
+			var sheet = StyleSheet.Parse(@"@mixin serif($fontWeight: 300) {
+  font-family: 'Merriweather', serif;
+  font-weight: $fontWeight;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2em;
+  text-rendering: optimizeLegibility;
+  margin: 0 0 1rem 0;
+}");
+
+			sheet.Context.AllowNestedRules();
+
+			sheet.ExecuteRewriters();
+
+			throw new Exception(sheet.ToString());
+		}
+
+		[Test]
 		public void ParseMixin30()
 		{
 			var ss = StyleSheet.Parse(@"@mixin dl-horizontal($dlSpacing : 7.5em, $dlGap : 0.625em) {
@@ -32,18 +53,14 @@
   @include dl-horizontal(3.75em, 0.625em);
 }
 ");
-
 			Assert.AreEqual(1, ss.Context.Mixins.Count);
 
 			Assert.AreEqual("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
 			Assert.AreEqual(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
 
-
 			ss.Context.AllowNestedRules();
 
 			ss.ExecuteRewriters();
-
-			// throw new Exception(ss.ToString());
 
 			Assert.AreEqual(@".left .awards dl dt {
   text-align: left;
