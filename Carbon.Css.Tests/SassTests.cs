@@ -3,6 +3,7 @@
 	using Carbon.Css.Tests;
 	using NUnit.Framework;
 	using System;
+	using System.IO;
 	using System.Linq;
 
 	[TestFixture]
@@ -18,6 +19,21 @@ $borderColor: $red;
 div { color: rgba($borderColor, 0.5); }");
 
 			Assert.AreEqual("div { color: rgba(255, 0, 0, 0.5); }", sheet.ToString());
+		}
+
+		[Test]
+		public void VariableReferencingItselfThrows()
+		{
+			var sheet = StyleSheet.Parse(@"
+$red: #fff;
+$red: $red;	
+
+div { color: $red; }");
+
+			Assert.Throws<Exception>(() => {
+
+				sheet.ToString();
+			});
 		}
 
 		[Test]
@@ -193,7 +209,7 @@ div .placeholderText {
 
 			var rule = (CssRule)sheet.Children[0];
 
-			var rewriter = new SassRewriter(sheet.Context);
+			var rewriter = new CssWriter(new StringWriter(), sheet.Context);
 
 			var rules = rewriter.Rewrite(rule).ToArray();
 

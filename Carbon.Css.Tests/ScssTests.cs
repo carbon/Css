@@ -36,9 +36,7 @@
 
 			Assert.AreEqual("div", parent.Selector.ToString());
 			Assert.AreEqual("input, textarea", node.Selector.ToString());
-			var sass = new SassRewriter(new CssContext());
-
-			var selector = sass.GetSelector(node);
+			var selector = CssWriter.ExpandSelector(node);
 
 			Assert.AreEqual("div input, div textarea", selector.ToString());
 

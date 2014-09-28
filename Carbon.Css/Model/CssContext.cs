@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
 
 	public class CssContext
 	{
@@ -22,9 +21,6 @@
 
 		public CssFormatting Formatting { get; set; }
 
-
-		public int IncludeCount { get; set; }
-
 		public Dictionary<string, CssValue> Variables
 		{
 			get { return variables;  }
@@ -42,9 +38,12 @@
 			{
 				if (value.Kind == NodeKind.Variable)
 				{
-					return GetVariable(((CssVariable)value).Symbol);
-				}
+					var variable = ((CssVariable)value);
 
+					if (variable.Symbol == name) throw new Exception("Self referencing");
+
+					return GetVariable(variable.Symbol);
+				}
 				else
 				{
 					return value;

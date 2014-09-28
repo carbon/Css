@@ -63,7 +63,6 @@
     <Compile Include="Color\IColor.cs" />
     <Compile Include="Color\WebColor.cs" />
     <Compile Include="Comptability\CssPropertyType.cs" />
-    <Compile Include="Rewriters\SassRewriter.cs" />
     <Compile Include="Writer\CssWriter.cs" />
     <Compile Include="Helpers\SourceLocation.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
