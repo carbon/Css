@@ -30,12 +30,6 @@
 			var fontText = File.ReadAllText(GetTestFile("fonts.css").FullName);
 
 			var ss2 = StyleSheet.Parse(fontText, ss.Context);
-
-			ss.Context.AllowNestedRules();
-
-			ss.Context.AddRewriter(new AddPrefixes(new[] { Browser.Chrome1, Browser.Firefox1, Browser.Safari1 }));
-
-			ss.ExecuteRewriters();
 		}
 	
 		[Test]
@@ -132,13 +126,12 @@
 div { transition: width: 5px; }"
 );
 
-
+			/*
 			Assert.AreEqual(
 				expected: @"div { transition: width: 5px; }", 
 				actual: sheet.ToString()
 			);
-
-			sheet.ExecuteRewriters();
+			*/
 
 			Assert.AreEqual(
 				expected: @"div {

@@ -20,6 +20,11 @@
 			return value;
 		}
 
+		public static CssColor FromRgba(byte r, byte g, byte b, float a)
+		{
+			return new CssColor(string.Format("rgba({0}, {1}, {2}, {3})", r, g, b, a));
+		}
+
 		public override CssNode CloneNode()
 		{
 			return new CssColor(value);

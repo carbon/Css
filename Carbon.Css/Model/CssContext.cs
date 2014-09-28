@@ -1,5 +1,6 @@
 ﻿namespace Carbon.Css
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 
@@ -9,6 +10,8 @@
 		private readonly Dictionary<string, MixinNode> mixins = new Dictionary<string, MixinNode>();
 
 		private readonly CssContext parent;
+
+		private int counter = 0;
 
 		public CssContext() { }
 
@@ -29,16 +32,36 @@
 
 		public CssValue GetVariable(string name)
 		{
+			counter++;
+
+			if (counter > 10000) throw new Exception("recussion detected");
+
 			CssValue value;
 
 			if (variables.TryGetValue(name, out value))
 			{
-				return value;
+				if (value.Kind == NodeKind.Variable)
+				{
+					return GetVariable(((CssVariable)value).Symbol);
+				}
+
+				else
+				{
+					return value;
+				}
 			}
 
 			if (parent != null && parent.Variables.TryGetValue(name, out value))
 			{
-				return value;
+				if (value.Kind == NodeKind.Variable)
+				{
+					return GetVariable(((CssVariable)value).Symbol);
+				}
+
+				else
+				{
+					return value;
+				}
 			}
 
 			return new CssString("");
@@ -53,8 +76,6 @@
 		{
 			get { return parent; }
 		}
-
-
 
 		#region Rewriters
 
@@ -73,7 +94,6 @@
 
 		public void AllowNestedRules()
 		{
-			rewriters.Add(new SassRewriter(this));
 		}
 
 		public void AddRewriter(ICssRewriter rewriter)

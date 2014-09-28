@@ -1,10 +1,8 @@
 ﻿namespace Carbon.Css
 {
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 
-	// Directive
 	public class AddPrefixes : ICssRewriter
 	{
 		private readonly Browser[] targets;
@@ -14,42 +12,39 @@
 			this.targets = targets.OrderByDescending(t => t.Prefix.Text).ToArray(); // Reverse the list
 		}
 
-		public int Order
-		{
-			get { return 3; }
-		}
-
 		public IEnumerable<CssRule> Rewrite(CssRule rule)
-		{	
+		{
 			if (rule.Type == RuleType.Keyframes)
 			{
-				var ss = (StyleSheet)rule.Parent;
-
-				var keyframes = (KeyframesRule)rule;
+				var keyframes = (KeyframesRule)((KeyframesRule)rule).CloneNode();
 
 				if (targets.Any(a => a.Type == BrowserType.Firefox && a.Version < 16))
 				{
-					var index = rule.Parent.Children.IndexOf(rule);
-
-					var newRule = GetPrefixedKeyframeRule(keyframes, Browser.Firefox1);
-
-					ss.InsertChild(index, newRule);
+					yield return GetPrefixedKeyframeRule(keyframes, Browser.Firefox1);
 				}
 
 				// -webkit
 				if (targets.Any(a => a.Type == BrowserType.Safari))
 				{
-					var index = rule.Parent.Children.IndexOf(rule);
 
-					var newRule = GetPrefixedKeyframeRule(keyframes, Browser.Safari1);
-
-					ss.InsertChild(index, newRule);
+					yield return GetPrefixedKeyframeRule(keyframes, Browser.Safari1);
 				}
 
-				yield break;
-			}
+				keyframes.SkipTransforms = true;
 
-			Expand(rule);
+				// Stay standards
+				foreach (var c in keyframes.Children.OfType<CssRule>())
+				{
+					c.SkipTransforms = true;
+				}
+
+				yield return keyframes;
+			}
+			else
+			{
+				yield return Expand(rule);
+
+			}
 		}
 
 		public AtRule GetPrefixedKeyframeRule(KeyframesRule rule, Browser browser)
@@ -75,9 +70,10 @@
 			return newRule;
 		}
 
-		public void Expand(CssRule rule)
+		public CssRule Expand(CssRule rule)
 		{
 			var index = -1;
+			var prefixes = BrowserPrefixKind.None;
 
 			foreach (var declaration in rule.Children.OfType<CssDeclaration>().ToList())
 			{
@@ -86,10 +82,9 @@
 				if (!prop.Compatibility.HasPatches) continue;
 
 				index = -1;
-				
-				var cssValue = declaration.Value;
+				prefixes = BrowserPrefixKind.None;
 
-				var prefixes = BrowserPrefixKind.None;
+				var cssValue = declaration.Value;
 
 				foreach (var browser in targets) // Iterated backwards
 				{
@@ -123,11 +118,15 @@
 					prefixes |= browser.Prefix.Kind;
 				}
 			}
+
+			return rule;
 		}
+
+		#region Helpers
 
 		// transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
 
-		public CssValue GetPatchedValueFor(CssValue value, Browser browser)
+		private CssValue GetPatchedValueFor(CssValue value, Browser browser)
 		{
 			if (value.Kind != NodeKind.ValueList) return value;
 
@@ -153,5 +152,7 @@
 
 			return list;
 		}
+
+		#endregion
 	}
 }

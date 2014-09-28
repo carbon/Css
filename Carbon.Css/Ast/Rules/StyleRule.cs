@@ -36,7 +36,7 @@
 
 		public override CssNode CloneNode()
 		{
-			var clone = new StyleRule(selector.Text);
+			var clone = new StyleRule(selector);
 
 			foreach(var child in Children)
 			{

@@ -13,22 +13,10 @@
 			// &:before { content: "("; }
 		}
 
-		[Test]
-		public void Test53()
-		{
-			var ss = StyleSheet.FromFile(GetTestFile("test53.css"));
-
-			ss.Context.AllowNestedRules();
-
-			ss.ExecuteRewriters();
-
-			throw new Exception(ss.ToString());
-
-
-		}
+		
 
 		[Test]
-		public void Test51()
+		public void KetframesExpansition1()
 		{
 			var ss = StyleSheet.Parse(@"
 //= support Safari >= 5
@@ -43,10 +31,6 @@
  50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
 }");
-
-
-			ss.ExecuteRewriters();
-			ss.Context.AllowNestedRules();
 
 			Assert.AreEqual(
 @".block ::-webkit-input-placeholder {
@@ -97,8 +81,6 @@
  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
 }");
 
-			ss.ExecuteRewriters();
-
 			Assert.AreEqual(
 @"@-webkit-keyframes domainProcessing2 {
   0% { border-color: rgba(248, 202, 92, 0.4); }
@@ -133,8 +115,6 @@
   100% { transform: translate(0, 0px)rotate(-360deg); }
 }");
 
-			sheet.ExecuteRewriters();
-
 			Assert.AreEqual(@"@-moz-keyframes planet {
   0% { -moz-transform: translate(0, 0px) rotate(0deg); }
   100% { -moz-transform: translate(0, 0px) rotate(-360deg); }
@@ -147,6 +127,7 @@
   0% { transform: translate(0, 0px) rotate(0deg); }
   100% { transform: translate(0, 0px) rotate(-360deg); }
 }", sheet.ToString());
+
 
 			/*
 			@-webkit-keyframes planet {
@@ -171,8 +152,6 @@
   60%   { opacity: 1; }
   100%  { opacity: .6; }
 }");
-
-			sheet.ExecuteRewriters();
 
 			Assert.AreEqual(
 @"@-webkit-keyframes flicker {

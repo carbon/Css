@@ -12,15 +12,18 @@
 		private readonly TextWriter writer;
 		private readonly CssContext context;
 		private readonly ICssResolver resolver;
+		private int includeCount = 0;
+
+		private readonly SassRewriter sass;
 
 		public CssWriter(TextWriter writer, CssContext context = null, ICssResolver resolver = null)
 		{
 			this.writer = writer;
 			this.context = context ?? new CssContext();
 			this.resolver = resolver;
-		}
 
-		int includeCount = 0;
+			this.sass = new SassRewriter(context);
+		}
 
 		public void WriteRoot(StyleSheet sheet)
 		{
@@ -80,8 +83,6 @@
 					try
 					{
 						var css = StyleSheet.Parse(text, context);
-
-						css.ExecuteRewriters();
 
 						WriteRoot(css);
 					}
@@ -164,16 +165,24 @@
 
 				if (args.Length == 2 && args[0].ToString().StartsWith("#"))
 				{
-					var colorText = args[0].ToString();
-
-					var color = WebColor.Parse(colorText);
-
-					writer.Write(string.Format("rgba({0}, {1}, {2}, {3})", color.R, color.G, color.B, args[1].ToString()));
+					writer.Write(new RgbaFunction().Execute(args));
 
 					return;
 				}
 			}
+			else if (function.Name == "lighten")
+			{
+				writer.Write(new LightenFunction().Execute(GetArgs(function.Args).ToArray()));
 
+				return;
+			}
+			else if (function.Name == "darken")
+			{
+				writer.Write(new DarkenFunction().Execute(GetArgs(function.Args).ToArray()));
+
+				return;
+			}
+			
 			writer.Write(function.Name);
 
 			writer.Write("(");
@@ -220,7 +229,7 @@
 				variable.Value = context.GetVariable(variable.Symbol);
 			}
 
-			writer.Write(variable.Value.Text);
+			WriteValue(variable.Value);
 		}
 
 		public void WriteImportRule(ImportRule rule)
@@ -230,6 +239,30 @@
 		}
 
 		public void WriteRule(CssRule rule, int level = 0)
+		{
+			var i = 0;
+
+			if (rule.SkipTransforms)
+			{
+				_WriteRule(rule, level);
+
+				return;
+			}
+
+			foreach (var r in sass.Rewrite(rule))
+			{				
+				foreach (var nr in context.Rewriters.Rewrite(r))
+				{
+					if (i != 0) writer.WriteLine();
+
+					_WriteRule(nr, level);
+
+					i++;
+				}				
+			}
+		}
+
+		public void _WriteRule(CssRule rule, int level = 0)
 		{
 			Indent(level);
 
@@ -265,7 +298,9 @@
 
 		public void WriteStyleRule(StyleRule rule, int level)
 		{
-			WriteSelector(rule.Selector); // Write selector
+			WriteSelector(rule.Selector);
+
+			writer.Write(" ");
 
 			WriteBlock(rule, level);
 		}
@@ -280,8 +315,6 @@
 			{
 				writer.Write(string.Join("," + Environment.NewLine, selector));
 			}
-
-			writer.Write(" ");
 		}
 
 		public void WriteMediaRule(MediaRule rule, int level)
@@ -335,10 +368,8 @@
 					}
 
 					writer.Write(" ");
-					writer.Write(declaration.Name);
-					writer.Write(": ");
 
-					WriteValue(declaration.Value);
+					WriteDeclaration(declaration);
 
 					writer.Write(";");
 
@@ -349,7 +380,7 @@
 
 					var childRule = (CssRule)node;
 
-					WriteRule(childRule, level + 1);
+					WriteRule(childRule, level + 1);				
 				}
 
 				if (!condenced)
@@ -373,6 +404,13 @@
 			writer.Write("}"); // Block end
 		}
 
+		public void WriteDeclaration(CssDeclaration declaration)
+		{
+			writer.Write(declaration.Name);
+			writer.Write(": ");
+			WriteValue(declaration.Value);
+		}
+
 		#region Helpers
 
 		public void Indent(int level)
@@ -385,11 +423,5 @@
 		}
 
 		#endregion
-	}
-
-	public enum WriterStyle
-	{
-		Pretty = 1,  
-		OneRulePerLine = 2
 	}
 }

@@ -38,6 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ast\CssRoot.cs" />
     <Compile Include="Ast\Rules\AtRule.cs" />
     <Compile Include="Ast\Rules\KeyframesRule.cs" />
     <Compile Include="Ast\Rules\MediaRule.cs" />
@@ -49,6 +50,10 @@
     <Compile Include="Ast\Values\CssDimension.cs" />
     <Compile Include="Ast\Values\CssUrl.cs" />
     <Compile Include="Ast\Values\CssString.cs" />
+    <Compile Include="Functions\LightenFunction.cs" />
+    <Compile Include="Functions\ICssFunction.cs" />
+    <Compile Include="Functions\DarkenFunction.cs" />
+    <Compile Include="Functions\RgbaFunction.cs" />
     <Compile Include="Model\TokenList.cs" />
     <Compile Include="Ast\Whitespace.cs" />
     <Compile Include="Ast\Values\CssValueList.cs" />
@@ -58,10 +63,12 @@
     <Compile Include="Color\IColor.cs" />
     <Compile Include="Color\WebColor.cs" />
     <Compile Include="Comptability\CssPropertyType.cs" />
+    <Compile Include="Rewriters\SassRewriter.cs" />
     <Compile Include="Writer\CssWriter.cs" />
     <Compile Include="Helpers\SourceLocation.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Ast\CssDirective.cs" />
+    <Compile Include="Writer\WriterStyle.cs" />
     <Compile Include="_\LinearGradient.cs" />
     <Compile Include="Ast\CssBlock.cs" />
     <Compile Include="Model\CssContext.cs" />
@@ -102,7 +109,6 @@
     <Compile Include="Rewriters\AddVenderPrefixes.cs" />
     <Compile Include="Rewriters\IEOpacityTransfomer.cs" />
     <Compile Include="Rewriters\Rewriter.cs" />
-    <Compile Include="Rewriters\SassRewriter.cs" />
     <Compile Include="Rewriters\ICssTransform.cs" />
   </ItemGroup>
   <ItemGroup />

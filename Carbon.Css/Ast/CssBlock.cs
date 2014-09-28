@@ -5,7 +5,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
-	public class CssBlock : CssNode, IList<CssNode>
+	public class CssBlock : CssNode, IEnumerable<CssNode>
 	{
 		protected readonly List<CssNode> children;
 
@@ -86,31 +86,6 @@
 			node.Parent = this;
 
 			children.Add(node);
-		}
-
-		void ICollection<CssNode>.Clear()
-		{
-			children.Clear();
-		}
-
-		bool ICollection<CssNode>.Contains(CssNode item)
-		{
-			return children.Contains(item);
-		}
-
-		void ICollection<CssNode>.CopyTo(CssNode[] array, int arrayIndex)
-		{
-			children.CopyTo(array, arrayIndex);
-		}
-
-		int ICollection<CssNode>.Count
-		{
-			get { return children.Count; }
-		}
-
-		bool ICollection<CssNode>.IsReadOnly
-		{
-			get { return false; }
 		}
 
 		public bool Remove(CssNode item)

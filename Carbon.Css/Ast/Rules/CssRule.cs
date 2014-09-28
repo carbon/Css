@@ -34,6 +34,8 @@
 			get { return ToString(); }
 		}
 
+		public bool SkipTransforms { get; set; }
+
 		public override string ToString()
 		{
 			var sb = new StringBuilder();

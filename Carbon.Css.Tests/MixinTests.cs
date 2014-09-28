@@ -1,5 +1,6 @@
 ﻿namespace Carbon.Css
 {
+	using System.Linq;
 	using Carbon.Css.Parser;
 	using Carbon.Css.Tests;
 	using NUnit.Framework;
@@ -10,9 +11,42 @@
 	public class MixinTests : FixtureBase
 	{
 		[Test]
+		public void MixinTest19()
+		{
+			var ss = StyleSheet.Parse(@"@mixin serif($fontWeight:300) {
+  font-family: 'Merriweather', serif;
+  font-weight: $fontWeight;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @include serif;
+  line-height: 1.2em;
+  text-rendering: optimizeLegibility;
+  margin: 0 0 1rem 0;
+}");
+
+
+
+			Assert.AreEqual(@"h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Merriweather', serif;
+  font-weight: 300;
+  line-height: 1.2em;
+  text-rendering: optimizeLegibility;
+  margin: 0 0 1rem 0;
+}", ss.ToString());
+
+		}
+
+
+		[Test]
 		public void MixinTest15()
 		{
-			var sheet = StyleSheet.Parse(@"@mixin serif($fontWeight: 300) {
+			var ss = StyleSheet.Parse(@"@mixin serif($fontWeight: 300) {
   font-family: 'Merriweather', serif;
   font-weight: $fontWeight;
 }
@@ -23,17 +57,29 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 1rem 0;
 }");
 
-			sheet.Context.AllowNestedRules();
 
-			sheet.ExecuteRewriters();
+			Assert.AreEqual(@"h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2em;
+  text-rendering: optimizeLegibility;
+  margin: 0 0 1rem 0;
+}", ss.ToString());
 
-			throw new Exception(sheet.ToString());
 		}
+
+	
+
 
 		[Test]
 		public void ParseMixin30()
 		{
-			var ss = StyleSheet.Parse(@"@mixin dl-horizontal($dlSpacing : 7.5em, $dlGap : 0.625em) {
+			var ss = StyleSheet.Parse(@"
+// Mixins
+@mixin dl-horizontal($dlSpacing : 7.5em, $dlGap : 0.625em) {
   dt {
     text-align: left;
     overflow: hidden;
@@ -47,7 +93,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-
+// CSS
 .left .awards dl,
 .left .exhibitions dl {
   @include dl-horizontal(3.75em, 0.625em);
@@ -58,19 +104,7 @@ h1, h2, h3, h4, h5, h6 {
 			Assert.AreEqual("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
 			Assert.AreEqual(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
 
-			ss.Context.AllowNestedRules();
-
-			ss.ExecuteRewriters();
-
-			Assert.AreEqual(@".left .awards dl dt {
-  text-align: left;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  float: left;
-  width: 3.75em;
-}
-.left .awards dl dd { padding-left: 3.75em; }
+			Assert.AreEqual(@".left .awards dl dt,
 .left .exhibitions dl dt {
   text-align: left;
   overflow: hidden;
@@ -79,6 +113,7 @@ h1, h2, h3, h4, h5, h6 {
   float: left;
   width: 3.75em;
 }
+.left .awards dl dd,
 .left .exhibitions dl dd { padding-left: 3.75em; }", ss.ToString());
 		}
 
@@ -89,23 +124,11 @@ h1, h2, h3, h4, h5, h6 {
 
 			Assert.AreEqual(13, mixins.Context.Mixins.Count);
 
-
 			var ss = StyleSheet.Parse(@".happy {
 				@include li-horizontal;
 				font-size: 15px;
 				oranges: a;
 			} ", mixins.Context);
-
-			ss.Context.AllowNestedRules();
-
-			ss.ExecuteRewriters();
-
-
-			/*
-			 list-style: none;
-			padding: 0;
-			*/
-
 
 
 			Assert.AreEqual(
@@ -139,15 +162,10 @@ h1, h2, h3, h4, h5, h6 {
 
 			Assert.AreEqual(13, mixins.Context.Mixins.Count);
 
-
 			var ss = StyleSheet.Parse(@".happy {
 				@include dl-horizontal;
 				font-size: 15px;
 			} ", mixins.Context);
-
-			ss.Context.AllowNestedRules();
-
-			ss.ExecuteRewriters();
 
 			Assert.AreEqual(
 @".happy { font-size: 15px; }
@@ -169,15 +187,9 @@ h1, h2, h3, h4, h5, h6 {
 
 			Assert.AreEqual(13, mixins.Context.Mixins.Count);
 
-
 			var ss = StyleSheet.Parse(@".happy {
 				@include li-horizontal;
 			} ", mixins.Context);
-
-
-			ss.Context.AllowNestedRules();
-
-			ss.ExecuteRewriters();
 
 
 			Assert.AreEqual(@".happy {
@@ -218,10 +230,6 @@ h1, h2, h3, h4, h5, h6 {
 
 			var ss = StyleSheet.Parse(text);
 
-			ss.Context.AllowNestedRules();
-
-			ss.ExecuteRewriters();
-
 			Assert.AreEqual(1, ss.Context.Mixins.Count);
 
 			Assert.AreEqual(@"main {
@@ -249,7 +257,7 @@ h1, h2, h3, h4, h5, h6 {
 
 			var ss = StyleSheet.Parse(text);
 
-			var rules = ss.GetRules();
+			var rules = ss.Children.OfType<CssRule>().ToArray();
 
 			var include = rules[0].Children[0] as IncludeNode;
 			var args = include.Args as CssValueList;
@@ -264,11 +272,6 @@ h1, h2, h3, h4, h5, h6 {
 			Assert.AreEqual(ValueListSeperator.Comma, args.Seperator);
 
 			Assert.AreEqual(1, ss.Context.Mixins.Count);
-
-			ss.Context.AllowNestedRules();
-
-			ss.ExecuteRewriters();
-
 
 			Assert.AreEqual(@"main {
   border-radius: 50px;

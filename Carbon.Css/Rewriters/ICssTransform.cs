@@ -6,7 +6,5 @@
 	public interface ICssRewriter
 	{
 		IEnumerable<CssRule> Rewrite(CssRule rule);
-
-		int Order { get; }
 	}
 }

@@ -554,9 +554,9 @@
 
 					var name = tokenizer.Read(); // Name
 
-					if (name.Text == "include")
+					switch (name.Text)
 					{
-						block.Add(ReadInclude()); continue;
+						case "include": block.Add(ReadInclude()); continue;
 					}
 				}
 
