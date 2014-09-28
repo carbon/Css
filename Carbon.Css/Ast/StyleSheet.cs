@@ -9,63 +9,21 @@
 	using Carbon.Css.Helpers;
 	using System;
 
-	public class StyleSheet : CssNode, IStylesheet
+	public class StyleSheet : CssRoot, IStylesheet
 	{
-		private readonly List<CssNode> children;
 		private readonly CssContext context;
 
 		public StyleSheet(List<CssNode> children, CssContext context)
-			: base(NodeKind.Document)
+			: base(children)
 		{
-			this.children = children;
 			this.context = context;
 		}
 
 		public StyleSheet(CssContext context)
-			: base(NodeKind.Document)
+			: base()
 		{
-			this.children = new List<CssNode>();
 			this.context = context;
 		}
-
-		#region Children
-
-		public void RemoveChild(CssNode node)
-		{
-			node.Parent = null;
-
-			children.Remove(node);
-		}
-
-		public void AddChild(CssNode node)
-		{
-			node.Parent = this;
-
-			children.Add(node);
-		}
-
-		public void InsertChild(int index, CssNode node)
-		{
-			node.Parent = this;
-
-			children.Insert(index, node);
-		}
-
-		#endregion
-
-		public override IList<CssNode> Children
-		{
-			get { return children; }
-		}
-
-		#region Helpers
-
-		public IList<CssRule> GetRules()
-		{
-			return children.OfType<CssRule>().ToList(); 
-		}
-
-		#endregion
 
 		public CssContext Context
 		{
@@ -171,28 +129,7 @@
 
 		public void ExecuteRewriters()
 		{
-			foreach (var rewriter in context.Rewriters.OrderBy(r => r.Order))
-			{
-				var index = 0;
-
-				foreach (var node in children.ToArray())
-				{
-					var rule = node as CssRule;
-
-					if (rule != null)
-					{
-						index = this.children.IndexOf(node);
-
-						foreach (var a in rewriter.Rewrite(rule))
-						{
-							this.InsertChild(++index, a);
-						}
-
-						// Remove the rule if we've moved all it's children up
-						if (rule.Childless) this.RemoveChild(rule);
-					}
-				}
-			}
+			return;
 		}
 
 		public void WriteTo(TextWriter textWriter)
@@ -205,11 +142,6 @@
 		public override string Text
 		{
 			get { return ToString(); }
-		}
-
-		public override CssNode CloneNode()
-		{
-			throw new NotImplementedException();
 		}
 
 		public override string ToString()
