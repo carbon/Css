@@ -50,13 +50,19 @@
 
 		public Hsla Saturate(float value)
 		{
-			return new Hsla(h, s * (1f + value), l, 1);
+			return new Hsla(h, s * (1f + value), l, a);
 		}
 
-		public Hsla Brighten(float value)
+		public Hsla WithL(double value)
 		{
-			return new Hsla(h, s, l * (1f + value), 1);
+			return new Hsla(h, s, value, a);
 		}
+
+		public Hsla WithS(double value)
+		{
+			return new Hsla(h, value, l, a);
+		}
+
 
 		public WebColor ToRgb()
 		{
@@ -101,39 +107,47 @@
 			return new WebColor(r, g, b);
 		}
 
-		public static Hsla FromColor(WebColor color)
+		public static Hsla FromRgb(WebColor color)
 		{
-			// Clamp to 0-1
-            float r = color.R / 255f,
-				  b = color.B / 255f,
-				  g = color.G / 255f;
+			float r = (color.R / 255f);
+			float g = (color.G / 255f);
+			float b = (color.B / 255f);
 
-			float min = new[] { r, g, b }.Min(),
-				  max = new[] { r, g, b }.Max();
-				  
-			
-			float h = 0f, 
-				  s = 0f,
-				  l = (max + min) / 2f;
+			float min = Math.Min(Math.Min(r, g), b);
+			float max = Math.Max(Math.Max(r, g), b);
+			float delta = max - min;
 
-            if (max == min) 
+			float h = 0;
+			float s = 0;
+			float l = (float)((max + min) / 2.0f);
+
+			if (delta != 0)
 			{
-				h = s = 0f; // achromatic
-            } 
-			else 
-			{	
-				var d = max - min;
+				if (l < 0.5f)
+				{
+					s = (float)(delta / (max + min));
+				}
+				else
+				{
+					s = (float)(delta / (2.0f - max - min));
+				}
 
-				s = (l > 0.5f) ? (d / (2f - max - min)) : (d / (max + min));
 
-				if      (max == r) h = (g - b) / d + (g < b ? 6 : 0);
-				else if (max == g) h = (b - r) / d + 2;
-				else if (max == b) h = (r - g) / d + 4; 			
+				if (r == max)
+				{
+					h = (g - b) / delta;
+				}
+				else if (g == max)
+				{
+					h = 2f + (b - r) / delta;
+				}
+				else if (b == max)
+				{
+					h = 4f + (r - g) / delta;
+				}
+			}
 
-				h /= 6;
-            }
-
-            return new Hsla(h, s, l, (double)color.Alpha); 
+			return new Hsla(h, s, l, color.Alpha);
         }
        
 
