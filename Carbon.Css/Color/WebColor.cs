@@ -34,7 +34,7 @@
 
 		public Hsla ToHsla()
 		{
-			return Hsla.FromColor(this);
+			return Hsla.FromRgb(this);
 		}
 
 		public Hsv ToHsv()
@@ -45,6 +45,27 @@
 		public WebColor WithOpacity(float alpha)
 		{
 			return new WebColor(r, g, b, alpha);
+		}
+
+
+		public WebColor Lighten(float amount)
+		{
+			var hsl = Hsla.FromRgb(this);
+
+			var delta = 1 - hsl.L;
+
+			var l = hsl.L + (Math.Min(amount, 1f) * delta);
+
+			return hsl.WithL(l).ToRgb();
+		}
+
+		public WebColor Darken(float amount)
+		{
+			var hsl = Hsla.FromRgb(this);
+
+			var l = hsl.L - (Math.Min(amount, 1f) * hsl.L);
+
+			return hsl.WithL(l).ToRgb();
 		}
 
 		public WebColor(byte r, byte g, byte b, float a = 1)
@@ -135,7 +156,7 @@
 
 				return new WebColor(data[0], data[1], data[2]);
 			}
-			catch (Exception ex)
+			catch
 			{
 				throw new Exception("invalid color:" + hex);
 			}
