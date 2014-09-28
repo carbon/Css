@@ -8,8 +8,8 @@
     <ProjectGuid>{1CC780F1-1E2E-42C8-82C0-F61B3C971449}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cadmium.Css.Tests</RootNamespace>
-    <AssemblyName>Cadmium.Css.Tests</AssemblyName>
+    <RootNamespace>Carbon.Css.Tests</RootNamespace>
+    <AssemblyName>Carbon.Css.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SassTests.cs" />
     <Compile Include="Colors\WebColorTests.cs" />
     <Compile Include="CssTests.cs" />
     <Compile Include="AnimationTests.cs" />
@@ -55,12 +56,6 @@
     <Compile Include="ScssTests.cs" />
     <Compile Include="VariableTests.cs" />
     <Compile Include="VenderTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Carbon.Css\Carbon.Css.csproj">
-      <Project>{7EFEE97C-F942-47BB-86B6-AEBCADB81034}</Project>
-      <Name>Cadmium.Css</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -76,6 +71,12 @@
     <Content Include="data\nested.css" />
     <Content Include="data\project.css" />
     <Content Include="data\test53.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Carbon.Css\Carbon.Css.csproj">
+      <Project>{7efee97c-f942-47bb-86b6-aebcadb81034}</Project>
+      <Name>Carbon.Css</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
