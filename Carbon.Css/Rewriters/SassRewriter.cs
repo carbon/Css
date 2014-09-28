@@ -8,6 +8,7 @@
 	public class SassRewriter : ICssRewriter
 	{
 		private readonly CssContext context;
+		private readonly List<CssRule> root = new List<CssRule>();
 
 		public SassRewriter(CssContext context)
 		{
@@ -23,53 +24,44 @@
 		{
 			var styleRule = rule as StyleRule;
 
-			if (styleRule == null) yield break;
-
-			if (rule.All(r => r.Kind == NodeKind.Declaration)) yield break;
-
-			// Expand styles if it's a multiselector
-			if (styleRule.Selector.Count > 1)
+			if (styleRule == null || rule.All(r => r.Kind == NodeKind.Declaration))
 			{
-				foreach (var s in styleRule.Selector)
-				{
-					var children = rule.CloneNode().Children;
-
-					foreach (var a in Rewrite(new StyleRule(s, children)))
-					{
-						yield return a;
-					}
-				}
-
-				rule.Children.Clear();
-
-				// TODO: Figure out how to combine back together
+				yield return rule;
 
 				yield break;
 			}
 
+			var clone = (StyleRule)rule.CloneNode();
 
-			foreach (var includeNode in rule.Children.OfType<IncludeNode>().ToArray())
+			root.Clear();
+
+			root.Add(clone);
+
+			// Expand includes
+			foreach (var includeNode in clone.Children.OfType<IncludeNode>().ToArray())
 			{
 				ExpandInclude(
 					includeNode,
-					rule
+					clone
 				);
 
-				rule.Children.Remove(includeNode);
+				clone.Children.Remove(includeNode);
 			}
 
-			foreach (var nestedRule in rule.Children.OfType<StyleRule>().ToArray())
+			foreach (var nestedRule in clone.Children.OfType<StyleRule>().ToArray())
 			{
-				var newRules = Expand(
-					rule   : nestedRule,
-					parent : rule
-				);
-
-				foreach (var r in newRules)
+				foreach (var r in Expand(
+					rule: nestedRule,
+					parent: clone
+				))
 				{
-					yield return r;
+					root.Add(r);
 				}
+			}
 
+			foreach (var r in root)
+			{
+				if (!r.Childless) yield return r;
 			}
 		}
 
@@ -102,19 +94,17 @@
 			}
 		}
 
-		public CssSelector GetSelector(StyleRule nested)
+		public CssSelector GetSelector(StyleRule rule)
 		{
-			var parts = new List<string>();
+			var parts = new Stack<StyleRule>();
 
-			var selector = nested.Selector.ToString();
+			parts.Push(rule);
 
-			parts.Add(selector);
-
-			StyleRule current = nested;
+			StyleRule current = rule;
 
 			while ((current = current.Parent as StyleRule) != null)
 			{
-				parts.Add(current.Selector.ToString());
+				parts.Push(current);
 
 				if (parts.Count > 6)
 				{
@@ -122,43 +112,85 @@
 				}
 			}
 
+			var i = 0;
+
 			var sb = new StringBuilder();
 
-			for (var i = parts.Count; --i >= 0; )
+
+			foreach (var part in parts)
 			{
-				var part = parts[i];
-				
-				if (part.Contains('&'))
+				if (part.Selector.Contains("&"))
 				{
-					part = part.Replace("&", sb.ToString());
+					var x = part.Selector.ToString().Replace("&", sb.ToString());
 
 					sb.Clear();
+
+					sb.Append(x);
+
+					i++;
+
+					continue;
 				}
 
-				if (i != parts.Count) sb.Append(' ');
+				if (i != 0) sb.Append(' ');
+
+				i++;
 
 				// h1, h2, h3
 
-				var split = part.Split(',');
-
-				if (split.Length > 1)
+				if (part.Selector.Count > 1)
 				{
 					var parentSelector = sb.ToString();
 
-					sb.Append(split[0].Trim());
+					sb.Clear();
 
-					foreach(var a in split.Skip(1))
+					var c = GetSelector(parts.Skip(i));
+
+					var q = 0;
+
+					foreach (var a in part.Selector)
 					{
-						sb.Append(", " + parentSelector + a.Trim());
+						if (q != 0) sb.Append(", ");
+
+						sb.Append(parentSelector + a);
+
+						if (c != null)
+						{
+							sb.Append(" " + c);
+						}
+
+						q++;	
 					}
+
+					break;
 				}
 				else
 				{
-					sb.Append(part);
+					sb.Append(part.Selector);
 				}
 			}
+			
+			return new CssSelector(sb.ToString());
+			
+		}
 
-			return new CssSelector(sb.ToString().Trim());
+		private string GetSelector(IEnumerable<StyleRule> rules)
+		{
+			// TODO: & support
+
+			var i = 0;
+
+			var sb = new StringBuilder();
+
+			foreach (var rule in rules)
+			{
+				if (i != 0) sb.Append(' ');
+
+				sb.Append(rule.Selector);
+			}
+
+			return sb.ToString();
+
 		}
 
 		#region Includes
@@ -181,8 +213,6 @@
 			var childContext = GetContext(mixin.Parameters, include.Args);
 
 			var i = 0;
-
-			var ss = (StyleSheet)rule.Parent;
 
 			foreach (var node in mixin.Children.ToArray())
 			{
@@ -212,9 +242,6 @@
 			if (node.Kind == NodeKind.Declaration)
 			{
 				var declaration = (CssDeclaration)node;
-
-				// TODO: Remove
-				// throw new Exception(declaration.Value.Kind.ToString() + ":" + declaration.Value.ToString());
 
 				BindVariables(declaration.Value, c);
 			}

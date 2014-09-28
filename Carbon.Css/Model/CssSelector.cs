@@ -53,9 +53,19 @@
 			}
 		}
 
+		public CssSelector(List<string> parts)
+		{
+			this.parts = parts;
+		}
+
 		public int Count
 		{
 			get { return parts.Count; }
+		}
+
+		public string this[int index]
+		{
+			get { return parts[index]; }
 		}
 
 		public string Text
@@ -68,11 +78,24 @@
 			}
 		}
 
+		public bool Contains(string text)
+		{
+			if (parts.Count == 1) return parts[0].Contains(text);
+
+			foreach (var part in parts)
+			{
+				if (part.Contains(text)) return true;
+			}
+
+			return false;
+		}
+
+		
+
 		public override string ToString()
 		{
 			return Text;
 		}
-
 
 		public IEnumerator<string> GetEnumerator()
 		{

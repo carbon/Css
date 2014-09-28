@@ -1,10 +1,66 @@
 ﻿namespace Carbon.Css
 {
 	using NUnit.Framework;
+	using System;
 
 	[TestFixture]
 	public class ScssTests
-	{		
+	{
+		[Test]
+		public void ChildSelector()
+		{
+			var ss = StyleSheet.Parse(@"div {
+  input,
+  textarea {
+    display: block;
+    font-size: 22px;
+    line-height: 40px;
+    color: #333;
+    width: 100%;
+    height: 60px;
+    padding: 10px 15px;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    border-radius: 0px;
+    border-radius: 2px 2px 0 0;
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+  }
+}");
+
+			Assert.AreEqual(1, ss.Children.Count);
+
+			var node = (StyleRule)ss.Children[0].Children[0];
+			var parent = (StyleRule)node.Parent;
+
+			Assert.AreEqual("div", parent.Selector.ToString());
+			Assert.AreEqual("input, textarea", node.Selector.ToString());
+			var sass = new SassRewriter(new CssContext());
+
+			var selector = sass.GetSelector(node);
+
+			Assert.AreEqual("div input, div textarea", selector.ToString());
+
+			Assert.AreEqual(@"div input,
+div textarea {
+  display: block;
+  font-size: 22px;
+  line-height: 40px;
+  color: #333;
+  width: 100%;
+  height: 60px;
+  padding: 10px 15px;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  border-radius: 0px;
+  border-radius: 2px 2px 0 0;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}", ss.ToString());
+		}
+
 		[Test]
 		public void NestedStyleRewriterTest()
 		{
@@ -25,11 +81,6 @@
     text-decoration: none;
   }
 }");
-
-			sheet.Context.AllowNestedRules();
-
-			sheet.ExecuteRewriters();
-
 
 			Assert.AreEqual(
 @"nav { display: block; }
@@ -55,8 +106,6 @@ nav a {
 			//= support Safari >= 5
 			a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
 			
-			sheet.ExecuteRewriters();
-
 			Assert.AreEqual(@"a {
   -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
   transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
@@ -72,7 +121,6 @@ nav a {
 			var sheet = StyleSheet.Parse("a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
 
 			sheet.Context.SetCompatibility(Browser.Chrome1, Browser.Safari5);
-			sheet.ExecuteRewriters();
 
 			Assert.AreEqual(@"a {
   -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
@@ -172,12 +220,8 @@ nav a {
   }
 }");
 
-			sheet.Context.AllowNestedRules();
 
 			sheet.Context.SetCompatibility(Browser.Chrome26, Browser.Safari5);
-
-			sheet.ExecuteRewriters();
-
 
 			Assert.AreEqual(@".form {
   padding-bottom: 3em;
@@ -288,10 +332,6 @@ nav a {
     b { color: red; }
   }
 }");
-			sheet.Context.AllowNestedRules();
-
-			sheet.ExecuteRewriters();
-
 
 			Assert.AreEqual(
 @"nav ul {
