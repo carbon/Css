@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MediaTests.cs" />
     <Compile Include="SassTests.cs" />
     <Compile Include="Colors\WebColorTests.cs" />
     <Compile Include="CssTests.cs" />

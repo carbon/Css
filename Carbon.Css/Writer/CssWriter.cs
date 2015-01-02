@@ -311,7 +311,19 @@
 			}
 			else
 			{
-				writer.Write(string.Join("," + Environment.NewLine, selector));
+				var i = 0;
+
+				foreach(var s in selector)
+				{
+					if (i != 0)
+					{
+						writer.Write("," + Environment.NewLine);
+					}
+
+					writer.Write(s);
+
+					i++;
+				}
 			}
 		}
 
@@ -346,9 +358,26 @@
 			// Write the declarations
 			foreach (var node in block.Children) // TODO: Change to an immutable list?
 			{
-				if (node.Kind == NodeKind.Include) continue;
+				if (node.Kind == NodeKind.Include)
+				{
+					var b2 = new CssBlock(NodeKind.Block);
 
-				if (node.Kind == NodeKind.Declaration)
+					b2.Add(node);
+
+					ExpandInclude((IncludeNode)node, b2);
+
+					foreach (var rule in b2.OfType<CssRule>())
+					{
+						writer.WriteLine();
+
+						WriteRule(rule, level + 1);
+
+						count++;
+					}
+				}
+
+
+				else if (node.Kind == NodeKind.Declaration)
 				{
 					var declaration = (CssDeclaration)node;
 

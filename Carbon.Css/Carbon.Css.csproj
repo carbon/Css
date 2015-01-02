@@ -103,7 +103,6 @@
     <Compile Include="Parser\StringBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resolver\IStylesheet.cs" />
-    <Compile Include="Resolver\IStyleSheetResolver.cs" />
     <Compile Include="Resolver\Include.cs" />
     <Compile Include="Rewriters\AddVenderPrefixes.cs" />
     <Compile Include="Rewriters\IEOpacityTransfomer.cs" />

@@ -34,6 +34,7 @@
 			get { return selector; }
 		}
 
+
 		public override CssNode CloneNode()
 		{
 			var clone = new StyleRule(selector);
@@ -59,5 +60,20 @@
 				return sb.ToString();
 			}
 		}
+
+		public void WriteTo(TextWriter writer)
+		{			
+			new CssWriter(writer).WriteStyleRule(this, 0);			
+		}
+
+
+		#region Add Helper
+
+		public void Add(string name, string value)
+		{
+			children.Add(new CssDeclaration(name, value));
+		}
+
+		#endregion
 	}
 }
