@@ -16,11 +16,28 @@
 				case "saturate"		: func = Saturate;		return true;
 				case "desaturate"	: func = Desaturate;	return true;
 				case "adjust-hue"	: func = AdjustHue;		return true;
+				case "mix"			: func = Mix;			return true;
 			}
 
 			func = null;
 
 			return false;
+		}
+
+
+		public static CssValue Mix(CssValue[] args)
+		{
+			var color1 = GetColor(args[0]);
+			var color2 = GetColor(args[1]);
+
+			var amount = 0.5f;
+
+			if (args.Length == 3)
+			{
+				amount = GetAmount(args[2]);
+			}
+
+			return new CssColor(color1.BlendWith(color2, amount));
 		}
 
 		public static CssValue Saturate(CssValue[] args)
@@ -60,7 +77,7 @@
 			var color = GetColor(args[0]);
 			var amount = GetAmount(args[1]);
 
-			return new CssColor(color.ToHsla().AdjustHue(amount).ToRgb());
+			return new CssColor(color.ToHsla().RotateHue(amount * 360).ToRgb());
 		}
 
 		public static CssValue Rgba(CssValue[] args)

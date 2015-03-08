@@ -5,12 +5,12 @@
 
 	public struct Hsla
 	{
-		private readonly double h;
-		private readonly double s;
-		private readonly double l;
-		private readonly double a;
+		private readonly float h;
+		private readonly float s;
+		private readonly float l;
+		private readonly float a;
 
-		public Hsla(double h, double s, double l, double a = 1d)
+		public Hsla(float h, float s, float l, float a = 1f)
 		{
 			this.h = h;
 			this.s = s;
@@ -18,22 +18,22 @@
 			this.a = a;
 		}
 
-		public double H
+		public float H
 		{
 			get { return h; }
 		}
 
-		public double S
+		public float S
 		{
 			get { return s; }
 		}
 
-		public double L
+		public float L
 		{
 			get { return l; }
 		}
 
-		public double A
+		public float A
 		{
 			get { return a; }
 		}
@@ -41,44 +41,90 @@
 		public override string ToString()
 		{
 			return string.Format("hsla({0},{1}%,{2}%,{3})", (
-				/*0*/ (int)Math.Round(H * 360d)),
-				/*1*/ (int)Math.Round(S * 100), 
-				/*2*/ (int)Math.Round(L * 100),
+				/*0*/ (int)Math.Round(H * 360f)),
+				/*1*/ (int)Math.Round(S * 100f), 
+				/*2*/ (int)Math.Round(L * 100f),
 				/*3*/ 1
 			);
 		}
 
-		public Hsla AdjustHue(float value)
+		public Hsla AdjustLightness(float value)
 		{
-			var newValue = h.Lerp(1d, -(double)value);
-
-			return new Hsla(newValue, s, l, a);
+			return new Hsla(h, s, Constrain(l + value), a);
 		}
 
-		public Hsla Desaturate(float value)
+		public Hsla RotateHue(float degrees)
 		{
-			var newValue = s.Lerp(1d, -(double)value);
+			// var newValue = h.Lerp(1f, -value);
 
-			return WithS(newValue);
+			// throw new Exception(h +"/" + value + "/ " + Constrain(h + value).ToString());
+
+			return WithHueDegrees(HueDegrees + degrees);
 		}
 
-		public Hsla Saturate(float value)
+		public Hsla AdjustSaturation(float value)
 		{
-			var newValue = s.Lerp(1d, (double)value);
+			// var newValue = s.Lerp(1f, value);
 
-			return WithS(newValue);
+
+			return WithS(Constrain(s + value));
 		}
 
-		public Hsla WithL(double value)
+		public Hsla WithL(float value)
 		{
 			return new Hsla(h, s, value, a);
 		}
 
-		public Hsla WithS(double value)
+		public Hsla WithS(float saturation)
 		{
-			return new Hsla(h, value, l, a);
+			return new Hsla(h, saturation, l, a);
 		}
 
+		public Hsla WithHue(float hue)
+		{
+			return new Hsla(hue, s, l, a);
+		}
+
+
+		public float HueDegrees
+		{
+			get 
+			{
+				// The next thing you need to understand is that we’re taking integer RGB values from 0 to 255 and converting them to decimal values from 0 to 1. 
+				// The HSL that we get back will thus need to be converted to the normal degree/percent/percent that you’re used to. 
+				// The H value returned should be from 0 to 6 so to convert it to degrees you just multiply by 60.
+				// H can actually be negative sometimes so if it is just add 360;
+
+				var degrees = h * 60f;
+				
+				if (degrees < 0) degrees += 360;
+
+				return degrees;
+			}
+		}
+
+		public Hsla WithHueDegrees(float degrees)
+		{
+			degrees = (degrees % 360f);
+
+			// - 360f
+
+			var value = degrees / 60f;
+
+			// 0 - 6
+
+			return WithHue(value);
+
+		}
+
+
+		private float Constrain(float value)
+		{
+			if (value > 1) return 1f;
+			if (value < 0) return 0f;
+
+			return value;
+		}
 
 		public WebColor ToRgb()
 		{
@@ -86,41 +132,41 @@
 
 			if (s == 0d)
 			{
-				r = (byte)Math.Round(l * 255d);
-				g = (byte)Math.Round(l * 255d);
-				b = (byte)Math.Round(l * 255d);
+				r = (byte)Math.Round(l * 255f);
+				g = (byte)Math.Round(l * 255f);
+				b = (byte)Math.Round(l * 255f);
 			}
 			else
 			{
-				double t1, t2;
-				double th = h / 6.0d;
+				float t1, t2;
+				float th = h / 6.0f;
 
-				if (l < 0.5d)
+				if (l < 0.5f)
 				{
-					t2 = l * (1d + s);
+					t2 = l * (1f + s);
 				}
 				else
 				{
 					t2 = (l + s) - (l * s);
 				}
 
-				t1 = 2d * l - t2;
+				t1 = 2f * l - t2;
 
-				double tr, tg, tb;
+				float tr, tg, tb;
 
-				tr = th + (1.0d / 3.0d);
+				tr = th + (1.0f / 3.0f);
 				tg = th;
-				tb = th - (1.0d / 3.0d);
+				tb = th - (1.0f / 3.0f);
 
 				tr = ColorCalc(tr, t1, t2);
 				tg = ColorCalc(tg, t1, t2);
 				tb = ColorCalc(tb, t1, t2);
 
-				r = (byte)Math.Round(tr * 255d);
-				g = (byte)Math.Round(tg * 255d);
-				b = (byte)Math.Round(tb * 255d);
+				r = (byte)Math.Round(tr * 255f);
+				g = (byte)Math.Round(tg * 255f);
+				b = (byte)Math.Round(tb * 255f);
 			}
-			return new WebColor(r, g, b);
+			return new WebColor(r, g, b, a);
 		}
 
 		public static Hsla FromRgb(WebColor color)
@@ -166,14 +212,14 @@
 			return new Hsla(h, s, l, color.Alpha);
         }
 
-		private static double ColorCalc(double c, double t1, double t2)
+		private static float ColorCalc(float c, float t1, float t2)
 		{
 
-			if (c < 0) c += 1d;
-			if (c > 1) c -= 1d;
-			if (6.0d * c < 1.0d) return t1 + (t2 - t1) * 6.0d * c;
-			if (2.0d * c < 1.0d) return t2;
-			if (3.0d * c < 2.0d) return t1 + (t2 - t1) * (2.0d / 3.0d - c) * 6.0d;
+			if (c < 0) c += 1f;
+			if (c > 1) c -= 1f;
+			if (6.0f * c < 1.0f) return t1 + (t2 - t1) * 6.0f * c;
+			if (2.0f * c < 1.0f) return t2;
+			if (3.0f * c < 2.0f) return t1 + (t2 - t1) * (2.0f / 3.0f - c) * 6.0f;
 			return t1;
 		}
 	
