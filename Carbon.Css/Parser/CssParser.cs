@@ -243,7 +243,7 @@
 
 			if (values.Count == 1) return values[0];
 
-			var list = new CssValueList(values, ValueListSeperator.Comma);
+			var list = new CssValueList(values, ValueSeperator.Comma);
 
 			return list;
 		}

@@ -44,7 +44,7 @@
 				return first;
 			}
 
-			var list = new CssValueList(ValueListSeperator.Space);
+			var list = new CssValueList(ValueSeperator.Space);
 
 			list.Children.Add(first);
 			list.Children.Add(enumerator.Current);

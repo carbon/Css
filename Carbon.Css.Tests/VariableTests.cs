@@ -1,6 +1,7 @@
 ﻿namespace Carbon.Css.Tests
 {
 	using NUnit.Framework;
+	using System;
 
 	[TestFixture]
 	public class VariableTests
@@ -119,10 +120,6 @@ body { font-size: 14px; opacity: 0.5; }
 			";
 
 			var sheet = StyleSheet.Parse(styles);
-
-			// Adds a filter: alpha(opacity) property to support opacity in IE8
-			// Ads vendor prefixed properties for box-sizing for Safari (Firefox 4 natively implements it)
-			// sheet.SetCompatibility(Browser.Chrome10, Browser.Firefox4, Browser.IE8, Browser.Safari5);
 
 
 			Assert.AreEqual(

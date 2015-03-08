@@ -103,7 +103,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resolver\IStylesheet.cs" />
     <Compile Include="Resolver\Include.cs" />
-    <Compile Include="Rewriters\AddVenderPrefixes.cs" />
     <Compile Include="Rewriters\IEOpacityTransfomer.cs" />
     <Compile Include="Rewriters\Rewriter.cs" />
     <Compile Include="Rewriters\ICssTransform.cs" />

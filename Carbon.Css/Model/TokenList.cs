@@ -4,7 +4,7 @@
 	using Carbon.Css.Parser;
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
-	using System.Linq;
+	using System.Text;
 
 	public class TokenList : Collection<CssToken>
 	{
@@ -22,12 +22,33 @@
 
 		public string RawText
 		{
-			get { return string.Join("", this.Select(t => t.Text)); }
+			get 
+			{
+				var sb = new StringBuilder();
+
+				foreach (var token in this)
+				{
+					sb.Append(token.Text);
+				}
+
+				return sb.ToString();
+			}
 		}
 
 		public override string ToString()
 		{
-			return string.Join(" ", this.Where(t => !t.IsTrivia).Select(t => t.Text));
+			var sb = new StringBuilder();
+			
+			foreach (var token in this)
+			{
+				if (token.IsTrivia) continue;
+
+				if (sb.Length != 0) sb.Append(" ");
+
+				sb.Append(token.Text);
+			}
+
+			return sb.ToString();
 		}
 	}
 }

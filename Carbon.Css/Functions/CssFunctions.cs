@@ -1,8 +1,9 @@
 ﻿namespace Carbon.Css
 {
-	using Carbon.Css.Color;
 	using System;
 	using System.Collections.Generic;
+
+	using Carbon.Css.Color;
 
 	public static class CssFunctions
 	{

@@ -4,7 +4,6 @@
 	using System.Linq;
 	using System.Text;
 
-	using Carbon.Css.Parser;
 	using System.Collections.Generic;
 	using System.Collections;
 
@@ -16,20 +15,18 @@
 		{
 			var sb = new StringBuilder();
 
-			CssToken? last = null;
-
 			foreach (var token in tokens)
 			{
 				if (token.IsTrivia)
 				{
+					// Prettify the trivia
+
 					sb.Append(" ");
 				}
 				else
 				{
 					sb.Append(token.Text);
 				}
-
-				last = token;
 			}
 
 			this.parts = new List<string>(sb.ToString().Split(',').Select(t => t.Trim()));
@@ -108,6 +105,7 @@
 		}
 	}
 
+	// a:hover
 	// #id
 	// .className
 	// .className, .anotherName			(Multiselector or group)

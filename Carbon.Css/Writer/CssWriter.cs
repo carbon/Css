@@ -6,6 +6,7 @@
 	using System.IO;
 	using System.Linq;
 	using System.Text;
+	using System.Linq;
 
 	public class CssWriter
 	{
@@ -15,7 +16,7 @@
 		private int includeCount = 0;
 		private int importCount = 0;
 
-		private CssContext currentContext;
+		private Browser[] support;
 
 		public CssWriter(TextWriter writer, CssContext context = null, ICssResolver resolver = null)
 		{
@@ -23,7 +24,7 @@
 			this.context = context ?? new CssContext();
 			this.resolver = resolver;
 
-			this.currentContext = this.context;
+			this.support = this.context.BrowserSupport;			
 		}
 
 		public void WriteRoot(StyleSheet sheet)
@@ -145,7 +146,7 @@
 			{
 				if (i != 0)
 				{
-					writer.Write(list.Seperator == ValueListSeperator.Space ? " " : ", ");
+					writer.Write(list.Seperator == ValueSeperator.Space ? " " : ", ");
 				}
 
 				WriteValue(value);
@@ -212,7 +213,7 @@
 					{
 						var list = (CssValueList)value;
 
-						if (list.Seperator == ValueListSeperator.Space) yield return list;
+						if (list.Seperator == ValueSeperator.Space) yield return list;
 
 						// Break out comma seperated values
 						foreach (var v in list)
@@ -257,14 +258,13 @@
 
 			foreach (var r in Rewrite(rule))
 			{				
-				foreach (var nr in context.Rewriters.Rewrite(r))
-				{
-					if (i != 0) writer.WriteLine();
+				
+				if (i != 0) writer.WriteLine();
 
-					_WriteRule(nr, level);
+				_WriteRule(r, level);
 
-					i++;
-				}				
+				i++;
+								
 			}
 		}
 
@@ -351,14 +351,53 @@
 
 		public void WriteKeyframesRule(KeyframesRule rule, int level)
 		{
+			if (context.BrowserSupport != null)
+			{
+				// -moz-
+				if (context.BrowserSupport.Any(a => a.Type == BrowserType.Firefox && a.Version < 16))
+				{
+					WriteKeyframesRule(context.BrowserSupport.First(b => b.Type == BrowserType.Firefox), rule, level);
+
+					writer.WriteLine();
+				}
+
+				// -webkit- 
+				if (context.BrowserSupport.Any(a => a.Type == BrowserType.Safari))
+				{
+					WriteKeyframesRule(context.BrowserSupport.First(b => b.Type == BrowserType.Safari), rule, level);
+
+					writer.WriteLine();
+				}
+			}
+
+
 			writer.Write("@keyframes {0} ", rule.Name); // Write selector
 
+			support = null;
+
+			WriteBlock(rule, level); // super standards
+
+			support = context.BrowserSupport;
+
+			// TODO: Expand
+		}
+
+		private void WriteKeyframesRule(Browser browser, KeyframesRule rule, int level)
+		{
+			support = new[] { browser };
+
+			writer.Write("@" + browser.Prefix.Text + "keyframes {0} ", rule.Name); // Write selector
+
 			WriteBlock(rule, level);
+
+			support = context.BrowserSupport;
+
+			// TODO: Expand
 		}
 
 		public void WriteBlock(CssBlock block, int level)
 		{
-			writer.Write("{"); // Block Start	
+			writer.Write("{"); // Block start
 
 			var condenced = false;
 			var count = 0;
@@ -387,25 +426,20 @@
 				{
 					var declaration = (CssDeclaration)node;
 
-					if (block.Children.Count == 1)
+					if (block.Children.Count == 1 && !declaration.Info.NeedsExpansion(support))
 					{
 						condenced = true;
+
+						writer.Write(" ");
+
+						WriteDeclaration(declaration, 0);
 					}
 					else
 					{
 						if (count == 0) writer.WriteLine();
 
-						Indent(level);
-
-						writer.Write(" ");
+						WriteDeclaration2(declaration, level + 1);
 					}
-
-					writer.Write(" ");
-
-					WriteDeclaration(declaration);
-
-					writer.Write(";");
-
 				}
 				else if (node.Kind == NodeKind.Rule)  // Nested rule
 				{
@@ -437,12 +471,88 @@
 			writer.Write("}"); // Block end
 		}
 
-		public void WriteDeclaration(CssDeclaration declaration)
+
+		public void WriteDeclaration(CssDeclaration declaration, int level)
 		{
+			Indent(level);
+
 			writer.Write(declaration.Name);
 			writer.Write(": ");
 			WriteValue(declaration.Value);
+			writer.Write(";");
 		}
+
+		public void WriteDeclaration2(CssDeclaration declaration, int level)
+		{
+			var prop = declaration.Info;
+			var prefixes = BrowserPrefixKind.None;
+
+			if (support != null && prop.Compatibility.HasPatches)
+			{ 
+				foreach (var browser in support)
+				{
+					if (!prop.Compatibility.IsPrefixed(browser)) continue;
+
+					// Skip the prefix if we've already added it
+					if (prefixes.HasFlag(browser.Prefix.Kind)) continue;
+
+					var patchedValue = (prop.Compatibility.HasValuePatches)
+						? GetPatchedValueFor(declaration.Value, browser)
+						: declaration.Value;
+
+					Indent(level);
+
+					writer.Write(browser.Prefix);	// Write the prefix
+					writer.Write(prop.Name);		// Write the standard name
+					writer.Write(": ");
+					WriteValue(patchedValue);
+					writer.Write(";");
+
+					writer.WriteLine();
+
+					prefixes |= browser.Prefix.Kind;
+				}
+			}
+
+			// Finally, write the standards declaration
+			WriteDeclaration(declaration, level);
+		}
+
+
+		#region Compatibility helpers
+
+		// transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
+
+		private CssValue GetPatchedValueFor(CssValue value, Browser browser)
+		{
+			if (value.Kind != NodeKind.ValueList) return value;
+
+			var a = (CssValueList)value;
+
+			var list = new CssValueList(a.Seperator);
+
+			foreach (var node in a.Children)
+			{
+				if (node.Kind == NodeKind.ValueList) // For comma seperated componented lists
+				{
+					list.Add(GetPatchedValueFor((CssValue)node, browser));
+				}
+				else if (node.Kind == NodeKind.String && node.Text == "transform")
+				{
+					list.Add(new CssString(browser.Prefix.Text + "transform"));
+				}
+				else
+				{
+					list.Add(node);
+				}
+			}
+
+			return list;
+		}
+
+
+		#endregion
+
 
 		#region Helpers
 
@@ -491,7 +601,7 @@
 
 			foreach (var nestedRule in clone.Children.OfType<StyleRule>().ToArray())
 			{
-				foreach (var r in Expand(
+				foreach (var r in ExpandStyle(
 					rule: nestedRule,
 					parent: clone
 				))
@@ -506,7 +616,7 @@
 			}
 		}
 
-		public IEnumerable<CssRule> Expand(StyleRule rule, CssRule parent)
+		public IEnumerable<CssRule> ExpandStyle(StyleRule rule, CssRule parent)
 		{
 			var newRule = new StyleRule(ExpandSelector(rule));
 
@@ -516,7 +626,7 @@
 				{
 					var childRule = (StyleRule)childNode;
 
-					foreach (var r in Expand(childRule, rule))
+					foreach (var r in ExpandStyle(childRule, rule))
 					{
 						yield return r;
 					}
@@ -610,7 +720,7 @@
 					list.Add(args); // Single Value
 				}
 
-				if (valueList != null && valueList.Seperator == ValueListSeperator.Comma)
+				if (valueList != null && valueList.Seperator == ValueSeperator.Comma)
 				{
 					list.AddRange(valueList.Children.OfType<CssValue>());
 				}

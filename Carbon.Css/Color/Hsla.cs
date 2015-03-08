@@ -165,8 +165,6 @@
 
 			return new Hsla(h, s, l, color.Alpha);
         }
-       
-
 
 		private static double ColorCalc(double c, double t1, double t2)
 		{

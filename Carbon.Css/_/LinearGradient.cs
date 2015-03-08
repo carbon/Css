@@ -25,7 +25,7 @@ namespace Carbon.Css
 		{
 			foreach(var browser in browsers)
 			{
-				var args2 = new CssValueList(ValueListSeperator.Comma);
+				var args2 = new CssValueList(ValueSeperator.Comma);
 
 				var i = 0;
 				foreach(var arg in args)

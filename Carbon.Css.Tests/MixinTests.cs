@@ -269,7 +269,7 @@ h6 {
 			Assert.AreEqual("50px", args.Children[0].ToString());
 			Assert.AreEqual("20px", args.Children[1].ToString());
 
-			Assert.AreEqual(ValueListSeperator.Comma, args.Seperator);
+			Assert.AreEqual(ValueSeperator.Comma, args.Seperator);
 
 			Assert.AreEqual(1, ss.Context.Mixins.Count);
 

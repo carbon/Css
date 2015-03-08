@@ -138,6 +138,21 @@
 			get { return compatibility ?? Carbon.Css.CssCompatibility.Unknown; }
 		}
 
+
+		public bool NeedsExpansion(Browser[] browsers)
+		{
+			if (browsers == null || browsers.Length == 0) return false;
+
+			if (!Compatibility.HasPatches) return false;
+
+			foreach(var browser in browsers)
+			{
+				if (Compatibility.IsPrefixed(browser)) return true;
+			}
+
+			return false;
+		}
+
 		public override int GetHashCode()
 		{
 			return this.name.GetHashCode();

@@ -1,17 +1,14 @@
 ﻿namespace Carbon.Css
 {
-	using Carbon.Css.Model;
-	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 
 	public class CssContext
 	{
 		private readonly Dictionary<string, MixinNode> mixins = new Dictionary<string, MixinNode>();
 		private readonly CssScope scope = new CssScope();
 
-		private readonly CssContext parent;
-
-		private int counter = 0;
+		private Browser[] browserSupport = null;
 
 		public CssFormatting Formatting { get; set; }
 
@@ -25,37 +22,24 @@
 			get { return mixins; }
 		}
 
-		#region Rewriters
-
-		private readonly RewriterCollection rewriters = new RewriterCollection();
+		public CssScope GetNestedScope()
+		{
+			return new CssScope(scope);
+		}
 
 		private bool cs = false;
 
+		public Browser[] BrowserSupport
+		{
+			get { return browserSupport; }
+		}
+
 		public void SetCompatibility(params Browser[] targets)
 		{
-			if (cs) return;
+			if (browserSupport != null) return;
 
-			cs = true;
-
-			rewriters.Add(new AddPrefixes(targets));
+			browserSupport = targets.OrderBy(t => t.Prefix.Text).ToArray();
 		}
-
-		public void AllowNestedRules()
-		{
-		}
-
-		public void AddRewriter(ICssRewriter rewriter)
-		{
-			rewriters.Add(rewriter);
-		}
-
-		public RewriterCollection Rewriters
-		{
-			get { return rewriters; }
-		}
-
-		#endregion
-
 	}
 
 	public enum CssFormatting

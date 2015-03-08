@@ -32,6 +32,7 @@
  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
 }");
 
+
 			Assert.AreEqual(
 @".block ::-webkit-input-placeholder {
   color: #cfcece;
@@ -50,9 +51,18 @@
   font-weight: 400;
 }
 @-webkit-keyframes domainProcessing {
-  0% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
-  50% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-  100% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+  0% {
+    -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6);
+    box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6);
+  }
+  50% {
+    -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2);
+    box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2);
+  }
+  100% {
+    -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2);
+    box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2);
+  }
 }
 @keyframes domainProcessing {
   0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
@@ -68,7 +78,7 @@
 		public void Test50()
 		{
 			var ss = StyleSheet.Parse(
-@"//= support Safari >= 5
+@"//= support Safari >= 6
 @keyframes domainProcessing2 {
  0% { border-color: rgba(248, 202, 92, 0.4); }
  20% { border-color: rgba(248, 202, 92, 0.2); }
@@ -80,6 +90,9 @@
  50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
 }");
+
+
+
 
 			Assert.AreEqual(
 @"@-webkit-keyframes domainProcessing2 {
@@ -93,9 +106,9 @@
   100% { border-color: rgba(248, 202, 92, 0.2); }
 }
 @-webkit-keyframes domainProcessing {
-  0% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
-  50% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-  100% { -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+  0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+  50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
 }
 @keyframes domainProcessing {
   0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
@@ -115,13 +128,26 @@
   100% { transform: translate(0, 0px)rotate(-360deg); }
 }");
 
+
 			Assert.AreEqual(@"@-moz-keyframes planet {
-  0% { -moz-transform: translate(0, 0px) rotate(0deg); }
-  100% { -moz-transform: translate(0, 0px) rotate(-360deg); }
+  0% {
+    -moz-transform: translate(0, 0px) rotate(0deg);
+    transform: translate(0, 0px) rotate(0deg);
+  }
+  100% {
+    -moz-transform: translate(0, 0px) rotate(-360deg);
+    transform: translate(0, 0px) rotate(-360deg);
+  }
 }
 @-webkit-keyframes planet {
-  0% { -webkit-transform: translate(0, 0px) rotate(0deg); }
-  100% { -webkit-transform: translate(0, 0px) rotate(-360deg); }
+  0% {
+    -webkit-transform: translate(0, 0px) rotate(0deg);
+    transform: translate(0, 0px) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate(0, 0px) rotate(-360deg);
+    transform: translate(0, 0px) rotate(-360deg);
+  }
 }
 @keyframes planet {
   0% { transform: translate(0, 0px) rotate(0deg); }
@@ -152,6 +178,7 @@
   60%   { opacity: 1; }
   100%  { opacity: .6; }
 }");
+
 
 			Assert.AreEqual(
 @"@-webkit-keyframes flicker {
