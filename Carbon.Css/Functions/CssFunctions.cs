@@ -6,14 +6,20 @@
 
 	public static class CssFunctions
 	{
-		public static Func<CssValue[], CssValue> Get(string name, CssValue[] args)
+		public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
 		{
 			switch (name)
 			{
-				case "darken"	: return Darken;
-				case "lighten"	: return Lighten;
-				default			: return null;
+				case "darken"		: func = Darken;		return true;
+				case "lighten"		: func = Lighten;		return true;
+				case "saturate"		: func = Saturate;		return true;
+				case "desaturate"	: func = Desaturate;	return true;
+				case "adjust-hue"	: func = AdjustHue;		return true;
 			}
+
+			func = null;
+
+			return false;
 		}
 
 		public static CssValue Saturate(CssValue[] args)

@@ -1,6 +1,5 @@
 ﻿namespace Carbon.Css
 {
-	using Carbon.Css.Color;
 	using Carbon.Css.Parser;
 	using System;
 	using System.Collections.Generic;
@@ -31,7 +30,7 @@
 		{
 			importCount++;
 
-			if (importCount > 100) throw new Exception("Exceded importCount of 100");
+			if (importCount > 200) throw new Exception("Exceded importCount of 200");
 
 			var i = 0;
 
@@ -172,43 +171,14 @@
 					return;
 				}
 			}
-			else if (function.Name == "lighten")
+
+			Func<CssValue[], CssValue> func;
+
+			if (CssFunctions.TryGet(function.Name, out func))
 			{
 				var args = GetArgs(function.Args).ToArray();
 
-				writer.Write(CssFunctions.Lighten(args));
-
-				return;
-			}
-			else if (function.Name == "darken")
-			{
-				var args = GetArgs(function.Args).ToArray();
-
-				writer.Write(CssFunctions.Darken(args));
-
-				return;
-			}
-			else if (function.Name == "saturate")
-			{
-				var args = GetArgs(function.Args).ToArray();
-
-				writer.Write(CssFunctions.Saturate(args));
-
-				return;
-			}
-			else if (function.Name == "desaturate")
-			{
-				var args = GetArgs(function.Args).ToArray();
-
-				writer.Write(CssFunctions.Desaturate(args));
-
-				return;
-			}
-			else if (function.Name == "adjust-hue")
-			{
-				var args = GetArgs(function.Args).ToArray();
-
-				writer.Write(CssFunctions.AdjustHue(args));
+				writer.Write(func(args));
 
 				return;
 			}
@@ -413,8 +383,6 @@
 						count++;
 					}
 				}
-
-
 				else if (node.Kind == NodeKind.Declaration)
 				{
 					var declaration = (CssDeclaration)node;
@@ -489,17 +457,12 @@
 
 		#endregion
 
-
-
-
-
-
 		#region Sass
-
-		private readonly List<CssRule> root = new List<CssRule>();
 
 		public IEnumerable<CssRule> Rewrite(CssRule rule)
 		{
+			var root = new List<CssRule>();
+
 			var styleRule = rule as StyleRule;
 
 			if (styleRule == null || rule.All(r => r.Kind == NodeKind.Declaration))
@@ -584,7 +547,7 @@
 
 			var index = rule.Children.IndexOf(include);
 
-			var childContext = GetScope(mixin.Parameters, include.Args);
+			var scope = GetScope(mixin.Parameters, include.Args);
 
 			var i = 0;
 
@@ -602,7 +565,7 @@
 					mixin.Children.Remove(node);
 				}
 
-				BindVariables(node, childContext);
+				BindVariables(node, scope);
 
 				rule.Insert(i + 1, node.CloneNode());
 
