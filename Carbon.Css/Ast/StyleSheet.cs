@@ -51,7 +51,7 @@
 				{
 					var variable = (CssAssignment)node;
 
-					context.Variables[variable.Name] = variable.Value;
+					context.Scope[variable.Name] = variable.Value;
 				}
 				else if(node.Kind == NodeKind.Mixin)
 				{

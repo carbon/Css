@@ -12,7 +12,7 @@
 			
 			";
 
-			Assert.AreEqual(1, StyleSheet.Parse(text).Context.Variables.Count);
+			Assert.AreEqual(1, StyleSheet.Parse(text).Context.Scope.Count);
 		}
 
 		[Test]
@@ -28,9 +28,9 @@ body {
   color: $yellow;
 }
 ");
-			Assert.AreEqual("#dceef7", sheet.Context.Variables["blue"].ToString());
+			Assert.AreEqual("#dceef7", sheet.Context.Scope["blue"].ToString());
 
-			Assert.AreEqual(2, sheet.Context.Variables.Count);
+			Assert.AreEqual(2, sheet.Context.Scope.Count);
 
 			Assert.AreEqual(
 @"body {
@@ -46,7 +46,7 @@ body {
 		{
 			var context = new CssContext();
 
-			context.Variables["monster"] = CssValue.Parse("red");
+			context.Scope["monster"] = CssValue.Parse("red");
 
 			var sheet = StyleSheet.Parse(
 @"
@@ -76,7 +76,7 @@ body {
 		{
 			var context = new CssContext();
 
-			context.Variables["monster"] = CssValue.Parse("purple");
+			context.Scope["monster"] = CssValue.Parse("purple");
 
 			var sheet = StyleSheet.Parse(
 @"

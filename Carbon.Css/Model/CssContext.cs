@@ -1,81 +1,28 @@
 ﻿namespace Carbon.Css
 {
+	using Carbon.Css.Model;
 	using System;
 	using System.Collections.Generic;
 
 	public class CssContext
 	{
-		private readonly Dictionary<string, CssValue> variables = new Dictionary<string,CssValue>();
 		private readonly Dictionary<string, MixinNode> mixins = new Dictionary<string, MixinNode>();
+		private readonly CssScope scope = new CssScope();
 
 		private readonly CssContext parent;
 
 		private int counter = 0;
 
-		public CssContext() { }
-
-		public CssContext(CssContext parent)
-		{
-			this.parent = parent;
-		}
-
 		public CssFormatting Formatting { get; set; }
 
-		public Dictionary<string, CssValue> Variables
+		public CssScope Scope
 		{
-			get { return variables;  }
-		}
-
-		public CssValue GetVariable(string name)
-		{
-			counter++;
-
-			if (counter > 10000) throw new Exception("recussion detected");
-
-			CssValue value;
-
-			if (variables.TryGetValue(name, out value))
-			{
-				if (value.Kind == NodeKind.Variable)
-				{
-					var variable = (CssVariable)value;
-
-					if (variable.Symbol == name) throw new Exception("Self referencing");
-
-					return GetVariable(variable.Symbol);
-				}
-				
-				return value;
-			}
-
-			if (parent != null && parent.Variables.TryGetValue(name, out value))
-			{
-				if (value.Kind == NodeKind.Variable)
-				{
-
-					var variable = (CssVariable)value;
-
-					if (variable.Symbol == name) throw new Exception("Self referencing");
-
-					return parent.GetVariable(variable.Symbol);
-				}
-				
-				return value;
-				
-			}
-
-
-			return new CssString(string.Format("/* ${0} not found */", name));
+			get { return scope; }
 		}
 
 		public Dictionary<string, MixinNode> Mixins
 		{
 			get { return mixins; }
-		}
-
-		public CssContext Parent
-		{
-			get { return parent; }
 		}
 
 		#region Rewriters
@@ -108,6 +55,7 @@
 		}
 
 		#endregion
+
 	}
 
 	public enum CssFormatting

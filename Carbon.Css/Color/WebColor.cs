@@ -13,8 +13,8 @@
 
 		private readonly float alpha; // Increase precision of alpha
 
-		private static readonly WebColor White = new WebColor(255, 255, 255, 1);
-		private static readonly WebColor Black = new WebColor(0, 0, 0, 1);
+		private static readonly WebColor White  = new WebColor(255, 255, 255, 1);
+		private static readonly WebColor Black  = new WebColor(0, 0, 0, 1);
 		private static readonly WebColor Red	= new WebColor(255, 0, 0, 1);
 		private static readonly WebColor Green	= new WebColor(0, 255, 0, 1);
 		private static readonly WebColor Blue	= new WebColor(0, 0, 255, 1);
@@ -198,6 +198,9 @@
 			}
 			else
 			{
+
+				// TODO: Named colors
+
 				throw new Exception("Unexpected color:" + text);
 			}
 

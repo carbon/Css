@@ -235,7 +235,7 @@
 					}
 					else
 					{
-						yield return context.GetVariable(x.Symbol);
+						yield return context.Scope.GetValue(x.Symbol);
 					}
 					break;
 				case NodeKind.ValueList:
@@ -262,7 +262,7 @@
 		{
 			if (variable.Value == null)
 			{
-				variable.Value = context.GetVariable(variable.Symbol);
+				variable.Value = context.Scope.GetValue(variable.Symbol);
 			}
 
 			WriteValue(variable.Value);
@@ -584,7 +584,7 @@
 
 			var index = rule.Children.IndexOf(include);
 
-			var childContext = GetContext(mixin.Parameters, include.Args);
+			var childContext = GetScope(mixin.Parameters, include.Args);
 
 			var i = 0;
 
@@ -610,30 +610,31 @@
 			}
 		}
 
-		public void BindVariables(CssNode node, CssContext c)
+
+		public void BindVariables(CssNode node, CssScope scope)
 		{
 			if (node.Kind == NodeKind.Declaration)
 			{
 				var declaration = (CssDeclaration)node;
 
-				BindVariables(declaration.Value, c);
+				BindVariables(declaration.Value, scope);
 			}
 			else if (node.Kind == NodeKind.Variable)
 			{
 				var variable = (CssVariable)node;
 
-				variable.Value = c.GetVariable(variable.Symbol);
+				variable.Value = scope.GetValue(variable.Symbol);
 			}
 			else if (node.HasChildren)
 			{
 				foreach (var n in node.Children)
 				{
-					BindVariables(n, c);
+					BindVariables(n, scope);
 				}
 			}
 		}
 
-		public CssContext GetContext(IList<CssParameter> paramaters, CssValue args)
+		public CssScope GetScope(IList<CssParameter> paramaters, CssValue args)
 		{
 			var list = new List<CssValue>();
 
@@ -652,15 +653,15 @@
 				}
 			}
 
-			var child = new CssContext(context);
+			var child = new CssScope(context.Scope);
 
 			var i = 0;
 
 			foreach (var p in paramaters)
 			{
-				var val = (list != null && list.Count >= i + 1) ? list[i] : p.Default;
+				var val = (list != null && list.Count >= i + 1) ? list[i] : p.DefaultValue;
 
-				child.Variables.Add(p.Name, val);
+				child.Add(p.Name, val);
 
 				i++;
 			}
