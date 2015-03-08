@@ -38,32 +38,34 @@
 			{
 				if (value.Kind == NodeKind.Variable)
 				{
-					var variable = ((CssVariable)value);
+					var variable = (CssVariable)value;
 
 					if (variable.Symbol == name) throw new Exception("Self referencing");
 
 					return GetVariable(variable.Symbol);
 				}
-				else
-				{
-					return value;
-				}
+				
+				return value;
 			}
 
 			if (parent != null && parent.Variables.TryGetValue(name, out value))
 			{
 				if (value.Kind == NodeKind.Variable)
 				{
-					return GetVariable(((CssVariable)value).Symbol);
-				}
 
-				else
-				{
-					return value;
+					var variable = (CssVariable)value;
+
+					if (variable.Symbol == name) throw new Exception("Self referencing");
+
+					return parent.GetVariable(variable.Symbol);
 				}
+				
+				return value;
+				
 			}
 
-			return new CssString("");
+
+			return new CssString(string.Format("/* ${0} not found */", name));
 		}
 
 		public Dictionary<string, MixinNode> Mixins

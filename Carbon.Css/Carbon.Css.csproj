@@ -50,10 +50,8 @@
     <Compile Include="Ast\Values\CssDimension.cs" />
     <Compile Include="Ast\Values\CssUrl.cs" />
     <Compile Include="Ast\Values\CssString.cs" />
-    <Compile Include="Functions\LightenFunction.cs" />
-    <Compile Include="Functions\ICssFunction.cs" />
-    <Compile Include="Functions\DarkenFunction.cs" />
-    <Compile Include="Functions\RgbaFunction.cs" />
+    <Compile Include="Functions\CssFunctions.cs" />
+    <Compile Include="Math\MathHelper.cs" />
     <Compile Include="Model\TokenList.cs" />
     <Compile Include="Ast\Whitespace.cs" />
     <Compile Include="Ast\Values\CssValueList.cs" />

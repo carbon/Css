@@ -13,7 +13,7 @@
 
 			Assert.AreEqual("rgba(197, 20, 37, 0.3)", color.ToRgba());
 			Assert.AreEqual("rgba(197, 20, 37, 0.3)", color.ToString());
-			Assert.AreEqual("C51425", color.ToHex());
+			Assert.AreEqual("c51425", color.ToHex());
 
 
 		}
@@ -21,7 +21,7 @@
 		[Test]
 		public void Webcolor2()
 		{
-			var color = WebColor.Parse("#FF0000");
+			var color = WebColor.Parse("#ff0000");
 
 			Assert.AreEqual(255, color.R);
 
@@ -33,11 +33,11 @@
 
 
 
-			Assert.AreEqual("#FFFFFF", hsl.WithL(1).ToRgb().ToString());
+			Assert.AreEqual("#ffffff", hsl.WithL(1).ToRgb().ToString());
 
 
 
-			Assert.AreEqual("#FF0000", hsl.ToRgb().ToString());
+			Assert.AreEqual("#ff0000", hsl.ToRgb().ToString());
 
 		}
 	}

@@ -31,7 +31,6 @@ $red: $red;
 div { color: $red; }");
 
 			Assert.Throws<Exception>(() => {
-
 				sheet.ToString();
 			});
 		}
@@ -47,8 +46,83 @@ div { color: darken($red, 10%); }
 div { color: lighten($red, 0.2); }");
 
 
-			Assert.AreEqual(@"div { color: #E50000; }
-div { color: #FF3333; }", sheet.ToString());
+			Assert.AreEqual(@"div { color: #e50000; }
+div { color: #ff3333; }", sheet.ToString());
+		}
+
+
+		/*
+		[Test]
+		public void LightenTests()
+		{
+			var sheet = StyleSheet.Parse(@"
+div { color: darken(#ccc, .5); }
+div { color: lighten(#ccc, 0.2); }");
+
+
+			Assert.AreEqual(@"div { color: #cdcdcd; }
+div { color: #cbcbcb; }", sheet.ToString());
+		}
+		*/
+
+		[Test]
+		public void FuncInMixin()
+		{
+			var sheet = StyleSheet.Parse(@"
+$red: #f00;
+$borderColor: $red;
+
+
+@mixin hi() {
+  color: darken($red, 10%);
+  color: lighten($red, 0.2);
+}
+
+div {
+  @include hi;
+}
+
+");
+
+			Assert.AreEqual(@"div {
+  color: #e50000;
+  color: #ff3333;
+}", sheet.ToString());
+		}
+
+		[Test]
+		public void FuncNestedMixin()
+		{
+			var sheet = StyleSheet.Parse(@"
+$red: #f00;
+$borderColor: $red;
+
+@mixin hi($a, $b) {
+  color: darken($red, 10%);
+  color: lighten($red, 0.2);
+  
+  div { 
+    color: darken(#e33b47, 20%);
+	color: darken($a, 20%);
+  }
+}
+
+div {
+  @include hi(#fff);
+}
+
+
+");
+
+
+			Assert.AreEqual(@"div {
+  color: #e50000;
+  color: #ff3333;
+}
+div div {
+  color: #b52f38;
+  color: #cccccc;
+}", sheet.ToString());
 		}
 
 		[Test]

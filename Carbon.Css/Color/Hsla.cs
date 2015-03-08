@@ -48,9 +48,25 @@
 			);
 		}
 
+		public Hsla AdjustHue(float value)
+		{
+			var newValue = h.Lerp(1d, -(double)value);
+
+			return new Hsla(newValue, s, l, a);
+		}
+
+		public Hsla Desaturate(float value)
+		{
+			var newValue = s.Lerp(1d, -(double)value);
+
+			return WithS(newValue);
+		}
+
 		public Hsla Saturate(float value)
 		{
-			return new Hsla(h, s * (1f + value), l, a);
+			var newValue = s.Lerp(1d, (double)value);
+
+			return WithS(newValue);
 		}
 
 		public Hsla WithL(double value)
@@ -150,6 +166,7 @@
 			return new Hsla(h, s, l, color.Alpha);
         }
        
+
 
 		private static double ColorCalc(double c, double t1, double t2)
 		{

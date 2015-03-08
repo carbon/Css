@@ -13,17 +13,24 @@
 
 		private readonly float alpha; // Increase precision of alpha
 
+		private static readonly WebColor White = new WebColor(255, 255, 255, 1);
+		private static readonly WebColor Black = new WebColor(0, 0, 0, 1);
 		private static readonly WebColor Red	= new WebColor(255, 0, 0, 1);
 		private static readonly WebColor Green	= new WebColor(0, 255, 0, 1);
 		private static readonly WebColor Blue	= new WebColor(0, 0, 255, 1);
 
 		public WebColor(Bgra c)
-		{
-			this.r = c.R;
-			this.g = c.G;
-			this.b = c.B;
+			: this(r: c.R,
+				   g: c.G,
+				   b: c.B,
+				   a: (float)c.A / (float)255) { }
 
-			this.alpha = (float)c.A / (float)255;
+		public WebColor(byte r, byte g, byte b, float a = 1)
+		{
+			this.r = r;
+			this.g = g;
+			this.b = b;
+			this.alpha = a;
 		}
 
 		public byte R { get { return r; } }
@@ -47,12 +54,18 @@
 			return new WebColor(r, g, b, alpha);
 		}
 
-
 		public WebColor Lighten(float amount)
+		{
+			return this.Lerp(WebColor.White, amount);
+		}
+
+		public WebColor Lighten2(float amount)
 		{
 			var hsl = Hsla.FromRgb(this);
 
 			var delta = 1 - hsl.L;
+
+			// var l = hsl.L.Lerp(1d, amount);
 
 			var l = hsl.L + (Math.Min(amount, 1f) * delta);
 
@@ -61,6 +74,11 @@
 
 		public WebColor Darken(float amount)
 		{
+			return this.Lerp(WebColor.Black, amount);
+		}
+
+		public WebColor Darken2(float amount)
+		{
 			var hsl = Hsla.FromRgb(this);
 
 			var l = hsl.L - (Math.Min(amount, 1f) * hsl.L);
@@ -68,13 +86,34 @@
 			return hsl.WithL(l).ToRgb();
 		}
 
-		public WebColor(byte r, byte g, byte b, float a = 1)
+		public WebColor Desaturate(float amount)
 		{
-			this.r = r;
-			this.g = g;
-			this.b = b;
-			this.alpha = a;
+			var hsl = Hsla.FromRgb(this);
+
+			return hsl.Desaturate(amount).ToRgb();
 		}
+
+		public WebColor Saturate(float amount)
+		{
+			var hsl = Hsla.FromRgb(this);
+
+			return hsl.Saturate(amount).ToRgb();
+		}
+
+		public WebColor Lerp(WebColor to, float amount)
+		{
+			float sr = this.R, sg = this.G, sb = this.B;
+
+			float er = to.R, eg = to.G, eb = to.B;
+
+			return new WebColor(
+			   r: (byte)sr.Lerp(er, amount),
+			   g: (byte)sg.Lerp(eg, amount),
+			   b: (byte)sb.Lerp(eb, amount)
+			);
+		}
+
+		
 
 		public string ToHex()
 		{
@@ -83,7 +122,7 @@
 
 		public string ToHex(byte value)
 		{
-			return string.Concat("0123456789ABCDEF"[(value - value % 16) / 16], "0123456789ABCDEF"[value % 16]);
+			return string.Concat("0123456789abcdef"[(value - value % 16) / 16], "0123456789abcdef"[value % 16]);
 		}
 
 		public string ToRgb()
@@ -111,55 +150,58 @@
 		}
 
 
-		public static WebColor Parse(string hex)
+		public static WebColor Parse(string text)
 		{
 			#region Preconditions
 
-			if (hex == null)		throw new ArgumentNullException("hex");
-			// if (hex.Length)	throw new ArgumentException("must be 6", "hex.length");
+			if (text == null) throw new ArgumentNullException("hex");
 
 			#endregion
 
+			if (text.StartsWith("#"))
+			{
+				var hex = text.TrimStart('#');
 
-			if (hex.StartsWith("rgba("))
+				// Support 3 letter hexes
+				if (hex.Length == 3)
+				{
+					var newHex = new string(new[] { hex[0], hex[0], hex[1], hex[1], hex[2], hex[2] });
+
+					hex = newHex;
+				}
+
+				try
+				{
+					var data = HexString.ToBytes(hex);
+
+					return new WebColor(data[0], data[1], data[2]);
+				}
+				catch
+				{
+					throw new Exception("invalid color:" + text);
+				}
+			}
+			else if (text.StartsWith("rgba("))
 			{
 				// rgba(197, 20, 37, 0.3)
 
-				var parts = hex.Substring(5).TrimEnd(')').Split(',');
+				var parts = text.Substring(5).TrimEnd(')').Split(',');
 
 				if (parts.Length != 4) throw new Exception("Must be 4 parts");
 
 				return new WebColor(
 					r: Byte.Parse(parts[0]),
-					g: Byte.Parse(parts[1]), 
-					b: Byte.Parse(parts[2]), 
+					g: Byte.Parse(parts[1]),
+					b: Byte.Parse(parts[2]),
 					a: float.Parse(parts[3])
 				);
 			}
+			else
+			{
+				throw new Exception("Unexpected color:" + text);
+			}
+
 			
-			// 000000
-
-			
-			hex = hex.TrimStart('#');
-
-			// Support 3 letter hexes
-			if (hex.Length == 3)
-			{
-				var newHex = new string(new[] { hex[0], hex[0], hex[1], hex[1], hex[2],  hex[2] });
-
-				hex = newHex;
-			}
-
-			try
-			{
-				var data = HexString.ToBytes(hex);
-
-				return new WebColor(data[0], data[1], data[2]);
-			}
-			catch
-			{
-				throw new Exception("invalid color:" + hex);
-			}
 		}
 	}
 

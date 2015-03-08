@@ -16,11 +16,15 @@
 		private int includeCount = 0;
 		private int importCount = 0;
 
+		private CssContext currentContext;
+
 		public CssWriter(TextWriter writer, CssContext context = null, ICssResolver resolver = null)
 		{
 			this.writer = writer;
 			this.context = context ?? new CssContext();
 			this.resolver = resolver;
+
+			this.currentContext = this.context;
 		}
 
 		public void WriteRoot(StyleSheet sheet)
@@ -163,20 +167,48 @@
 
 				if (args.Length == 2 && args[0].ToString().StartsWith("#"))
 				{
-					writer.Write(new RgbaFunction().Execute(args));
+					writer.Write(CssFunctions.Rgba(args));
 
 					return;
 				}
 			}
 			else if (function.Name == "lighten")
 			{
-				writer.Write(new LightenFunction().Execute(GetArgs(function.Args).ToArray()));
+				var args = GetArgs(function.Args).ToArray();
+
+				writer.Write(CssFunctions.Lighten(args));
 
 				return;
 			}
 			else if (function.Name == "darken")
 			{
-				writer.Write(new DarkenFunction().Execute(GetArgs(function.Args).ToArray()));
+				var args = GetArgs(function.Args).ToArray();
+
+				writer.Write(CssFunctions.Darken(args));
+
+				return;
+			}
+			else if (function.Name == "saturate")
+			{
+				var args = GetArgs(function.Args).ToArray();
+
+				writer.Write(CssFunctions.Saturate(args));
+
+				return;
+			}
+			else if (function.Name == "desaturate")
+			{
+				var args = GetArgs(function.Args).ToArray();
+
+				writer.Write(CssFunctions.Desaturate(args));
+
+				return;
+			}
+			else if (function.Name == "adjust-hue")
+			{
+				var args = GetArgs(function.Args).ToArray();
+
+				writer.Write(CssFunctions.AdjustHue(args));
 
 				return;
 			}
@@ -197,8 +229,14 @@
 				case NodeKind.Variable:
 					var x = (CssVariable)value;
 
-					yield return context.GetVariable(x.Symbol);	
-					
+					if (x.Value != null)
+					{
+						yield return x.Value;
+					}
+					else
+					{
+						yield return context.GetVariable(x.Symbol);
+					}
 					break;
 				case NodeKind.ValueList:
 					{
@@ -585,7 +623,6 @@
 				var variable = (CssVariable)node;
 
 				variable.Value = c.GetVariable(variable.Symbol);
-
 			}
 			else if (node.HasChildren)
 			{

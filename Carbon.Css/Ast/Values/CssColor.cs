@@ -1,4 +1,5 @@
-﻿namespace Carbon.Css
+﻿using Carbon.Css.Color;
+namespace Carbon.Css
 {
 	public class CssColor : CssValue
 	{
@@ -8,6 +9,12 @@
 			: base(NodeKind.Color)
 		{
 			this.value = value;
+		}
+
+		public CssColor(WebColor value)
+			: base(NodeKind.Color)
+		{
+			this.value = value.ToString();
 		}
 
 		public override string Text
