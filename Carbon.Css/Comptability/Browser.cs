@@ -1,7 +1,7 @@
-﻿namespace Carbon.Css
-{
-	using System;
+﻿using System;
 
+namespace Carbon.Css
+{
 	public struct Browser
 	{
 		private readonly BrowserType type;
@@ -13,45 +13,21 @@
 			this.version = version;
 		}
 
-		public BrowserType Type
-		{
-			get { return type; }
-		}
+		public BrowserType Type => type;
 
-		public float Version
-		{
-			get { return version; }
-		}
+		public float Version => version;
 
-		public BrowserPrefix Prefix
-		{
-			get { return GetPrefix(type); }
-		}
+		public BrowserPrefix Prefix => GetPrefix(type);
 
-		public static Browser Chrome(float version)
-		{
-			return new Browser(BrowserType.Chrome, version);
-		}
+		public static Browser Chrome(float version) => new Browser(BrowserType.Chrome, version);
 
-		public static Browser Firefox(float version)
-		{
-			return new Browser(BrowserType.Firefox, version);
-		}
+		public static Browser Firefox(float version) => new Browser(BrowserType.Firefox, version);
 
-		public static Browser Safari(float version)
-		{
-			return new Browser(BrowserType.Safari, version);
-		}
+		public static Browser Safari(float version) => new Browser(BrowserType.Safari, version);
 
-		public static Browser Opera(float version)
-		{
-			return new Browser(BrowserType.Opera, version);
-		}
+		public static Browser Opera(float version) => new Browser(BrowserType.Opera, version);
 
-		public static Browser IE(float version)
-		{
-			return new Browser(BrowserType.IE, version);
-		}
+		public static Browser IE(float version) => new Browser(BrowserType.IE, version);
 
 		public static readonly Browser Chrome1  = Chrome(1);
 		public static readonly Browser Chrome4	= Chrome(4);
@@ -88,6 +64,7 @@
 		public static readonly Browser Safari4 = Safari(4);
 		public static readonly Browser Safari5 = Safari(5);
 		public static readonly Browser Safari6 = Safari(6);
+		public static readonly Browser Safari7 = Safari(7);
 
 		public static BrowserPrefix GetPrefix(BrowserType type)
 		{
@@ -123,10 +100,7 @@
 			this.kind = kind;
 		}
 
-		public BrowserPrefixKind Kind
-		{
-			get { return kind; }
-		}
+		public BrowserPrefixKind Kind => kind;
 
 		public string Text
 		{
@@ -152,7 +126,7 @@
 
 
 	[Flags]
-	public enum BrowserPrefixKind : byte
+	public enum BrowserPrefixKind
 	{
 		None = 0,
 		Moz = 1,
@@ -162,7 +136,7 @@
 	}
 
 	[Flags]
-	public enum BrowserType : byte
+	public enum BrowserType
 	{
 		Unknown = 0,
 		IE		= 1,

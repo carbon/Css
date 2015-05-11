@@ -1,13 +1,12 @@
-﻿using Carbon.Css.Parser;
-namespace Carbon.Css
+﻿namespace Carbon.Css
 {
+	using Parser;
+
 	public class CssUrl : CssFunction
 	{
 		public CssUrl(CssToken name, CssValue value)
 			: base(name.Text, value)
-		{ }
-
-		
+		{ }		
 	}
 }
 

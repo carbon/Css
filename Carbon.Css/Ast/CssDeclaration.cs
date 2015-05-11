@@ -1,8 +1,8 @@
-﻿namespace Carbon.Css
-{
-	using System;
-	using System.Text;
+﻿using System;
+using System.Text;
 
+namespace Carbon.Css
+{
 	public class CssDeclaration : CssNode
 	{
 		private readonly CssProperty property;
@@ -42,46 +42,24 @@
 			this.priority = priority;
 		}
 
-		public string Name
-		{
-			get { return property.Name; }
-		}
+		public string Name => property.Name;
 
-		public CssValue Value
-		{
-			get { return value; }
-		}
+		public CssValue Value => value;
 
-		public CssProperty Info
-		{
-			get { return property; }
-		}
+		public CssProperty Info => property;
 
-		public string Priority
-		{
-			get { return priority; }
-		}
+		public string Priority => priority;
 
-		public override string Text
-		{
-			get { return ToString(); }
-		}
-
-		public override CssNode CloneNode()
-		{
-			return new CssDeclaration(property, (CssValue)value.CloneNode(), priority);
-		}
+		public override CssNode CloneNode() => new CssDeclaration(property, (CssValue)value.CloneNode(), priority);
 
 		public override string ToString()
 		{
 			// color: red !important
 
-			var sb = new StringBuilder();
+			var sb = new StringBuilder(property.Name);
 
-			sb
-				.Append(property.Name)
-				.Append(": ")
-				.Append(value.ToString());
+            sb.Append(": ");
+			sb.Append(value.ToString());
 
 			if (priority != null)
 			{

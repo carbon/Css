@@ -1,13 +1,13 @@
-﻿namespace Carbon.Css
-{
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-	using Carbon.Css.Parser;
-	using System.IO;
-	using Carbon.Css.Helpers;
-	using System;
+namespace Carbon.Css
+{
+	using Parser;
+	using Helpers;
 
 	public class StyleSheet : CssRoot, IStylesheet
 	{
@@ -25,10 +25,7 @@
 			this.context = context;
 		}
 
-		public CssContext Context
-		{
-			get { return context; }
-		}
+		public CssContext Context => context;
 
 		public static StyleSheet Parse(string text, CssContext context = null)
 		{
@@ -78,8 +75,6 @@
 				else
 				{
 					sheet.AddChild(node);
-
-					// TODO: Transform here?
 				}
 			}
 
@@ -126,22 +121,11 @@
 			this.resolver = resolver;
 		}
 
-
-		public void ExecuteRewriters()
-		{
-			return;
-		}
-
 		public void WriteTo(TextWriter textWriter)
 		{
 			var writer = new CssWriter(textWriter, context, resolver);
 
 			writer.WriteRoot(this);
-		}
-
-		public override string Text
-		{
-			get { return ToString(); }
 		}
 
 		public override string ToString()

@@ -20,32 +20,17 @@
 			this.position = position;
 		}
 
-		public TokenKind Kind
-		{
-			get { return kind; }
-		}
+		public TokenKind Kind => kind;
 
-		public int Position
-		{
-			get { return position; }
-		}
+		public int Position => position;
 
-		public string Text
-		{
-			get { return text; }
-		}
+		public string Text => text;
 
-		public override string ToString()
-		{
-			return Kind + ": " + "'" + Text + "'";
-		}
+		public override string ToString() => $"{Kind}: '{Text}'";
 
 		#region Helpers
 
-		public bool IsTrivia
-		{
-			get { return kind == TokenKind.Whitespace || kind == TokenKind.Comment; }
-		}
+		public bool IsTrivia => kind == TokenKind.Whitespace || kind == TokenKind.Comment;
 
 		#endregion
 	}

@@ -1,10 +1,9 @@
-﻿namespace Carbon.Css
-{
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace Carbon.Css
+{
 	public class CssBlock : CssNode, IEnumerable<CssNode>
 	{
 		protected readonly List<CssNode> children;
@@ -21,15 +20,11 @@
 			this.children = children;
 		}
 
-		public bool Childless
-		{
-			get { return children.Count == 0; }
-		}
+		public override IList<CssNode> Children => children;
 
-		public override IList<CssNode> Children
-		{
-			get { return children; }
-		}
+		public int Count => children.Count;
+
+		public bool Childless => Count == 0;
 
 		public IEnumerable<CssDeclaration> FindDeclaration(string propertyName)
 		{
@@ -41,27 +36,9 @@
 			return children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
 		}
 
-		public int Count
-		{
-			get { return children.Count; }
-		}
-
-		public override string Text
-		{
-			get { return ""; }
-		}
-
-		public override CssNode CloneNode()
-		{
-			throw new NotImplementedException();
-		}
-
 		#region IList<CssNode> Members
 
-		public int IndexOf(CssNode node)
-		{
-			return children.IndexOf(node);
-		}
+		public int IndexOf(CssNode node) => children.IndexOf(node);
 
 		public void Insert(int index, CssNode item)
 		{
@@ -70,10 +47,7 @@
 			children.Insert(index, item);
 		}
 
-		public void RemoveAt(int index)
-		{
-			children.RemoveAt(index);
-		}
+		public void RemoveAt(int index) => children.RemoveAt(index);
 
 		public CssNode this[int index]
 		{
@@ -88,20 +62,11 @@
 			children.Add(node);
 		}
 
-		public bool Remove(CssNode item)
-		{
-			return children.Remove(item);
-		}
+		public bool Remove(CssNode item) => children.Remove(item);
 
-		IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator()
-		{
-			return children.GetEnumerator();
-		}
+		IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator() => children.GetEnumerator();
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return children.GetEnumerator();
-		}
+		IEnumerator IEnumerable.GetEnumerator() => children.GetEnumerator();
 
 		#endregion
 	}

@@ -1,24 +1,20 @@
-﻿using System;
-namespace Carbon.Css
+﻿namespace Carbon.Css
 
 {	public class CssDirective : CssNode
 	{
-		public CssDirective()
-			: base(NodeKind.Directive) { }
+		private readonly string name;
+		private readonly string value;
 
-		public string Name { get; set; }
+		public CssDirective(string name, string value)
+			: base(NodeKind.Directive) {
 
-		public string Value { get; set; }
-
-		public override string Text
-		{
-			get { return ""; }
+			this.name = name;
+			this.value = value;
 		}
 
-		public override CssNode CloneNode()
-		{
-			throw new NotImplementedException();
-		}
+		public string Name => name;
+
+		public string Value => value;
 	}
 }
 

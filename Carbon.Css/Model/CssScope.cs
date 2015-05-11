@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Carbon.Css
 {
@@ -26,10 +23,7 @@ namespace Carbon.Css
 
 		public object This { get; set; }
 
-		public CssScope Parent
-		{
-			get { return parent; }
-		}
+		public CssScope Parent => parent;
 
 		public CssValue this[string name]
 		{
@@ -73,7 +67,6 @@ namespace Carbon.Css
 			{
 				if (value.Kind == NodeKind.Variable)
 				{
-
 					var variable = (CssVariable)value;
 
 					if (variable.Symbol == name) throw new Exception("Self referencing");
@@ -82,22 +75,13 @@ namespace Carbon.Css
 				}
 
 				return value;
-
 			}
 
-
-			return new CssString(string.Format("/* ${0} not found */", name));
+			return new CssString($"/* ${name} not found */");
 		}
 
-		public int Count
-		{
-			get { return items.Count; }
-		}
+		public int Count => items.Count;
 
-		public void Clear()
-		{
-			items.Clear();
-		}
-
+		public void Clear() => items.Clear();
 	}
 }

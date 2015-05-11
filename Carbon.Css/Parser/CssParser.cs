@@ -1,9 +1,9 @@
-﻿namespace Carbon.Css.Parser
-{
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
+namespace Carbon.Css.Parser
+{
 	public class CssParser : IDisposable
 	{
 		private readonly CssTokenizer tokenizer;
@@ -69,10 +69,10 @@
 			var parts = text.Substring(3).TrimStart().Split(new[] { ' ' }, 2);
 
 			//= support Safari 5.1
-			return new CssDirective { 
-				Name = parts[0].Trim(),
-				Value = parts[1].Trim()
-			};
+			return new CssDirective(
+				name  : parts[0].Trim(),
+				value : parts[1].Trim()
+			);
 		}
 
 		public CssNode ReadRule()
@@ -191,16 +191,11 @@
 			return rule;
 		}
 
-
-
 		public CssRule ReadImportRule()
 		{
 			var value = ReadValue();
 
-			var rule = new ImportRule
-			{
-				Url = CssUrlValue.Parse(value.ToString())
-			};
+			var rule = new ImportRule(url: CssUrlValue.Parse(value.ToString()));
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{

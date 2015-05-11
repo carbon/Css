@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	using Carbon.Css.Parser;
+	using Parser;
 
 	public class CssDimension : CssValue
 	{
@@ -14,21 +14,9 @@
 			this.unit	= unit;
 		}
 
+		public override string ToString() => number.Text + unit.Text;
 
-		public override string Text
-		{
-			get { return number.Text + unit.Text; }
-		}
-
-		public override string ToString()
-		{
-			return Text;
-		}
-
-		public override CssNode CloneNode()
-		{
-			return new CssDimension(number, unit);
-		}
+		public override CssNode CloneNode() => new CssDimension(number, unit);
 
 		public static NodeKind GetDimensionKind(string a)
 		{

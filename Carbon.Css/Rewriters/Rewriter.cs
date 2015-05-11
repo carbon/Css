@@ -6,7 +6,6 @@
 
 	public class RewriterCollection : Collection<ICssRewriter>
 	{
-
 		public IEnumerable<CssRule> Rewrite(CssRule rule, int index = 0)
 		{
 			if (this.Count == 0)

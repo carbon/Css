@@ -1,9 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	using System;
-	using System.Collections.Generic;
 	using System.IO;
-	using System.Linq;
 	using System.Text;
 
 	// A StyleRule rule has a selector, and one or more declarations
@@ -24,17 +21,7 @@
 			this.type = type;
 		}
 
-		public RuleType Type
-		{
-			get { return type; }
-		}
-
-		public override string Text
-		{
-			get { return ToString(); }
-		}
-
-		public bool SkipTransforms { get; set; }
+		public RuleType Type => type;
 
 		public override string ToString()
 		{

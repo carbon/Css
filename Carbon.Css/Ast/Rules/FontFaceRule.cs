@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	public class FontFaceRule : CssRule
+	public sealed class FontFaceRule : CssRule
 	{
 		public FontFaceRule()
 			: base(RuleType.FontFace) { }

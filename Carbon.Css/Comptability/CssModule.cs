@@ -14,15 +14,9 @@
 			this.level = level;
 		}
 
-		public CssModuleType Type
-		{
-			get { return type; }
-		}
+		public CssModuleType Type => type;
 
-		public override string ToString()
-		{
-			return type + " Level " + level;
-		}
+		public override string ToString() => type + " Level " + level;
 
 		public static readonly CssModule Core1 = new CssModule(CssModuleType.Core, 1,
 			standard: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 6, Safari = 1 }

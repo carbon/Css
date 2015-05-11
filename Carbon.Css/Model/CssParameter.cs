@@ -11,14 +11,8 @@
 			this.defaultValue = defaultValue;
 		}
 		
-		public string Name 
-		{
-			get { return name; }
-		}
+		public string Name => name;
 
-		public CssValue DefaultValue
-		{
-			get { return defaultValue; }
-		}
+		public CssValue DefaultValue => defaultValue;
 	}
 }

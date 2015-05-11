@@ -16,3 +16,5 @@ Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\Carbon.Css.Tests.dll
 Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\Carbon.Css.Tests.pdb
 Z:\Workspace\Carbon\Css\Carbon.Css.Tests\obj\Debug\Carbon.Css.Tests.dll
 Z:\Workspace\Carbon\Css\Carbon.Css.Tests\obj\Debug\Carbon.Css.Tests.pdb
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\Carbon.Color.dll
+Z:\Workspace\Carbon\Css\Carbon.Css.Tests\bin\Debug\Carbon.Color.pdb

@@ -10,29 +10,13 @@
 
 		private Browser[] browserSupport = null;
 
-		public CssFormatting Formatting { get; set; }
+		public CssScope Scope => scope;
 
-		public CssScope Scope
-		{
-			get { return scope; }
-		}
+		public Dictionary<string, MixinNode> Mixins => mixins;
 
-		public Dictionary<string, MixinNode> Mixins
-		{
-			get { return mixins; }
-		}
+		public Browser[] BrowserSupport => browserSupport;
 
-		public CssScope GetNestedScope()
-		{
-			return new CssScope(scope);
-		}
-
-		private bool cs = false;
-
-		public Browser[] BrowserSupport
-		{
-			get { return browserSupport; }
-		}
+		public CssScope GetNestedScope() => new CssScope(scope);
 
 		public void SetCompatibility(params Browser[] targets)
 		{

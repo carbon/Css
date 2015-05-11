@@ -1,5 +1,4 @@
-﻿using System.IO;
-namespace Carbon.Css
+﻿namespace Carbon.Css
 {
 	public interface ICssResolver
 	{
@@ -7,6 +6,6 @@ namespace Carbon.Css
 
 		string GetText(string absolutePath); 
 
-		// TODO: Stream
+		// TODO: GetStreamAsync
 	}
 }

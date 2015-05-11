@@ -1,8 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	using System.IO;
-
-	public class MediaRule : CssRule
+	public sealed class MediaRule : CssRule
 	{
 		private readonly string ruleText;
 
@@ -12,10 +10,6 @@
 			this.ruleText = ruleText;
 		}
 
-		public string RuleText
-		{
-			get { return ruleText; }
-		}
-
+		public string RuleText => ruleText;
 	}
 }

@@ -14,10 +14,7 @@
 			this.position = position;
 		}
 
-		public int Position
-		{
-			get { return position; }
-		}
+		public int Position => position;
 
 		public SourceLocation Location { get; set; }
 
@@ -72,9 +69,6 @@
 			this.token = token;
 		}
 
-		public CssToken Token
-		{
-			get { return token; }
-		}
+		public CssToken Token => token;
 	}
 }

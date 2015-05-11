@@ -1,12 +1,11 @@
-﻿namespace Carbon.Css
+﻿using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
+using System.Text;
+
+namespace Carbon.Css
 {
-	using System;
-	using System.Linq;
-	using System.Text;
-
-	using System.Collections.Generic;
-	using System.Collections;
-
 	public class CssSelector : IEnumerable<string>
 	{
 		private readonly List<string> parts;
@@ -20,7 +19,6 @@
 				if (token.IsTrivia)
 				{
 					// Prettify the trivia
-
 					sb.Append(" ");
 				}
 				else
@@ -55,25 +53,11 @@
 			this.parts = parts;
 		}
 
-		public int Count
-		{
-			get { return parts.Count; }
-		}
+		public int Count => parts.Count;
 
-		public string this[int index]
-		{
-			get { return parts[index]; }
-		}
+		public string this[int index] => parts[index];
 
-		public string Text
-		{
-			get 
-			{
-				if (parts.Count == 1) return parts[0];
-
-				return string.Join(", ", parts); 
-			}
-		}
+	
 
 		public bool Contains(string text)
 		{
@@ -87,22 +71,16 @@
 			return false;
 		}
 
-		
-
 		public override string ToString()
 		{
-			return Text;
+			if (parts.Count == 1) return parts[0];
+
+			return string.Join(", ", parts);
 		}
 
-		public IEnumerator<string> GetEnumerator()
-		{
-			return parts.GetEnumerator();
-		}
+		public IEnumerator<string> GetEnumerator() => parts.GetEnumerator();
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return parts.GetEnumerator();
-		}
+		IEnumerator IEnumerable.GetEnumerator() => parts.GetEnumerator();
 	}
 
 	// a:hover

@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	using Carbon.Css.Parser;
+	using Parser;
 
 	public class CssVariable : CssValue
 	{
@@ -16,31 +16,14 @@
 			this.text = text;
 		}
 
-		public string Symbol
-		{
-			get { return text; }
-		}
-
-		public override string Text
-		{
-			get { return text; }
-		}
+		public string Symbol => text;
 
 		// When bound
 		public CssValue Value { get; set; }
 
+		public override CssNode CloneNode() => new CssVariable(text) { Value = Value };
 
-		public override CssNode CloneNode()
-		{
-			return new CssVariable(text) { Value = Value };
-		}
-
-		public override string ToString()
-		{
-			if (Value != null) return Value.ToString();
-
-			return "[null]";
-		}
+		public override string ToString() => Value?.ToString() ?? "[null]";
 	}
 }
 

@@ -1,10 +1,10 @@
 ﻿namespace Carbon.Css
 {
-	using Carbon.Css.Parser;
+	using Parser;
 
 	public class CssString : CssValue
 	{
-		private string text;
+		private readonly string text;
 
 		public CssString(CssToken token)
 			: this(token.Text)
@@ -16,20 +16,11 @@
 			this.text = text;
 		}
 
-		public override CssNode CloneNode()
-		{
-			return new CssString(text);
-		}
+		public string Text => text;
 
-		public override string Text
-		{
-			get { return text; }
-		}
+		public override CssNode CloneNode() => new CssString(text);
 
-		public override string ToString()
-		{
-			return Text;
-		}
+		public override string ToString() => text;
 	}
 }
 

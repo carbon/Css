@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 namespace Carbon.Css
 {
-
 	public class CssRoot : CssNode
 	{
 		protected readonly List<CssNode> children;
@@ -15,7 +14,6 @@ namespace Carbon.Css
 		{
 			this.children = children;
 		}
-
 
 		#region Children
 
@@ -46,18 +44,5 @@ namespace Carbon.Css
 		}
 
 		#endregion
-
-
-		public override string Text
-		{
-			get { return ""; }
-		}
-
-		public override CssNode CloneNode()
-		{
-			throw new NotImplementedException();
-		}
-
-		
 	}
 }

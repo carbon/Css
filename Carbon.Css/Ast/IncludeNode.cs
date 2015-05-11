@@ -1,7 +1,7 @@
-﻿namespace Carbon.Css
-{
-	using System;
+﻿using System;
 
+namespace Carbon.Css
+{
 	public class IncludeNode : CssNode
 	{
 		private readonly string name;
@@ -12,7 +12,7 @@
 		{
 			#region Preconditions
 
-			if (name == null) throw new ArgumentNullException("name");
+			if (name == null) throw new ArgumentNullException(nameof(name));
 
 			#endregion
 
@@ -20,25 +20,11 @@
 			this.args = args;
 		}
 
-		public string Name
-		{
-			get { return name; }
-		}
+		public string Name => name;
+		
+		public CssValue Args => args;
 
-		public CssValue Args
-		{
-			get { return args; }
-		}
-
-		public override string Text
-		{
-			get { return ""; }
-		}
-
-		public override CssNode CloneNode()
-		{
-			return new IncludeNode(name, args);
-		}
+		public override CssNode CloneNode() => new IncludeNode(name, args);
 	}
 }
 

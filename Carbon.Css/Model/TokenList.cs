@@ -1,16 +1,16 @@
-﻿namespace Carbon.Css
-{
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
 
-	using Carbon.Css.Parser;
-	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
-	using System.Text;
+namespace Carbon.Css
+{
+	using Parser;
 
 	public class TokenList : Collection<CssToken>
 	{
 		public TokenList() { }
 
-		public TokenList(params CssToken[] tokens)
+		public TokenList(CssToken[] tokens)
 			: base(tokens) { }
 
 		public void AddRange(IEnumerable<CssToken> tokens)

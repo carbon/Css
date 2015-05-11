@@ -6,10 +6,7 @@
 	{
 		private readonly StringBuilder sb = new StringBuilder();
 
-		public int Length 
-		{
-			get { return sb.Length; }
-		}
+		public int Length => sb.Length;
 
 		public void Append(char c)
 		{

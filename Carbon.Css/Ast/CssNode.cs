@@ -1,10 +1,13 @@
-﻿namespace Carbon.Css
-{
-	using System.Collections;
-	using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
+namespace Carbon.Css
+{
 	public abstract class CssNode : IEnumerable<CssNode>
 	{
+		private static readonly CssNode[] EmptyNodeArray = new CssNode[0];
+
 		private readonly NodeKind kind;
 		private CssNode parent;
 
@@ -14,10 +17,7 @@
 			this.parent = parent;
 		}
 
-		public NodeKind Kind
-		{
-			get { return kind; }
-		}
+		public NodeKind Kind => kind;
 
 		public CssNode Parent
 		{
@@ -31,19 +31,14 @@
 
 		// ChildNodes
 
-		public virtual IList<CssNode> Children
+		public virtual IList<CssNode> Children => EmptyNodeArray;
+
+		public bool HasChildren => Children?.Count > 0;
+
+		public virtual CssNode CloneNode()
 		{
-			get { return new CssNode[0]; }
+			throw new NotImplementedException();
 		}
-
-		public bool HasChildren
-		{
-			get { return Children != null && Children.Count > 0; }
-		}
-
-		public abstract string Text { get; }
-
-		public abstract CssNode CloneNode();
 
 		#region IEnumerator
 

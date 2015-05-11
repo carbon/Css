@@ -1,12 +1,11 @@
-﻿namespace Carbon.Css
-{
-	using Carbon.Css.Parser;
-	using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace Carbon.Css
+{
 	public class CssFunction : CssValue
 	{
-		private string name;
-		private CssValue args;
+		private readonly string name;
+		private readonly CssValue args;
 
 		public CssFunction(string name, CssValue args)
 			: base(NodeKind.Function)
@@ -15,35 +14,15 @@
 			this.args = args;
 		}
 
-		public string Name
-		{
-			get { return name; }
-		}
+		public string Name => name;
 
-		public CssValue Args
-		{
-			get { return args; }
-		}
-
-		public override string Text
-		{
-			get { return name + "(" + args.Text + ")"; }
-		}
+		public CssValue Args => args;
 
 		// Add Children to allow recussive variable binding
-		public override IList<CssNode> Children
-		{
-			get { return new[] { Args }; }
-		}
+		public override IList<CssNode> Children => new[] { Args };
 
-		public override CssNode CloneNode()
-		{
-			return new CssFunction(name, args);
-		}
+		public override CssNode CloneNode() => new CssFunction(name, args);
 
-		public override string ToString()
-		{
-			return Text;
-		}
+		public override string ToString() => name + "(" + args.ToString() + ")";
 	}
 }

@@ -1,15 +1,22 @@
-﻿using Carbon.Css.Parser;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Text;
 
 namespace Carbon.Css
 {
+	using Parser;
+
 	public class Whitespace : Collection<CssToken>
 	{
 		public override string ToString()
 		{
-			return string.Join("", this.Select(t => t.ToString()));
+			var sb = new StringBuilder();
+
+			foreach (var token in this)
+			{
+				sb.Append(token.ToString());
+			}
+
+			return sb.ToString();
 		}
 	}
 }

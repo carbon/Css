@@ -1,8 +1,8 @@
-﻿namespace Carbon.Css.Parser
-{
-	using System;
-	using System.IO;
+﻿using System;
+using System.IO;
 
+namespace Carbon.Css.Parser
+{
 	public class SourceReader : IDisposable
 	{
 		public const char EofChar = '\0';
@@ -25,20 +25,11 @@
 			current = '.';
 		}
 
-		public char Current 
-		{
-			get { return current; }
-		}
+		public char Current => current;
 
-		public bool IsEof 
-		{
-			get { return current == EofChar; }
-		}
+		public bool IsEof => current == EofChar;
 
-		public int Position
-		{
-			get { return position; }
-		}
+		public int Position => position;
 
 		public char Peek()
 		{

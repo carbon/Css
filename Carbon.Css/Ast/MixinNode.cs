@@ -1,9 +1,7 @@
-﻿namespace Carbon.Css
-{
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
+﻿using System.Collections.Generic;
 
+namespace Carbon.Css
+{
 	public class MixinNode : CssBlock
 	{
 		private readonly string name;
@@ -16,20 +14,9 @@
 			this.parameters = parameters;
 		}
 
-		public string Name
-		{
-			get { return name; }
-		}
+		public string Name => name;
 
-		public IList<CssParameter> Parameters
-		{
-			get { return parameters; }
-		}
-
-		public override string Text
-		{
-			get { return ""; }
-		}
+		public IList<CssParameter> Parameters => parameters;
 	}
 }
 

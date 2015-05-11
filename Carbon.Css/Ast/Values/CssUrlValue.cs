@@ -1,8 +1,8 @@
-﻿namespace Carbon.Css
-{
-	using System;
+﻿using System;
 
-	public class CssUrlValue // : CssPrimitiveValue
+namespace Carbon.Css
+{
+	public class CssUrlValue
 	{
 		// url('')
 
@@ -20,18 +20,13 @@
 			this.value = "data:" + contentType + ";base64," + Convert.ToBase64String(data);
 		}
 
-		public string Value
-		{
-			get { return value; }
-		}
+		public string Value => value;
 
+		public override string ToString() => $"url('{value}')";
 
 		#region Helpers
 
-		public bool IsPath
-		{
-			get { return !value.Contains(":"); }
-		}
+		public bool IsPath => !value.Contains(":");
 
 		public string GetAbsolutePath(string basePath) /* /styles/ */
 		{
@@ -56,11 +51,5 @@
 			return new CssUrlValue(value);
 		}
 
-		public override string ToString()
-		{
-			// "url(" + value + ")";
-
-			return string.Format("url('{0}')", value);
-		}
 	}
 }

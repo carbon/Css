@@ -1,8 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	using System.IO;
-
-	public class KeyframesRule : CssRule
+	public sealed class KeyframesRule : CssRule
 	{
 		private readonly string name;
 
@@ -12,16 +10,13 @@
 			this.name = name;
 		}
 
-		public string Name
-		{
-			get { return name; }
-		}
+		public string Name => name;
 
 		// TODO: Keyframes
 
 		public override CssNode CloneNode()
 		{
-			var rule = new KeyframesRule(this.name);
+			var rule = new KeyframesRule(name);
 
 			foreach (var x in children)
 			{

@@ -1,12 +1,12 @@
-﻿namespace Carbon.Css
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace Carbon.Css
 {
-	using Carbon.Css.Parser;
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Linq;
-	using System.Text;
-	using System.Linq;
+	using Parser;
 
 	public class CssWriter
 	{
@@ -127,6 +127,7 @@
 				writer.Write("/* NOT FOUND */" + Environment.NewLine);
 			}
 		}
+
 		public void WriteValue(CssNode value)
 		{
 			switch(value.Kind)
@@ -134,7 +135,7 @@
 				case NodeKind.Variable	: WriteVariable((CssVariable)value);	break;
 				case NodeKind.ValueList	: WriteValueList((CssValueList)value);	break;
 				case NodeKind.Function	: WriteFunction((CssFunction)value);	break;
-				default					: writer.Write(value.Text);				break;
+				default					: writer.Write(value.ToString());		break;
 			}
 		}
 
@@ -208,7 +209,9 @@
 					{
 						yield return context.Scope.GetValue(x.Symbol);
 					}
+
 					break;
+
 				case NodeKind.ValueList:
 					{
 						var list = (CssValueList)value;
@@ -223,6 +226,7 @@
 					}
 					
 					break;
+
 				case NodeKind.Function	: yield return value;	break;
 				default					: yield return value;	break;
 			}
@@ -242,29 +246,20 @@
 		public void WriteImportRule(ImportRule rule)
 		{
 			// TODO: normalize value
-			writer.Write("@import " + rule.Url.ToString() + ';');
+			writer.Write(rule.ToString());
 		}
 
 		public void WriteRule(CssRule rule, int level = 0)
 		{
 			var i = 0;
 
-			if (rule.SkipTransforms)
-			{
-				_WriteRule(rule, level);
-
-				return;
-			}
-
 			foreach (var r in Rewrite(rule))
 			{				
-				
 				if (i != 0) writer.WriteLine();
 
 				_WriteRule(r, level);
 
-				i++;
-								
+				i++;			
 			}
 		}
 
@@ -315,7 +310,7 @@
 		{
 			if(selector.Count == 1) 
 			{
-				writer.Write(selector.Text);
+				writer.Write(selector.ToString());
 			}
 			else
 			{
@@ -537,7 +532,7 @@
 				{
 					list.Add(GetPatchedValueFor((CssValue)node, browser));
 				}
-				else if (node.Kind == NodeKind.String && node.Text == "transform")
+				else if (node.Kind == NodeKind.String && node.ToString() == "transform")
 				{
 					list.Add(new CssString(browser.Prefix.Text + "transform"));
 				}
@@ -552,7 +547,6 @@
 
 
 		#endregion
-
 
 		#region Helpers
 
@@ -743,7 +737,6 @@
 		}
 
 		#endregion
-
 
 		#region Selector Expansion
 

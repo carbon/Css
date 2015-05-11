@@ -46,9 +46,11 @@ div { color: darken($red, 10%); }
 div { color: lighten($red, 0.2); }");
 
 
-			Assert.AreEqual(@"div { color: #e50000; }
-div { color: #ff3333; }", sheet.ToString());
+			Assert.AreEqual(@"div { color: #cc0000; }
+div { color: #ff6666; }", sheet.ToString());
 		}
+		
+
 
 
 		/*
@@ -85,10 +87,12 @@ div {
 ");
 
 			Assert.AreEqual(@"div {
-  color: #e50000;
-  color: #ff3333;
+  color: #cc0000;
+  color: #ff6666;
 }", sheet.ToString());
 		}
+
+	
 
 		[Test]
 		public void FuncNestedMixin()
@@ -116,14 +120,16 @@ div {
 
 
 			Assert.AreEqual(@"div {
-  color: #e50000;
-  color: #ff3333;
+  color: #cc0000;
+  color: #ff6666;
 }
 div div {
-  color: #b52f38;
+  color: #a11721;
   color: #cccccc;
 }", sheet.ToString());
 		}
+
+
 
 		[Test]
 		public void Test99()

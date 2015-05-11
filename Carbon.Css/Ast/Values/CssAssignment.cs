@@ -1,8 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	using Carbon.Css.Parser;
-	using System;
-	using System.IO;
+	using Parser;
 
 	public class CssAssignment : CssNode
 	{
@@ -23,24 +21,8 @@
 			this.value = value;
 		}
 
-		public string Name
-		{
-			get { return name; }
-		}
+		public string Name => name;
 
-		public CssValue Value
-		{
-			get { return value; }
-		}
-
-		public override string Text
-		{
-			get { return ""; }
-		}
-
-		public override CssNode CloneNode()
-		{
-			throw new NotImplementedException();
-		}
+		public CssValue Value => value;
 	}
 }

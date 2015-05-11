@@ -12,14 +12,8 @@
 			this.selectorText = selectorText;
 		}
 
-		public string AtName
-		{
-			get { return atName; }
-		}
+		public string AtName => atName;
 
-		public string SelectorText
-		{
-			get { return selectorText; }
-		}
+		public string SelectorText => selectorText;
 	}
 }

@@ -1,29 +1,25 @@
-﻿namespace Carbon.Css
-{
-	using System;
-	using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-	using Carbon.Css.Color;
+namespace Carbon.Css
+{
+	using Color;
 
 	public static class CssFunctions
 	{
+		private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new Dictionary<string, Func<CssValue[], CssValue>>(6) {
+			["darken"]		= Darken,
+			["lighten"]		= Lighten,
+			["saturate"]	= Saturate,
+			["desaturate"]	= Desaturate,
+			["adjust-hue"]	= AdjustHue,
+			["mix"]			= Mix
+		};
+
 		public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
 		{
-			switch (name)
-			{
-				case "darken"		: func = Darken;		return true;
-				case "lighten"		: func = Lighten;		return true;
-				case "saturate"		: func = Saturate;		return true;
-				case "desaturate"	: func = Desaturate;	return true;
-				case "adjust-hue"	: func = AdjustHue;		return true;
-				case "mix"			: func = Mix;			return true;
-			}
-
-			func = null;
-
-			return false;
+			return dic.TryGetValue(name, out func);
 		}
-
 
 		public static CssValue Mix(CssValue[] args)
 		{
@@ -86,7 +82,6 @@
 
 			return CssColor.FromRgba(color.R, color.G, color.B, float.Parse(args[1].ToString()));
 		}
-
 
 		private static WebColor GetColor(CssValue value)
 		{

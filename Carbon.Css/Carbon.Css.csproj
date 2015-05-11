@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Carbon.Css</RootNamespace>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -51,16 +51,10 @@
     <Compile Include="Ast\Values\CssUrl.cs" />
     <Compile Include="Ast\Values\CssString.cs" />
     <Compile Include="Functions\CssFunctions.cs" />
-    <Compile Include="Math\MathHelper.cs" />
     <Compile Include="Model\CssScope.cs" />
     <Compile Include="Model\TokenList.cs" />
     <Compile Include="Ast\Whitespace.cs" />
     <Compile Include="Ast\Values\CssValueList.cs" />
-    <Compile Include="Color\Bgra.cs" />
-    <Compile Include="Color\Hsla.cs" />
-    <Compile Include="Color\Hsv.cs" />
-    <Compile Include="Color\IColor.cs" />
-    <Compile Include="Color\WebColor.cs" />
     <Compile Include="Comptability\CssPropertyType.cs" />
     <Compile Include="Writer\CssWriter.cs" />
     <Compile Include="Helpers\SourceLocation.cs" />
@@ -83,7 +77,7 @@
     <Compile Include="Ast\Rules\ImportRule.cs" />
     <Compile Include="Ast\Rules\FontFaceRule.cs" />
     <Compile Include="Ast\Rules\RuleType.cs" />
-    <Compile Include="Ast\Values\FontSrcValue.cs" />
+    <Compile Include="_\FontSrcValue.cs" />
     <Compile Include="Parser\CssParser.cs" />
     <Compile Include="Parser\CssToken.cs" />
     <Compile Include="Parser\CssTokenizer.cs" />
@@ -94,7 +88,7 @@
     <Compile Include="Model\CssSelector.cs" />
     <Compile Include="Ast\Values\CssValue.cs" />
     <Compile Include="Ast\StyleSheet.cs" />
-    <Compile Include="Ast\Values\CssPadding.cs" />
+    <Compile Include="_\CssPadding.cs" />
     <Compile Include="Ast\Values\CssUrlValue.cs" />
     <Compile Include="Parser\LexicalMode.cs" />
     <Compile Include="Parser\ParseException.cs" />
@@ -107,7 +101,12 @@
     <Compile Include="Rewriters\Rewriter.cs" />
     <Compile Include="Rewriters\ICssTransform.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Carbon.Color\Carbon.Color.csproj">
+      <Project>{03edd958-cecc-4830-adda-3ac928625a8f}</Project>
+      <Name>Carbon.Color</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

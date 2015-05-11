@@ -1,11 +1,9 @@
-﻿namespace Carbon.Css
+﻿using System;
+using System.Collections.Generic;
+
+namespace Carbon.Css
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-
 	// TODO: Make immutable
-
 	public struct CompatibilityTable
 	{
 		public float Chrome { get; set; }
@@ -32,25 +30,19 @@
 
 		public bool HasValuePatches { get; set; }
 
-		public CompatibilityTable Prefixed
-		{
-			get { return prefixed; }
-		}
+		public CompatibilityTable Prefixed => prefixed;
 
-		public CompatibilityTable Standard
-		{
-			get { return standard; }
-		}
+		public CompatibilityTable Standard => standard;
 
 		public bool IsPrefixed(Browser browser)
 		{
 			// Check if it's standard
 			switch (browser.Type)
 			{
-				case BrowserType.Chrome		: return prefixed.Chrome > 0f	&& !IsStandard(browser);
-				case BrowserType.Firefox	: return prefixed.Firefox > 0f	&& !IsStandard(browser);
-				case BrowserType.IE			: return prefixed.IE > 0f		&& !IsStandard(browser);
-				case BrowserType.Safari		: return prefixed.Safari > 0f	&& !IsStandard(browser);
+				case BrowserType.Chrome	 : return prefixed.Chrome > 0f	&& !IsStandard(browser);
+				case BrowserType.Firefox : return prefixed.Firefox > 0f	&& !IsStandard(browser);
+				case BrowserType.IE		 : return prefixed.IE > 0f		&& !IsStandard(browser);
+				case BrowserType.Safari	 : return prefixed.Safari > 0f	&& !IsStandard(browser);
 			}
 
 			return false; 
@@ -61,10 +53,10 @@
 			// Check if it's standard
 			switch (browser.Type)
 			{
-				case BrowserType.Chrome		: return standard.Safari != 0 && standard.Chrome <= browser.Version;
-				case BrowserType.Firefox	: return standard.Firefox != 0 && standard.Firefox <= browser.Version; 
-				case BrowserType.IE			: return standard.IE != 0 && standard.IE <= browser.Version; 
-				case BrowserType.Safari		: return standard.Safari != 0 && standard.Safari <= browser.Version; 
+				case BrowserType.Chrome	 : return standard.Safari != 0 && standard.Chrome <= browser.Version;
+				case BrowserType.Firefox : return standard.Firefox != 0 && standard.Firefox <= browser.Version; 
+				case BrowserType.IE		 : return standard.IE != 0 && standard.IE <= browser.Version; 
+				case BrowserType.Safari	 : return standard.Safari != 0 && standard.Safari <= browser.Version; 
 			}
 
 			return false;
@@ -118,26 +110,16 @@
 			}
 		}
 
-		public bool IsStandard
-		{
-			get { return Module != null; }
-		}
+		public bool IsStandard => Module != null;
 
-		public string Name
-		{
-			get { return name; }
-		}
+		public string Name => name;
 
-		public CssModule Module
-		{
-			get { return module; }
-		}
+		public CssModule Module => module;
 
 		public CssCompatibility Compatibility
 		{
-			get { return compatibility ?? Carbon.Css.CssCompatibility.Unknown; }
+			get { return compatibility ?? CssCompatibility.Unknown; }
 		}
-
 
 		public bool NeedsExpansion(Browser[] browsers)
 		{
@@ -153,10 +135,7 @@
 			return false;
 		}
 
-		public override int GetHashCode()
-		{
-			return this.name.GetHashCode();
-		}
+		public override int GetHashCode() => name.GetHashCode();
 
 		public override bool Equals(object obj)
 		{
@@ -170,10 +149,7 @@
 			return a.Name == this.name;
 		}
 
-		public override string ToString()
-		{
-			return this.name;
-		}
+		public override string ToString() => name;
 
 		public static CssProperty Get(string name)
 		{
@@ -186,7 +162,6 @@
 
 			return propertyInfo;
 		}
-
 
 		// Animations (Level 3) -----------------------------------------------------------------------------------------------------------
 		public static readonly CssProperty Animation				= new CssProperty("animation",					CssModule.Animations3);
@@ -444,23 +419,23 @@
 		public static readonly CssProperty PerspectiveOriginY	= new CssProperty("perspective-origin-y",	CssModule.Transforms3);
 
 		public static readonly CssProperty Position = new CssProperty("position",				CssModule.Core1);
-		public static readonly CssProperty Quotes = new CssProperty("quotes");
-		public static readonly CssProperty Resize = new CssProperty("resize");
-		public static readonly CssProperty Right = new CssProperty("right",						CssModule.Core1);
+		public static readonly CssProperty Quotes	= new CssProperty("quotes");
+		public static readonly CssProperty Resize	= new CssProperty("resize");
+		public static readonly CssProperty Right	= new CssProperty("right",						CssModule.Core1);
 
 		// Ruby (Level 3) ------------------------------------------------------------------------------------
 
-		public static readonly CssModule RubyLevel3					= new CssModule(CssModuleType.Ruby, 3);
+		public static readonly CssModule RubyLevel3		= new CssModule(CssModuleType.Ruby, 3);
 
-		public static readonly CssProperty RubyAlign				= new CssProperty("ruby-align",		RubyLevel3);
-		public static readonly CssProperty RubyOverhang				= new CssProperty("ruby-overhang",	RubyLevel3);
-		public static readonly CssProperty RubyPosition				= new CssProperty("ruby-position",	RubyLevel3);
-		public static readonly CssProperty RubySpan					= new CssProperty("ruby-span",		RubyLevel3);
+		public static readonly CssProperty RubyAlign	= new CssProperty("ruby-align",		RubyLevel3);
+		public static readonly CssProperty RubyOverhang	= new CssProperty("ruby-overhang",	RubyLevel3);
+		public static readonly CssProperty RubyPosition	= new CssProperty("ruby-position",	RubyLevel3);
+		public static readonly CssProperty RubySpan		= new CssProperty("ruby-span",		RubyLevel3);
 
-		public static readonly CssProperty Size						= new CssProperty("size");
-		public static readonly CssProperty Speak					= new CssProperty("speak");
+		public static readonly CssProperty Size			= new CssProperty("size");
+		public static readonly CssProperty Speak		= new CssProperty("speak");
 
-		public static readonly CssProperty TableLayout				= new CssProperty("table-layout", CssModule.Core2_1);
+		public static readonly CssProperty TableLayout	= new CssProperty("table-layout", CssModule.Core2_1);
 
 		// Text ------------------------------------------------------------------------
 		public static readonly CssProperty TextAlign				= new CssProperty("text-align", CssModule.Core1);
@@ -505,8 +480,8 @@
 		public static readonly CssProperty TransitionTimingFunction = new CssProperty("transition-timing-function", CssModule.Transitions3);
 
 		// - Unicode -------------------------------------------------------------------------
-		public static readonly CssProperty UnicodeBidi		= new CssProperty("unicode-bidi");
-		public static readonly CssProperty UnicodeRange		= new CssProperty("unicode-range");
+		public static readonly CssProperty UnicodeBidi	= new CssProperty("unicode-bidi");
+		public static readonly CssProperty UnicodeRange	= new CssProperty("unicode-range");
 		
 		public static readonly CssProperty UserSelect = new CssProperty("user-select", new CssCompatibility(
 			prefixed: new CompatibilityTable{ Chrome = 1, Firefox = 1, IE = 10, Safari = 3 }	
@@ -519,11 +494,11 @@
 		public static readonly CssProperty Width			= new CssProperty("width",			CssModule.Core1);
 
 		// Words
-		public static readonly CssProperty WordBreak		= new CssProperty("word-break",		CssModule.Text3);
-		public static readonly CssProperty WordSpacing		= new CssProperty("word-spacing",	CssModule.Core1);
-		public static readonly CssProperty WordWrap			= new CssProperty("word-wrap",		CssModule.Text3);
+		public static readonly CssProperty WordBreak	= new CssProperty("word-break",		CssModule.Text3);
+		public static readonly CssProperty WordSpacing	= new CssProperty("word-spacing",	CssModule.Core1);
+		public static readonly CssProperty WordWrap		= new CssProperty("word-wrap",		CssModule.Text3);
 		
-		public static readonly CssProperty ZIndex			= new CssProperty("z-index", 		CssModule.Core1);
+		public static readonly CssProperty ZIndex		= new CssProperty("z-index", 		CssModule.Core1);
 
 		public static readonly IDictionary<string, CssProperty> Map = new Dictionary<string, CssProperty> {
 			// Animations

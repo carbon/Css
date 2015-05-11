@@ -1,8 +1,8 @@
-﻿namespace Carbon.Css
-{
-	using System.Collections.Generic;
-	using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
+namespace Carbon.Css
+{
 	// Component Values 
 	// Comma seperated list of a component values
 
@@ -10,7 +10,7 @@
 	{
 		private readonly List<CssNode> children = new List<CssNode>();
 
-		private ValueSeperator seperator;
+		private readonly ValueSeperator seperator;
 
 		public CssValueList(ValueSeperator seperator = ValueSeperator.Comma)
 			: base(NodeKind.ValueList)
@@ -26,15 +26,7 @@
 			this.seperator = seperator;
 		}
 
-		public ValueSeperator Seperator
-		{
-			get { return seperator; }
-		}
-
-		public override string Text
-		{
-			get { return ToString(); }
-		}
+		public ValueSeperator Seperator => seperator;
 
 		public void Add(CssNode node)
 		{
@@ -43,14 +35,11 @@
 			children.Add(node);
 		}
 
-		public override IList<CssNode> Children
-		{
-			get { return children; }
-		}
+		public override IList<CssNode> Children => children;
 
 		public override CssNode CloneNode()
 		{
-			return new CssValueList(this.children.Select(c => c.CloneNode()), this.seperator);
+			return new CssValueList(children.Select(c => c.CloneNode()), seperator);
 		}
 
 		public override string ToString()
@@ -64,5 +53,4 @@
 		Comma,
 		Space
 	}
-
 }

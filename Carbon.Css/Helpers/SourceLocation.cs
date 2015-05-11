@@ -14,31 +14,14 @@
 		}
 
 		// 0 based
-		public int Position
-		{
-			get { return position; }
-		}
+		public int Position => position;
 
 		// 1 based
-		public int Line
-		{
-			get { return line; }
-		}
+		public int Line => line;
 
 		// 1 based
-		public int Column
-		{
-			get { return column; }
-		}
+		public int Column => column;
 
-		public SourceLocation GetLocation()
-		{
-			return new SourceLocation(this.position, this.line, this.column);
-		}
-
-		public override string ToString()
-		{
-			return "(" + line + "," + column + ")";
-		}
+		public override string ToString() => $"({line},{column})";
 	}
 }

@@ -1,8 +1,8 @@
-﻿namespace Carbon.Css.Resolver
-{
-	using System;
-	using System.IO;
+﻿using System;
+using System.IO;
 
+namespace Carbon.Css.Resolver
+{
 	public class Include
 	{
 		private readonly FileInfo file;
@@ -12,10 +12,7 @@
 			this.file = file;
 		}
 
-		public DateTime Modified
-		{
-			get { return file.LastWriteTime; }
-		}
+		public DateTime Modified => file.LastWriteTime;
 
 		public void WriteTo(TextWriter writer)
 		{

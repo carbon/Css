@@ -1,8 +1,7 @@
-﻿namespace Carbon.Css.Parser
-{
-	using System;
-	using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace Carbon.Css.Parser
+{
 	public class LexicalModeContext
 	{
 		private readonly Stack<LexicalMode> modes = new Stack<LexicalMode>();
@@ -32,10 +31,7 @@
 			current = modes.Peek();
 		}
 
-		public LexicalMode Current
-		{
-			get { return current; }
-		}
+		public LexicalMode Current => current;
 	}
 
 	public enum LexicalMode : byte

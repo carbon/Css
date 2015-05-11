@@ -1,10 +1,10 @@
 ﻿namespace Carbon.Css
 {
-	using Carbon.Css.Parser;
+	using Parser;
 
 	public class CssNumber : CssValue
 	{
-		private string text;
+		private readonly string text;
 
 		public CssNumber(CssToken token)
 			: this(token.Text)
@@ -16,35 +16,13 @@
 			this.text = text;
 		}
 		
-		public override string Text
-		{
-			get { return text; }
-		}
+		public float ToInt() => int.Parse(text);
 
-		public float ToInt()
-		{
-			return int.Parse(text);
-		}
+		public float ToFloat() => float.Parse(text);
 
-		public float ToFloat()
-		{
-			return float.Parse(text);
-		}
+		public override CssNode CloneNode() => new CssNumber(text);
 
-		public double ToDouble()
-		{
-			return double.Parse(text);
-		}
-
-		public override CssNode CloneNode()
-		{
-			return new CssNumber(text);
-		}
-
-		public override string ToString()
-		{
-			return Text;
-		}
+		public override string ToString() => text;
 	}
 }
 

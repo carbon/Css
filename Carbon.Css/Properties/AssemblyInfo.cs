@@ -4,9 +4,12 @@
 [assembly: AssemblyProduct("Carbon")]
 [assembly: AssemblyCopyright("© 2012-2014 Jason Nelson")]
 
-[assembly: AssemblyVersion("0.0.8")]
+[assembly: AssemblyVersion("0.1.0")]
 
 /*
+ 0.1
+ - Breakout Carbon.Color
+
  - CssPropertyInfo
  IsStandard
  Vendor

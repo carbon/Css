@@ -45,7 +45,7 @@
 		{
 			var key = "/images/hi.gif";
 
-			Assert.AreEqual("/images/", key.Replace(Path.GetFileName(key), ""));
+			Assert.AreEqual("/images/", key.Replace(Path.GetFileName(key), string.Empty));
 		}
 
 		[Test]
@@ -258,8 +258,8 @@ div { transition: width: 5px; }"
 			var value = CssValue.Parse("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset");
 			var value2 = CssValue.Parse(@"""Gill Sans"", Futura, sans-serif");
 
-			Assert.AreEqual("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset", value.Text);
-			Assert.AreEqual(@"""Gill Sans"", Futura, sans-serif", value2.Text);
+			Assert.AreEqual("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset", value.ToString());
+			Assert.AreEqual(@"""Gill Sans"", Futura, sans-serif", value2.ToString());
 		}
 
 

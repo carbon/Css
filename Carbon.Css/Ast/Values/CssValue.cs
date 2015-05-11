@@ -1,9 +1,9 @@
-﻿namespace Carbon.Css
+﻿using System.Collections.Generic;
+using System.IO;
+
+namespace Carbon.Css
 {
-	using Carbon.Css.Parser;
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
+	using Parser;
 
 	// Single value
 	public abstract class CssValue : CssNode
@@ -13,19 +13,14 @@
 
 		public static CssValue Parse(string text)
 		{
-			#region Preconditions
+			using (var reader = new SourceReader(new StringReader(text)))
+			{
+				var tokenizer = new CssTokenizer(reader, LexicalMode.Value);
 
-			if (text == null) throw new ArgumentNullException("text");
+				var parser = new CssParser(tokenizer);
 
-			#endregion
-
-			var reader = new SourceReader(new StringReader(text));
-
-			var tokenizer = new CssTokenizer(reader, LexicalMode.Value);
-
-			var parser = new CssParser(tokenizer);
-
-			return parser.ReadValue();			
+				return parser.ReadValue();
+			}
 		}
 
 		public static CssValue FromComponents(IEnumerable<CssValue> components)
