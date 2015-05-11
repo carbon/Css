@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Carbon.Css.Tests</RootNamespace>
     <AssemblyName>Carbon.Css.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -74,6 +74,10 @@
     <Content Include="data\test53.css" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Carbon.Color\Carbon.Color.csproj">
+      <Project>{03edd958-cecc-4830-adda-3ac928625a8f}</Project>
+      <Name>Carbon.Color</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Carbon.Css\Carbon.Css.csproj">
       <Project>{7efee97c-f942-47bb-86b6-aebcadb81034}</Project>
       <Name>Carbon.Css</Name>

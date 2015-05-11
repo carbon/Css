@@ -1,6 +1,7 @@
-﻿using Carbon.Css.Color;
-namespace Carbon.Css
+﻿namespace Carbon.Css
 {
+	using Color;
+
 	public class CssColor : CssValue
 	{
 		private readonly string value;
@@ -17,26 +18,15 @@ namespace Carbon.Css
 			this.value = value.ToString();
 		}
 
-		public override string Text
-		{
-			get { return value; }
-		}
-
-		public override string ToString()
-		{
-			return value;
-		}
+		public override string ToString() => value;
 
 		public static CssColor FromRgba(byte r, byte g, byte b, float a)
 		{
-			return new CssColor(string.Format("rgba({0}, {1}, {2}, {3})", r, g, b, a));
+			return new CssColor($"rgba({r}, {g}, {b}, {a})");
 		}
 
-		public override CssNode CloneNode()
-		{
-			return new CssColor(value);
-		}
-	}
+		public override CssNode CloneNode() => new CssColor(value);
+    }
 }
 
 // hsl

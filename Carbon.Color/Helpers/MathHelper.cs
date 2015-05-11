@@ -1,4 +1,4 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Color
 {
 	internal static class MathHelper
 	{

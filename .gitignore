@@ -12,3 +12,6 @@ Carbon.Css.v12.suo
 /Carbon.Css.v12.suo
 .DS_Store
 Carbon.Css.Tests/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+Carbon.Color/obj
+.vs
+Carbon.Color/bin

@@ -1,6 +1,5 @@
-﻿namespace Carbon.Css.Tests
+﻿namespace Carbon.Color.Tests
 {
-	using Carbon.Css.Color;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -138,6 +137,16 @@
 		}
 
 		[Test]
+		public void ParseHex()
+		{
+			Assert.AreEqual("#0000ff", WebColor.Parse("#00f").ToString());
+			Assert.AreEqual("#ff0000", WebColor.Parse("#f00").ToString());
+			Assert.AreEqual("#886a11", WebColor.Parse("#886a11").ToString());
+
+			Assert.AreEqual("ff0000", WebColor.Parse("#f00").BlendWith(WebColor.Parse("#f00"), 0).ToHex());
+		}
+
+		[Test]
 		public void MixColors()
 		{
 			/*
@@ -161,6 +170,7 @@
 
 			Assert.AreEqual("7f007f", WebColor.Parse("#f00").BlendWith(WebColor.Parse("#00f"), 0.5f).ToHex());
 			Assert.AreEqual("7f7f7f", WebColor.Parse("#f00").BlendWith(WebColor.Parse("#0ff"), 0.5f).ToHex());
+			Assert.AreEqual("7f9055", WebColor.Parse("#f70").BlendWith(WebColor.Parse("#0aa"), 0.5f).ToHex());
 			Assert.AreEqual("3f00bf", WebColor.Parse("#f00").BlendWith(WebColor.Parse("#00f"), 0.25f).ToHex());
 		}
 	

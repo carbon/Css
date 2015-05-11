@@ -1,43 +1,40 @@
-﻿namespace Carbon.Css.Color
+﻿namespace Carbon.Color
 {
 	using System;
-using System.Collections.Generic;
-using System.Text;
-	
-	// TODO: Move all of this into CssColor
+	using System.Collections.Generic;
+
 	public struct WebColor : IColor
 	{
 		private readonly byte r;
 		private readonly byte g;
 		private readonly byte b;
+		private readonly float a;
 
-		private readonly float alpha; // Increase precision of alpha
-
-		private static readonly WebColor White  = new WebColor(255, 255, 255, 1);
-		private static readonly WebColor Black  = new WebColor(0, 0, 0, 1);
-		private static readonly WebColor Red	= new WebColor(255, 0, 0, 1);
-		private static readonly WebColor Green	= new WebColor(0, 255, 0, 1);
-		private static readonly WebColor Blue	= new WebColor(0, 0, 255, 1);
+		private static readonly WebColor White = new WebColor(255, 255, 255, 1);
+		private static readonly WebColor Black = new WebColor(0, 0, 0, 1);
+		private static readonly WebColor Red = new WebColor(255, 0, 0, 1);
+		private static readonly WebColor Green = new WebColor(0, 255, 0, 1);
+		private static readonly WebColor Blue = new WebColor(0, 0, 255, 1);
 
 		public WebColor(Bgra c)
 			: this(r: c.R,
 				   g: c.G,
 				   b: c.B,
-				   a: (float)c.A / (float)255) { }
+				   a: (float)c.A / (float)255)
+		{ }
 
 		public WebColor(byte r, byte g, byte b, float a = 1)
 		{
 			this.r = r;
 			this.g = g;
 			this.b = b;
-			this.alpha = a;
+			this.a = a;
 		}
 
-		public byte R { get { return r; } }
-		public byte G { get { return g; } }
-		public byte B { get { return b; } }
-
-		public float Alpha { get { return alpha; } }
+		public  byte R => r;
+		public  byte G => g;
+		public  byte B => b;
+		public float A => a;
 
 		public Hsla ToHsla()
 		{
@@ -57,21 +54,21 @@ using System.Text;
 		public WebColor Lighten(float amount)
 		{
 			return ToHsla().AdjustLightness(amount).ToRgb();
-			
+
 			// return this.Lerp(WebColor.White, amount);
 		}
 
 
 		public WebColor Darken(float amount)
 		{
-			return ToHsla().AdjustLightness(- amount).ToRgb();
+			return ToHsla().AdjustLightness(-amount).ToRgb();
 
 			// return this.Lerp(WebColor.Black, amount);
 		}
 
 		public WebColor Desaturate(float amount)
 		{
-			return ToHsla().AdjustSaturation(- amount).ToRgb();
+			return ToHsla().AdjustSaturation(-amount).ToRgb();
 		}
 
 		public WebColor Saturate(float amount)
@@ -125,19 +122,18 @@ using System.Text;
 		{
 			// background-color:rgba(0,0,255,0.3);
 
-			return string.Format("rgba({0}, {1}, {2}, {3})", r, g, b, alpha);
+			return string.Format("rgba({0}, {1}, {2}, {3})", r, g, b, a);
 		}
 
 		public override string ToString()
 		{
-			if (alpha != 1f)
+			if (a != 1f)
 			{
 				return ToRgba();
 			}
 
 			return '#' + ToHex();
 		}
-
 
 		public static WebColor Parse(string text)
 		{
@@ -197,7 +193,7 @@ using System.Text;
 				throw new Exception("Unexpected color:" + text);
 			}
 
-			
+
 		}
 
 
@@ -346,36 +342,10 @@ using System.Text;
 	}
 
 	internal static class HexString
-	{
-		internal static string FromBytes(byte[] bytes)
-		{
-			#region Preconditions
-
-			if (bytes == null) throw new ArgumentNullException("bytes");
-
-			#endregion
-
-			var sb = new StringBuilder(bytes.Length * 2);
-
-			foreach (byte b in bytes)
-			{
-				sb.Append(b.ToString("x2"));
-			}
-
-			return sb.ToString();
-		}
-
+	{ 
 		internal static byte[] ToBytes(string hexString)
-		{
-			#region Preconditions
-
-			if (hexString == null) throw new ArgumentNullException("hexString");
-
-			if (hexString.Length % 2 != 0) throw new ArgumentException("Must be divisible by 2");
-
-			#endregion
-
-			byte[] bytes = new byte[hexString.Length / 2];
+		{ 
+			var bytes = new byte[hexString.Length / 2];
 
 			for (int i = 0; i < hexString.Length; i += 2)
 			{

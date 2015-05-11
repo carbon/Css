@@ -1,34 +1,23 @@
-﻿namespace Carbon.Css.Color
+﻿namespace Carbon.Color
 {
 	using System.Linq;
 
 	public struct Hsv
 	{
-		private readonly double h;
-		private readonly double s;
-		private readonly double v;
+		private readonly float h;
+		private readonly float s;
+		private readonly float v;
 
-		public Hsv(double h, double s, double v)
+		public Hsv(float h, float s, float v)
 		{
 			this.h = h;
 			this.s = s;
 			this.v = v;
 		}
 
-		public double H
-		{
-			get { return h; }
-		}
-
-		public double S
-		{
-			get { return s; }
-		}
-
-		public double V
-		{
-			get { return v; }
-		}
+		public double H => h;
+		public double S => s;
+		public double V => v;
 
 		public static Hsv FromColor(WebColor color)
 		{
@@ -60,9 +49,7 @@
 				h /= 6f;
 			}
 
-
 			return new Hsv(h, s, v);
 		}
     }
-
 }

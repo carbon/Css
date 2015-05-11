@@ -1,7 +1,6 @@
-﻿namespace Carbon.Css.Color
+﻿namespace Carbon.Color
 {
 	using System;
-	using System.Linq;
 
 	public struct Hsla
 	{
@@ -18,25 +17,10 @@
 			this.a = a;
 		}
 
-		public float H
-		{
-			get { return h; }
-		}
-
-		public float S
-		{
-			get { return s; }
-		}
-
-		public float L
-		{
-			get { return l; }
-		}
-
-		public float A
-		{
-			get { return a; }
-		}
+		public float H => h;
+		public float S => s;
+		public float L => l;
+		public float A => a;
 
 		public override string ToString()
 		{
@@ -55,17 +39,12 @@
 
 		public Hsla RotateHue(float degrees)
 		{
-			// var newValue = h.Lerp(1f, -value);
-
-			// throw new Exception(h +"/" + value + "/ " + Constrain(h + value).ToString());
-
 			return WithHueDegrees(HueDegrees + degrees);
 		}
 
 		public Hsla AdjustSaturation(float value)
 		{
 			// var newValue = s.Lerp(1f, value);
-
 
 			return WithS(Constrain(s + value));
 		}
@@ -85,12 +64,12 @@
 			return new Hsla(hue, s, l, a);
 		}
 
-
 		public float HueDegrees
 		{
 			get 
 			{
 				// The next thing you need to understand is that we’re taking integer RGB values from 0 to 255 and converting them to decimal values from 0 to 1. 
+				
 				// The HSL that we get back will thus need to be converted to the normal degree/percent/percent that you’re used to. 
 				// The H value returned should be from 0 to 6 so to convert it to degrees you just multiply by 60.
 				// H can actually be negative sometimes so if it is just add 360;
@@ -108,15 +87,11 @@
 			degrees = (degrees % 360f);
 
 			// - 360f
-
 			var value = degrees / 60f;
 
 			// 0 - 6
-
 			return WithHue(value);
-
 		}
-
 
 		private float Constrain(float value)
 		{
@@ -194,7 +169,6 @@
 					s = (float)(delta / (2.0f - max - min));
 				}
 
-
 				if (r == max)
 				{
 					h = (g - b) / delta;
@@ -209,19 +183,18 @@
 				}
 			}
 
-			return new Hsla(h, s, l, color.Alpha);
+			return new Hsla(h, s, l, color.A);
         }
 
 		private static float ColorCalc(float c, float t1, float t2)
 		{
-
 			if (c < 0) c += 1f;
 			if (c > 1) c -= 1f;
 			if (6.0f * c < 1.0f) return t1 + (t2 - t1) * 6.0f * c;
 			if (2.0f * c < 1.0f) return t2;
 			if (3.0f * c < 2.0f) return t1 + (t2 - t1) * (2.0f / 3.0f - c) * 6.0f;
+
 			return t1;
 		}
-	
 	}
 }

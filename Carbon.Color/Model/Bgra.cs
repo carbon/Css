@@ -1,4 +1,4 @@
-﻿namespace Carbon.Css.Color
+﻿namespace Carbon.Color
 {
 	using System.Runtime.InteropServices;
 
