@@ -113,7 +113,7 @@
 		{
 			// background-color:rgba(0,0,255,0.3);
 
-			return string.Format("rgb({0}, {1}, {2}, {3})", r, g, b);
+			return string.Format("rgb({0}, {1}, {2})", r, g, b);
 		}
 
 		public string ToRgbaString()
@@ -125,7 +125,7 @@
 
 		public override string ToString()
 		{
-			if (a != 1f) return ToRgbString();
+			if (a != 1f) return ToRgbaString();
 
 			return '#' + ToHex();
 		}

@@ -19,3 +19,5 @@ bin
 Carbon.Color.Tests/obj/Debug/Carbon.Color.Tests.csproj.FileListAbsolute.txt
 Carbon.Color.Tests/obj
 packages/NUnit.2.6.4
+Carbon.Css.Tests/bin/Debug/nunit.framework.xml
+Carbon.Css.Tests/bin/Debug/nunit.framework.dll
