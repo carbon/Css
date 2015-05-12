@@ -57,8 +57,6 @@ namespace Carbon.Css
 
 		public string this[int index] => parts[index];
 
-	
-
 		public bool Contains(string text)
 		{
 			if (parts.Count == 1) return parts[0].Contains(text);

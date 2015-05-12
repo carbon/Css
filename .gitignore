@@ -15,3 +15,7 @@ Carbon.Css.Tests/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 Carbon.Color/obj
 .vs
 Carbon.Color/bin
+bin
+Carbon.Color.Tests/obj/Debug/Carbon.Color.Tests.csproj.FileListAbsolute.txt
+Carbon.Color.Tests/obj
+packages/NUnit.2.6.4
