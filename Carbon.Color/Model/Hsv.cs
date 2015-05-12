@@ -19,7 +19,7 @@
 		public double S => s;
 		public double V => v;
 
-		public static Hsv FromColor(WebColor color)
+		public static Hsv FromColor(Rgba color)
 		{
 			// Clamp to 0-1
 			float r = color.R / 255f,

@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="MediaTests.cs" />
     <Compile Include="SassTests.cs" />
-    <Compile Include="Colors\WebColorTests.cs" />
     <Compile Include="CssTests.cs" />
     <Compile Include="AnimationTests.cs" />
     <Compile Include="FixtureBase.cs" />
@@ -74,10 +73,6 @@
     <Content Include="data\test53.css" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Carbon.Color\Carbon.Color.csproj">
-      <Project>{03edd958-cecc-4830-adda-3ac928625a8f}</Project>
-      <Name>Carbon.Color</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Carbon.Css\Carbon.Css.csproj">
       <Project>{7efee97c-f942-47bb-86b6-aebcadb81034}</Project>
       <Name>Carbon.Css</Name>

@@ -22,6 +22,8 @@
 		public float L => l;
 		public float A => a;
 
+
+
 		public override string ToString()
 		{
 			return string.Format("hsla({0},{1}%,{2}%,{3})", (
@@ -68,9 +70,6 @@
 		{
 			get 
 			{
-				// The next thing you need to understand is that we’re taking integer RGB values from 0 to 255 and converting them to decimal values from 0 to 1. 
-				
-				// The HSL that we get back will thus need to be converted to the normal degree/percent/percent that you’re used to. 
 				// The H value returned should be from 0 to 6 so to convert it to degrees you just multiply by 60.
 				// H can actually be negative sometimes so if it is just add 360;
 
@@ -101,7 +100,7 @@
 			return value;
 		}
 
-		public WebColor ToRgb()
+		public Rgba ToRgb()
 		{
 			byte r, g, b;
 
@@ -141,10 +140,10 @@
 				g = (byte)Math.Round(tg * 255f);
 				b = (byte)Math.Round(tb * 255f);
 			}
-			return new WebColor(r, g, b, a);
+			return new Rgba(r, g, b, a);
 		}
 
-		public static Hsla FromRgb(WebColor color)
+		public static Hsla FromRgb(Rgba color)
 		{
 			float r = (color.R / 255f);
 			float g = (color.G / 255f);

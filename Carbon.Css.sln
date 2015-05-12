@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Css.Tests", "Carbon.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Color", "Carbon.Color\Carbon.Color.csproj", "{03EDD958-CECC-4830-ADDA-3AC928625A8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Color.Tests", "Carbon.Color.Tests\Carbon.Color.Tests.csproj", "{F7876CDB-41CA-46B8-AEA5-6F8A3B5DBD9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{03EDD958-CECC-4830-ADDA-3AC928625A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03EDD958-CECC-4830-ADDA-3AC928625A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03EDD958-CECC-4830-ADDA-3AC928625A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7876CDB-41CA-46B8-AEA5-6F8A3B5DBD9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7876CDB-41CA-46B8-AEA5-6F8A3B5DBD9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7876CDB-41CA-46B8-AEA5-6F8A3B5DBD9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7876CDB-41CA-46B8-AEA5-6F8A3B5DBD9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

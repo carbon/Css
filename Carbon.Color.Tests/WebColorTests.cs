@@ -8,13 +8,11 @@
 		[Test]
 		public void Webcolor1()
 		{
-			var color = WebColor.Parse("rgba(197, 20, 37, 0.3)");
+			var color = Rgba.Parse("rgba(197, 20, 37, 0.3)");
 
-			Assert.AreEqual("rgba(197, 20, 37, 0.3)", color.ToRgba());
+			Assert.AreEqual("rgba(197, 20, 37, 0.3)", color.ToRgbaString());
 			Assert.AreEqual("rgba(197, 20, 37, 0.3)", color.ToString());
 			Assert.AreEqual("c51425", color.ToHex());
-
-
 		}
 
 		[Test]
@@ -32,11 +30,11 @@
 			*/
 
 			Assert.AreEqual("4d4d4d", new Hsla(0, 0, 0).AdjustLightness(.3f).ToRgb().ToHex());
-			Assert.AreEqual("ee0000", WebColor.Parse("#800").Lighten(0.2f).ToHex());
-			Assert.AreEqual("ffffff", WebColor.Parse("#fff").Lighten(0.2f).ToHex());
-			Assert.AreEqual("ffffff", WebColor.Parse("#800").Lighten(1f).ToHex());
-			Assert.AreEqual("880000", WebColor.Parse("#800").Lighten(0f).ToHex());
-			Assert.AreEqual("rgba(238, 0, 0, 0.5)", WebColor.Parse("rgba(136, 0, 0, 0.5)").Lighten(0.2f).ToString());
+			Assert.AreEqual("ee0000", Rgba.Parse("#800").Lighten(0.2f).ToHex());
+			Assert.AreEqual("ffffff", Rgba.Parse("#fff").Lighten(0.2f).ToHex());
+			Assert.AreEqual("ffffff", Rgba.Parse("#800").Lighten(1f).ToHex());
+			Assert.AreEqual("880000", Rgba.Parse("#800").Lighten(0f).ToHex());
+			Assert.AreEqual("rgba(238, 0, 0, 0.5)", Rgba.Parse("rgba(136, 0, 0, 0.5)").Lighten(0.2f).ToString());
 
 			// Assert.AreEqual("hsla(0, 0, 30, 1)", new Hsla(0d, 0d, 0d).AdjustL(.3f).ToString());
 		}
@@ -56,11 +54,11 @@
 			*/
 
 			// Assert.AreEqual("ff6a00", new Hsla(0.25f, 0.100f, 0.80f).AdjustLightness(-.3f).ToRgb().ToHex());
-			Assert.AreEqual("220000", WebColor.Parse("#800").Darken(0.2f).ToHex());
-			Assert.AreEqual("000000", WebColor.Parse("#000").Darken(0.2f).ToHex());
-			Assert.AreEqual("000000", WebColor.Parse("#800").Darken(1f).ToHex());
-			Assert.AreEqual("880000", WebColor.Parse("#800").Darken(0f).ToHex());
-			Assert.AreEqual("rgba(34, 0, 0, 0.5)", WebColor.Parse("rgba(136, 0, 0, 0.5)").Darken(0.2f).ToString());
+			Assert.AreEqual("220000", Rgba.Parse("#800").Darken(0.2f).ToHex());
+			Assert.AreEqual("000000", Rgba.Parse("#000").Darken(0.2f).ToHex());
+			Assert.AreEqual("000000", Rgba.Parse("#800").Darken(1f).ToHex());
+			Assert.AreEqual("880000", Rgba.Parse("#800").Darken(0f).ToHex());
+			Assert.AreEqual("rgba(34, 0, 0, 0.5)", Rgba.Parse("rgba(136, 0, 0, 0.5)").Darken(0.2f).ToString());
 
 			// Assert.AreEqual("hsla(0, 0, 30, 1)", new Hsla(0d, 0d, 0d).AdjustL(.3f).ToString());
 		}
@@ -81,28 +79,28 @@
 			*/
 
 			// Assert.AreEqual("d9f2d9", new Hsla(120f / 360f, 0.3f, 0.9f).AdjustSaturation(0.2f).ToRgb().ToHex());
-			Assert.AreEqual("9e3f3f", WebColor.Parse("#855").Saturate(0.2f).ToHex());
-			Assert.AreEqual("000000", WebColor.Parse("#000").Saturate(0.2f).ToHex());
-			Assert.AreEqual("ffffff", WebColor.Parse("#fff").Saturate(0.2f).ToHex());
-			Assert.AreEqual("rgba(158, 63, 63, 0.5)", WebColor.Parse("rgba(136, 85, 85, 0.5)").Saturate(0.2f).ToString());
+			Assert.AreEqual("9e3f3f", Rgba.Parse("#855").Saturate(0.2f).ToHex());
+			Assert.AreEqual("000000", Rgba.Parse("#000").Saturate(0.2f).ToHex());
+			Assert.AreEqual("ffffff", Rgba.Parse("#fff").Saturate(0.2f).ToHex());
+			Assert.AreEqual("rgba(158, 63, 63, 0.5)", Rgba.Parse("rgba(136, 85, 85, 0.5)").Saturate(0.2f).ToString());
 
 
 
 
-			Assert.AreEqual("726b6b", WebColor.Parse("#855").Desaturate(0.2f).ToHex());
+			Assert.AreEqual("726b6b", Rgba.Parse("#855").Desaturate(0.2f).ToHex());
 		}
 
 		[Test]
 		public void HueTests()
 		{
 
-			Assert.AreEqual(0f, WebColor.Parse("#e00000").ToHsla().H);
-			Assert.AreEqual(0f, WebColor.Parse("#fff").ToHsla().H);
-			Assert.AreEqual(2.97709918f, WebColor.Parse("#3ec1be").ToHsla().H);
-			Assert.AreEqual(350.869568f, WebColor.Parse("#5c000e").ToHsla().HueDegrees);
+			Assert.AreEqual(0f, Rgba.Parse("#e00000").ToHsla().H);
+			Assert.AreEqual(0f, Rgba.Parse("#fff").ToHsla().H);
+			Assert.AreEqual(2.97709918f, Rgba.Parse("#3ec1be").ToHsla().H);
+			Assert.AreEqual(350.869568f, Rgba.Parse("#5c000e").ToHsla().HueDegrees);
 
 
-			var hsla = WebColor.Parse("#5c000e").ToHsla();
+			var hsla = Rgba.Parse("#5c000e").ToHsla();
 
 			Assert.AreEqual(-0.152173907f, hsla.H);
 
@@ -129,21 +127,21 @@
 
 			Assert.AreEqual("deeded", new Hsla(0f, 0.3f, 0.9f).WithHueDegrees(120f).RotateHue(60f).ToRgb().ToHex());
 			Assert.AreEqual("ededde", new Hsla(0f, 0.3f, 0.9f).WithHueDegrees(120f).RotateHue(-60f).ToRgb().ToHex());
-			Assert.AreEqual("886a11", WebColor.Parse("#811").ToHsla().RotateHue(45f).ToRgb().ToHex());
+			Assert.AreEqual("886a11", Rgba.Parse("#811").ToHsla().RotateHue(45f).ToRgb().ToHex());
 
 
 			// Assert.AreEqual("#88aa88", WebColor.Parse("#8a8").ToHsla().AdjustHue(1f).ToRgb().ToHex());
-			Assert.AreEqual("88aa88", WebColor.Parse("#8a8").ToHsla().RotateHue(0f).ToRgb().ToHex());
+			Assert.AreEqual("88aa88", Rgba.Parse("#8a8").ToHsla().RotateHue(0f).ToRgb().ToHex());
 		}
 
 		[Test]
 		public void ParseHex()
 		{
-			Assert.AreEqual("#0000ff", WebColor.Parse("#00f").ToString());
-			Assert.AreEqual("#ff0000", WebColor.Parse("#f00").ToString());
-			Assert.AreEqual("#886a11", WebColor.Parse("#886a11").ToString());
+			Assert.AreEqual("#0000ff", Rgba.Parse("#00f").ToString());
+			Assert.AreEqual("#ff0000", Rgba.Parse("#f00").ToString());
+			Assert.AreEqual("#886a11", Rgba.Parse("#886a11").ToString());
 
-			Assert.AreEqual("ff0000", WebColor.Parse("#f00").BlendWith(WebColor.Parse("#f00"), 0).ToHex());
+			Assert.AreEqual("ff0000", Rgba.Parse("#f00").BlendWith(Rgba.Parse("#f00"), 0).ToHex());
 		}
 
 		[Test]
@@ -168,17 +166,17 @@
 			  end
 			*/
 
-			Assert.AreEqual("7f007f", WebColor.Parse("#f00").BlendWith(WebColor.Parse("#00f"), 0.5f).ToHex());
-			Assert.AreEqual("7f7f7f", WebColor.Parse("#f00").BlendWith(WebColor.Parse("#0ff"), 0.5f).ToHex());
-			Assert.AreEqual("7f9055", WebColor.Parse("#f70").BlendWith(WebColor.Parse("#0aa"), 0.5f).ToHex());
-			Assert.AreEqual("3f00bf", WebColor.Parse("#f00").BlendWith(WebColor.Parse("#00f"), 0.25f).ToHex());
+			Assert.AreEqual("7f007f", Rgba.Parse("#f00").BlendWith(Rgba.Parse("#00f"), 0.5f).ToHex());
+			Assert.AreEqual("7f7f7f", Rgba.Parse("#f00").BlendWith(Rgba.Parse("#0ff"), 0.5f).ToHex());
+			Assert.AreEqual("7f9055", Rgba.Parse("#f70").BlendWith(Rgba.Parse("#0aa"), 0.5f).ToHex());
+			Assert.AreEqual("3f00bf", Rgba.Parse("#f00").BlendWith(Rgba.Parse("#00f"), 0.25f).ToHex());
 		}
 	
 
 		[Test]
 		public void Webcolor2()
 		{
-			var color = WebColor.Parse("#ff0000");
+			var color = Rgba.Parse("#ff0000");
 
 			Assert.AreEqual(255, color.R);
 

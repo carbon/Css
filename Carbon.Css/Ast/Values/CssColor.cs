@@ -12,7 +12,7 @@
 			this.value = value;
 		}
 
-		public CssColor(WebColor value)
+		public CssColor(Rgba value)
 			: base(NodeKind.Color)
 		{
 			this.value = value.ToString();

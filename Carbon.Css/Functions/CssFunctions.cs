@@ -78,14 +78,14 @@ namespace Carbon.Css
 
 		public static CssValue Rgba(CssValue[] args)
 		{
-			var color = WebColor.Parse(args[0].ToString());
+			var color = Color.Rgba.Parse(args[0].ToString());
 
 			return CssColor.FromRgba(color.R, color.G, color.B, float.Parse(args[1].ToString()));
 		}
 
-		private static WebColor GetColor(CssValue value)
+		private static Rgba GetColor(CssValue value)
 		{
-			return WebColor.Parse(value.ToString());
+			return Color.Rgba.Parse(value.ToString());
 		}
 
 		private static float GetAmount(CssValue value)
