@@ -34,6 +34,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Carbon.Color, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Carbon.Color.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -100,12 +104,6 @@
     <Compile Include="Rewriters\IEOpacityTransfomer.cs" />
     <Compile Include="Rewriters\Rewriter.cs" />
     <Compile Include="Rewriters\ICssTransform.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Carbon.Color\Carbon.Color.csproj">
-      <Project>{03edd958-cecc-4830-adda-3ac928625a8f}</Project>
-      <Name>Carbon.Color</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
