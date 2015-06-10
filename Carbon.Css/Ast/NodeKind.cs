@@ -34,7 +34,7 @@
 		Percentage,
 		Resolution,
 
-		UnknownDimension,
+		UnknownMeasurement,
 
 		// Extensions
 		Directive,

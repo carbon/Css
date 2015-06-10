@@ -1,27 +1,29 @@
 ﻿namespace Carbon.Css
 {
-	using Parser;
-
-	public class CssDimension : CssValue
+	public class CssMeasurement : CssValue
 	{
-		private readonly CssToken number;
+		private readonly float number;
 		private readonly CssUnit unit;
 
-		public CssDimension(CssToken number, CssUnit unit)
+		public CssMeasurement(float number, CssUnit unit)
 			: base(unit.Kind)
 		{
 			this.number = number;
 			this.unit	= unit;
 		}
 
-		public CssToken Number => number;
+		public float Number => number;
 
 		public CssUnit Unit => unit;
 
-		public override string ToString() => number.Text + unit.Name;
+		public override string ToString() => number + unit.Name;
 
-		public override CssNode CloneNode() => new CssDimension(number, unit);
+		public override CssNode CloneNode() => new CssMeasurement(number, unit);
 	}
+
+	// CssLength
+	// CssTime
+	// ...
 }
 
 // A dimension is a number immediately followed by a unit identifier.
@@ -48,20 +50,4 @@
 
 {num}%				{return PERCENTAGE;}
 {num}				{return NUMBER;}
-*/
-
-
-/*
-EMS,
-EXS,
-PX,
-CM,
-MM,
-IN,
-PT,
-PC,
-DEG,
-RAD,
-GRAD,
-TURN
 */

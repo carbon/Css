@@ -52,7 +52,7 @@
     <Compile Include="Ast\CssExpression.cs" />
     <Compile Include="Ast\Values\CssNumber.cs" />
     <Compile Include="Ast\Values\CssVariable.cs" />
-    <Compile Include="Ast\Values\CssDimension.cs" />
+    <Compile Include="Ast\Values\CssMeasurement.cs" />
     <Compile Include="Ast\Values\CssUrl.cs" />
     <Compile Include="Ast\Values\CssString.cs" />
     <Compile Include="Functions\CssFunctions.cs" />

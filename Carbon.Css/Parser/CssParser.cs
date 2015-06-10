@@ -273,7 +273,7 @@ namespace Carbon.Css.Parser
 				{
 					var unit = CssUnit.Get(tokenizer.Read().Text);
 
-					return new CssDimension(value, unit) {
+					return new CssMeasurement(float.Parse(value.Text), unit) {
 						Trailing = ReadTrivia()
 					};
 				}
@@ -282,7 +282,6 @@ namespace Carbon.Css.Parser
 					Trailing = ReadTrivia()
 				};
 			}
-		
 
 			if (tokenizer.Current.Kind == TokenKind.LeftParenthesis)
 			{
@@ -335,12 +334,13 @@ namespace Carbon.Css.Parser
 		}
 
 		/*
+		https://en.wikipedia.org/wiki/Shunting-yard_algorithm
 		public CssExpression ReadExpression()
 		{
 			
 		}
 		*/
-		
+
 		#endregion
 
 		#region Variables
