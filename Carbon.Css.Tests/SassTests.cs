@@ -1,15 +1,14 @@
 ﻿namespace Carbon.Css
 {
 	using Carbon.Css.Tests;
-	using NUnit.Framework;
+	using Xunit;
 	using System;
 	using System.IO;
 	using System.Linq;
 
-	[TestFixture]
 	public class SassTests : FixtureBase
 	{
-		[Test]
+		[Fact]
 		public void VariableReferencingVariable()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -18,10 +17,10 @@ $borderColor: $red;
 
 div { color: rgba($borderColor, 0.5); }");
 
-			Assert.AreEqual("div { color: rgba(255, 0, 0, 0.5); }", sheet.ToString());
+			Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", sheet.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void VariableReferencingItselfThrows()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -35,7 +34,7 @@ div { color: $red; }");
 			});
 		}
 
-		[Test]
+		[Fact]
 		public void Test78()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -46,7 +45,7 @@ div { color: darken($red, 10%); }
 div { color: lighten($red, 0.2); }");
 
 
-			Assert.AreEqual(@"div { color: #cc0000; }
+			Assert.Equal(@"div { color: #cc0000; }
 div { color: #ff6666; }", sheet.ToString());
 		}
 		
@@ -54,7 +53,7 @@ div { color: #ff6666; }", sheet.ToString());
 
 
 		/*
-		[Test]
+		[Fact]
 		public void LightenTests()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -62,12 +61,12 @@ div { color: darken(#ccc, .5); }
 div { color: lighten(#ccc, 0.2); }");
 
 
-			Assert.AreEqual(@"div { color: #cdcdcd; }
+			Assert.Equal(@"div { color: #cdcdcd; }
 div { color: #cbcbcb; }", sheet.ToString());
 		}
 		*/
 
-		[Test]
+		[Fact]
 		public void FuncInMixin()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -86,15 +85,13 @@ div {
 
 ");
 
-			Assert.AreEqual(@"div {
+			Assert.Equal(@"div {
   color: #cc0000;
   color: #ff6666;
 }", sheet.ToString());
-		}
+		}	
 
-	
-
-		[Test]
+		[Fact]
 		public void FuncNestedMixin()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -119,7 +116,7 @@ div {
 ");
 
 
-			Assert.AreEqual(@"div {
+			Assert.Equal(@"div {
   color: #cc0000;
   color: #ff6666;
 }
@@ -131,7 +128,7 @@ div div {
 
 
 
-		[Test]
+		[Fact]
 		public void Test99()
 		{
 			var ss = StyleSheet.Parse(@"div {
@@ -153,7 +150,7 @@ div div {
 }");
 
 			
-			Assert.AreEqual(
+			Assert.Equal(
 @"div .text,
 div .placeholderText {
   position: relative;
@@ -171,12 +168,12 @@ div .placeholderText {
 }", ss.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void Test53()
 		{
 			var ss = StyleSheet.FromFile(GetTestFile("test53.css"));
 
-			Assert.AreEqual(
+			Assert.Equal(
 @".block ::-webkit-input-placeholder {
   color: #cfcece;
   font-weight: 400;
@@ -264,7 +261,7 @@ div .placeholderText {
 
 		}
 
-		[Test]
+		[Fact]
 		public void Test1()
 		{
 			var sheet = StyleSheet.Parse(
@@ -293,9 +290,9 @@ div .placeholderText {
 
 			var rules = rewriter.Rewrite(rule).ToArray();
 
-			Assert.AreEqual(4, rules.Length);
-			Assert.AreEqual("nav { display: block; }", rules[0].ToString());
-			Assert.AreEqual(@"nav ul {
+			Assert.Equal(4, rules.Length);
+			Assert.Equal("nav { display: block; }", rules[0].ToString());
+			Assert.Equal(@"nav ul {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -307,7 +304,7 @@ div .placeholderText {
 			// Ensure the original rule was not modified
 			
 			/*
-			Assert.AreEqual(
+			Assert.Equal(
 @"nav {
   display: block;
   ul {

@@ -1,16 +1,12 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css.Tests
 {
 	using System.Linq;
-	using Carbon.Css.Parser;
-	using Carbon.Css.Tests;
-	using NUnit.Framework;
-	using System;
+	using Xunit;
 	using System.IO;
 
-	[TestFixture]
 	public class MixinTests : FixtureBase
 	{
-		[Test]
+		[Fact]
 		public void MixinTest19()
 		{
 			var ss = StyleSheet.Parse(@"@mixin serif($fontWeight:300) {
@@ -27,7 +23,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-			Assert.AreEqual(@"h1,
+			Assert.Equal(@"h1,
 h2,
 h3,
 h4,
@@ -43,7 +39,7 @@ h6 {
 		}
 
 
-		[Test]
+		[Fact]
 		public void MixinTest15()
 		{
 			var ss = StyleSheet.Parse(@"@mixin serif($fontWeight: 300) {
@@ -58,7 +54,7 @@ h1, h2, h3, h4, h5, h6 {
 }");
 
 
-			Assert.AreEqual(@"h1,
+			Assert.Equal(@"h1,
 h2,
 h3,
 h4,
@@ -74,7 +70,7 @@ h6 {
 	
 
 
-		[Test]
+		[Fact]
 		public void ParseMixin30()
 		{
 			var ss = StyleSheet.Parse(@"
@@ -99,12 +95,12 @@ h6 {
   @include dl-horizontal(3.75em, 0.625em);
 }
 ");
-			Assert.AreEqual(1, ss.Context.Mixins.Count);
+			Assert.Equal(1, ss.Context.Mixins.Count);
 
-			Assert.AreEqual("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
-			Assert.AreEqual(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
+			Assert.Equal("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
+			Assert.Equal(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
 
-			Assert.AreEqual(@".left .awards dl dt,
+			Assert.Equal(@".left .awards dl dt,
 .left .exhibitions dl dt {
   text-align: left;
   overflow: hidden;
@@ -117,12 +113,12 @@ h6 {
 .left .exhibitions dl dd { padding-left: 3.75em; }", ss.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void ParseMixin7()
 		{
 			var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
 
-			Assert.AreEqual(13, mixins.Context.Mixins.Count);
+			Assert.Equal(13, mixins.Context.Mixins.Count);
 
 			var ss = StyleSheet.Parse(@".happy {
 				@include li-horizontal;
@@ -131,7 +127,7 @@ h6 {
 			} ", mixins.Context);
 
 
-			Assert.AreEqual(
+			Assert.Equal(
 @".happy {
   list-style: none;
   padding: 0;
@@ -155,19 +151,19 @@ h6 {
 .happy li { padding-bottom: 1em; }", ss.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void ParseMixin3()
 		{
 			var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
 
-			Assert.AreEqual(13, mixins.Context.Mixins.Count);
+			Assert.Equal(13, mixins.Context.Mixins.Count);
 
 			var ss = StyleSheet.Parse(@".happy {
 				@include dl-horizontal;
 				font-size: 15px;
 			} ", mixins.Context);
 
-			Assert.AreEqual(
+			Assert.Equal(
 @".happy { font-size: 15px; }
 .happy dt {
   text-align: left;
@@ -180,19 +176,19 @@ h6 {
 .happy dd { padding-left: (   7.5em +   0.625em; }", ss.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void ParseMixin4()
 		{
 			var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
 
-			Assert.AreEqual(13, mixins.Context.Mixins.Count);
+			Assert.Equal(13, mixins.Context.Mixins.Count);
 
 			var ss = StyleSheet.Parse(@".happy {
 				@include li-horizontal;
 			} ", mixins.Context);
 
 
-			Assert.AreEqual(@".happy {
+			Assert.Equal(@".happy {
   list-style: none;
   padding: 0;
 }
@@ -213,7 +209,7 @@ h6 {
 .happy li { padding-bottom: 1em; }", ss.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void ParseMixin()
 		{
 			var text = @"@mixin left($dist, $x: 1) {
@@ -230,9 +226,9 @@ h6 {
 
 			var ss = StyleSheet.Parse(text);
 
-			Assert.AreEqual(1, ss.Context.Mixins.Count);
+			Assert.Equal(1, ss.Context.Mixins.Count);
 
-			Assert.AreEqual(@"main {
+			Assert.Equal(@"main {
   margin-left: 50px;
   float: left;
   apples: bananas;
@@ -242,7 +238,7 @@ h6 {
 		}
 
 
-		[Test]
+		[Fact]
 		public void ParseMixin2()
 		{
 			var text = 
@@ -262,18 +258,18 @@ h6 {
 			var include = rules[0].Children[0] as IncludeNode;
 			var args = include.Args as CssValueList;
 
-			Assert.AreEqual(2, args.Children.Count);
-			Assert.AreEqual("50px, 20px", args.ToString());
-			Assert.AreEqual(include.Name, "round");
+			Assert.Equal(2, args.Children.Count);
+			Assert.Equal("50px, 20px", args.ToString());
+			Assert.Equal(include.Name, "round");
 
-			Assert.AreEqual("50px", args.Children[0].ToString());
-			Assert.AreEqual("20px", args.Children[1].ToString());
+			Assert.Equal("50px", args.Children[0].ToString());
+			Assert.Equal("20px", args.Children[1].ToString());
 
-			Assert.AreEqual(ValueSeperator.Comma, args.Seperator);
+			Assert.Equal(ValueSeperator.Comma, args.Seperator);
 
-			Assert.AreEqual(1, ss.Context.Mixins.Count);
+			Assert.Equal(1, ss.Context.Mixins.Count);
 
-			Assert.AreEqual(@"main {
+			Assert.Equal(@"main {
   border-radius: 50px;
   -webkit-border-radius: 50px;
 }", ss.ToString());

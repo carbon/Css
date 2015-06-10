@@ -21,3 +21,10 @@ Carbon.Color.Tests/obj
 packages/NUnit.2.6.4
 Carbon.Css.Tests/bin/Debug/nunit.framework.xml
 Carbon.Css.Tests/bin/Debug/nunit.framework.dll
+packages/NUnit.3.0.0-beta-2
+packages/xunit.2.1.0-beta2-build2981
+packages/xunit.abstractions.2.0.0
+packages/xunit.assert.2.1.0-beta2-build2981
+packages/xunit.core.2.1.0-beta2-build2981
+packages/xunit.extensibility.core.2.1.0-beta2-build2981
+packages/xunit.runner.visualstudio.2.1.0-beta2-build1055

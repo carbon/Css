@@ -1,22 +1,21 @@
 ﻿namespace Carbon.Css.Tests
 {
-	using NUnit.Framework;
+	using Xunit;
 	using System;
 
-	[TestFixture]
 	public class VariableTests
 	{
-		[Test]
+		[Fact]
 		public void ParseVariables()
 		{
 			var text = @"$color: red;
 			
 			";
 
-			Assert.AreEqual(1, StyleSheet.Parse(text).Context.Scope.Count);
+			Assert.Equal(1, StyleSheet.Parse(text).Context.Scope.Count);
 		}
 
-		[Test]
+		[Fact]
 		public void VariableTest1()
 		{
 			var sheet = StyleSheet.Parse(
@@ -29,11 +28,11 @@ body {
   color: $yellow;
 }
 ");
-			Assert.AreEqual("#dceef7", sheet.Context.Scope["blue"].ToString());
+			Assert.Equal("#dceef7", sheet.Context.Scope["blue"].ToString());
 
-			Assert.AreEqual(2, sheet.Context.Scope.Count);
+			Assert.Equal(2, sheet.Context.Scope.Count);
 
-			Assert.AreEqual(
+			Assert.Equal(
 @"body {
   background-color: #dceef7;
   color: #fff5cc;
@@ -42,7 +41,7 @@ body {
 
 		}
 
-		[Test]
+		[Fact]
 		public void VariableTest3()
 		{
 			var context = new CssContext();
@@ -63,7 +62,7 @@ body {
 
 
 
-			Assert.AreEqual(
+			Assert.Equal(
 @"body {
   background-color: #dceef7;
   color: #fff5cc;
@@ -72,7 +71,7 @@ body {
 		}
 
 
-		[Test]
+		[Fact]
 		public void VariableTest4()
 		{
 			var context = new CssContext();
@@ -95,7 +94,7 @@ body {
 
 
 
-			Assert.AreEqual(
+			Assert.Equal(
 @"body {
   background-color: #dceef7;
   color: #fff5cc;
@@ -105,7 +104,7 @@ body {
 		}
 
 
-		[Test]
+		[Fact]
 		public void VariableTest2()
 		{
 			var styles =
@@ -122,7 +121,7 @@ body { font-size: 14px; opacity: 0.5; }
 			var sheet = StyleSheet.Parse(styles);
 
 
-			Assert.AreEqual(
+			Assert.Equal(
 @"body {
   font-size: 14px;
   opacity: 0.5;

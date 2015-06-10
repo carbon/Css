@@ -1,12 +1,10 @@
 ﻿namespace Carbon.Css
 {
-	using NUnit.Framework;
-	using System;
+	using Xunit;
 
-	[TestFixture]
 	public class ScssTests
 	{
-		[Test]
+		[Fact]
 		public void ChildSelector()
 		{
 			var ss = StyleSheet.Parse(@"div {
@@ -29,18 +27,18 @@
   }
 }");
 
-			Assert.AreEqual(1, ss.Children.Count);
+			Assert.Equal(1, ss.Children.Count);
 
 			var node = (StyleRule)ss.Children[0].Children[0];
 			var parent = (StyleRule)node.Parent;
 
-			Assert.AreEqual("div", parent.Selector.ToString());
-			Assert.AreEqual("input, textarea", node.Selector.ToString());
+			Assert.Equal("div", parent.Selector.ToString());
+			Assert.Equal("input, textarea", node.Selector.ToString());
 			var selector = CssWriter.ExpandSelector(node);
 
-			Assert.AreEqual("div input, div textarea", selector.ToString());
+			Assert.Equal("div input, div textarea", selector.ToString());
 
-			Assert.AreEqual(@"div input,
+			Assert.Equal(@"div input,
 div textarea {
   display: block;
   font-size: 22px;
@@ -59,7 +57,7 @@ div textarea {
 }", ss.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void NestedStyleRewriterTest()
 		{
 			var sheet = StyleSheet.Parse(
@@ -80,7 +78,7 @@ div textarea {
   }
 }");
 
-			Assert.AreEqual(
+			Assert.Equal(
 @"nav { display: block; }
 nav ul {
   margin: 0;
@@ -96,7 +94,7 @@ nav a {
 
 		}
 
-		[Test]
+		[Fact]
 		public void DoubleList5()
 		{
 
@@ -104,7 +102,7 @@ nav a {
 			//= support Safari >= 5
 			a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
 			
-			Assert.AreEqual(@"a {
+			Assert.Equal(@"a {
   -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
   transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
 }", sheet.ToString());
@@ -112,7 +110,7 @@ nav a {
 
 		}
 
-		[Test]
+		[Fact]
 		public void DoubleList()
 		{
 
@@ -120,7 +118,7 @@ nav a {
 
 			sheet.Context.SetCompatibility(Browser.Chrome1, Browser.Safari5);
 
-			Assert.AreEqual(@"a {
+			Assert.Equal(@"a {
   -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
   transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
 }", sheet.ToString());
@@ -128,7 +126,7 @@ nav a {
 
 		}
 
-		[Test]
+		[Fact]
 		public void DoubleList2()
 		{
 			var sheet = StyleSheet.Parse(@".form {
@@ -221,7 +219,7 @@ nav a {
 
 			sheet.Context.SetCompatibility(Browser.Chrome26, Browser.Safari5);
 
-			Assert.AreEqual(@".form {
+			Assert.Equal(@".form {
   padding-bottom: 3em;
   margin: 15px;
   padding-top: 3em;
@@ -307,7 +305,7 @@ nav a {
 		}
 
 
-		[Test]
+		[Fact]
 		public void NestedStyleRecursiveRewriterTest()
 		{
 			var sheet = StyleSheet.Parse(
@@ -331,7 +329,7 @@ nav a {
   }
 }");
 
-			Assert.AreEqual(
+			Assert.Equal(
 @"nav ul {
   margin: 0;
   padding: 0;

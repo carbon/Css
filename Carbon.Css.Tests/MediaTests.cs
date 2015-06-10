@@ -1,15 +1,12 @@
 ﻿namespace Carbon.Css
 {
 	using Carbon.Css.Tests;
-	using NUnit.Framework;
-	using System;
-	using System.IO;
-	using System.Linq;
 
-	[TestFixture]
+	using Xunit;
+
 	public class MediaTests : FixtureBase
 	{
-		[Test]
+		[Fact]
 		public void MediaTest1()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -39,7 +36,7 @@ $bgColor: orange;
 ");
 
 
-			Assert.AreEqual(@"@media (min-width: 700px) {
+			Assert.Equal(@"@media (min-width: 700px) {
   a { color: pink; }
   a:hover { color: #000; }
   div {

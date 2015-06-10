@@ -2,20 +2,41 @@
 {
 	using System.IO;
 
-	using NUnit.Framework;
-	using System;
+	using Xunit;
 
-	[TestFixture]
 	public class VendorTests : FixtureBase
 	{
-		[Test]
+		[Fact]
+		public void Nested3()
+		{
+			var ss = StyleSheet.Parse(
+@"#networkLinks .block .emptyGuts,
+#networkLinks .block .populatedGuts,
+#networkLinks .block .editGuts {
+  cursor: default;
+  z-index: 100;
+}");
+
+			Assert.Equal(
+@"#networkLinks .block .emptyGuts,
+#networkLinks .block .populatedGuts,
+#networkLinks .block .editGuts {
+  cursor: default;
+  z-index: 100;
+}", ss.ToString());
+		}
+
+	
+
+
+		[Fact]
 		public void Nested()
 		{
 			var ss = StyleSheet.Parse(File.ReadAllText(GetTestFile("nested.css").FullName));
 
 			ss.Context.SetCompatibility(Browser.Chrome1, Browser.Safari1);
 
-			Assert.AreEqual(@"#networkLinks .block .edit:before {
+			Assert.Equal(@"#networkLinks .block .edit:before {
   font-family: 'carbonmade';
   font-size: 12px;
   line-height: 26px;
@@ -84,7 +105,7 @@
 
 		}
 
-		[Test]
+		[Fact]
 		public void Transform()
 		{
 			var sheet = StyleSheet.Parse(
@@ -96,7 +117,7 @@ body {
 
 			sheet.Context.SetCompatibility(Browser.Chrome1, Browser.Safari1, Browser.Firefox1, Browser.IE9);
 
-			Assert.AreEqual(@"body {
+			Assert.Equal(@"body {
   -moz-transform: rotate(90);
   -ms-transform: rotate(90);
   -webkit-transform: rotate(90);

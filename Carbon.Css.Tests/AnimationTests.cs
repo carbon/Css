@@ -1,21 +1,22 @@
 ﻿namespace Carbon.Css
 {
 	using Carbon.Css.Tests;
-	using NUnit.Framework;
-	using System;
 
-	[TestFixture]
+	using Xunit;
+
 	public class AnimationTests : FixtureBase
 	{
-		[Test]
+		
+		/*
+		[Fact]
 		public void BeforeSyntax()
 		{
 			// &:before { content: "("; }
 		}
+		*/
 
-		
 
-		[Test]
+		[Fact]
 		public void KetframesExpansition1()
 		{
 			var ss = StyleSheet.Parse(@"
@@ -33,7 +34,7 @@
 }");
 
 
-			Assert.AreEqual(
+			Assert.Equal(
 @".block ::-webkit-input-placeholder {
   color: #cfcece;
   font-weight: 400;
@@ -74,7 +75,7 @@
 
 		}
 
-		[Test]
+		[Fact]
 		public void Test50()
 		{
 			var ss = StyleSheet.Parse(
@@ -94,7 +95,7 @@
 
 
 
-			Assert.AreEqual(
+			Assert.Equal(
 @"@-webkit-keyframes domainProcessing2 {
   0% { border-color: rgba(248, 202, 92, 0.4); }
   20% { border-color: rgba(248, 202, 92, 0.2); }
@@ -117,7 +118,7 @@
 }", ss.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void KeyframesTest3()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -129,7 +130,7 @@
 }");
 
 
-			Assert.AreEqual(@"@-moz-keyframes planet {
+			Assert.Equal(@"@-moz-keyframes planet {
   0% {
     -moz-transform: translate(0, 0px) rotate(0deg);
     transform: translate(0, 0px) rotate(0deg);
@@ -167,7 +168,7 @@
 			*/
 		}
 
-		[Test]
+		[Fact]
 		public void KeyframesTest2()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -180,7 +181,7 @@
 }");
 
 
-			Assert.AreEqual(
+			Assert.Equal(
 @"@-webkit-keyframes flicker {
   0% { opacity: 1; }
   30% { opacity: .8; }
@@ -195,7 +196,7 @@
 }", sheet.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void KeyframesTest()
 		{
 
@@ -223,19 +224,19 @@
 
 			// var rule2 = sheet.Children[0].Clone();
 
-			Assert.AreEqual(RuleType.Keyframes, rule.Type);
-			Assert.AreEqual("flicker", rule.Name);
+			Assert.Equal(RuleType.Keyframes, rule.Type);
+			Assert.Equal("flicker", rule.Name);
 
-			Assert.AreEqual(4, rule.Children.Count);
+			Assert.Equal(4, rule.Children.Count);
 
 			// TODO: KeyframeRule
 
-			Assert.AreEqual("0%", ((StyleRule)rule.Children[0]).Selector.ToString());
-			Assert.AreEqual("30%", ((StyleRule)rule.Children[1]).Selector.ToString());
-			Assert.AreEqual("60%", ((StyleRule)rule.Children[2]).Selector.ToString());
-			Assert.AreEqual("100%", ((StyleRule)rule.Children[3]).Selector.ToString());
+			Assert.Equal("0%", ((StyleRule)rule.Children[0]).Selector.ToString());
+			Assert.Equal("30%", ((StyleRule)rule.Children[1]).Selector.ToString());
+			Assert.Equal("60%", ((StyleRule)rule.Children[2]).Selector.ToString());
+			Assert.Equal("100%", ((StyleRule)rule.Children[3]).Selector.ToString());
 
-			Assert.AreEqual(@"@keyframes flicker {
+			Assert.Equal(@"@keyframes flicker {
   0% { opacity: 1; }
   30% { opacity: .8; }
   60% { opacity: 1; }
