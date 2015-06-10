@@ -10,14 +10,12 @@ namespace Carbon.Css.Parser
 		private readonly LexicalModeContext context = new LexicalModeContext(LexicalMode.Unknown);
 
 		public CssParser(TextReader textReader)
-		{
-			this.tokenizer = new CssTokenizer(new SourceReader(textReader));
-		}
+			: this(new CssTokenizer(new SourceReader(textReader)))
+		{ }
 
 		public CssParser(string text)
-		{
-			this.tokenizer = new CssTokenizer(new SourceReader(new StringReader(text)));
-		}
+			: this(new CssTokenizer(new SourceReader(new StringReader(text))))
+		{ }
 
 		public CssParser(CssTokenizer tokenizer)
 		{
@@ -49,9 +47,9 @@ namespace Carbon.Css.Parser
 		{
 			switch (tokenizer.Current.Kind)
 			{
-				case TokenKind.Directive: return ReadDirective();
-				case TokenKind.AtSymbol	: return ReadAtRule();
-				case TokenKind.Dollar	: return ReadAssignment();
+				case TokenKind.Directive : return ReadDirective();
+				case TokenKind.AtSymbol	 : return ReadAtRule();
+				case TokenKind.Dollar	 : return ReadAssignment();
 			}
 
 			var selector = ReadSelector();
@@ -106,28 +104,28 @@ namespace Carbon.Css.Parser
 
 			switch (atName.Text)
 			{
-				case "charset"		: ruleType = RuleType.Charset; break;
-				case "import"		: return ReadImportRule();
-				case "font-face"	: return ReadFontFaceRule();
-				case "media"		: return ReadMediaRule();
-				case "page"			: ruleType = RuleType.Page; break;
-				case "keyframes"	: return ReadKeyframesRule();
-				case "mixin"		: return ReadMixinBody();
+				case "charset"	 : ruleType = RuleType.Charset; break;
+				case "import"	 : return ReadImportRule();
+				case "font-face" : return ReadFontFaceRule();
+				case "media"	 : return ReadMediaRule();
+				case "page"		 : ruleType = RuleType.Page; break;
+				case "keyframes" : return ReadKeyframesRule();
+				case "mixin"	 : return ReadMixinBody();
 			}
-			
-			var selectorText = "";
+
+			string selectorText = null;
 
 			if (tokenizer.Current.Kind == TokenKind.Name)
 			{
 				selectorText = ReadSpan().ToString();
 			}
 
-			var rule = new AtRule(atName.Text, ruleType, selectorText);
+			var rule = new AtRule(atName.Text, ruleType, selectorText ?? "");
 
 			switch (tokenizer.Current.Kind)
 			{
-				case TokenKind.BlockStart: ReadBlock(rule); break; // {
-				case TokenKind.Semicolon: tokenizer.Read(); break; // ;
+				case TokenKind.BlockStart : ReadBlock(rule);  break; // {
+				case TokenKind.Semicolon  : tokenizer.Read(); break; // ;
 			}
 
 			return rule;
@@ -195,7 +193,7 @@ namespace Carbon.Css.Parser
 		{
 			var value = ReadValue();
 
-			var rule = new ImportRule(url: CssUrlValue.Parse(value.ToString()));
+			var rule = new ImportRule(CssUrlValue.Parse(value.ToString()));
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{
@@ -267,25 +265,24 @@ namespace Carbon.Css.Parser
 			
 			var value = tokenizer.Read();	// read value (string or number)
 
+			// TODO Length
+			// TODO Percentage
 			if (value.Kind == TokenKind.Number)
 			{
-				var hasUnit = (tokenizer.Current.Kind == TokenKind.String || tokenizer.Current.Kind == TokenKind.Name);
-
-				if (hasUnit)
+				if (tokenizer.Current.Kind == TokenKind.Unit)
 				{
-					var unit = tokenizer.Read(); // Read unit
+					var unit = CssUnit.Get(tokenizer.Read().Text);
 
 					return new CssDimension(value, unit) {
 						Trailing = ReadTrivia()
 					};
 				}
-				else
-				{
-					return new CssNumber(value) {
-						Trailing = ReadTrivia()
-					};
-				}
+
+				return new CssNumber(value) {
+					Trailing = ReadTrivia()
+				};
 			}
+		
 
 			if (tokenizer.Current.Kind == TokenKind.LeftParenthesis)
 			{
@@ -311,8 +308,6 @@ namespace Carbon.Css.Parser
 				Trailing = ReadTrivia()
 			};
 		}
-
-
 
 		/*
 		public CssFunction ReadFunction()
@@ -585,7 +580,7 @@ namespace Carbon.Css.Parser
 
 			tokenizer.Read(TokenKind.Colon, LexicalMode.Declaration);		// read :
 
-			ReadTrivia();													// TODO: read as leading annotation
+			ReadTrivia();													// TODO: read as leading trivia
 
 			var value = ReadValue();										// read value (value or valuelist)
 
@@ -603,7 +598,7 @@ namespace Carbon.Css.Parser
 		{
 			tokenizer.Read(TokenKind.Colon, LexicalMode.Declaration);		// read :
 
-			ReadTrivia();													// TODO: read as leading annotation
+			ReadTrivia();													// TODO: read as leading trivia
 
 			var value = ReadValue();										// read value (value or cssvariable)
 
@@ -617,11 +612,11 @@ namespace Carbon.Css.Parser
 			return new CssDeclaration(name.ToString(), value);
 		}
 
-		public Whitespace ReadTrivia()
+		public Trivia ReadTrivia()
 		{
 			if (tokenizer.IsEnd || !tokenizer.Current.IsTrivia) return null;
 
-			var trivia = new Whitespace();
+			var trivia = new Trivia();
 
 			while (tokenizer.Current.IsTrivia && !tokenizer.IsEnd)
 			{
@@ -645,7 +640,7 @@ namespace Carbon.Css.Parser
 				name = tokenizer.Read().Text;
 			}
 
-			var trivia = ReadTrivia();
+			ReadTrivia();
 
 			return name;
 		}
@@ -668,7 +663,7 @@ namespace Carbon.Css.Parser
 				}
 			}
 
-			list.AddRange(ReadTrivia()); // Trialing trivia
+			ReadTrivia(); // Trialing trivia
 
 			return list;
 		}

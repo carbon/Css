@@ -5,45 +5,22 @@
 	public class CssDimension : CssValue
 	{
 		private readonly CssToken number;
-		private readonly CssToken unit;
+		private readonly CssUnit unit;
 
-		public CssDimension(CssToken number, CssToken unit)
-			: base(GetDimensionKind(unit.Text))
+		public CssDimension(CssToken number, CssUnit unit)
+			: base(unit.Kind)
 		{
 			this.number = number;
 			this.unit	= unit;
 		}
 
-		public override string ToString() => number.Text + unit.Text;
+		public CssToken Number => number;
+
+		public CssUnit Unit => unit;
+
+		public override string ToString() => number.Text + unit.Name;
 
 		public override CssNode CloneNode() => new CssDimension(number, unit);
-
-		public static NodeKind GetDimensionKind(string a)
-		{
-			switch (a)
-			{
-				case "cm": 
-				case "mm": 
-				case "in":
-				case "pt": 
-				case "pc": 
-				case "px": return NodeKind.Length;
-
-				case "deg"  :
-				case "rad"  :
-				case "grad" : return NodeKind.Angle;
-
-				case "ms" :
-				case "s"  : return NodeKind.Time;
-
-				case "hz"  :
-				case "khz" : return NodeKind.Frequency;
-
-				case "%"   : return NodeKind.Percent;
-
-				default	   : return NodeKind.Dimension;
-			}
-		}
 	}
 }
 

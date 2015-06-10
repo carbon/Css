@@ -13,7 +13,7 @@ namespace Carbon.Css
 		public TokenList(CssToken[] tokens)
 			: base(tokens) { }
 
-		public void AddRange(IEnumerable<CssToken> tokens)
+		private void AddRange(IEnumerable<CssToken> tokens)
 		{
 			if (tokens == null) return;
 			

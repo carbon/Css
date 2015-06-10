@@ -285,7 +285,7 @@ namespace Carbon.Css
 
 		public void WriteAtRule(AtRule rule, int level)
 		{
-			writer.Write("@" + rule.AtName);
+			writer.Write("@" + rule.Name);
 
 			if (rule.SelectorText != null)
 			{

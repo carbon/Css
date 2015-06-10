@@ -46,6 +46,7 @@ namespace Carbon.Css.Parser
 		Function = 7,
 
 		Symbol = 10,
+		Unit = 11,
 
 		Mixin = 20
 	}

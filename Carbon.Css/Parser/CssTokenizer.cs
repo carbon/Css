@@ -8,6 +8,7 @@
 		private readonly LexicalModeContext mode;
 
 		private CssToken current;
+		private bool isEnd = false;
 
 		public CssTokenizer(SourceReader reader, LexicalMode mode = LexicalMode.Selector)
 		{
@@ -20,15 +21,9 @@
 			this.Next(); // Load the first token
 		}
 
-		public CssToken Current
-		{
-			get { return current; }
-		}
+		public CssToken Current => current;
 
-		public bool IsEnd
-		{
-			get { return isEnd; }
-		}
+		public bool IsEnd => isEnd;
 
 		public CssToken Read(TokenKind expect, LexicalMode mode)
 		{
@@ -40,14 +35,12 @@
 			return Read();
 		}
 
-		private bool isEnd = false;
-
 		// Returns the current token and advances to the next
 		public CssToken Read()
 		{
 			if (isEnd) throw new Exception("Already ready the last token");
 
-			var c = this.current;
+			var c = current;
 
 			if (!reader.IsEof)	Next();
 			else				isEnd = true;
@@ -57,9 +50,9 @@
 
 		private CssToken Next()
 		{
-			this.current = ReadNext();
+			current = ReadNext();
 
-			return this.current;
+			return current;
 		}
 
 		private CssToken ReadNext()
@@ -84,7 +77,7 @@
 					if (peek == '/' || peek == '*')
 						return ReadComment();
 					else
-						break;
+						return new CssToken(TokenKind.Divide, reader.Read(), reader.Position);
 
 				case ':': mode.Enter(LexicalMode.Value);							return new CssToken(TokenKind.Colon,		reader.Read(), reader.Position);
 				case ',':															return new CssToken(TokenKind.Comma,		reader.Read(), reader.Position);
@@ -95,11 +88,27 @@
 				case '(': return new CssToken(TokenKind.LeftParenthesis,  reader.Read(), reader.Position);
 				case ')': return new CssToken(TokenKind.RightParenthesis, reader.Read(), reader.Position);
 				
-				case '-': 
-					if (Char.IsDigit(reader.Peek())) 
+
+				case '!': // !=
+					if (reader.Peek() == '=') return new CssToken(TokenKind.Divide, reader.Read(2), reader.Position - 1);
+					
+					else break;
+				case '=': // ==
+					if (reader.Peek() == '=') return new CssToken(TokenKind.Divide, reader.Read(2), reader.Position - 1);
+
+					else break;
+
+				case '+': return new CssToken(TokenKind.Add, reader.Read(), reader.Position);
+				case '*': return new CssToken(TokenKind.Multiply, reader.Read(), reader.Position);
+
+				case '-':
+					if (Char.IsDigit(reader.Peek()))
 						return ReadNumber();
-					else 
+					else if (reader.Peek() == ' ')
+						return new CssToken(TokenKind.Subtract, reader.Read(), reader.Position);
+					else
 						break;
+
 				case '0':
 				case '1':
 				case '2':
@@ -116,10 +125,27 @@
 
 			switch (mode.Current)
 			{
-				case LexicalMode.Symbol		: return ReadSymbol();
-				case LexicalMode.Value		: return ReadValue();
-				default						: return ReadName();
+				case LexicalMode.Symbol	: return ReadSymbol();
+				case LexicalMode.Value	: return ReadValue();
+				case LexicalMode.Unit	: return ReadUnit();
+				default					: return ReadName();
 			}
+		}
+
+		private CssToken ReadUnit()
+		{
+			reader.Mark();
+
+			while (Char.IsLetter(reader.Current) || reader.Current == '%')
+			{
+				if (reader.IsEof) throw ParseException.UnexpectedEOF("Name");
+
+				reader.Next();
+			}
+
+			mode.Leave(LexicalMode.Unit);
+
+			return new CssToken(TokenKind.Unit, reader.Unmark(), reader.MarkStart);
 		}
 
 		private CssToken ReadSymbol()
@@ -196,6 +222,12 @@
 			{
 				reader.Next();
 			}
+
+
+			if (reader.Current == '%' || Char.IsLetter(reader.Current))
+			{
+				mode.Enter(LexicalMode.Unit);
+            }
 
 			return new CssToken(TokenKind.Number, reader.Unmark(), reader.MarkStart);
 		}

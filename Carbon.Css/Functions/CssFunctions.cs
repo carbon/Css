@@ -13,12 +13,21 @@ namespace Carbon.Css
 			["saturate"]	= Saturate,
 			["desaturate"]	= Desaturate,
 			["adjust-hue"]	= AdjustHue,
-			["mix"]			= Mix
+			["mix"]			= Mix,
+			
+			// 
+			["if"]			= If
 		};
 
 		public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
 		{
 			return dic.TryGetValue(name, out func);
+		}
+		
+		// if($condition, $if-true, $if-false)
+		public static CssValue If(CssValue[] args)
+		{
+			return (ToBoolean(args[0])) ? args[1] : args[2];
 		}
 
 		public static CssValue Mix(CssValue[] args)
@@ -83,6 +92,14 @@ namespace Carbon.Css
 			return CssColor.FromRgba(color.R, color.G, color.B, float.Parse(args[1].ToString()));
 		}
 
+
+		#region Helpers
+
+		private static bool ToBoolean(CssValue value)
+		{
+			return value.ToString().ToLower() == "true";
+		}
+
 		private static Rgba GetColor(CssValue value)
 		{
 			return Color.Rgba.Parse(value.ToString());
@@ -107,5 +124,7 @@ namespace Carbon.Css
 				return float.Parse(text);
 			}
 		}
+
+		#endregion
 	}
 }

@@ -5,7 +5,7 @@ namespace Carbon.Css
 {
 	using Parser;
 
-	public class Whitespace : Collection<CssToken>
+	public class Trivia : Collection<CssToken>
 	{
 		public override string ToString()
 		{

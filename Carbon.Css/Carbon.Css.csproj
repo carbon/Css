@@ -42,6 +42,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ast\Control\ForDirective.cs" />
     <Compile Include="Ast\CssRoot.cs" />
     <Compile Include="Ast\Rules\AtRule.cs" />
     <Compile Include="Ast\Rules\KeyframesRule.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Ast\Values\CssString.cs" />
     <Compile Include="Functions\CssFunctions.cs" />
     <Compile Include="Model\CssScope.cs" />
+    <Compile Include="Model\CssUnit.cs" />
     <Compile Include="Model\TokenList.cs" />
     <Compile Include="Ast\Whitespace.cs" />
     <Compile Include="Ast\Values\CssValueList.cs" />
@@ -72,7 +74,7 @@
     <Compile Include="Parser\CssResolver.cs" />
     <Compile Include="Model\CssParameter.cs" />
     <Compile Include="Ast\IncludeNode.cs" />
-    <Compile Include="Ast\MixinNode.cs" />
+    <Compile Include="Ast\Control\MixinNode.cs" />
     <Compile Include="Ast\Values\CssAssignment.cs" />
     <Compile Include="Comptability\CssModule.cs" />
     <Compile Include="Comptability\CssModuleType.cs" />

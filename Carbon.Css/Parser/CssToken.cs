@@ -39,15 +39,13 @@
 	{
 		// Identifier,		// selector or identifer (IDENT)
 		
-		Name,			// name (followed by a :)
+		Name,		// name (followed by a :)
 
 		// Values
 		String,
 		Number,
+		Unit,		// {em,ex,in,cm,mm,pt,pc,px
 
-		Percentage,		// {number}%
-		Dimension,		// {number}px
-		
 		Uri,			// uri({string})
 
 		Dollar,			// ${variableName}
@@ -64,9 +62,22 @@
 		RightParenthesis,	// )
 
 		// Trivia
-		Directive,			// //= *
+		Directive,		// //= *
 		Whitespace,
 		Comment,
+
+		Equals,			// ==
+		NotEquals,		// !=
+		Gt,				// > 
+		Gte,            // >=
+		Lt,             // <
+		Lte,            // <=
+
+		// Operators
+		Divide,		// /
+		Multiply,   // *
+		Add,		// +
+		Subtract,	// -
 	}
 }
 

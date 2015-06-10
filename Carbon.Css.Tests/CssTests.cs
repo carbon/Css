@@ -238,7 +238,7 @@ div { transition: width: 5px; }"
 
 			Assert.Equal(TokenKind.LeftParenthesis	, tokens[1].Kind);
 			Assert.Equal(TokenKind.Number			, tokens[2].Kind);
-			Assert.Equal(TokenKind.Percent			, tokens[3].Kind);
+			Assert.Equal(TokenKind.Unit				, tokens[3].Kind);
 			Assert.Equal(TokenKind.Whitespace		, tokens[4].Kind);
 			Assert.Equal(TokenKind.Divide			, tokens[5].Kind);
 			Assert.Equal(TokenKind.Whitespace		, tokens[6].Kind);

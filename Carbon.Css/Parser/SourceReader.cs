@@ -29,6 +29,8 @@ namespace Carbon.Css.Parser
 
 		public bool IsEof => current == EofChar;
 
+		public bool IsWhiteSpace => Char.IsWhiteSpace(current);
+
 		public int Position => position;
 
 		public char Peek()
@@ -49,6 +51,20 @@ namespace Carbon.Css.Parser
 			Next();
 
 			return c;
+		}
+
+		public string Read(int count)
+		{
+			var buffer = new char[count];
+
+			for (int i = 0; i < count; i++)
+			{
+				buffer[i] = current;
+
+				Next();
+			}
+
+			return new string(buffer);
 		}
 
 		/// <summary>
@@ -77,11 +93,6 @@ namespace Carbon.Css.Parser
 			position++;
 
 			return current;
-		}
-
-		public bool IsWhiteSpace
-		{
-			get { return Char.IsWhiteSpace(current); }
 		}
 
 		#region Mark

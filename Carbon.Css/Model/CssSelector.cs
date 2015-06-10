@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Carbon.Css
 {
+	using Parser;
 	public class CssSelector : IEnumerable<string>
 	{
 		private readonly List<string> parts;
@@ -14,12 +15,22 @@ namespace Carbon.Css
 		{
 			var sb = new StringBuilder();
 
+			this.parts = new List<string>();
+
 			foreach (var token in tokens)
 			{
+				if (token.Kind == TokenKind.Comma)
+				{
+					parts.Add(sb.ToString().Trim());
+
+					sb.Clear();
+
+					continue;
+				}
+
 				if (token.IsTrivia)
 				{
-					// Prettify the trivia
-					sb.Append(" ");
+					sb.Append(" "); // Prettify the trivia
 				}
 				else
 				{
@@ -27,7 +38,10 @@ namespace Carbon.Css
 				}
 			}
 
-			this.parts = new List<string>(sb.ToString().Split(',').Select(t => t.Trim()));
+			if (sb.Length > 0)
+			{
+				parts.Add(sb.ToString().Trim());
+			}
 		}
 
 		public CssSelector(string text)

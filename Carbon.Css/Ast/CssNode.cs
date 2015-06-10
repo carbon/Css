@@ -25,9 +25,9 @@ namespace Carbon.Css
 			set { parent = value; }
 		}
 
-		internal Whitespace Leading { get; set; }
+		internal Trivia Leading { get; set; }
 
-		internal Whitespace Trailing { get; set; }
+		internal Trivia Trailing { get; set; }
 
 		// ChildNodes
 
