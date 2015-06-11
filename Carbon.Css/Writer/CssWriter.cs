@@ -74,16 +74,26 @@ namespace Carbon.Css
 
 		#region Expressions
 
-		public void EvaluateIf(IfBlock block)
+		public void EvaluateIf(IfBlock block, int level = 0)
 		{
-			var result = EvalulateExpression((BinaryExpression)block.Condition);
+			var result = EvalulateExpression(block.Condition);
 
-			if (ToBoolean(result))
+            if (ToBoolean(result))
 			{
-				foreach (var rule in block.OfType<CssRule>())
+				foreach (var child in block.Children)
 				{
-					WriteRule(rule);
+					
+
+					if (child is CssRule)
+					{
+						WriteRule((CssRule)child);
+					}
+					else if (child is CssDeclaration)
+					{
+						WriteDeclaration((CssDeclaration)child, level);
+					}
 				}
+				
 			}
 		}
 
@@ -316,7 +326,6 @@ namespace Carbon.Css
 		
 		}
 
-
 		public void WriteVariable(CssVariable variable)
 		{
 			if (variable.Value == null)
@@ -526,9 +535,13 @@ namespace Carbon.Css
 
 					var childRule = (CssRule)node;
 
-					WriteRule(childRule, level + 1);				
+					WriteRule(childRule, level + 1);
 				}
-
+				else if (node.Kind == NodeKind.If)
+				{
+					EvaluateIf((IfBlock)node, level + 1);
+				}
+				
 				if (!condenced)
 				{
 					writer.WriteLine();
@@ -649,8 +662,6 @@ namespace Carbon.Css
 
 		public IEnumerable<CssRule> Rewrite(CssRule rule)
 		{
-			var root = new List<CssRule>();
-
 			var styleRule = rule as StyleRule;
 
 			if (styleRule == null || rule.All(r => r.Kind == NodeKind.Declaration))
@@ -660,29 +671,25 @@ namespace Carbon.Css
 				yield break;
 			}
 
-			var clone = (StyleRule)rule.CloneNode();
+			// Figure out how to eliminate this clone
 
-			root.Clear();
-
-			root.Add(clone);
+			var clone = (StyleRule)rule.CloneNode();		
 
 			// Expand includes
 			foreach (var includeNode in clone.Children.OfType<IncludeNode>().ToArray())
 			{
-				ExpandInclude(
-					includeNode,
-					clone
-				);
+				ExpandInclude(includeNode, clone);
 
 				clone.Children.Remove(includeNode);
 			}
 
+			var root = new List<CssRule>();
+
+			root.Add(clone);
+
 			foreach (var nestedRule in clone.Children.OfType<StyleRule>().ToArray())
 			{
-				foreach (var r in ExpandStyle(
-					rule: nestedRule,
-					parent: clone
-				))
+				foreach (var r in ExpandStyle(nestedRule, parent: clone))
 				{
 					root.Add(r);
 				}
@@ -760,7 +767,6 @@ namespace Carbon.Css
 				i++;
 			}
 		}
-
 
 		public void BindVariables(CssNode node, CssScope scope)
 		{

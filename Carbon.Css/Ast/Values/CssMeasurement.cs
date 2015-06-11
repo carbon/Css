@@ -1,24 +1,36 @@
 ﻿namespace Carbon.Css
 {
+	using System;
+
 	public class CssMeasurement : CssValue
 	{
-		private readonly float number;
+		private readonly float value;
 		private readonly CssUnit unit;
 
-		public CssMeasurement(float number, CssUnit unit)
+		public CssMeasurement(float value, CssUnit unit)
 			: base(unit.Kind)
 		{
-			this.number = number;
+			this.value = value;
 			this.unit	= unit;
 		}
 
-		public float Number => number;
+		public float Value => value;
 
 		public CssUnit Unit => unit;
 
-		public override string ToString() => number + unit.Name;
+		public override string ToString() => value + unit.Name;
 
-		public override CssNode CloneNode() => new CssMeasurement(number, unit);
+		public override CssNode CloneNode() => new CssMeasurement(value, unit);
+
+		public CssValue Multiply(CssValue node)
+		{
+			switch (node.Kind)
+			{
+				case NodeKind.Number	 : return new CssMeasurement(this.value * ((CssNumber)node).Value, unit);
+				case NodeKind.Percentage : return new CssMeasurement(this.value * (((CssNumber)node).Value / 100), unit);
+				default					 : throw new Exception($"Cannot multiply {node.Kind} with {this.Kind}.");
+			}
+		}
 	}
 
 	// CssLength
@@ -29,6 +41,15 @@
 // A dimension is a number immediately followed by a unit identifier.
 // It corresponds to the DIMENSION token in the grammar. 
 // [CSS21] Like keywords, unit identifiers are case-insensitive within the ASCII range.
+
+/*
+math    : calc S*;
+calc    : "calc(" S* sum S* ")";
+sum     : product [ S+ [ "+" | "-" ] S+ product ]*;
+product : unit [ S* [ "*" S* unit | "/" S* NUMBER ] ]*;
+attr    : "attr(" S* qname [ S+ type-keyword ]? S* [ "," [ unit | calc ] S* ]? ")";
+unit    : [ NUMBER | DIMENSION | PERCENTAGE | "(" S* sum S* ")" | calc | attr ];
+*/
 
 /*
 {num}{E}{M}			{return EMS;}

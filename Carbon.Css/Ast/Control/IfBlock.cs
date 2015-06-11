@@ -11,6 +11,18 @@
 		}
 
 		public CssValue Condition => condition;
+
+		public override CssNode CloneNode()
+		{ 
+			var block = new IfBlock(condition);
+
+			foreach (var child in children)
+			{
+				block.Add(child);
+			}
+
+			return block;
+		}
 	}
 
 	/*

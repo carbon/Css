@@ -217,8 +217,6 @@ namespace Carbon.Css.Parser
 
 			var rule = new IfBlock(condition);
 
-			// Declarations
-
 			ReadBlock(rule);
 
 			return rule;
@@ -613,7 +611,8 @@ namespace Carbon.Css.Parser
 
 					switch (name.Text)
 					{
-						case "include": block.Add(ReadInclude()); continue;
+						case "include" : block.Add(ReadInclude()); continue;
+						case "if"	   : block.Add(ReadIfRule());  continue;
 					}
 				}
 
@@ -667,7 +666,7 @@ namespace Carbon.Css.Parser
 
 			ReadTrivia();												// TODO: read as leading trivia
 
-			var value = ReadValueList();									// read value (value or cssvariable)
+			var value = ReadValueList();								// read value (value or cssvariable)
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{

@@ -2,8 +2,6 @@
 {
 	using System;
 
-	using Carbon.Css.Tests;
-
 	using Xunit;
 
 	public class ExpressionTests
@@ -61,6 +59,52 @@ $foregroundColor: #000000;
 
 			Assert.Equal("div { background-color: red; }", sheet.ToString());
 		}
+
+		[Fact]
+		public void ExpressionTest4()
+		{
+			var sheet = StyleSheet.Parse(@"
+$backgroundColor: #ffffff;
+$foregroundColor: #000000;
+
+
+div {
+  background-color: red;
+
+  @if readability($foregroundColor, $backgroundColor) > 0.5 { 
+	color: orange;
+  }
+}
+");
+			var ifBlock = sheet.Children[0].Children[1];
+
+            Assert.Equal(NodeKind.If, ifBlock.Kind);
+			Assert.Equal(ifBlock.Children.Count, 1);
+
+			Assert.Equal(
+@"div {
+  background-color: red;
+  color: orange;
+}", sheet.ToString());
+		}
+
+		/*
+		[Fact]
+		public void ExpressionTest5()
+		{
+
+var sheet = StyleSheet.Parse(@"
+  div {
+    font-size: 50px * 0.5;
+  }
+
+");
+
+			var measurement = (CssDeclaration)sheet.Children[0].Children[0];
+			
+			Assert.Equal("div { background-color: orange; }", sheet.ToString());
+		}
+		*/
 
 	}
 }
