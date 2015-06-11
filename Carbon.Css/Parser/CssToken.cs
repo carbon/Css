@@ -66,6 +66,10 @@
 		Whitespace,
 		Comment,
 
+
+		And,			// && 
+		Or,				// ||
+
 		Equals,			// ==
 		NotEquals,		// !=
 		Gt,				// > 
@@ -78,6 +82,7 @@
 		Multiply,   // *
 		Add,		// +
 		Subtract,	// -
+		Mod    // %
 	}
 }
 

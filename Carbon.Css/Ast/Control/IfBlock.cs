@@ -1,6 +1,5 @@
-﻿namespace Carbon.Css.Ast
+﻿namespace Carbon.Css
 {
-	/*
 	public class IfBlock : CssBlock
 	{
 		private readonly CssValue condition;
@@ -14,6 +13,7 @@
 		public CssValue Condition => condition;
 	}
 
+	/*
 	public class EachBlock : CssNode
 	{
 		private readonly string variableName;

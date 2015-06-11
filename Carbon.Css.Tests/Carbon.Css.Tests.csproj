@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpressionTests.cs" />
     <Compile Include="MediaTests.cs" />
     <Compile Include="SassTests.cs" />
     <Compile Include="CssTests.cs" />

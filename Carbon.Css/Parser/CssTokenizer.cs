@@ -87,16 +87,34 @@
 
 				case '(': return new CssToken(TokenKind.LeftParenthesis,  reader.Read(), reader.Position);
 				case ')': return new CssToken(TokenKind.RightParenthesis, reader.Read(), reader.Position);
-				
+
+				case '&':
+					if (reader.Peek() == '&') return new CssToken(TokenKind.And, reader.Read(2), reader.Position - 1);
+
+					else break;
+
+				case '|':
+					if (reader.Peek() == '|') return new CssToken(TokenKind.Or, reader.Read(2), reader.Position - 1);
+
+					else break;
 
 				case '!': // !=
-					if (reader.Peek() == '=') return new CssToken(TokenKind.Divide, reader.Read(2), reader.Position - 1);
+					if (reader.Peek() == '=') return new CssToken(TokenKind.NotEquals, reader.Read(2), reader.Position - 1);
 					
 					else break;
 				case '=': // ==
-					if (reader.Peek() == '=') return new CssToken(TokenKind.Divide, reader.Read(2), reader.Position - 1);
+					if (reader.Peek() == '=') return new CssToken(TokenKind.Equals, reader.Read(2), reader.Position - 1);
 
 					else break;
+
+				case '>': // >=
+					if (reader.Peek() == '=') return new CssToken(TokenKind.Gte, reader.Read(2), reader.Position - 1);
+					else					  return new CssToken(TokenKind.Gt, reader.Read(), reader.Position);
+
+				case '<': // <=
+					if (reader.Peek() == '=') return new CssToken(TokenKind.Lte, reader.Read(2), reader.Position - 1);
+					else					  return new CssToken(TokenKind.Lt, reader.Read(), reader.Position);
+
 
 				case '+': return new CssToken(TokenKind.Add, reader.Read(), reader.Position);
 				case '*': return new CssToken(TokenKind.Multiply, reader.Read(), reader.Position);

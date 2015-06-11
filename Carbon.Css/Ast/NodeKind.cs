@@ -33,7 +33,6 @@
 		Time,
 		Percentage,
 		Resolution,
-
 		UnknownMeasurement,
 
 		// Extensions

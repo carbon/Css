@@ -37,6 +37,13 @@ namespace Carbon.Css
 
 			foreach (var child in sheet.Children)
 			{
+				if (child.Kind == NodeKind.If)
+				{
+					EvaluateIf((IfBlock)child);
+
+					continue;
+				}
+
 				var rule = child as CssRule;
 
 				if (rule == null) continue;
@@ -65,6 +72,82 @@ namespace Carbon.Css
 			}
 		}
 
+		#region Expressions
+
+		public void EvaluateIf(IfBlock block)
+		{
+			var result = EvalulateExpression((BinaryExpression)block.Condition);
+
+			if (ToBoolean(result))
+			{
+				foreach (var rule in block.OfType<CssRule>())
+				{
+					WriteRule(rule);
+				}
+			}
+		}
+
+		public bool ToBoolean(object value)
+		{
+			if (value is bool) return (bool)value;
+
+			return false;
+		}
+
+		public object GetVariableValue(CssVariable variable)
+		{
+			if (variable.Value == null)
+			{
+				variable.Value = context.Scope.GetValue(variable.Symbol);
+			}
+
+			return variable.Value;
+		}
+
+		public object EvalulateExpression(CssValue expression)
+		{
+			switch (expression.Kind)
+			{
+				case NodeKind.Variable   : return GetVariableValue((CssVariable)expression);
+				case NodeKind.Expression : return EvalBinaryExpression((BinaryExpression)expression);
+				case NodeKind.Function	 : return EvalFunction((CssFunction)expression);
+				default					 : return expression.ToString();
+			}
+		}
+
+		public object EvalBinaryExpression(BinaryExpression expression)
+		{
+			var left = EvalulateExpression(expression.Left).ToString();
+			var right = EvalulateExpression(expression.Right).ToString();
+
+			switch (expression.Operator)
+			{
+				case Op.Equals    : return left == right;
+				case Op.NotEquals : return left != right;
+				case Op.Gt		  : return float.Parse(left) >  float.Parse(right);
+				case Op.Gte		  : return float.Parse(left) >= float.Parse(right);
+				case Op.Lt		  : return float.Parse(left) <  float.Parse(right);
+				case Op.Lte		  : return float.Parse(left) <= float.Parse(right);
+			}
+
+			return true;
+		}
+
+		public CssValue EvalFunction(CssFunction function)
+		{
+			Func<CssValue[], CssValue> func;
+
+			if (CssFunctions.TryGet(function.Name, out func))
+			{
+				var args = GetArgs(function.Args).ToArray();
+
+				return func(args);
+			}
+
+			throw new Exception("could not find function:" + function.Name);
+		}
+
+		#endregion
 
 		public void InlineImport(ImportRule importRule, StyleSheet sheet)
 		{
@@ -232,6 +315,7 @@ namespace Carbon.Css
 			}
 		
 		}
+
 
 		public void WriteVariable(CssVariable variable)
 		{

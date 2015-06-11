@@ -42,14 +42,14 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ast\Control\ForDirective.cs" />
+    <Compile Include="Ast\Control\IfBlock.cs" />
     <Compile Include="Ast\CssRoot.cs" />
     <Compile Include="Ast\Rules\AtRule.cs" />
     <Compile Include="Ast\Rules\KeyframesRule.cs" />
     <Compile Include="Ast\Rules\MediaRule.cs" />
     <Compile Include="Ast\Values\CssColor.cs" />
     <Compile Include="Ast\Values\CssFunction.cs" />
-    <Compile Include="Ast\CssExpression.cs" />
+    <Compile Include="Ast\Expressions\CssExpression.cs" />
     <Compile Include="Ast\Values\CssNumber.cs" />
     <Compile Include="Ast\Values\CssVariable.cs" />
     <Compile Include="Ast\Values\CssMeasurement.cs" />

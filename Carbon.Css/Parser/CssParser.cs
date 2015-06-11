@@ -111,6 +111,7 @@ namespace Carbon.Css.Parser
 				case "page"		 : ruleType = RuleType.Page; break;
 				case "keyframes" : return ReadKeyframesRule();
 				case "mixin"	 : return ReadMixinBody();
+				case "if"		 : return ReadIfRule();
 			}
 
 			string selectorText = null;
@@ -191,7 +192,7 @@ namespace Carbon.Css.Parser
 
 		public CssRule ReadImportRule()
 		{
-			var value = ReadValue();
+			var value = ReadValueList();
 
 			var rule = new ImportRule(CssUrlValue.Parse(value.ToString()));
 
@@ -205,13 +206,31 @@ namespace Carbon.Css.Parser
 			return rule;
 		}
 
+
+		public IfBlock ReadIfRule()
+		{
+			// @font-face [expression] {
+
+			ReadTrivia();
+
+			var condition = ReadExpression();
+
+			var rule = new IfBlock(condition);
+
+			// Declarations
+
+			ReadBlock(rule);
+
+			return rule;
+		}
+
 		#endregion
 
 		#region Values
 
 		// Read comma seperated values
 
-		public CssValue ReadValue()
+		public CssValue ReadValueList()
 		{
 			// : #fffff
 			// : $oranges
@@ -245,7 +264,7 @@ namespace Carbon.Css.Parser
 		{
 			while (!tokenizer.IsEnd)
 			{
-				yield return ReadLiteral();
+				yield return ReadComponent();
 
 				var current = tokenizer.Current;
 
@@ -259,35 +278,26 @@ namespace Carbon.Css.Parser
 			}
 		}
 
-		public CssValue ReadLiteral()
+		public CssValue ReadComponent()
 		{
-			if (tokenizer.Current.Kind == TokenKind.Dollar) return ReadVariable();
-			
-			var value = tokenizer.Read();	// read value (string or number)
+			// Variable
+			// Number
+			// Measurement
+			// Function
 
-			// TODO Length
-			// TODO Percentage
-			if (value.Kind == TokenKind.Number)
+			switch (tokenizer.Current.Kind)
 			{
-				if (tokenizer.Current.Kind == TokenKind.Unit)
-				{
-					var unit = CssUnit.Get(tokenizer.Read().Text);
-
-					return new CssMeasurement(float.Parse(value.Text), unit) {
-						Trailing = ReadTrivia()
-					};
-				}
-
-				return new CssNumber(value) {
-					Trailing = ReadTrivia()
-				};
+				case TokenKind.Dollar: return ReadVariable();
+				case TokenKind.Number: return ReadNumberOrMeasurement();
 			}
+
+			var value = tokenizer.Read();   // read string or number
 
 			if (tokenizer.Current.Kind == TokenKind.LeftParenthesis)
 			{
 				tokenizer.Read(TokenKind.LeftParenthesis, LexicalMode.Function);
 
-				var args = ReadValue();
+				var args = ReadValueList();
 
 				tokenizer.Read(TokenKind.RightParenthesis, LexicalMode.Function);
 
@@ -308,6 +318,24 @@ namespace Carbon.Css.Parser
 			};
 		}
 
+		public CssValue ReadNumberOrMeasurement()
+		{
+			var value = float.Parse(tokenizer.Read().Text);   // read number
+			
+			if (tokenizer.Current.Kind == TokenKind.Unit)
+			{
+				var unit = CssUnit.Get(tokenizer.Read().Text);
+
+				return new CssMeasurement(value, unit) {
+					Trailing = ReadTrivia()
+				};
+			}
+
+			return new CssNumber(value) {
+				Trailing = ReadTrivia()
+			};
+		}
+
 		/*
 		public CssFunction ReadFunction()
 		{
@@ -317,8 +345,6 @@ namespace Carbon.Css.Parser
 			// to the notation followed by a right parenthesis. 
 			// White space is allowed, but optional, immediately inside the parentheses. 
 			// If a function takes a list of arguments, the arguments are separated by a comma (‘,’) with optional whitespace before and after the comma.
-
-
 		}
 		*/
 
@@ -333,13 +359,55 @@ namespace Carbon.Css.Parser
 			};
 		}
 
-		/*
-		https://en.wikipedia.org/wiki/Shunting-yard_algorithm
-		public CssExpression ReadExpression()
+
+		#endregion
+
+		#region Expressions
+
+		// https://en.wikipedia.org/wiki/Shunting-yard_algorithm
+
+		// 1: *, /, %
+		// 2: +, – 
+		// 3: ==, !=, >, >=, <, <= 
+		// 4: &&, ||
+
+		// | number | plus | number | equals |  number  |
+		//      5      +       10       ==       5
+		// |    BinaryExpression    |
+		// |               BinaryExpression             |
+		public CssValue ReadExpression()
 		{
-			
+			var left = ReadComponent(); // Variable, FunctionCall, ...
+
+			Op? op = null;
+
+			switch (tokenizer.Current.Kind)
+			{
+				case TokenKind.Add		 : op = Op.Add;			break;
+				case TokenKind.Subtract	 : op = Op.Subtract;	break;
+				case TokenKind.Multiply  : op = Op.Multipy;		break;
+				case TokenKind.Divide    : op = Op.Divided;		break;
+				case TokenKind.Mod		 : op = Op.Mod;			break;
+				case TokenKind.Gt		 : op = Op.Gt;			break;
+				case TokenKind.Gte		 : op = Op.Gte;			break;
+				case TokenKind.Lt		 : op = Op.Lt;			break;
+				case TokenKind.Lte		 : op = Op.Lte;			break;
+				case TokenKind.And		 : op = Op.And;			break;
+				case TokenKind.Or		 : op = Op.Or;			break;
+				case TokenKind.Equals    : op = Op.Equals;		break;
+				case TokenKind.NotEquals : op = Op.NotEquals;	break;
+			}
+
+			if (op == null) return left;
+
+			tokenizer.Read(); // Read Op
+
+			ReadTrivia();
+
+			var right = ReadComponent();
+
+			return new BinaryExpression(left, op.Value, right);
 		}
-		*/
 
 		#endregion
 
@@ -357,7 +425,7 @@ namespace Carbon.Css.Parser
 
 			ReadTrivia();														// Read trivia
 
-			var value = ReadValue();
+			var value = ReadValueList();
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{
@@ -370,7 +438,6 @@ namespace Carbon.Css.Parser
 		}
 
 		#endregion
-
 		
 		public CssSelector ReadSelector()
 		{
@@ -498,7 +565,7 @@ namespace Carbon.Css.Parser
 			{
 				tokenizer.Read(TokenKind.LeftParenthesis, LexicalMode.Function);
 
-				args = ReadValue();
+				args = ReadValueList();
 
 				tokenizer.Read(TokenKind.RightParenthesis, LexicalMode.Function);
 			}
@@ -574,19 +641,19 @@ namespace Carbon.Css.Parser
 
 		public CssDeclaration ReadDeclaration()
 		{
-			var name = ReadName();											// read name
+			var name = ReadName();										// read name
 
-			ReadTrivia();													// read trivia
+			ReadTrivia();												// read trivia
 
-			tokenizer.Read(TokenKind.Colon, LexicalMode.Declaration);		// read :
+			tokenizer.Read(TokenKind.Colon, LexicalMode.Declaration);	// read :
 
-			ReadTrivia();													// TODO: read as leading trivia
+			ReadTrivia();												// TODO: read as leading trivia
 
-			var value = ReadValue();										// read value (value or valuelist)
+			var value = ReadValueList();								// read value (value or valuelist)
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{
-				tokenizer.Read();											// read ;
+				tokenizer.Read();										// read ;
 			}
 
 			ReadTrivia();
@@ -596,15 +663,15 @@ namespace Carbon.Css.Parser
 
 		public CssDeclaration ReadDeclarationFromName(TokenList name)
 		{
-			tokenizer.Read(TokenKind.Colon, LexicalMode.Declaration);		// read :
+			tokenizer.Read(TokenKind.Colon, LexicalMode.Declaration);	// read :
 
-			ReadTrivia();													// TODO: read as leading trivia
+			ReadTrivia();												// TODO: read as leading trivia
 
-			var value = ReadValue();										// read value (value or cssvariable)
+			var value = ReadValueList();									// read value (value or cssvariable)
 
 			if (tokenizer.Current.Kind == TokenKind.Semicolon)
 			{
-				tokenizer.Read();											// read ;
+				tokenizer.Read();										// read ;
 			}
 
 			ReadTrivia();

@@ -19,7 +19,7 @@ namespace Carbon.Css
 
 				var parser = new CssParser(tokenizer);
 
-				return parser.ReadValue();
+				return parser.ReadValueList();
 			}
 		}
 
