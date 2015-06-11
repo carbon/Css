@@ -1,8 +1,9 @@
-﻿namespace Carbon.Css.Parser
+﻿using System;
+using System.Collections.Generic;
+
+namespace Carbon.Css.Parser
 {
-	using Carbon.Css.Helpers;
-	using System;
-	using System.Collections.Generic;
+	using Helpers;
 
 	public class ParseException : Exception
 	{
@@ -22,7 +23,7 @@
 
 		public static ParseException UnexpectedEOF(string context)
 		{
-			return new ParseException(string.Format("Unexpected EOF reading '{0}'.", context));
+			return new ParseException($"Unexpected EOF reading '{context}'.");
 		}
 	}
 
@@ -33,7 +34,7 @@
 		private int position;
 
 		public UnexpectedModeChange(LexicalMode currentMode, LexicalMode leavingMode, int position)
-			: base(String.Format("Unexpected mode change. Expected {0}. Was {1}.", currentMode.ToString(), leavingMode.ToString()))
+			: base($"Unexpected mode change. Expected {currentMode}. Was {leavingMode}.")
 		{
 			this.position = position;
 		}
@@ -52,19 +53,19 @@
 		private readonly CssToken token;
 
 		public UnexpectedTokenException(LexicalMode mode, CssToken token)
-			: base(String.Format("Unexpected token reading {0}. Was '{1}'.", mode, token.Kind))
+			: base($"Unexpected token reading {mode}. Was '{token.Kind}'.")
 		{
 			this.token = token;
 		}
 
 		public UnexpectedTokenException(LexicalMode mode, TokenKind expectedKind, CssToken token)
-			: base(String.Format("Unexpected token reading {0}. Expected '{1}'. Was '{2}'.", mode, expectedKind, token.Kind), token.Position)
+			: base($"Unexpected token reading {mode}. Expected '{expectedKind}'. Was '{token.Kind}'.", token.Position)
 		{
 			this.token = token;
 		}
 
 		public UnexpectedTokenException(CssToken token)
-			: base(String.Format("Unexpected token. Was '{0}:{1}'.", token.Kind, token.Text), token.Position)
+			: base($"Unexpected token. Was '{token.Kind}:{token.Text}'.", token.Position)
 		{
 			this.token = token;
 		}

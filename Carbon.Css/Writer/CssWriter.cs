@@ -82,8 +82,6 @@ namespace Carbon.Css
 			{
 				foreach (var child in block.Children)
 				{
-					
-
 					if (child is CssRule)
 					{
 						WriteRule((CssRule)child);
@@ -188,7 +186,7 @@ namespace Carbon.Css
 						writer.WriteLine("body, html { background-color: red !important; }");
 						writer.WriteLine("body * { display: none; }");
 
-						writer.WriteLine(string.Format("/* --- Parse Error in '{0}':{1} ", absolutePath, ex.Message));
+						writer.WriteLine($"/* --- Parse Error in '{absolutePath}':{ex.Message} ");
 
 						if (ex.Lines != null)
 						{
@@ -425,8 +423,9 @@ namespace Carbon.Css
 
 		public void WriteMediaRule(MediaRule rule, int level)
 		{
-			writer.Write("@media {0} ", rule.RuleText); // Write selector
-
+			writer.Write("@media ");
+			writer.Write(rule.RuleText); // Write rule text
+			writer.Write(" ");
 			WriteBlock(rule, level);
 		}
 
@@ -458,8 +457,9 @@ namespace Carbon.Css
 				}
 			}
 
-
-			writer.Write("@keyframes {0} ", rule.Name); // Write selector
+			writer.Write("@keyframes ");
+			writer.Write(rule.Name);
+			writer.Write(" ");
 
 			support = null;
 
@@ -474,13 +474,15 @@ namespace Carbon.Css
 		{
 			support = new[] { browser };
 
-			writer.Write("@" + browser.Prefix.Text + "keyframes {0} ", rule.Name); // Write selector
+			writer.Write("@");
+			writer.Write(browser.Prefix.Text);
+			writer.Write("keyframes ");
+			writer.Write(rule.Name);
+			writer.Write(" ");
 
 			WriteBlock(rule, level);
 
 			support = context.BrowserSupport;
-
-			// TODO: Expand
 		}
 
 		public void WriteBlock(CssBlock block, int level)
@@ -737,7 +739,7 @@ namespace Carbon.Css
 
 			if (!context.Mixins.TryGetValue(include.Name, out mixin))
 			{
-				throw new Exception(string.Format("Mixin '{0}' not registered", include.Name));
+				throw new Exception($"Mixin '{include.Name}' not registered");
 			}
 
 			var index = rule.Children.IndexOf(include);
@@ -770,6 +772,8 @@ namespace Carbon.Css
 
 		public void BindVariables(CssNode node, CssScope scope)
 		{
+			// TODO: Remove this concern and render in scope
+
 			if (node.Kind == NodeKind.Declaration)
 			{
 				var declaration = (CssDeclaration)node;
@@ -867,7 +871,7 @@ namespace Carbon.Css
 					continue;
 				}
 
-				if (i != 0) sb.Append(' ');
+				if (i != 0) sb.Append(" ");
 
 				i++;
 
@@ -906,26 +910,20 @@ namespace Carbon.Css
 			}
 
 			return new CssSelector(sb.ToString());
-
 		}
 
 		private static string GetSelector(IEnumerable<CssSelector> selectors)
 		{
 			// TODO: & support
 
-			var i = 0;
-
 			var sb = new StringBuilder();
 
 			foreach (var selector in selectors)
 			{
-				if (i != 0) sb.Append(' ');
-
 				sb.Append(selector);
 			}
 
 			return sb.ToString();
-
 		}
 
 		#endregion
