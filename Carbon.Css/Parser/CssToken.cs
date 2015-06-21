@@ -32,6 +32,8 @@
 
 		public bool IsTrivia => kind == TokenKind.Whitespace || kind == TokenKind.Comment;
 
+		public bool IsBinaryOperator => (int)kind > 30 && (int)kind < 50;
+
 		#endregion
 	}
 
@@ -44,7 +46,7 @@
 		// Values
 		String,
 		Number,
-		Unit,		// {em,ex,in,cm,mm,pt,pc,px
+		Unit,			// {em,ex,in,cm,mm,pt,pc,px
 
 		Uri,			// uri({string})
 
@@ -66,23 +68,23 @@
 		Whitespace,
 		Comment,
 
+		// Binary Operators ------------------------
+		And		  = 30, // && 
+		Or		  = 31,	// ||
 
-		And,			// && 
-		Or,				// ||
+		Equals	  = 32,	// ==
+		NotEquals = 33,	// !=
+		Gt		  = 34,	// > 
+		Gte		  = 35, // >=
+		Lt		  = 36, // <
+		Lte		  = 37, // <=
 
-		Equals,			// ==
-		NotEquals,		// !=
-		Gt,				// > 
-		Gte,            // >=
-		Lt,             // <
-		Lte,            // <=
-
-		// Operators
-		Divide,		// /
-		Multiply,   // *
-		Add,		// +
-		Subtract,	// -
-		Mod    // %
+		// Math
+		Divide	  = 38, // /
+		Multiply  = 39, // *
+		Add		  = 40,	// +
+		Subtract  = 41,	// -
+		Mod		  = 42  // %
 	}
 }
 

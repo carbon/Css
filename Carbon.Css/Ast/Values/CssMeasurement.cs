@@ -22,15 +22,52 @@
 
 		public override CssNode CloneNode() => new CssMeasurement(value, unit);
 
+		#region Operators
+
 		public CssValue Multiply(CssValue node)
 		{
-			switch (node.Kind)
+			if (node.Kind == NodeKind.Number)
 			{
-				case NodeKind.Number	 : return new CssMeasurement(this.value * ((CssNumber)node).Value, unit);
-				case NodeKind.Percentage : return new CssMeasurement(this.value * (((CssNumber)node).Value / 100), unit);
-				default					 : throw new Exception($"Cannot multiply {node.Kind} with {this.Kind}.");
+				return new CssMeasurement(this.value * ((CssNumber)node).Value, unit);
 			}
+			else if (node.Kind == NodeKind.Percentage)
+			{
+				return new CssMeasurement(this.value * (((CssNumber)node).Value / 100), unit);
+            }
+			else if (node is CssMeasurement)
+			{
+				var measurement = (CssMeasurement)node;
+
+				if (node.Kind == this.Kind)
+				{
+					return new CssMeasurement(this.value * measurement.value, measurement.unit);
+				}
+			}
+		
+			throw new Exception("cannot multiply types");
 		}
+
+
+		public CssValue Add(CssValue node)
+		{
+			if (node.Kind == NodeKind.Number)
+			{
+				return new CssMeasurement(this.value + ((CssNumber)node).Value, unit);
+			}
+			else if (node is CssMeasurement)
+			{
+				var measurement = (CssMeasurement)node;
+
+				if (node.Kind == this.Kind)
+				{
+					return new CssMeasurement(this.value + measurement.value, measurement.unit);
+				}
+			}
+
+			throw new Exception("cannot add types");
+		}
+
+		#endregion
 	}
 
 	// CssLength

@@ -1,6 +1,5 @@
 ﻿namespace Carbon.Css
-{
-	
+{ 
 	public class UnaryExpression : CssValue
 	{
 		private readonly CssNode operand;
@@ -39,24 +38,27 @@
 		public CssValue Right => right;
 
 		public Op Operator => op;
-	}
+
+		public override CssNode CloneNode() => new BinaryExpression(left, op, right);
+    }
 
 	public enum Op
 	{
-		Add, // +
-		Subtract, // - 
-		Multipy, // *
-		Divided, // 
-		Mod,	// %
+		And			= 30, // && 
+		Or			= 31, // ||
 
-		And,
-		Or,
+		Equals		= 32, // ==
+		NotEquals	= 33, // !=
+		Gt			= 34, // > 
+		Gte			= 35, // >=
+		Lt			= 36, // <
+		Lte			= 37, // <=
 
-		Equals,
-		NotEquals,
-		Gt,
-		Gte,
-		Lt,
-		Lte
+		// Operators
+		Divide		= 38, // /
+		Multiply	= 39, // *
+		Add			= 40, // +
+		Subtract	= 41, // -
+		Mod			= 42  // %
 	}
 }

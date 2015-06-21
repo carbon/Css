@@ -282,6 +282,7 @@ namespace Carbon.Css.Parser
 			// Number
 			// Measurement
 			// Function
+			// Expression
 
 			switch (tokenizer.Current.Kind)
 			{
@@ -291,6 +292,7 @@ namespace Carbon.Css.Parser
 
 			var value = tokenizer.Read();   // read string or number
 
+			// Function
 			if (tokenizer.Current.Kind == TokenKind.LeftParenthesis)
 			{
 				tokenizer.Read(TokenKind.LeftParenthesis, LexicalMode.Function);
@@ -377,34 +379,21 @@ namespace Carbon.Css.Parser
 		{
 			var left = ReadComponent(); // Variable, FunctionCall, ...
 
-			Op? op = null;
-
-			switch (tokenizer.Current.Kind)
+			// Wasn't an expression
+			if (!tokenizer.Current.IsBinaryOperator)
 			{
-				case TokenKind.Add		 : op = Op.Add;			break;
-				case TokenKind.Subtract	 : op = Op.Subtract;	break;
-				case TokenKind.Multiply  : op = Op.Multipy;		break;
-				case TokenKind.Divide    : op = Op.Divided;		break;
-				case TokenKind.Mod		 : op = Op.Mod;			break;
-				case TokenKind.Gt		 : op = Op.Gt;			break;
-				case TokenKind.Gte		 : op = Op.Gte;			break;
-				case TokenKind.Lt		 : op = Op.Lt;			break;
-				case TokenKind.Lte		 : op = Op.Lte;			break;
-				case TokenKind.And		 : op = Op.And;			break;
-				case TokenKind.Or		 : op = Op.Or;			break;
-				case TokenKind.Equals    : op = Op.Equals;		break;
-				case TokenKind.NotEquals : op = Op.NotEquals;	break;
+				return left;
 			}
 
-			if (op == null) return left;
-
-			tokenizer.Read(); // Read Op
+			var opToken = tokenizer.Read(); // Read operator
 
 			ReadTrivia();
 
+			var op = (Op)((int)opToken.Kind);
+		
 			var right = ReadComponent();
 
-			return new BinaryExpression(left, op.Value, right);
+			return new BinaryExpression(left, op, right);
 		}
 
 		#endregion

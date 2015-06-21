@@ -97,12 +97,12 @@ namespace Carbon.Css
 
 		public bool ToBoolean(object value)
 		{
-			if (value is bool) return (bool)value;
+			if (value is CssBoolean) return ((CssBoolean)value).Value;
 
 			return false;
 		}
 
-		public object GetVariableValue(CssVariable variable)
+		public CssValue GetVariableValue(CssVariable variable)
 		{
 			if (variable.Value == null)
 			{
@@ -112,33 +112,44 @@ namespace Carbon.Css
 			return variable.Value;
 		}
 
-		public object EvalulateExpression(CssValue expression)
+		public CssValue EvalulateExpression(CssValue expression)
 		{
 			switch (expression.Kind)
 			{
 				case NodeKind.Variable   : return GetVariableValue((CssVariable)expression);
 				case NodeKind.Expression : return EvalBinaryExpression((BinaryExpression)expression);
 				case NodeKind.Function	 : return EvalFunction((CssFunction)expression);
-				default					 : return expression.ToString();
+				default					 : return expression;
 			}
 		}
 
-		public object EvalBinaryExpression(BinaryExpression expression)
+		public CssValue EvalBinaryExpression(BinaryExpression expression)
 		{
-			var left = EvalulateExpression(expression.Left).ToString();
-			var right = EvalulateExpression(expression.Right).ToString();
+			var left = EvalulateExpression(expression.Left);
+			var right = EvalulateExpression(expression.Right);
+
+			
 
 			switch (expression.Operator)
 			{
-				case Op.Equals    : return left == right;
-				case Op.NotEquals : return left != right;
-				case Op.Gt		  : return float.Parse(left) >  float.Parse(right);
-				case Op.Gte		  : return float.Parse(left) >= float.Parse(right);
-				case Op.Lt		  : return float.Parse(left) <  float.Parse(right);
-				case Op.Lte		  : return float.Parse(left) <= float.Parse(right);
+				case Op.Multiply  : return ((CssMeasurement)expression.Left).Multiply(expression.Right);
+				case Op.Add       : return ((CssMeasurement)expression.Left).Add(expression.Right);
 			}
 
-			return true;
+			var leftS = left.ToString();
+			var rightS = right.ToString();
+
+			switch (expression.Operator)
+			{
+				case Op.Equals		: return new CssBoolean(leftS == rightS);
+				case Op.NotEquals	: return new CssBoolean(leftS != rightS);
+				case Op.Gt			: return new CssBoolean(float.Parse(leftS) > float.Parse(rightS));
+				case Op.Gte			: return new CssBoolean(float.Parse(leftS) >= float.Parse(rightS));
+				case Op.Lt			: return new CssBoolean(float.Parse(leftS) < float.Parse(rightS));
+				case Op.Lte			: return new CssBoolean(float.Parse(leftS) <= float.Parse(rightS));
+			}
+
+			return new CssBoolean(true);
 		}
 
 		public CssValue EvalFunction(CssFunction function)
@@ -223,10 +234,11 @@ namespace Carbon.Css
 		{
 			switch(value.Kind)
 			{
-				case NodeKind.Variable	: WriteVariable((CssVariable)value);	break;
-				case NodeKind.ValueList	: WriteValueList((CssValueList)value);	break;
-				case NodeKind.Function	: WriteFunction((CssFunction)value);	break;
-				default					: writer.Write(value.ToString());		break;
+				case NodeKind.Variable	 : WriteVariable((CssVariable)value);				 break;
+				case NodeKind.ValueList	 : WriteValueList((CssValueList)value);				 break;
+				case NodeKind.Function	 : WriteFunction((CssFunction)value);				 break;
+				case NodeKind.Expression : WriteValue(EvalulateExpression((CssValue)value)); break;
+				default					 : writer.Write(value.ToString());					 break;
 			}
 		}
 
@@ -691,7 +703,7 @@ namespace Carbon.Css
 
 			foreach (var nestedRule in clone.Children.OfType<StyleRule>().ToArray())
 			{
-				foreach (var r in ExpandStyle(nestedRule, parent: clone))
+				foreach (var r in ExpandStyleRule(nestedRule, parent: clone))
 				{
 					root.Add(r);
 				}
@@ -703,7 +715,7 @@ namespace Carbon.Css
 			}
 		}
 
-		public IEnumerable<CssRule> ExpandStyle(StyleRule rule, CssRule parent)
+		public IEnumerable<CssRule> ExpandStyleRule(StyleRule rule, CssRule parent)
 		{
 			var newRule = new StyleRule(ExpandSelector(rule));
 
@@ -713,7 +725,7 @@ namespace Carbon.Css
 				{
 					var childRule = (StyleRule)childNode;
 
-					foreach (var r in ExpandStyle(childRule, rule))
+					foreach (var r in ExpandStyleRule(childRule, rule))
 					{
 						yield return r;
 					}

@@ -51,6 +51,7 @@
     <Compile Include="Ast\Values\CssFunction.cs" />
     <Compile Include="Ast\Expressions\CssExpression.cs" />
     <Compile Include="Ast\Values\CssNumber.cs" />
+    <Compile Include="Ast\Values\CssBoolean.cs" />
     <Compile Include="Ast\Values\CssVariable.cs" />
     <Compile Include="Ast\Values\CssMeasurement.cs" />
     <Compile Include="Ast\Values\CssUrl.cs" />
