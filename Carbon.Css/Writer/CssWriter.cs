@@ -275,15 +275,11 @@ namespace Carbon.Css
 
 		public IEnumerable<CssValue> GetArgs(CssValue value)
 		{
-			switch(value.Kind)
+			switch (value.Kind)
 			{
-				case NodeKind.Variable:
-					var x = (CssVariable)value;
-
+				case NodeKind.Variable:					
+					yield return scope.GetValue(((CssVariable)value).Symbol);
 					
-					yield return scope.GetValue(x.Symbol);
-					
-
 					break;
 
 				case NodeKind.ValueList:
@@ -446,8 +442,6 @@ namespace Carbon.Css
 			WriteBlock(rule, level); // super standards
 
 			support = context.BrowserSupport;
-
-			// TODO: Expand
 		}
 
 		private void WriteKeyframesRule(Browser browser, KeyframesRule rule, int level)
@@ -510,7 +504,7 @@ namespace Carbon.Css
 					{
 						if (count == 0) writer.WriteLine();
 
-						WriteDeclaration2(declaration, level + 1);
+						WritePatchedDeclaration(declaration, level + 1);
 					}
 				}
 				else if (node.Kind == NodeKind.Rule)  // Nested rule
@@ -559,13 +553,14 @@ namespace Carbon.Css
 			writer.Write(";");
 		}
 
-		public void WriteDeclaration2(CssDeclaration declaration, int level)
+		public void WritePatchedDeclaration(CssDeclaration declaration, int level)
 		{
-			var prop = declaration.Info;
-			var prefixes = BrowserPrefixKind.None;
+            var prop = declaration.Info;
 
 			if (support != null && prop.Compatibility.HasPatches)
-			{ 
+			{
+				var prefixes = BrowserPrefixKind.None;
+
 				foreach (var browser in support)
 				{
 					if (!prop.Compatibility.IsPrefixed(browser)) continue;
@@ -592,6 +587,7 @@ namespace Carbon.Css
 			}
 
 			// Finally, write the standards declaration
+
 			WriteDeclaration(declaration, level);
 		}
 
