@@ -67,6 +67,19 @@ namespace Carbon.Css
 			this.parts = parts;
 		}
 
+
+		public CssSelector(CssValue list)
+		{
+			if (list is CssValueList)
+			{
+				this.parts = new List<string>(list.Children.Select(l => l.ToString()));
+			}
+			else
+			{
+				this.parts = new List<string>(new[] { list.ToString() });
+			}
+		}
+
 		public int Count => parts.Count;
 
 		public string this[int index] => parts[index];

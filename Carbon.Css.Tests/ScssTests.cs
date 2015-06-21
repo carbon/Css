@@ -1,4 +1,4 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css.Tests
 {
 	using Xunit;
 

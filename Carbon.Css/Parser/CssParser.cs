@@ -501,16 +501,18 @@ namespace Carbon.Css.Parser
 
 				ReadTrivia();
 
-				if(tokenizer.Current.Kind == TokenKind.Colon)
+				if (tokenizer.Current.Kind == TokenKind.Colon)
 				{
-					tokenizer.Read(); // Read the colon
+					tokenizer.Read();	// Read :
+
+					ReadTrivia();		// Read trivia
 
 					@default = CssValue.FromComponents(ReadComponents());
 				}
 
 				ReadTrivia();
 
-				if(tokenizer.Current.Kind == TokenKind.Comma)
+				if (tokenizer.Current.Kind == TokenKind.Comma)
 				{
 					tokenizer.Read();
 				}

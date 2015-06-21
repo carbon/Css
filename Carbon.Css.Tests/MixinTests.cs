@@ -42,12 +42,16 @@ h6 {
 		[Fact]
 		public void MixinTest15()
 		{
-			var ss = StyleSheet.Parse(@"@mixin serif($fontWeight: 300) {
+			var ss = StyleSheet.Parse(@"
+$fontWeight: 500;
+
+@mixin serif($fontWeight: 300) {
   font-family: 'Merriweather', serif;
   font-weight: $fontWeight;
 }
 
 h1, h2, h3, h4, h5, h6 {
+  @include serif;
   line-height: 1.2em;
   text-rendering: optimizeLegibility;
   margin: 0 0 1rem 0;
@@ -60,6 +64,8 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: 'Merriweather', serif;
+  font-weight: 300;
   line-height: 1.2em;
   text-rendering: optimizeLegibility;
   margin: 0 0 1rem 0;
@@ -67,7 +73,7 @@ h6 {
 
 		}
 
-	
+
 
 
 		[Fact]
@@ -138,7 +144,7 @@ h6 {
   position: inherit;
   text-align: left;
   display: inline-block;
-  margin-right:   0.625em;
+  margin-right: 0.625em;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -171,9 +177,9 @@ h6 {
   white-space: nowrap;
   text-overflow: ellipsis;
   float: left;
-  width:   7.5em;
+  width: 7.5em;
 }
-.happy dd { padding-left: (   7.5em +   0.625em; }", ss.ToString());
+.happy dd { padding-left: ( 7.5em + 0.625em; }", ss.ToString());
 		}
 
 		[Fact]
@@ -187,7 +193,6 @@ h6 {
 				@include li-horizontal;
 			} ", mixins.Context);
 
-
 			Assert.Equal(@".happy {
   list-style: none;
   padding: 0;
@@ -196,7 +201,7 @@ h6 {
   position: inherit;
   text-align: left;
   display: inline-block;
-  margin-right:   0.625em;
+  margin-right: 0.625em;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

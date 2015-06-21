@@ -1,7 +1,5 @@
 ﻿namespace Carbon.Css
 {
-	using System;
-
 	using Xunit;
 
 	public class ExpressionTests
@@ -19,7 +17,6 @@ $bgColor: orange;
   }
 }
 ");
-
 
 			Assert.Equal("div { background-color: orange; }", sheet.ToString());
 		}

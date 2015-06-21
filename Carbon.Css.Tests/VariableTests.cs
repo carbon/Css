@@ -1,7 +1,6 @@
 ﻿namespace Carbon.Css.Tests
 {
 	using Xunit;
-	using System;
 
 	public class VariableTests
 	{
