@@ -261,6 +261,7 @@ div .placeholderText {
 
 		}
 
+		/*
 		[Fact]
 		public void Test1()
 		{
@@ -297,29 +298,7 @@ div .placeholderText {
   padding: 0;
   list-style: none;
 }", rules[1].ToString());
-
-
-
-
-			// Ensure the original rule was not modified
-			
-			/*
-			Assert.Equal(
-@"nav {
-  display: block;
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  li { display: inline-block; }
-  a {
-    display: block;
-    padding: 6px 12px;
-    text-decoration: none;
-  }
-}", sheet.ToString());
-			*/
 		}
+		*/
 	}
 }

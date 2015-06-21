@@ -18,12 +18,9 @@
 
 		public string Symbol => text;
 
-		// When bound
-		public CssValue Value { get; set; }
+		public override CssNode CloneNode() => new CssVariable(text);
 
-		public override CssNode CloneNode() => new CssVariable(text) { Value = Value };
-
-		public override string ToString() => Value?.ToString() ?? "[null]";
+		public override string ToString() => "$" + text;
 	}
 }
 

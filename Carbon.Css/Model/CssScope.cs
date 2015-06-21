@@ -63,25 +63,23 @@ namespace Carbon.Css
 				return value;
 			}
 
-			if (parent != null && parent.TryGetValue(name, out value))
+			if (parent != null)
 			{
-				if (value.Kind == NodeKind.Variable)
-				{
-					var variable = (CssVariable)value;
-
-					if (variable.Symbol == name) throw new Exception("Self referencing");
-
-					return parent.GetValue(variable.Symbol);
-				}
-
-				return value;
+				return parent.GetValue(name);
 			}
-
-			return new CssString($"/* ${name} not found */");
+			else
+			{
+				return new CssString($"/* ${name} not found */");
+			}
 		}
 
 		public int Count => items.Count;
 
 		public void Clear() => items.Clear();
+
+		public CssScope GetChildScope()
+		{
+			return new CssScope(this);
+		}
 	}
 }

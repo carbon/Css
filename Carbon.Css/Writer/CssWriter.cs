@@ -18,11 +18,14 @@ namespace Carbon.Css
 
 		private Browser[] support;
 
+		private CssScope scope;
+
 		public CssWriter(TextWriter writer, CssContext context = null, ICssResolver resolver = null)
 		{
 			this.writer = writer;
 			this.context = context ?? new CssContext();
 			this.resolver = resolver;
+			this.scope = context.Scope;
 
 			this.support = this.context.BrowserSupport;			
 		}
@@ -91,7 +94,6 @@ namespace Carbon.Css
 						WriteDeclaration((CssDeclaration)child, level);
 					}
 				}
-				
 			}
 		}
 
@@ -102,21 +104,11 @@ namespace Carbon.Css
 			return false;
 		}
 
-		public CssValue GetVariableValue(CssVariable variable)
-		{
-			if (variable.Value == null)
-			{
-				variable.Value = context.Scope.GetValue(variable.Symbol);
-			}
-
-			return variable.Value;
-		}
-
 		public CssValue EvalulateExpression(CssValue expression)
 		{
 			switch (expression.Kind)
 			{
-				case NodeKind.Variable   : return GetVariableValue((CssVariable)expression);
+				case NodeKind.Variable   : return scope.GetValue(((CssVariable)expression).Symbol);
 				case NodeKind.Expression : return EvalBinaryExpression((BinaryExpression)expression);
 				case NodeKind.Function	 : return EvalFunction((CssFunction)expression);
 				default					 : return expression;
@@ -127,9 +119,7 @@ namespace Carbon.Css
 		{
 			var left = EvalulateExpression(expression.Left);
 			var right = EvalulateExpression(expression.Right);
-
 			
-
 			switch (expression.Operator)
 			{
 				case Op.Multiply  : return ((CssMeasurement)expression.Left).Multiply(expression.Right);
@@ -163,7 +153,7 @@ namespace Carbon.Css
 				return func(args);
 			}
 
-			throw new Exception("could not find function:" + function.Name);
+			throw new Exception($"function named '{function.Name}' not registered");
 		}
 
 		#endregion
@@ -263,20 +253,6 @@ namespace Carbon.Css
 		{
 			// {name}({args})
 
-			// If rgba & args = 2
-
-			if (function.Name == "rgba")
-			{
-				var args = GetArgs(function.Args).ToArray();
-
-				if (args.Length == 2 && args[0].ToString().StartsWith("#"))
-				{
-					writer.Write(CssFunctions.Rgba(args));
-
-					return;
-				}
-			}
-
 			Func<CssValue[], CssValue> func;
 
 			if (CssFunctions.TryGet(function.Name, out func))
@@ -304,14 +280,9 @@ namespace Carbon.Css
 				case NodeKind.Variable:
 					var x = (CssVariable)value;
 
-					if (x.Value != null)
-					{
-						yield return x.Value;
-					}
-					else
-					{
-						yield return context.Scope.GetValue(x.Symbol);
-					}
+					
+					yield return scope.GetValue(x.Symbol);
+					
 
 					break;
 
@@ -338,12 +309,9 @@ namespace Carbon.Css
 
 		public void WriteVariable(CssVariable variable)
 		{
-			if (variable.Value == null)
-			{
-				variable.Value = context.Scope.GetValue(variable.Symbol);
-			}
+			var value = scope.GetValue(variable.Symbol);
 
-			WriteValue(variable.Value);
+			WriteValue(value);
 		}
 
 		public void WriteImportRule(ImportRule rule)
@@ -499,6 +467,8 @@ namespace Carbon.Css
 
 		public void WriteBlock(CssBlock block, int level)
 		{
+			var prevScope = scope;
+
 			writer.Write("{"); // Block start
 
 			var condenced = false;
@@ -513,7 +483,7 @@ namespace Carbon.Css
 
 					b2.Add(node);
 
-					ExpandInclude((IncludeNode)node, b2);
+					scope = ExpandInclude((IncludeNode)node, b2);
 
 					foreach (var rule in b2.OfType<CssRule>())
 					{
@@ -523,7 +493,7 @@ namespace Carbon.Css
 
 						count++;
 					}
-				}
+                }
 				else if (node.Kind == NodeKind.Declaration)
 				{
 					var declaration = (CssDeclaration)node;
@@ -575,8 +545,9 @@ namespace Carbon.Css
 			}
 
 			writer.Write("}"); // Block end
-		}
 
+			prevScope = scope;
+		}
 
 		public void WriteDeclaration(CssDeclaration declaration, int level)
 		{
@@ -692,7 +663,7 @@ namespace Carbon.Css
 			// Expand includes
 			foreach (var includeNode in clone.Children.OfType<IncludeNode>().ToArray())
 			{
-				ExpandInclude(includeNode, clone);
+				scope = ExpandInclude(includeNode, clone);
 
 				clone.Children.Remove(includeNode);
 			}
@@ -741,7 +712,7 @@ namespace Carbon.Css
 			if (!newRule.Childless) yield return newRule;
 		}
 
-		public void ExpandInclude(IncludeNode include, CssBlock rule)
+		public CssScope ExpandInclude(IncludeNode include, CssBlock rule)
 		{
 			includeCount++;
 
@@ -756,7 +727,7 @@ namespace Carbon.Css
 
 			var index = rule.Children.IndexOf(include);
 
-			var scope = GetScope(mixin.Parameters, include.Args);
+			var childScope = GetScope(mixin.Parameters, include.Args);
 
 			var i = 0;
 
@@ -774,38 +745,13 @@ namespace Carbon.Css
 					mixin.Children.Remove(node);
 				}
 
-				BindVariables(node, scope);
-
 				rule.Insert(i + 1, node.CloneNode());
 
 				i++;
 			}
-		}
 
-		public void BindVariables(CssNode node, CssScope scope)
-		{
-			// TODO: Remove this concern and render in scope
-
-			if (node.Kind == NodeKind.Declaration)
-			{
-				var declaration = (CssDeclaration)node;
-
-				BindVariables(declaration.Value, scope);
-			}
-			else if (node.Kind == NodeKind.Variable)
-			{
-				var variable = (CssVariable)node;
-
-				variable.Value = scope.GetValue(variable.Symbol);
-			}
-			else if (node.HasChildren)
-			{
-				foreach (var n in node.Children)
-				{
-					BindVariables(n, scope);
-				}
-			}
-		}
+			return childScope;
+        }
 
 		public CssScope GetScope(IList<CssParameter> paramaters, CssValue args)
 		{
@@ -826,7 +772,7 @@ namespace Carbon.Css
 				}
 			}
 
-			var child = new CssScope(context.Scope);
+			var child = scope.GetChildScope(); 
 
 			var i = 0;
 
