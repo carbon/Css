@@ -266,7 +266,8 @@ namespace Carbon.Css.Parser
 
 				var current = tokenizer.Current;
 
-				if   ( current.Kind == TokenKind.BlockEnd
+				if   ( current.Kind == TokenKind.BlockStart
+					|| current.Kind == TokenKind.BlockEnd
 					|| current.Kind == TokenKind.Semicolon
 					|| current.Kind == TokenKind.Comma
 					|| current.Kind == TokenKind.RightParenthesis)
@@ -293,6 +294,12 @@ namespace Carbon.Css.Parser
 			var value = tokenizer.Read();   // read string or number
 
 			// Function
+			// A functional notation is a type of component value that can represent more complex types or invoke special processing.
+			// The syntax starts with the name of the function immediately followed by a left parenthesis (i.e. a FUNCTION token) followed by the argument(s) 
+			// to the notation followed by a right parenthesis. 
+			// White space is allowed, but optional, immediately inside the parentheses. 
+			// If a function takes a list of arguments, the arguments are separated by a comma (‘,’) with optional whitespace before and after the comma.
+
 			if (tokenizer.Current.Kind == TokenKind.LeftParenthesis)
 			{
 				tokenizer.Read(TokenKind.LeftParenthesis, LexicalMode.Function);
@@ -313,6 +320,13 @@ namespace Carbon.Css.Parser
 				};
 			}
 
+			// ReadString (consider context)
+
+			// :-ms-input-placeholder
+			// #id:before
+			// :link
+			// :not
+			
 			return new CssString(value) {
 				Trailing = ReadTrivia()
 			};
@@ -335,18 +349,6 @@ namespace Carbon.Css.Parser
 				Trailing = ReadTrivia()
 			};
 		}
-
-		/*
-		public CssFunction ReadFunction()
-		{
-
-			// A functional notation is a type of component value that can represent more complex types or invoke special processing.
-			// The syntax starts with the name of the function immediately followed by a left parenthesis (i.e. a FUNCTION token) followed by the argument(s) 
-			// to the notation followed by a right parenthesis. 
-			// White space is allowed, but optional, immediately inside the parentheses. 
-			// If a function takes a list of arguments, the arguments are separated by a comma (‘,’) with optional whitespace before and after the comma.
-		}
-		*/
 
 		public CssVariable ReadVariable()
 		{

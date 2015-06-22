@@ -20,7 +20,7 @@ namespace Carbon.Css
 			this.children = children;
 		}
 
-		public override IList<CssNode> Children => children;
+		public IList<CssNode> Children => children;
 
 		public int Count => children.Count;
 

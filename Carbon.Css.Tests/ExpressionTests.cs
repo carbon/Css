@@ -73,7 +73,7 @@ div {
   }
 }
 ");
-			var ifBlock = sheet.Children[0].Children[1];
+			var ifBlock = (IfBlock)((CssRule)sheet.Children[0]).Children[1];
 
             Assert.Equal(NodeKind.If, ifBlock.Kind);
 			Assert.Equal(ifBlock.Children.Count, 1);

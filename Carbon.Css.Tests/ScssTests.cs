@@ -29,7 +29,7 @@
 
 			Assert.Equal(1, ss.Children.Count);
 
-			var node = (StyleRule)ss.Children[0].Children[0];
+			var node = (StyleRule)((StyleRule)ss.Children[0]).Children[0];
 			var parent = (StyleRule)node.Parent;
 
 			Assert.Equal("div", parent.Selector.ToString());

@@ -2,19 +2,16 @@
 { 
 	public class UnaryExpression : CssValue
 	{
-		private readonly CssNode operand;
-		private readonly Op op;
-
 		public UnaryExpression(Op op, CssNode operand)
 			: base(NodeKind.Expression)
 		{
-			this.operand = operand;
-			this.op = op;
+			Operand = operand;
+			Operator = op;
 		}
 
-		public Op Operator => op;
+		public Op Operator { get; }
 
-		public CssNode Operand => operand;
+		public CssNode Operand { get; }
 	}
 
 	public class BinaryExpression : CssValue
@@ -22,24 +19,19 @@
 		// ||, &&, ==, !=
 		// +, -, *, /, %
 
-		private readonly CssValue left;
-		private readonly Op op;
-		private readonly CssValue right;
-
 		public BinaryExpression(CssValue left, Op op, CssValue right)
 			: base(NodeKind.Expression)
 		{
-			this.left = left;
-			this.op = op;
-			this.right = right;
+			Left = left;
+			Operator = op;
+			Right = right;
 		}
 
-		public CssValue Left => left;
-		public CssValue Right => right;
+		public CssValue Left { get; }
+		public CssValue Right { get; }
+		public Op Operator { get; }
 
-		public Op Operator => op;
-
-		public override CssNode CloneNode() => new BinaryExpression(left, op, right);
+		public override CssNode CloneNode() => new BinaryExpression(Left, Operator, Right);
     }
 
 	public enum Op

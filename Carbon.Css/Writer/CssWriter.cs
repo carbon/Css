@@ -148,7 +148,7 @@ namespace Carbon.Css
 
 			if (CssFunctions.TryGet(function.Name, out func))
 			{
-				var args = GetArgs(function.Args).ToArray();
+				var args = GetArgs(function.Arguments).ToArray();
 
 				return func(args);
 			}
@@ -257,7 +257,7 @@ namespace Carbon.Css
 
 			if (CssFunctions.TryGet(function.Name, out func))
 			{
-				var args = GetArgs(function.Args).ToArray();
+				var args = GetArgs(function.Arguments).ToArray();
 
 				writer.Write(func(args));
 
@@ -268,7 +268,7 @@ namespace Carbon.Css
 
 			writer.Write("(");
 
-			WriteValue(function.Args);
+			WriteValue(function.Arguments);
 			
 			writer.Write(")");
 		}

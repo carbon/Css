@@ -4,25 +4,22 @@
 
 	public class CssAssignment : CssNode
 	{
-		private readonly string name;
-		private readonly CssValue value;
-
 		public CssAssignment(string name, CssValue value)
 			: base(NodeKind.Assignment)
 		{
-			this.name = name;
-			this.value = value;
+			Name = name;
+			Value = value;
 		}
 
 		public CssAssignment(CssToken name, CssValue value)
 			: base(NodeKind.Assignment)
 		{
-			this.name = name.Text;
-			this.value = value;
+			Name = name.Text;
+			Value = value;
 		}
 
-		public string Name => name;
+		public string Name { get; }
 
-		public CssValue Value => value;
+		public CssValue Value { get; }
 	}
 }

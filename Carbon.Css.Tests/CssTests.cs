@@ -317,8 +317,8 @@ div { transition: width: 5px; }"
 
 			//  url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/cm-billing-webfont.woff') format('woff')
 
-			var list = value.ToList();
-			var list_1_0 = list[1].ToList();
+			var list = ((CssValueList)value).Children;
+			var list_1_0 = ((CssValueList)list[1]).Children;
 
 			Assert.Equal(2, list.Count);
 			Assert.Equal("url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype')", list[0].ToString());

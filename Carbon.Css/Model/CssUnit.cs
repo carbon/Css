@@ -10,33 +10,36 @@
 		private static readonly CssUnit REM = new CssUnit("rem", NodeKind.Length);
 		private static readonly CssUnit VH	= new CssUnit("vh", NodeKind.Length);
 		private static readonly CssUnit VW	= new CssUnit("vw", NodeKind.Length);
+		private static readonly CssUnit VMIN = new CssUnit("vmin", NodeKind.Length);
 
-		private readonly string name;
-		private readonly NodeKind kind;
+		private static readonly CssUnit Percentage = new CssUnit("%", NodeKind.Percentage);
+
+		private static readonly CssUnit S  = new CssUnit("s", NodeKind.Time);
+		private static readonly CssUnit MS = new CssUnit("ms", NodeKind.Time);
 
 		public CssUnit(string name, NodeKind kind)
 		{
-			this.name = name;
-			this.kind = kind;
+			Name = name;
+			Kind = kind;
 		}
 
-		public string Name => name;
+		public string Name { get; }
 
-		public NodeKind Kind => kind;
+		public NodeKind Kind { get; }
 
 		public static CssUnit Get(string name)
 		{
 			switch (name)
 			{
 				// <length>
-				case "ch"	: return CH;
+				case "ch"	: return CH;    // width of the "0" (ZERO, U+0030) glyph in the element's font
 				case "cm"	: return CM;
-				case "em"	: return EM;
-				case "ex"	: return EX;
-				case "rem"	: return REM;
+				case "em"	: return EM;    // font size of the element
+				case "ex"	: return EX;    // x-height of the element's font
+				case "rem"	: return REM;   // font size of the root element
 				case "vh"	: return VH;
 				case "vw"	: return VW;
-				case "vmin"	:
+				case "vmin"	: return VMIN;
 				case "vmax"	:
 				case "px"	: 
 				case "mm"	:
@@ -45,7 +48,7 @@
 				case "pc"	: return new CssUnit(name, NodeKind.Length);
 
 				// <percentage>
-				case "%": return new CssUnit(name, NodeKind.Percentage);
+				case "%": return Percentage;
 
 				// <angle>
 				case "deg":
@@ -54,8 +57,8 @@
 				case "turn": return new CssUnit(name, NodeKind.Angle);
 
 				// <time>
-				case "s":
-				case "ms": return new CssUnit(name, NodeKind.Time);
+				case "s"  : return S; 
+				case "ms" : return MS;
 				
 				// <frequency>
 				case "Hz":

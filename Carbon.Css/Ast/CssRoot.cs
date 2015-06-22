@@ -38,10 +38,7 @@ namespace Carbon.Css
 			children.Insert(index, node);
 		}
 
-		public override IList<CssNode> Children
-		{
-			get { return children; }
-		}
+		public List<CssNode> Children => children;
 
 		#endregion
 	}

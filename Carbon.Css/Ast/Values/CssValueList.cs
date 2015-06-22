@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Carbon.Css
@@ -6,7 +7,7 @@ namespace Carbon.Css
 	// Component Values 
 	// Comma seperated list of a component values
 
-	public class CssValueList : CssValue
+	public class CssValueList : CssValue, IEnumerable<CssNode>
 	{
 		private readonly List<CssNode> children = new List<CssNode>();
 
@@ -35,7 +36,7 @@ namespace Carbon.Css
 			children.Add(node);
 		}
 
-		public override IList<CssNode> Children => children;
+		public IList<CssNode> Children => children;
 
 		public override CssNode CloneNode()
 		{
@@ -46,6 +47,20 @@ namespace Carbon.Css
 		{
 			return string.Join(seperator == ValueSeperator.Space ? " " : ", ", children.Select(t => t.ToString()));
 		}
+
+		#region IEnumerator
+
+		IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator()
+		{
+			return Children.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return Children.GetEnumerator();
+		}
+
+		#endregion
 	}
 
 	public enum ValueSeperator

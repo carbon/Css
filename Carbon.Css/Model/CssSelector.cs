@@ -72,7 +72,7 @@ namespace Carbon.Css
 		{
 			if (list is CssValueList)
 			{
-				this.parts = new List<string>(list.Children.Select(l => l.ToString()));
+				this.parts = new List<string>(((CssValueList)list).Select(l => l.ToString()));
 			}
 			else
 			{
