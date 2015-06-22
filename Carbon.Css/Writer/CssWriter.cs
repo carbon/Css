@@ -22,10 +22,16 @@ namespace Carbon.Css
 
 		public CssWriter(TextWriter writer, CssContext context = null, ICssResolver resolver = null)
 		{
+			#region Preconditions
+
+			if (writer == null) throw new ArgumentNullException(nameof(writer));
+
+			#endregion
+
 			this.writer = writer;
 			this.context = context ?? new CssContext();
 			this.resolver = resolver;
-			this.scope = context.Scope;
+			this.scope = this.context.Scope;
 
 			this.support = this.context.BrowserSupport;			
 		}

@@ -21,9 +21,8 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 1rem 0;
 }");
 
-
-
-			Assert.Equal(@"h1,
+			Assert.Equal(
+@"h1,
 h2,
 h3,
 h4,
@@ -275,8 +274,6 @@ h6 {
   border-radius: 50px;
   -webkit-border-radius: 50px;
 }", ss.ToString());
-
-
 		}
 	}
 }
