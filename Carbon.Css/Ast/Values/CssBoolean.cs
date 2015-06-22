@@ -5,7 +5,7 @@
 		private readonly bool value;
 
 		public CssBoolean(bool value)
-			: base(NodeKind.PrimitiveValue)
+			: base(NodeKind.Boolean)
 		{
 			this.value = value;
 		}

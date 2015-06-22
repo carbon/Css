@@ -2,23 +2,21 @@
 {
 	public class IfBlock : CssBlock
 	{
-		private readonly CssValue condition;
-
 		public IfBlock(CssValue condition)
 			: base(NodeKind.If)
 		{
-			this.condition = condition;
+			Condition = condition;
 		}
 
-		public CssValue Condition => condition;
+		public CssValue Condition { get; }
 
 		public override CssNode CloneNode()
 		{ 
-			var block = new IfBlock(condition);
+			var block = new IfBlock(Condition);
 
 			foreach (var child in children)
 			{
-				block.Add(child);
+				block.Add(child.CloneNode());
 			}
 
 			return block;

@@ -7,9 +7,9 @@ namespace Carbon.Css
 	// Component Values 
 	// Comma seperated list of a component values
 
-	public class CssValueList : CssValue, IEnumerable<CssNode>
+	public class CssValueList : CssValue, IEnumerable<CssValue>
 	{
-		private readonly List<CssNode> children = new List<CssNode>();
+		private readonly List<CssValue> items = new List<CssValue>();
 
 		private readonly ValueSeperator seperator;
 
@@ -19,45 +19,39 @@ namespace Carbon.Css
 			this.seperator = seperator;
 		}
 
-		public CssValueList(IEnumerable<CssNode> values, ValueSeperator seperator = ValueSeperator.Comma)
+		public CssValueList(IEnumerable<CssValue> values, ValueSeperator seperator = ValueSeperator.Comma)
 			: base(NodeKind.ValueList)
 		{
-			this.children.AddRange(values);
+			this.items.AddRange(values);
 
 			this.seperator = seperator;
 		}
 
 		public ValueSeperator Seperator => seperator;
 
-		public void Add(CssNode node)
-		{
-			node.Parent = this;
+		public void Add(CssValue node) => items.Add(node);
 
-			children.Add(node);
-		}
+		public CssValue this[int index] => items[index];
 
-		public IList<CssNode> Children => children;
+		public int Count => items.Count;
 
-		public override CssNode CloneNode()
-		{
-			return new CssValueList(children.Select(c => c.CloneNode()), seperator);
-		}
+		public override CssNode CloneNode() => new CssValueList(items.Select(c => (CssValue)c.CloneNode()), seperator);
 
 		public override string ToString()
 		{
-			return string.Join(seperator == ValueSeperator.Space ? " " : ", ", children.Select(t => t.ToString()));
+			return string.Join(seperator == ValueSeperator.Space ? " " : ", ", items.Select(t => t.ToString()));
 		}
 
 		#region IEnumerator
 
-		IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator()
+		IEnumerator<CssValue> IEnumerable<CssValue>.GetEnumerator()
 		{
-			return Children.GetEnumerator();
+			return items.GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return Children.GetEnumerator();
+			return items.GetEnumerator();
 		}
 
 		#endregion

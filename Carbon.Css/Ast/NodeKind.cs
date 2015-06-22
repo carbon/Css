@@ -6,7 +6,7 @@
 
 		Document,
 		Comment,
-		Rule, // Ruleset
+		Rule,
 		Expression,
 		Declaration,
 
@@ -16,17 +16,19 @@
 
 		Selector,
 		
-		// Values
+		
 		Assignment,
 		Variable,
-		PrimitiveValue, // ?
+
+		// Values
 		ValueList,
 		Url,
 		Number,
 		String,
+		Boolean,
 		Color,
 
-		// Dimensions
+		// Measurements
 		Angle,
 		Frequency,
 		Length,

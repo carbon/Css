@@ -7,7 +7,9 @@ namespace Carbon.Css
 
 	public static class CssFunctions
 	{
-		private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new Dictionary<string, Func<CssValue[], CssValue>>(6) {
+		// http://lesscss.org/functions/#color-operations-saturate
+
+		private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new Dictionary<string, Func<CssValue[], CssValue>>(9) {
 			["darken"]		= Darken,
 			["lighten"]		= Lighten,
 			["saturate"]	= Saturate,
@@ -125,17 +127,13 @@ namespace Carbon.Css
 
 			var text = value.ToString();
 
-			if (text.EndsWith("deg"))
+			switch (value.Kind)
 			{
-				return (float.Parse(text.Replace("deg", "")) % 360) / 360;
-			}
-			else if (text.EndsWith("%"))
-			{
-				return float.Parse(text.TrimEnd('%')) / 100;
-			}
-			else
-			{
-				return float.Parse(text);
+				case NodeKind.Angle      : return (float.Parse(text.Replace("deg", "")) % 360) / 360;
+				case NodeKind.Percentage : return ((CssMeasurement)value).Value / 100;
+				case NodeKind.Number     : return ((CssNumber)value).Value;
+
+				default: throw new Exception("Unknown numeric value:" + value.ToString());
 			}
 		}
 

@@ -42,7 +42,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ast\Control\IfBlock.cs" />
+    <Compile Include="Ast\Sass\IfBlock.cs" />
     <Compile Include="Ast\CssRoot.cs" />
     <Compile Include="Ast\Rules\AtRule.cs" />
     <Compile Include="Ast\Rules\KeyframesRule.cs" />
@@ -75,7 +75,7 @@
     <Compile Include="Parser\CssResolver.cs" />
     <Compile Include="Model\CssParameter.cs" />
     <Compile Include="Ast\IncludeNode.cs" />
-    <Compile Include="Ast\Control\MixinNode.cs" />
+    <Compile Include="Ast\Sass\MixinNode.cs" />
     <Compile Include="Ast\Values\CssAssignment.cs" />
     <Compile Include="Comptability\CssModule.cs" />
     <Compile Include="Comptability\CssModuleType.cs" />

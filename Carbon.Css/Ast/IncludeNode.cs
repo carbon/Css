@@ -4,9 +4,6 @@ namespace Carbon.Css
 {
 	public class IncludeNode : CssNode
 	{
-		private readonly string name;
-		private readonly CssValue args;
-
 		public IncludeNode(string name, CssValue args)
 			: base(NodeKind.Include)
 		{
@@ -16,15 +13,15 @@ namespace Carbon.Css
 
 			#endregion
 
-			this.name = name;
-			this.args = args;
+			Name = name;
+			Args = args;
 		}
 
-		public string Name => name;
+		public string Name { get; }
 		
-		public CssValue Args => args;
+		public CssValue Args { get; }
 
-		public override CssNode CloneNode() => new IncludeNode(name, args);
+		public override CssNode CloneNode() => new IncludeNode(Name, Args);
 	}
 }
 

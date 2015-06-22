@@ -108,7 +108,7 @@
 			Assert.Equal(1, sheet.Children.Count);
 			Assert.Equal(RuleType.Style, style.Type);
 			Assert.Equal("div > h1", style.Selector.ToString());
-			Assert.Equal(1, style.Count);
+			Assert.Equal(1, style.Children.Count);
 
 			var x = (CssDeclaration)style[0];
 			Assert.Equal("width", x.Name.ToString());
@@ -176,7 +176,7 @@ div { transition: width: 5px; }"
 			Assert.Equal(1, sheet.Children.Count);
 			Assert.Equal(RuleType.Style, style.Type);
 			Assert.Equal("#monster", style.Selector.ToString());
-			Assert.Equal(2, style.Count);
+			Assert.Equal(2, style.Children.Count);
 
 			var x = (CssDeclaration)style[0];
 			var y = (CssDeclaration)style[1];
@@ -317,8 +317,8 @@ div { transition: width: 5px; }"
 
 			//  url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/cm-billing-webfont.woff') format('woff')
 
-			var list = ((CssValueList)value).Children;
-			var list_1_0 = ((CssValueList)list[1]).Children;
+			var list = (CssValueList)value;
+			var list_1_0 = (CssValueList)list[1];
 
 			Assert.Equal(2, list.Count);
 			Assert.Equal("url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype')", list[0].ToString());

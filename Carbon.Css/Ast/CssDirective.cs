@@ -2,23 +2,18 @@
 
 {	public class CssDirective : CssNode
 	{
-		private readonly string name;
-		private readonly string value;
-
 		public CssDirective(string name, string value)
 			: base(NodeKind.Directive) {
 
-			this.name = name;
-			this.value = value;
+			Name = name;
+			Value = value;
 		}
 
-		public string Name => name;
+		public string Name { get; }
 
-		public string Value => value;
+		public string Value { get; }
 	}
 }
-
-
 
 /*
 EXAMPLES:

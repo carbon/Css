@@ -50,6 +50,5 @@ namespace Carbon.Css
 
 			return new CssUrlValue(value);
 		}
-
 	}
 }

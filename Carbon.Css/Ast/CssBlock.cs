@@ -22,16 +22,9 @@ namespace Carbon.Css
 
 		public IList<CssNode> Children => children;
 
-		public int Count => children.Count;
+		public bool HasChildren => children.Count > 0;
 
-		public bool Childless => Count == 0;
-
-		public IEnumerable<CssDeclaration> FindDeclaration(string propertyName)
-		{
-			return children.OfType<CssDeclaration>().Where(d => d.Name == propertyName);
-		}
-
-		public CssDeclaration Get(string name)
+		public CssDeclaration GetDeclaration(string name)
 		{
 			return children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
 		}

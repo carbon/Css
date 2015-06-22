@@ -25,8 +25,6 @@ namespace Carbon.Css
 
 		internal Trivia Trailing { get; set; }
 
-		// ChildNodes
-
 		public virtual CssNode CloneNode()
 		{
 			throw new NotImplementedException();

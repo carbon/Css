@@ -41,12 +41,12 @@ namespace Carbon.Css
 
 			var list = new CssValueList(ValueSeperator.Space);
 
-			list.Children.Add(first);
-			list.Children.Add(enumerator.Current);
+			list.Add(first);
+			list.Add(enumerator.Current);
 
 			while (enumerator.MoveNext())
 			{
-				list.Children.Add(enumerator.Current);
+				list.Add(enumerator.Current);
 			}
 
 			return list;

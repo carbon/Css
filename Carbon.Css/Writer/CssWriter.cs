@@ -236,7 +236,7 @@ namespace Carbon.Css
 		{
 			var i = 0;
 
-			foreach (var value in list.Children)
+			foreach (var value in list)
 			{
 				if (i != 0)
 				{
@@ -604,11 +604,11 @@ namespace Carbon.Css
 
 			var list = new CssValueList(a.Seperator);
 
-			foreach (var node in a.Children)
+			foreach (var node in a)
 			{
 				if (node.Kind == NodeKind.ValueList) // For comma seperated componented lists
 				{
-					list.Add(GetPatchedValueFor((CssValue)node, browser));
+					list.Add(GetPatchedValueFor(node, browser));
 				}
 				else if (node.Kind == NodeKind.String && node.ToString() == "transform")
 				{
@@ -677,7 +677,7 @@ namespace Carbon.Css
 
 			foreach (var r in root)
 			{
-				if (!r.Childless) yield return r;
+				if (r.HasChildren) yield return r;
 			}
 		}
 
@@ -704,7 +704,7 @@ namespace Carbon.Css
 
 			parent.Remove(rule); // Remove from parent node after it's been processed
 
-			if (!newRule.Childless) yield return newRule;
+			if (newRule.HasChildren) yield return newRule;
 		}
 
 		public CssScope ExpandInclude(IncludeNode include, CssBlock rule)
@@ -763,7 +763,7 @@ namespace Carbon.Css
 
 				if (valueList != null && valueList.Seperator == ValueSeperator.Comma)
 				{
-					list.AddRange(valueList.Children.OfType<CssValue>());
+					list.AddRange(valueList.OfType<CssValue>());
 				}
 			}
 

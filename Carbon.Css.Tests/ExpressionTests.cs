@@ -5,6 +5,28 @@
 	public class ExpressionTests
 	{
 		[Fact]
+		public void ExpressionTest7()
+		{
+			var sheet = StyleSheet.Parse(@"
+
+$bgColor: #ffffff;
+
+@if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
+  div {
+    color: darken($bgColor, 50%);
+    background-color: darken($bgColor, 0.5);
+  }
+}
+");
+		
+			Assert.Equal(
+@"div {
+  color: #808080;
+  background-color: #808080;
+}", sheet.ToString());
+		}
+
+        [Fact]
 		public void ExpressionTest1()
 		{
 			var sheet = StyleSheet.Parse(@"

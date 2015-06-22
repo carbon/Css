@@ -238,10 +238,7 @@ h6 {
   float: left;
   apples: bananas;
 }", ss.ToString());
-
-
 		}
-
 
 		[Fact]
 		public void ParseMixin2()
@@ -263,12 +260,12 @@ h6 {
 			var include = rules[0].Children[0] as IncludeNode;
 			var args = include.Args as CssValueList;
 
-			Assert.Equal(2, args.Children.Count);
+			Assert.Equal(2, args.Count);
 			Assert.Equal("50px, 20px", args.ToString());
 			Assert.Equal(include.Name, "round");
 
-			Assert.Equal("50px", args.Children[0].ToString());
-			Assert.Equal("20px", args.Children[1].ToString());
+			Assert.Equal("50px", args[0].ToString());
+			Assert.Equal("20px", args[1].ToString());
 
 			Assert.Equal(ValueSeperator.Comma, args.Seperator);
 

@@ -6,7 +6,7 @@
 	{
 		public IEnumerable<CssRule> Rewrite(CssRule rule)
 		{
-			var declaration = rule.Get("opacity");
+			var declaration = rule.GetDeclaration("opacity");
 
 			if (declaration == null)
 			{
