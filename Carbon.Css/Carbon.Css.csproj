@@ -42,6 +42,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ast\Expressions\Operator.cs" />
+    <Compile Include="Ast\Expressions\UnaryExpression.cs" />
     <Compile Include="Ast\Sass\IfBlock.cs" />
     <Compile Include="Ast\CssRoot.cs" />
     <Compile Include="Ast\Rules\AtRule.cs" />
@@ -49,7 +51,7 @@
     <Compile Include="Ast\Rules\MediaRule.cs" />
     <Compile Include="Ast\Values\CssColor.cs" />
     <Compile Include="Ast\Values\CssFunction.cs" />
-    <Compile Include="Ast\Expressions\CssExpression.cs" />
+    <Compile Include="Ast\Expressions\BinaryExpression.cs" />
     <Compile Include="Ast\Values\CssNumber.cs" />
     <Compile Include="Ast\Values\CssBoolean.cs" />
     <Compile Include="Ast\Values\CssVariable.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="Ast\Values\CssUrl.cs" />
     <Compile Include="Ast\Values\CssString.cs" />
     <Compile Include="Functions\CssFunctions.cs" />
+    <Compile Include="Language\Parser\CssParser.Expressions.cs" />
     <Compile Include="Model\CssScope.cs" />
     <Compile Include="Model\CssUnit.cs" />
     <Compile Include="Model\TokenList.cs" />
@@ -72,7 +75,7 @@
     <Compile Include="Ast\CssBlock.cs" />
     <Compile Include="Model\CssContext.cs" />
     <Compile Include="Ast\CssNode.cs" />
-    <Compile Include="Parser\CssResolver.cs" />
+    <Compile Include="Language\CssResolver.cs" />
     <Compile Include="Model\CssParameter.cs" />
     <Compile Include="Ast\IncludeNode.cs" />
     <Compile Include="Ast\Sass\MixinNode.cs" />
@@ -85,9 +88,9 @@
     <Compile Include="Ast\Rules\FontFaceRule.cs" />
     <Compile Include="Ast\Rules\RuleType.cs" />
     <Compile Include="_\FontSrcValue.cs" />
-    <Compile Include="Parser\CssParser.cs" />
-    <Compile Include="Parser\CssToken.cs" />
-    <Compile Include="Parser\CssTokenizer.cs" />
+    <Compile Include="Language\Parser\CssParser.cs" />
+    <Compile Include="Language\Tokenizer\CssToken.cs" />
+    <Compile Include="Language\Tokenizer\CssTokenizer.cs" />
     <Compile Include="Comptability\Browser.cs" />
     <Compile Include="Ast\CssDeclaration.cs" />
     <Compile Include="Comptability\CssProperty.cs" />
@@ -97,10 +100,10 @@
     <Compile Include="Ast\StyleSheet.cs" />
     <Compile Include="_\CssPadding.cs" />
     <Compile Include="Ast\Values\CssUrlValue.cs" />
-    <Compile Include="Parser\LexicalMode.cs" />
-    <Compile Include="Parser\ParseException.cs" />
-    <Compile Include="Parser\SourceReader.cs" />
-    <Compile Include="Parser\StringBuffer.cs" />
+    <Compile Include="Language\Tokenizer\LexicalMode.cs" />
+    <Compile Include="Language\SyntaxException.cs" />
+    <Compile Include="Language\SourceReader.cs" />
+    <Compile Include="Language\StringBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resolver\IStylesheet.cs" />
     <Compile Include="Resolver\Include.cs" />

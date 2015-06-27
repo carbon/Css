@@ -28,11 +28,17 @@
 
 		public override string ToString() => $"{Kind}: '{Text}'";
 
+
 		#region Helpers
 
 		public bool IsTrivia => kind == TokenKind.Whitespace || kind == TokenKind.Comment;
 
-		public bool IsBinaryOperator => (int)kind > 30 && (int)kind < 50;
+		public bool IsBinaryOperator => (int)kind > 30 && (int)kind < 60;
+
+		public bool IsEqualityOperator => kind == TokenKind.Equals || kind == TokenKind.NotEquals;
+
+		public bool IsLogicalOperator => kind == TokenKind.And || kind == TokenKind.Or;
+
 
 		#endregion
 	}
@@ -69,22 +75,27 @@
 		Comment,
 
 		// Binary Operators ------------------------
+
+		// Logical
 		And		  = 30, // && 
 		Or		  = 31,	// ||
 
-		Equals	  = 32,	// ==
-		NotEquals = 33,	// !=
-		Gt		  = 34,	// > 
-		Gte		  = 35, // >=
-		Lt		  = 36, // <
-		Lte		  = 37, // <=
+		// Equality
+		Equals	  = 40,	// ==
+		NotEquals = 41,	// !=
+
+		// Relational
+		Gt		  = 50,	// > 
+		Gte		  = 51, // >=
+		Lt		  = 52, // <
+		Lte		  = 53, // <=
 
 		// Math
-		Divide	  = 38, // /
-		Multiply  = 39, // *
-		Add		  = 40,	// +
-		Subtract  = 41,	// -
-		Mod		  = 42  // %
+		Divide	  = 60, // /
+		Multiply  = 61, // *
+		Add		  = 62,	// +
+		Subtract  = 62,	// -
+		Mod		  = 63  // %
 	}
 }
 

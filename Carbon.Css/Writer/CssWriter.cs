@@ -128,8 +128,8 @@ namespace Carbon.Css
 			
 			switch (expression.Operator)
 			{
-				case Op.Multiply  : return ((CssMeasurement)expression.Left).Multiply(expression.Right);
-				case Op.Add       : return ((CssMeasurement)expression.Left).Add(expression.Right);
+				case BinaryOperator.Multiply  : return ((CssMeasurement)expression.Left).Multiply(expression.Right);
+				case BinaryOperator.Add       : return ((CssMeasurement)expression.Left).Add(expression.Right);
 			}
 
 			var leftS = left.ToString();
@@ -137,12 +137,12 @@ namespace Carbon.Css
 
 			switch (expression.Operator)
 			{
-				case Op.Equals		: return new CssBoolean(leftS == rightS);
-				case Op.NotEquals	: return new CssBoolean(leftS != rightS);
-				case Op.Gt			: return new CssBoolean(float.Parse(leftS) > float.Parse(rightS));
-				case Op.Gte			: return new CssBoolean(float.Parse(leftS) >= float.Parse(rightS));
-				case Op.Lt			: return new CssBoolean(float.Parse(leftS) < float.Parse(rightS));
-				case Op.Lte			: return new CssBoolean(float.Parse(leftS) <= float.Parse(rightS));
+				case BinaryOperator.Equals		: return new CssBoolean(leftS == rightS);
+				case BinaryOperator.NotEquals	: return new CssBoolean(leftS != rightS);
+				case BinaryOperator.Gt			: return new CssBoolean(float.Parse(leftS) > float.Parse(rightS));
+				case BinaryOperator.Gte			: return new CssBoolean(float.Parse(leftS) >= float.Parse(rightS));
+				case BinaryOperator.Lt			: return new CssBoolean(float.Parse(leftS) < float.Parse(rightS));
+				case BinaryOperator.Lte			: return new CssBoolean(float.Parse(leftS) <= float.Parse(rightS));
 			}
 
 			return new CssBoolean(true);
@@ -186,7 +186,7 @@ namespace Carbon.Css
 
 						WriteRoot(css);
 					}
-					catch (ParseException ex)
+					catch (SyntaxException ex)
 					{
 						// response.StatusCode = 500;
 

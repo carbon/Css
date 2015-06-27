@@ -5,11 +5,11 @@ namespace Carbon.Css.Parser
 {
 	using Helpers;
 
-	public class ParseException : Exception
+	public class SyntaxException : Exception
 	{
 		private readonly int position = 0;
 
-		public ParseException(string message, int position = 0)
+		public SyntaxException(string message, int position = 0)
 			: base(message) { 
 		
 			this.position = position;
@@ -21,13 +21,13 @@ namespace Carbon.Css.Parser
 
 		public IList<LineInfo> Lines { get; set; }
 
-		public static ParseException UnexpectedEOF(string context)
+		public static SyntaxException UnexpectedEOF(string context)
 		{
-			return new ParseException($"Unexpected EOF reading '{context}'.");
+			return new SyntaxException($"Unexpected EOF reading '{context}'.");
 		}
 	}
 
-	public class UnexpectedModeChange : ParseException
+	public class UnexpectedModeChange : SyntaxException
 	{
 		// "Current mode is:" + current + ". Leaving " + mode + "."
 
@@ -40,7 +40,7 @@ namespace Carbon.Css.Parser
 		}
 	}
 
-	public class UnbalancedBlock : ParseException
+	public class UnbalancedBlock : SyntaxException
 	{
 		// "Current mode is:" + current + ". Leaving " + mode + "."
 
@@ -48,7 +48,7 @@ namespace Carbon.Css.Parser
 			: base("The block is unclosed, '}' expected", startToken.Position) { }
 	}
 
-	public class UnexpectedTokenException : ParseException
+	public class UnexpectedTokenException : SyntaxException
 	{
 		private readonly CssToken token;
 

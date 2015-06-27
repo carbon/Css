@@ -99,7 +99,7 @@ namespace Carbon.Css
 			{
 				return Parse(text, context);
 			}
-			catch (ParseException ex)
+			catch (SyntaxException ex)
 			{
 				ex.Location = TextHelper.GetLocation(text, ex.Position);
 

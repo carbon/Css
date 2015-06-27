@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExpressionTests.cs" />
+    <Compile Include="ParserTests.cs" />
     <Compile Include="WriterTests.cs" />
     <Compile Include="MediaTests.cs" />
     <Compile Include="SassTests.cs" />

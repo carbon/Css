@@ -25,16 +25,6 @@
 
 		public bool IsEnd => isEnd;
 
-		public CssToken Read(TokenKind expect, LexicalMode mode)
-		{
-			if (current.Kind != expect)
-			{
-				throw new UnexpectedTokenException(mode, expect, current);
-			}
-
-			return Read();
-		}
-
 		// Returns the current token and advances to the next
 		public CssToken Read()
 		{
@@ -48,11 +38,9 @@
 			return c;
 		}
 
-		private CssToken Next()
+		public CssToken Next()
 		{
-			current = ReadNext();
-
-			return current;
+			return ReadNext();
 		}
 
 		private CssToken ReadNext()
@@ -156,7 +144,7 @@
 
 			while (Char.IsLetter(reader.Current) || reader.Current == '%')
 			{
-				if (reader.IsEof) throw ParseException.UnexpectedEOF("Name");
+				if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Name");
 
 				reader.Next();
 			}
@@ -174,7 +162,7 @@
 				&& reader.Current != '{' && reader.Current != '}' && reader.Current != '(' && reader.Current != ')' 
 				&& reader.Current != ';' && reader.Current != ':' && reader.Current != ',')
 			{
-				if (reader.IsEof) throw ParseException.UnexpectedEOF("Name");
+				if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Name");
 
 				reader.Next();
 			}
@@ -192,7 +180,7 @@
 				&& reader.Current != '{' && reader.Current != '}' && reader.Current != '(' && reader.Current != ')' 
 				&& reader.Current != ';' && reader.Current != ',')
 			{
-				if (reader.IsEof) throw ParseException.UnexpectedEOF("Name");
+				if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Name");
 
 				if (reader.Current == ':')
 				{
@@ -279,7 +267,7 @@
 
 			while (reader.Current != '*')
 			{
-				if (reader.IsEof) throw new ParseException("Unexpected EOF reading comment");
+				if (reader.IsEof) throw new SyntaxException("Unexpected EOF reading comment");
 
 				reader.Next();
 			}
