@@ -40,7 +40,9 @@
 
 		public CssToken Next()
 		{
-			return ReadNext();
+			current = ReadNext();
+
+            return current;
 		}
 
 		private CssToken ReadNext()

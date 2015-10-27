@@ -232,7 +232,6 @@ div { transition: width: 5px; }"
 				tokens.Add(tokenizer.Read());
             }
 			while (!tokenizer.IsEnd);
-			
 
 			Assert.Equal(27, tokens.Count);
 

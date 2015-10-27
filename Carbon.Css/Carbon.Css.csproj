@@ -62,6 +62,7 @@
     <Compile Include="Language\Parser\CssParser.Expressions.cs" />
     <Compile Include="Model\CssScope.cs" />
     <Compile Include="Model\CssUnit.cs" />
+    <Compile Include="Model\ICssResolver.cs" />
     <Compile Include="Model\TokenList.cs" />
     <Compile Include="Ast\Whitespace.cs" />
     <Compile Include="Ast\Values\CssValueList.cs" />
@@ -75,7 +76,6 @@
     <Compile Include="Ast\CssBlock.cs" />
     <Compile Include="Model\CssContext.cs" />
     <Compile Include="Ast\CssNode.cs" />
-    <Compile Include="Language\CssResolver.cs" />
     <Compile Include="Model\CssParameter.cs" />
     <Compile Include="Ast\IncludeNode.cs" />
     <Compile Include="Ast\Sass\MixinNode.cs" />
