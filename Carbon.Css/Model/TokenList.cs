@@ -4,51 +4,52 @@ using System.Text;
 
 namespace Carbon.Css
 {
-	using Parser;
+    using Parser;
 
-	public class TokenList : Collection<CssToken>
-	{
-		public TokenList() { }
+    public class TokenList : Collection<CssToken>
+    {
+        public TokenList() { }
 
-		public TokenList(CssToken[] tokens)
-			: base(tokens) { }
+        public TokenList(CssToken[] tokens)
+            : base(tokens)
+        { }
 
-		private void AddRange(IEnumerable<CssToken> tokens)
-		{
-			if (tokens == null) return;
-			
-			this.AddRange(tokens);
-		}
+        private void AddRange(IEnumerable<CssToken> tokens)
+        {
+            if (tokens == null) return;
 
-		public string RawText
-		{
-			get 
-			{
-				var sb = new StringBuilder();
+            AddRange(tokens);
+        }
 
-				foreach (var token in this)
-				{
-					sb.Append(token.Text);
-				}
+        public string RawText
+        {
+            get
+            {
+                var sb = new StringBuilder();
 
-				return sb.ToString();
-			}
-		}
+                foreach (var token in this)
+                {
+                    sb.Append(token.Text);
+                }
 
-		public override string ToString()
-		{
-			var sb = new StringBuilder();
-			
-			foreach (var token in this)
-			{
-				if (token.IsTrivia) continue;
+                return sb.ToString();
+            }
+        }
 
-				if (sb.Length != 0) sb.Append(" ");
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
 
-				sb.Append(token.Text);
-			}
+            foreach (var token in this)
+            {
+                if (token.IsTrivia) continue;
 
-			return sb.ToString();
-		}
-	}
+                if (sb.Length != 0) sb.Append(" ");
+
+                sb.Append(token.Text);
+            }
+
+            return sb.ToString();
+        }
+    }
 }

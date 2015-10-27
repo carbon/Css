@@ -3,20 +3,20 @@ using System.Text;
 
 namespace Carbon.Css
 {
-	using Parser;
+    using Parser;
 
-	public class Trivia : Collection<CssToken>
-	{
-		public override string ToString()
-		{
-			var sb = new StringBuilder();
+    public class Trivia : Collection<CssToken>
+    {
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
 
-			foreach (var token in this)
-			{
-				sb.Append(token.ToString());
-			}
+            foreach (var token in this)
+            {
+                sb.Append(token.ToString());
+            }
 
-			return sb.ToString();
-		}
-	}
+            return sb.ToString();
+        }
+    }
 }

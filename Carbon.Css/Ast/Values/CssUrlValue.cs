@@ -2,53 +2,53 @@
 
 namespace Carbon.Css
 {
-	public class CssUrlValue
-	{
-		// url('')
+    public class CssUrlValue
+    {
+        // url('')
 
-		private readonly string value;
+        private readonly string value;
 
-		public CssUrlValue(string value)
-		{
-			this.value = value;
-		}
+        public CssUrlValue(string value)
+        {
+            this.value = value;
+        }
 
-		public CssUrlValue(byte[] data, string contentType)
-		{
-			// Works for resources only up to 32k in size in IE8.
+        public CssUrlValue(byte[] data, string contentType)
+        {
+            // Works for resources only up to 32k in size in IE8.
 
-			this.value = "data:" + contentType + ";base64," + Convert.ToBase64String(data);
-		}
+            this.value = "data:" + contentType + ";base64," + Convert.ToBase64String(data);
+        }
 
-		public string Value => value;
+        public string Value => value;
 
-		public override string ToString() => $"url('{value}')";
+        public override string ToString() => $"url('{value}')";
 
-		#region Helpers
+        #region Helpers
 
-		public bool IsPath => !value.Contains(":");
+        public bool IsPath => !value.Contains(":");
 
-		public string GetAbsolutePath(string basePath) /* /styles/ */
-		{
-			if (!IsPath) throw new ArgumentException("Has scheme:" + value.Split(':')[0]);
+        public string GetAbsolutePath(string basePath) /* /styles/ */
+        {
+            if (!IsPath) throw new ArgumentException("Has scheme:" + value.Split(':')[0]);
 
-			// Already absolute
-			if (value.StartsWith("/")) return value;
+            // Already absolute
+            if (value.StartsWith("/")) return value;
 
-			// "http://dev/styles/"
-			var baseUri = new Uri("http://dev/" + basePath.TrimStart('/'));
+            // "http://dev/styles/"
+            var baseUri = new Uri("http://dev/" + basePath.TrimStart('/'));
 
-			// Absolute path
-			return new Uri(baseUri, relativeUri: value).AbsolutePath;
-		}
+            // Absolute path
+            return new Uri(baseUri, relativeUri: value).AbsolutePath;
+        }
 
-		#endregion
+        #endregion
 
-		public static CssUrlValue Parse(string text)
-		{
-			var value = text.Replace("url", "").Trim('(', ')').Trim('\'', '\"');
+        public static CssUrlValue Parse(string text)
+        {
+            var value = text.Replace("url", "").Trim('(', ')').Trim('\'', '\"');
 
-			return new CssUrlValue(value);
-		}
-	}
+            return new CssUrlValue(value);
+        }
+    }
 }

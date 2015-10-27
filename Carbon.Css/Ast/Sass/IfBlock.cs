@@ -1,29 +1,29 @@
 ﻿namespace Carbon.Css
 {
-	public class IfBlock : CssBlock
-	{
-		public IfBlock(CssValue condition)
-			: base(NodeKind.If)
-		{
-			Condition = condition;
-		}
+    public class IfBlock : CssBlock
+    {
+        public IfBlock(CssValue condition)
+            : base(NodeKind.If)
+        {
+            Condition = condition;
+        }
 
-		public CssValue Condition { get; }
+        public CssValue Condition { get; }
 
-		public override CssNode CloneNode()
-		{ 
-			var block = new IfBlock(Condition);
+        public override CssNode CloneNode()
+        {
+            var block = new IfBlock(Condition);
 
-			foreach (var child in children)
-			{
-				block.Add(child.CloneNode());
-			}
+            foreach (var child in children)
+            {
+                block.Add(child.CloneNode());
+            }
 
-			return block;
-		}
-	}
+            return block;
+        }
+    }
 
-	/*
+    /*
 	public class EachBlock : CssNode
 	{
 		private readonly string variableName;

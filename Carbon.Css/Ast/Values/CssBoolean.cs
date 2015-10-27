@@ -1,19 +1,17 @@
 ﻿namespace Carbon.Css
 {
-	public class CssBoolean : CssValue
-	{
-		private readonly bool value;
+    public class CssBoolean : CssValue
+    {
+        public CssBoolean(bool value)
+            : base(NodeKind.Boolean)
+        {
+            Value = value;
+        }
 
-		public CssBoolean(bool value)
-			: base(NodeKind.Boolean)
-		{
-			this.value = value;
-		}
-		
-		public bool Value => value;
+        public bool Value { get; }
 
-		public override CssNode CloneNode() => new CssBoolean(value);
+        public override CssNode CloneNode() => new CssBoolean(Value);
 
-		public override string ToString() => value.ToString().ToLower();
-	}
+        public override string ToString() => Value.ToString().ToLower();
+    }
 }

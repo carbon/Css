@@ -1,33 +1,33 @@
 ﻿namespace Carbon.Css.Parser
 {
-	using System.Text;
+    using System.Text;
 
-	public class StringBuffer
-	{
-		private readonly StringBuilder sb = new StringBuilder();
+    public class StringBuffer
+    {
+        private readonly StringBuilder sb = new StringBuilder();
 
-		public int Length => sb.Length;
+        public int Length => sb.Length;
 
-		public void Append(char c)
-		{
-			sb.Append(c);
-		}
+        public void Append(char c)
+        {
+            sb.Append(c);
+        }
 
-		/// <summary>
-		/// Extracts the buffered value and resets the buffer
-		/// </summary>
-		public string Extract() 
-		{
-			var value = sb.ToString();
+        /// <summary>
+        /// Extracts the buffered value and resets the buffer
+        /// </summary>
+        public string Extract()
+        {
+            var value = sb.ToString();
 
-			Reset();
+            Reset();
 
-			return value;
-		}
+            return value;
+        }
 
-		public void Reset() 
-		{
-			sb.Clear();
-		}
-	}
+        public void Reset()
+        {
+            sb.Clear();
+        }
+    }
 }

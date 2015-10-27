@@ -2,32 +2,32 @@
 
 namespace Carbon.Css
 {
-	public abstract class CssNode 
-	{
-		private readonly NodeKind kind;
-		private CssNode parent;
+    public abstract class CssNode
+    {
+        private CssNode parent;
 
-		public CssNode(NodeKind kind, CssNode parent = null)
-		{
-			this.kind = kind;
-			this.parent = parent;
-		}
+        public CssNode(NodeKind kind, CssNode parent = null)
+        {
+            Kind = kind;
 
-		public NodeKind Kind => kind;
+            this.parent = parent;
+        }
 
-		public CssNode Parent
-		{
-			get { return parent; }
-			set { parent = value; }
-		}
+        public NodeKind Kind { get; }
 
-		internal Trivia Leading { get; set; }
+        public CssNode Parent
+        {
+            get { return parent; }
+            set { parent = value; }
+        }
 
-		internal Trivia Trailing { get; set; }
+        internal Trivia Leading { get; set; }
 
-		public virtual CssNode CloneNode()
-		{
-			throw new NotImplementedException();
-		}
-	}
+        internal Trivia Trailing { get; set; }
+
+        public virtual CssNode CloneNode()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

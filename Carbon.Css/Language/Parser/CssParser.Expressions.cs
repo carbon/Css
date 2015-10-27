@@ -2,33 +2,33 @@
 
 namespace Carbon.Css.Parser
 {
-	public sealed partial class CssParser : IDisposable
-	{
-		public CssValue ReadExpression()
-		{
-			// Literal (Number, Measurement, Variable, ...
-			var left = ReadComponent();
+    public sealed partial class CssParser : IDisposable
+    {
+        public CssValue ReadExpression()
+        {
+            // Literal (Number, Measurement, Variable, ...
+            var left = ReadComponent();
 
-			// Check if there's a binary operator
-			if (!current.IsBinaryOperator)
-			{
-				return left;
-			}
+            // Check if there's a binary operator
+            if (!current.IsBinaryOperator)
+            {
+                return left;
+            }
 
-			// Read operator
-			var opToken = Read(); 
+            // Read operator
+            var opToken = Read();
 
-			ReadTrivia();
+            ReadTrivia();
 
-			var op = (BinaryOperator)((int)opToken.Kind);
+            var op = (BinaryOperator)((int)opToken.Kind);
 
-			// This may be another expression... 
-			// TODO: Make recurssive
-			var right = ReadComponent();
+            // This may be another expression... 
+            // TODO: Make recurssive
+            var right = ReadComponent();
 
-			return new BinaryExpression(left, op, right);
-		}
-	}
+            return new BinaryExpression(left, op, right);
+        }
+    }
 }
 
 /*

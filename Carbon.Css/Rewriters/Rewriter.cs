@@ -1,40 +1,38 @@
-﻿namespace Carbon.Css
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace Carbon.Css
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
+    public class RewriterCollection : Collection<ICssRewriter>
+    {
+        public IEnumerable<CssRule> Rewrite(CssRule rule, int index = 0)
+        {
+            if (Count == 0)
+            {
+                yield return rule;
 
-	public class RewriterCollection : Collection<ICssRewriter>
-	{
-		public IEnumerable<CssRule> Rewrite(CssRule rule, int index = 0)
-		{
-			if (this.Count == 0)
-			{
-				yield return rule;
+                yield break;
+            }
 
-				yield break;
-			}
+            // TODO: Pass along in order
 
-			// TODO: Pass along in order
+            // Chain
 
-			// Chain
+            foreach (var r in this[index].Rewrite(rule))
+            {
+                if (Count > index + 1)
+                {
+                    foreach (var r2 in Rewrite(r, ++index))
+                    {
+                        yield return r2;
+                    }
+                }
+                else
+                {
+                    yield return r;
+                }
+            }
 
-
-			foreach (var r in this[index].Rewrite(rule))
-			{
-				if (this.Count > index + 1)
-				{
-					foreach(var r2 in Rewrite(r, ++index))
-					{
-						yield return r2;
-					}
-				}
-				else
-				{
-					yield return r;
-				}
-			}
-			
-		}
-	}
+        }
+    }
 }

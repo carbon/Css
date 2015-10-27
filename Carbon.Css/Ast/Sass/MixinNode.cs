@@ -2,19 +2,19 @@
 
 namespace Carbon.Css
 {
-	public class MixinNode : CssBlock
-	{
-		public MixinNode(string name, IList<CssParameter> parameters)
-			: base(NodeKind.Mixin)
-		{
-			Name = name;
-			Parameters = parameters;
-		}
+    public class MixinNode : CssBlock
+    {
+        public MixinNode(string name, IList<CssParameter> parameters)
+            : base(NodeKind.Mixin)
+        {
+            Name = name;
+            Parameters = parameters;
+        }
 
-		public string Name { get; }
+        public string Name { get; }
 
-		public IList<CssParameter> Parameters { get; }
-	}
+        public IList<CssParameter> Parameters { get; }
+    }
 }
 
 /*

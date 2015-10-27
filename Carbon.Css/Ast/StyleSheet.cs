@@ -6,138 +6,138 @@ using System.Text;
 
 namespace Carbon.Css
 {
-	using Parser;
-	using Helpers;
+    using Parser;
+    using Helpers;
 
-	public class StyleSheet : CssRoot, IStylesheet
-	{
-		private readonly CssContext context;
+    public class StyleSheet : CssRoot, IStylesheet
+    {
+        private readonly CssContext context;
 
-		public StyleSheet(List<CssNode> children, CssContext context)
-			: base(children)
-		{
-			this.context = context;
-		}
+        public StyleSheet(List<CssNode> children, CssContext context)
+            : base(children)
+        {
+            this.context = context;
+        }
 
-		public StyleSheet(CssContext context)
-			: base()
-		{
-			this.context = context;
-		}
+        public StyleSheet(CssContext context)
+            : base()
+        {
+            this.context = context;
+        }
 
-		public CssContext Context => context;
+        public CssContext Context => context;
 
-		public static StyleSheet Parse(string text, CssContext context = null)
-		{
-			if (context == null)
-			{
-				context = new CssContext();
-			}
+        public static StyleSheet Parse(string text, CssContext context = null)
+        {
+            if (context == null)
+            {
+                context = new CssContext();
+            }
 
-			var sheet = new StyleSheet(context);
+            var sheet = new StyleSheet(context);
 
-			var rules = new List<CssRule>();
+            var rules = new List<CssRule>();
 
-			var parser = new CssParser(text);
+            var parser = new CssParser(text);
 
-			var browsers = new List<Browser>();
+            var browsers = new List<Browser>();
 
-			foreach (var node in parser.ReadNodes())
-			{
-				if (node.Kind == NodeKind.Assignment)
-				{
-					var variable = (CssAssignment)node;
+            foreach (var node in parser.ReadNodes())
+            {
+                if (node.Kind == NodeKind.Assignment)
+                {
+                    var variable = (CssAssignment)node;
 
-					context.Scope[variable.Name] = variable.Value;
-				}
-				else if(node.Kind == NodeKind.Mixin)
-				{
-					var mixin = (MixinNode)node;
+                    context.Scope[variable.Name] = variable.Value;
+                }
+                else if (node.Kind == NodeKind.Mixin)
+                {
+                    var mixin = (MixinNode)node;
 
-					context.Mixins.Add(mixin.Name, mixin);
-				}
-				else if (node.Kind == NodeKind.Directive)
-				{
-					var directive = (CssDirective)node;
+                    context.Mixins.Add(mixin.Name, mixin);
+                }
+                else if (node.Kind == NodeKind.Directive)
+                {
+                    var directive = (CssDirective)node;
 
-					if (directive.Name == "support")
-					{
-						
-						var parts = directive.Value.Split(' ');
+                    if (directive.Name == "support")
+                    {
 
-						var browserType = (BrowserType)Enum.Parse(typeof(BrowserType), parts[0].Trim(), true);
-						// var compare = parts[1].Trim();
-						var browserVersion = float.Parse(parts.Last().Trim(' ', '+'));
+                        var parts = directive.Value.Split(' ');
 
-						browsers.Add(new Browser(browserType, browserVersion));
-					}
-				}
-				else
-				{
-					sheet.AddChild(node);
-				}
-			}
+                        var browserType = (BrowserType)Enum.Parse(typeof(BrowserType), parts[0].Trim(), true);
+                        // var compare = parts[1].Trim();
+                        var browserVersion = float.Parse(parts.Last().Trim(' ', '+'));
 
-			if (browsers.Count > 0)
-			{
-				sheet.Context.SetCompatibility(browsers.ToArray());
-			}
+                        browsers.Add(new Browser(browserType, browserVersion));
+                    }
+                }
+                else
+                {
+                    sheet.AddChild(node);
+                }
+            }
 
-			return sheet;
-		}
+            if (browsers.Count > 0)
+            {
+                sheet.Context.SetCompatibility(browsers.ToArray());
+            }
 
-		public static StyleSheet FromFile(FileInfo file, CssContext context = null)
-		{
-			var text = "";
+            return sheet;
+        }
 
-			using (var reader = file.OpenText())
-			{
-				text = reader.ReadToEnd();
-			}
+        public static StyleSheet FromFile(FileInfo file, CssContext context = null)
+        {
+            var text = "";
 
-			try
-			{
-				return Parse(text, context);
-			}
-			catch (SyntaxException ex)
-			{
-				ex.Location = TextHelper.GetLocation(text, ex.Position);
+            using (var reader = file.OpenText())
+            {
+                text = reader.ReadToEnd();
+            }
 
-				ex.Lines = TextHelper.GetLinesAround(text, ex.Location.Line, 3).ToList();
+            try
+            {
+                return Parse(text, context);
+            }
+            catch (SyntaxException ex)
+            {
+                ex.Location = TextHelper.GetLocation(text, ex.Position);
 
-				throw ex;
-			}
-		}
+                ex.Lines = TextHelper.GetLinesAround(text, ex.Location.Line, 3).ToList();
 
-		public void Compile(TextWriter writer)
-		{
-			WriteTo(writer);
-		}
+                throw ex;
+            }
+        }
 
-		private ICssResolver resolver;
+        public void Compile(TextWriter writer)
+        {
+            WriteTo(writer);
+        }
 
-		public void SetResolver(ICssResolver resolver)
-		{
-			this.resolver = resolver;
-		}
+        private ICssResolver resolver;
 
-		public void WriteTo(TextWriter textWriter)
-		{
-			var writer = new CssWriter(textWriter, context, resolver);
+        public void SetResolver(ICssResolver resolver)
+        {
+            this.resolver = resolver;
+        }
 
-			writer.WriteRoot(this);
-		}
+        public void WriteTo(TextWriter textWriter)
+        {
+            var writer = new CssWriter(textWriter, context, resolver);
 
-		public override string ToString()
-		{
-			var sb = new StringBuilder();
+            writer.WriteRoot(this);
+        }
 
-			using (var sw = new StringWriter(sb))
-			{
-				WriteTo(sw);
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
 
-				return sb.ToString();
-			}
-		}
-	}
+            using (var sw = new StringWriter(sb))
+            {
+                WriteTo(sw);
+
+                return sb.ToString();
+            }
+        }
+    }
 }

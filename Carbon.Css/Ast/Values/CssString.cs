@@ -1,27 +1,25 @@
 ﻿namespace Carbon.Css
 {
-	using Parser;
+    using Parser;
 
-	public class CssString : CssValue
-	{
-		private readonly string text;
+    public class CssString : CssValue
+    {
+        public CssString(CssToken token)
+            : this(token.Text)
+        { }
 
-		public CssString(CssToken token)
-			: this(token.Text)
-		{ }
+        public CssString(string text)
+            : base(NodeKind.String)
+        {
+            Text = text;
+        }
 
-		public CssString(string text)
-			: base(NodeKind.String) 
-		{ 
-			this.text = text;
-		}
+        public string Text { get; }
 
-		public string Text => text;
+        public override CssNode CloneNode() => new CssString(Text);
 
-		public override CssNode CloneNode() => new CssString(text);
-
-		public override string ToString() => text;
-	}
+        public override string ToString() => Text;
+    }
 }
 
 /*

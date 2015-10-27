@@ -4,65 +4,65 @@ using System.Linq;
 
 namespace Carbon.Css
 {
-	public class CssBlock : CssNode, IEnumerable<CssNode>
-	{
-		protected readonly List<CssNode> children;
+    public class CssBlock : CssNode, IEnumerable<CssNode>
+    {
+        protected readonly List<CssNode> children;
 
-		public CssBlock(NodeKind kind)
-			: base(kind) 
-		{
-			this.children = new List<CssNode>();
-		}
+        public CssBlock(NodeKind kind)
+            : base(kind)
+        {
+            this.children = new List<CssNode>();
+        }
 
-		public CssBlock(NodeKind kind, List<CssNode> children)
-			: base(kind)
-		{
-			this.children = children;
-		}
+        public CssBlock(NodeKind kind, List<CssNode> children)
+            : base(kind)
+        {
+            this.children = children;
+        }
 
-		public IList<CssNode> Children => children;
+        public IList<CssNode> Children => children;
 
-		public bool HasChildren => children.Count > 0;
+        public bool HasChildren => children.Count > 0;
 
-		public CssDeclaration GetDeclaration(string name)
-		{
-			return children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
-		}
+        public CssDeclaration GetDeclaration(string name)
+        {
+            return children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
+        }
 
-		#region IList<CssNode> Members
+        #region IList<CssNode> Members
 
-		public int IndexOf(CssNode node) => children.IndexOf(node);
+        public int IndexOf(CssNode node) => children.IndexOf(node);
 
-		public void Insert(int index, CssNode item)
-		{
-			item.Parent = this;
+        public void Insert(int index, CssNode item)
+        {
+            item.Parent = this;
 
-			children.Insert(index, item);
-		}
+            children.Insert(index, item);
+        }
 
-		public void RemoveAt(int index) => children.RemoveAt(index);
+        public void RemoveAt(int index) => children.RemoveAt(index);
 
-		public CssNode this[int index]
-		{
-			get { return children[index]; }
-			set { children[index] = value; }
-		}
+        public CssNode this[int index]
+        {
+            get { return children[index]; }
+            set { children[index] = value; }
+        }
 
-		public void Add(CssNode node)
-		{
-			node.Parent = this;
+        public void Add(CssNode node)
+        {
+            node.Parent = this;
 
-			children.Add(node);
-		}
+            children.Add(node);
+        }
 
-		public bool Remove(CssNode item) => children.Remove(item);
+        public bool Remove(CssNode item) => children.Remove(item);
 
-		IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator() => children.GetEnumerator();
+        IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator() => children.GetEnumerator();
 
-		IEnumerator IEnumerable.GetEnumerator() => children.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => children.GetEnumerator();
 
-		#endregion
-	}
+        #endregion
+    }
 }
 
 // A block starts with a left curly brace ({) and ends with the matching right curly brace (}).

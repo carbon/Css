@@ -6,110 +6,111 @@ using System.Text;
 
 namespace Carbon.Css
 {
-	using Parser;
-	public class CssSelector : IEnumerable<string>
-	{
-		private readonly List<string> parts;
+    using Parser;
 
-		public CssSelector(TokenList tokens)
-		{
-			var sb = new StringBuilder();
+    public class CssSelector : IEnumerable<string>
+    {
+        private readonly List<string> parts;
 
-			this.parts = new List<string>();
+        public CssSelector(TokenList tokens)
+        {
+            var sb = new StringBuilder();
 
-			foreach (var token in tokens)
-			{
-				if (token.Kind == TokenKind.Comma)
-				{
-					parts.Add(sb.ToString().Trim());
+            this.parts = new List<string>();
 
-					sb.Clear();
+            foreach (var token in tokens)
+            {
+                if (token.Kind == TokenKind.Comma)
+                {
+                    parts.Add(sb.ToString().Trim());
 
-					continue;
-				}
+                    sb.Clear();
 
-				if (token.IsTrivia)
-				{
-					sb.Append(" "); // Prettify the trivia
-				}
-				else
-				{
-					sb.Append(token.Text);
-				}
-			}
+                    continue;
+                }
 
-			if (sb.Length > 0)
-			{
-				parts.Add(sb.ToString().Trim());
-			}
-		}
+                if (token.IsTrivia)
+                {
+                    sb.Append(" "); // Prettify the trivia
+                }
+                else
+                {
+                    sb.Append(token.Text);
+                }
+            }
 
-		public CssSelector(string text)
-		{
-			#region Preconditions
+            if (sb.Length > 0)
+            {
+                parts.Add(sb.ToString().Trim());
+            }
+        }
 
-			if (text == null) throw new ArgumentNullException("text");
+        public CssSelector(string text)
+        {
+            #region Preconditions
 
-			#endregion
+            if (text == null) throw new ArgumentNullException("text");
 
-			if (text.Contains(','))
-			{
-				this.parts = new List<string>(text.Split(',').Select(t => t.Trim()));
-			}
-			else
-			{
-				this.parts = new List<string>(new[] { text });
-			}
-		}
+            #endregion
 
-		public CssSelector(List<string> parts)
-		{
-			this.parts = parts;
-		}
+            if (text.Contains(','))
+            {
+                this.parts = new List<string>(text.Split(',').Select(t => t.Trim()));
+            }
+            else
+            {
+                this.parts = new List<string>(new[] { text });
+            }
+        }
+
+        public CssSelector(List<string> parts)
+        {
+            this.parts = parts;
+        }
 
 
-		public CssSelector(CssValue list)
-		{
-			if (list is CssValueList)
-			{
-				this.parts = new List<string>(((CssValueList)list).Select(l => l.ToString()));
-			}
-			else
-			{
-				this.parts = new List<string>(new[] { list.ToString() });
-			}
-		}
+        public CssSelector(CssValue list)
+        {
+            if (list is CssValueList)
+            {
+                this.parts = new List<string>(((CssValueList)list).Select(l => l.ToString()));
+            }
+            else
+            {
+                this.parts = new List<string>(new[] { list.ToString() });
+            }
+        }
 
-		public int Count => parts.Count;
+        public int Count => parts.Count;
 
-		public string this[int index] => parts[index];
+        public string this[int index] => parts[index];
 
-		public bool Contains(string text)
-		{
-			if (parts.Count == 1) return parts[0].Contains(text);
+        public bool Contains(string text)
+        {
+            if (parts.Count == 1) return parts[0].Contains(text);
 
-			foreach (var part in parts)
-			{
-				if (part.Contains(text)) return true;
-			}
+            foreach (var part in parts)
+            {
+                if (part.Contains(text)) return true;
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-		public override string ToString()
-		{
-			if (parts.Count == 1) return parts[0];
+        public override string ToString()
+        {
+            if (parts.Count == 1) return parts[0];
 
-			return string.Join(", ", parts);
-		}
+            return string.Join(", ", parts);
+        }
 
-		public IEnumerator<string> GetEnumerator() => parts.GetEnumerator();
+        public IEnumerator<string> GetEnumerator() => parts.GetEnumerator();
 
-		IEnumerator IEnumerable.GetEnumerator() => parts.GetEnumerator();
-	}
+        IEnumerator IEnumerable.GetEnumerator() => parts.GetEnumerator();
+    }
 
-	// a:hover
-	// #id
-	// .className
-	// .className, .anotherName			(Multiselector or group)
+    // a:hover
+    // #id
+    // .className
+    // .className, .anotherName			(Multiselector or group)
 }

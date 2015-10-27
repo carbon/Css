@@ -4,62 +4,62 @@ using System.Linq;
 
 namespace Carbon.Css
 {
-	// Component Values 
-	// Comma seperated list of a component values
+    // Component Values 
+    // Comma seperated list of a component values
 
-	public class CssValueList : CssValue, IEnumerable<CssValue>
-	{
-		private readonly List<CssValue> items = new List<CssValue>();
+    public class CssValueList : CssValue, IEnumerable<CssValue>
+    {
+        private readonly List<CssValue> items = new List<CssValue>();
 
-		private readonly ValueSeperator seperator;
+        private readonly ValueSeperator seperator;
 
-		public CssValueList(ValueSeperator seperator = ValueSeperator.Comma)
-			: base(NodeKind.ValueList)
-		{
-			this.seperator = seperator;
-		}
+        public CssValueList(ValueSeperator seperator = ValueSeperator.Comma)
+            : base(NodeKind.ValueList)
+        {
+            this.seperator = seperator;
+        }
 
-		public CssValueList(IEnumerable<CssValue> values, ValueSeperator seperator = ValueSeperator.Comma)
-			: base(NodeKind.ValueList)
-		{
-			this.items.AddRange(values);
+        public CssValueList(IEnumerable<CssValue> values, ValueSeperator seperator = ValueSeperator.Comma)
+            : base(NodeKind.ValueList)
+        {
+            this.items.AddRange(values);
 
-			this.seperator = seperator;
-		}
+            this.seperator = seperator;
+        }
 
-		public ValueSeperator Seperator => seperator;
+        public ValueSeperator Seperator => seperator;
 
-		public void Add(CssValue node) => items.Add(node);
+        public void Add(CssValue node) => items.Add(node);
 
-		public CssValue this[int index] => items[index];
+        public CssValue this[int index] => items[index];
 
-		public int Count => items.Count;
+        public int Count => items.Count;
 
-		public override CssNode CloneNode() => new CssValueList(items.Select(c => (CssValue)c.CloneNode()), seperator);
+        public override CssNode CloneNode() => new CssValueList(items.Select(c => (CssValue)c.CloneNode()), seperator);
 
-		public override string ToString()
-		{
-			return string.Join(seperator == ValueSeperator.Space ? " " : ", ", items.Select(t => t.ToString()));
-		}
+        public override string ToString()
+        {
+            return string.Join(seperator == ValueSeperator.Space ? " " : ", ", items.Select(t => t.ToString()));
+        }
 
-		#region IEnumerator
+        #region IEnumerator
 
-		IEnumerator<CssValue> IEnumerable<CssValue>.GetEnumerator()
-		{
-			return items.GetEnumerator();
-		}
+        IEnumerator<CssValue> IEnumerable<CssValue>.GetEnumerator()
+        {
+            return items.GetEnumerator();
+        }
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return items.GetEnumerator();
-		}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return items.GetEnumerator();
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 
-	public enum ValueSeperator
-	{
-		Comma,
-		Space
-	}
+    public enum ValueSeperator
+    {
+        Comma,
+        Space
+    }
 }

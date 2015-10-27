@@ -1,35 +1,35 @@
 ﻿namespace Carbon.Css
 {
-	using System.Collections.Generic;
-	using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-	public class CssContext
-	{
-		private readonly Dictionary<string, MixinNode> mixins = new Dictionary<string, MixinNode>();
-		private readonly CssScope scope = new CssScope();
+    public class CssContext
+    {
+        private readonly Dictionary<string, MixinNode> mixins = new Dictionary<string, MixinNode>();
+        private readonly CssScope scope = new CssScope();
 
-		private Browser[] browserSupport = null;
+        private Browser[] browserSupport = null;
 
-		public CssScope Scope => scope;
+        public CssScope Scope => scope;
 
-		public Dictionary<string, MixinNode> Mixins => mixins;
+        public Dictionary<string, MixinNode> Mixins => mixins;
 
-		public Browser[] BrowserSupport => browserSupport;
+        public Browser[] BrowserSupport => browserSupport;
 
-		public CssScope GetNestedScope() => new CssScope(scope);
+        public CssScope GetNestedScope() => new CssScope(scope);
 
-		public void SetCompatibility(params Browser[] targets)
-		{
-			if (browserSupport != null) return;
+        public void SetCompatibility(params Browser[] targets)
+        {
+            if (browserSupport != null) return;
 
-			browserSupport = targets.OrderBy(t => t.Prefix.Text).ToArray();
-		}
-	}
+            browserSupport = targets.OrderBy(t => t.Prefix.Text).ToArray();
+        }
+    }
 
-	public enum CssFormatting
-	{
-		Original = 1,
-		Pretty = 2,
-		None = 3
-	}
+    public enum CssFormatting
+    {
+        Original = 1,
+        Pretty = 2,
+        None = 3
+    }
 }

@@ -1,9 +1,9 @@
 ﻿namespace Carbon.Css
 {
-	using System.IO;
+    using System.IO;
 
-	public interface IStylesheet
-	{		
-		void WriteTo(TextWriter writer);
-	}
+    public interface IStylesheet
+    {
+        void WriteTo(TextWriter writer);
+    }
 }

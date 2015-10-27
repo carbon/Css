@@ -1,53 +1,53 @@
 ﻿namespace Carbon.Css
 {
-	public enum NodeKind : ushort
-	{
-		Unknown = 0,
+    public enum NodeKind : ushort
+    {
+        Unknown = 0,
 
-		Document,
-		Comment,
-		Rule,
-		Expression,
-		Declaration,
+        Document,
+        Comment,
+        Rule,
+        Expression,
+        Declaration,
 
-		Block,
+        Block,
 
-		Function,
+        Function,
 
-		Selector,
-		
-		
-		Assignment,
-		Variable,
+        Selector,
 
-		// Values
-		ValueList,
-		Url,
-		Number,
-		String,
-		Boolean,
-		Color,
 
-		// Measurements
-		Angle,
-		Frequency,
-		Length,
-		Time,
-		Percentage,
-		Resolution,
-		UnknownMeasurement,
+        Assignment,
+        Variable,
 
-		// Extensions
-		Directive,
+        // Values
+        ValueList,
+        Url,
+        Number,
+        String,
+        Boolean,
+        Color,
 
-		// Sass
-		Mixin,
-		Include,
-		If,
-		For, 
-		Each,
-		While
-	}
+        // Measurements
+        Angle,
+        Frequency,
+        Length,
+        Time,
+        Percentage,
+        Resolution,
+        UnknownMeasurement,
+
+        // Extensions
+        Directive,
+
+        // Sass
+        Mixin,
+        Include,
+        If,
+        For,
+        Each,
+        While
+    }
 }
 
 

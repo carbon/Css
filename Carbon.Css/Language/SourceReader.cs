@@ -3,146 +3,146 @@ using System.IO;
 
 namespace Carbon.Css.Parser
 {
-	public class SourceReader : IDisposable
-	{
-		public const char EofChar = '\0';
+    public class SourceReader : IDisposable
+    {
+        const char EofChar = '\0';
 
-		private readonly TextReader textReader;
-		private char current;
-		private int position;
+        private readonly TextReader textReader;
+        private char current;
+        private int position;
 
-		public SourceReader(string text)
-		{
-			this.textReader = new StringReader(text);
+        public SourceReader(string text)
+        {
+            this.textReader = new StringReader(text);
 
-			current = '.';
-		}
+            current = '.';
+        }
 
-		public SourceReader(TextReader textReader) 
-		{
-			this.textReader = textReader;
+        public SourceReader(TextReader textReader)
+        {
+            this.textReader = textReader;
 
-			current = '.';
-		}
+            current = '.';
+        }
 
-		public char Current => current;
+        public char Current => current;
 
-		public bool IsEof => current == EofChar;
+        public bool IsEof => current == EofChar;
 
-		public bool IsWhiteSpace => Char.IsWhiteSpace(current);
+        public bool IsWhiteSpace => Char.IsWhiteSpace(current);
 
-		public int Position => position;
+        public int Position => position;
 
-		public char Peek()
-		{
-			int charCode = textReader.Peek();
+        public char Peek()
+        {
+            int charCode = textReader.Peek();
 
-			return (charCode > 0) ? (char)charCode : EofChar;
-		}
+            return (charCode > 0) ? (char)charCode : EofChar;
+        }
 
-		/// <summary>
-		/// Returns the current character and advances to the next
-		/// </summary>
-		/// <returns></returns>
-		public char Read()
-		{
-			var c = current;
+        /// <summary>
+        /// Returns the current character and advances to the next
+        /// </summary>
+        /// <returns></returns>
+        public char Read()
+        {
+            var c = current;
 
-			Next();
+            Next();
 
-			return c;
-		}
+            return c;
+        }
 
-		public string Read(int count)
-		{
-			var buffer = new char[count];
+        public string Read(int count)
+        {
+            var buffer = new char[count];
 
-			for (int i = 0; i < count; i++)
-			{
-				buffer[i] = current;
+            for (int i = 0; i < count; i++)
+            {
+                buffer[i] = current;
 
-				Next();
-			}
+                Next();
+            }
 
-			return new string(buffer);
-		}
+            return new string(buffer);
+        }
 
-		/// <summary>
-		/// Advances to the next character and returns it
-		/// </summary>
-		public char Next() 
-		{
-			if (IsEof) throw new Exception("Cannot read past EOF.");
+        /// <summary>
+        /// Advances to the next character and returns it
+        /// </summary>
+        public char Next()
+        {
+            if (IsEof) throw new Exception("Cannot read past EOF.");
 
-			if (marked != -1 && (marked <= this.position))
-			{
-				buffer.Append(current);
-			}
+            if (marked != -1 && (marked <= this.position))
+            {
+                buffer.Append(current);
+            }
 
-			int charCode = textReader.Read(); // -1 if there are no more chars to read (e.g. stream has ended)
+            int charCode = textReader.Read(); // -1 if there are no more chars to read (e.g. stream has ended)
 
-			if (charCode > 0)
-			{
-				this.current = (char)charCode;
-			}
-			else
-			{		
-				this.current = EofChar;
-			}
+            if (charCode > 0)
+            {
+                this.current = (char)charCode;
+            }
+            else
+            {
+                this.current = EofChar;
+            }
 
-			position++;
+            position++;
 
-			return current;
-		}
+            return current;
+        }
 
-		#region Mark
+        #region Mark
 
-		private readonly StringBuffer buffer = new StringBuffer();
+        private readonly StringBuffer buffer = new StringBuffer();
 
-		private int markStart = -1;
-		private int marked = -1;
+        private int markStart = -1;
+        private int marked = -1;
 
-		public int MarkStart
-		{
-			get { return markStart; }
-		}
-	
-		public int Mark(bool appendCurrent = true)
-		{
-			markStart = this.position;
-			marked = this.position;
+        public int MarkStart
+        {
+            get { return markStart; }
+        }
 
-			if (appendCurrent == false)
-			{
-				marked++;
-			}
+        public int Mark(bool appendCurrent = true)
+        {
+            markStart = this.position;
+            marked = this.position;
 
-			return this.position;
-	
-		}
+            if (appendCurrent == false)
+            {
+                marked++;
+            }
 
-		public string Unmark()
-		{
-			marked = -1;
+            return this.position;
 
-			return buffer.Extract();
-		}
+        }
 
-		#endregion
+        public string Unmark()
+        {
+            marked = -1;
 
-		#region IDisposable
+            return buffer.Extract();
+        }
 
-		private bool isDisposed = false;
+        #endregion
 
-		public void Dispose()
-		{
-			if (isDisposed) return;
+        #region IDisposable
 
-			textReader.Close();
+        private bool isDisposed = false;
 
-			isDisposed = true;
-		}
+        public void Dispose()
+        {
+            if (isDisposed) return;
 
-		#endregion
-	}
+            textReader.Close();
+
+            isDisposed = true;
+        }
+
+        #endregion
+    }
 }

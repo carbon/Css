@@ -1,11 +1,11 @@
 ﻿namespace Carbon.Css
 {
-	public interface ICssResolver
-	{
-		string ScopedPath { get; }
+    public interface ICssResolver
+    {
+        string ScopedPath { get; }
 
-		string GetText(string absolutePath); 
+        string GetText(string absolutePath);
 
-		// TODO: GetStreamAsync
-	}
+        // TODO: GetStreamAsync
+    }
 }

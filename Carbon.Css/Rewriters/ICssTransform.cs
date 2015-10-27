@@ -1,9 +1,9 @@
-﻿namespace Carbon.Css
-{
-	using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-	public interface ICssRewriter
-	{
-		IEnumerable<CssRule> Rewrite(CssRule rule);
-	}
+namespace Carbon.Css
+{
+    public interface ICssRewriter
+    {
+        IEnumerable<CssRule> Rewrite(CssRule rule);
+    }
 }

@@ -1,18 +1,19 @@
 ﻿namespace Carbon.Css
+{
+    public class CssDirective : CssNode
+    {
+        public CssDirective(string name, string value)
+            : base(NodeKind.Directive)
+        {
 
-{	public class CssDirective : CssNode
-	{
-		public CssDirective(string name, string value)
-			: base(NodeKind.Directive) {
+            Name = name;
+            Value = value;
+        }
 
-			Name = name;
-			Value = value;
-		}
+        public string Name { get; }
 
-		public string Name { get; }
-
-		public string Value { get; }
-	}
+        public string Value { get; }
+    }
 }
 
 /*
