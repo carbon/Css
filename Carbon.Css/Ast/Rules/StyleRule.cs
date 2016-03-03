@@ -17,7 +17,7 @@ namespace Carbon.Css
 		public StyleRule(string selectorText)
 			: this(new CssSelector(selectorText)) { }
 
-		public StyleRule(string selectorText, IList<CssNode> children)
+		public StyleRule(string selectorText, List<CssNode> children)
 			: this(new CssSelector(selectorText)) 
 		{
 			foreach (var child in children)

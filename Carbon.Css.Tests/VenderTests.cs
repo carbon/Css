@@ -27,16 +27,12 @@
 		}
 
 
-	
-
-
 		[Fact]
 		public void Nested()
 		{
 			var ss = StyleSheet.Parse(File.ReadAllText(GetTestFile("nested.css").FullName));
 
 			ss.Context.SetCompatibility(Browser.Chrome1, Browser.Safari1);
-
 
 			Assert.Equal(@"#networkLinks .block .edit:before {
   font-family: 'carbonmade';

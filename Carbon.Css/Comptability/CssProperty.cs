@@ -343,6 +343,8 @@ namespace Carbon.Css
         // https://developer.mozilla.org/en-US/docs/Web/CSS/hyphens
 
         public static readonly CssProperty InlineBoxAlign = new CssProperty("inline-box-align");
+
+
         public static readonly CssProperty Left = new CssProperty("left", CssModule.Core1);
         public static readonly CssProperty LetterSpacing = new CssProperty("letter-spacing");
 

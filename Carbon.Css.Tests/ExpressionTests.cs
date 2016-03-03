@@ -1,7 +1,7 @@
-﻿namespace Carbon.Css
-{
-	using Xunit;
+﻿using Xunit;
 
+namespace Carbon.Css
+{
 	public class ExpressionTests
 	{
 		[Fact]
@@ -30,7 +30,6 @@ $bgColor: #ffffff;
 		public void ExpressionTest1()
 		{
 			var sheet = StyleSheet.Parse(@"
-
 $bgColor: orange;
 
 @if $bgColor == orange { 
@@ -106,24 +105,6 @@ div {
   color: orange;
 }", sheet.ToString());
 		}
-
-		/*
-		[Fact]
-		public void ExpressionTest5()
-		{
-
-var sheet = StyleSheet.Parse(@"
-  div {
-    font-size: 50px * 0.5;
-  }
-
-");
-
-			var measurement = (CssDeclaration)sheet.Children[0].Children[0];
-			
-			Assert.Equal("div { background-color: orange; }", sheet.ToString());
-		}
-		*/
 
 	}
 }

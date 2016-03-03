@@ -6,16 +6,6 @@
 
 	public class AnimationTests : FixtureBase
 	{
-		
-		/*
-		[Fact]
-		public void BeforeSyntax()
-		{
-			// &:before { content: "("; }
-		}
-		*/
-
-
 		[Fact]
 		public void KetframesExpansition1()
 		{
@@ -129,8 +119,10 @@
   100% { transform: translate(0, 0px)rotate(-360deg); }
 }");
 
+            for (var i = 0; i < 100; i++)
+            {
 
-			Assert.Equal(@"@-moz-keyframes planet {
+                Assert.Equal(@"@-moz-keyframes planet {
   0% {
     -moz-transform: translate(0, 0px) rotate(0deg);
     transform: translate(0, 0px) rotate(0deg);
@@ -154,18 +146,7 @@
   0% { transform: translate(0, 0px) rotate(0deg); }
   100% { transform: translate(0, 0px) rotate(-360deg); }
 }", sheet.ToString());
-
-
-			/*
-			@-webkit-keyframes planet {
-  0%   { -webkit-transform: translate(0,0px) rotate(0deg); }
-  100% { -webkit-transform: translate(0, 0px) rotate(-360deg); }
-}
-@keyframes planet {
-  0%   { transform: translate(0, 0px)rotate(0deg); }
-  100% { transform: translate(0, 0px)rotate(-360deg); }
-}
-			*/
+            }
 		}
 
 		[Fact]
@@ -198,19 +179,7 @@
 
 		[Fact]
 		public void KeyframesTest()
-		{
-
-			/*
-			@-webkit-keyframes planet {
-  0%   { -webkit-transform: translate(0,0px) rotate(0deg); }
-  100% { -webkit-transform: translate(0, 0px) rotate(-360deg); }
-}
-@keyframes planet {
-  0%   { transform: translate(0, 0px)rotate(0deg); }
-  100% { transform: translate(0, 0px)rotate(-360deg); }
-}
-			*/
-
+        { 
 			var sheet = StyleSheet.Parse(@"@keyframes flicker {
   0%    { opacity: 1; }
   30%   { opacity: .8; }
@@ -220,16 +189,10 @@
 
 			var rule = sheet.Children[0] as KeyframesRule;
 
-
-
-			// var rule2 = sheet.Children[0].Clone();
-
 			Assert.Equal(RuleType.Keyframes, rule.Type);
 			Assert.Equal("flicker", rule.Name);
 
 			Assert.Equal(4, rule.Children.Count);
-
-			// TODO: KeyframeRule
 
 			Assert.Equal("0%", ((StyleRule)rule.Children[0]).Selector.ToString());
 			Assert.Equal("30%", ((StyleRule)rule.Children[1]).Selector.ToString());

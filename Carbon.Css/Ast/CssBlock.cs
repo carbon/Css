@@ -20,7 +20,7 @@ namespace Carbon.Css
             this.children = children;
         }
 
-        public IList<CssNode> Children => children;
+        public List<CssNode> Children => children;
 
         public bool HasChildren => children.Count > 0;
 
@@ -29,7 +29,7 @@ namespace Carbon.Css
             return children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
         }
 
-        #region IList<CssNode> Members
+        #region List<CssNode> Members
 
         public int IndexOf(CssNode node) => children.IndexOf(node);
 

@@ -57,7 +57,10 @@ h1, h2, h3, h4, h5, h6 {
 }");
 
 
-			Assert.Equal(@"h1,
+            for (var i = 0; i < 100; i++)
+            {
+
+                Assert.Equal(@"h1,
 h2,
 h3,
 h4,
@@ -69,10 +72,9 @@ h6 {
   text-rendering: optimizeLegibility;
   margin: 0 0 1rem 0;
 }", ss.ToString());
+            }
 
 		}
-
-
 
 
 		[Fact]

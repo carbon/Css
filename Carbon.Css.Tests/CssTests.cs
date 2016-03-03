@@ -1,12 +1,11 @@
-﻿namespace Carbon.Css.Tests
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+
+using Xunit;
+
+namespace Carbon.Css.Tests
 {
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Linq;
-
-	using Xunit;
-
 	using Parser;
 
 	public class CssTests : FixtureBase
@@ -52,7 +51,7 @@
 		{
 			string text = @"
 @media only screen and (min-width : 1600px) {
-  .projects { -webkit-column-count: 3; }
+  .projects { column-count: 3; }
   .main {   margin-left: 240px; }
   .projectDetails-bottom { display: none; }
   .contactForm { width: 760px; margin: 0 auto; }
@@ -64,7 +63,7 @@
 
 			Assert.Equal(
 @"@media only screen and (min-width : 1600px) {
-  .projects { -webkit-column-count: 3; }
+  .projects { column-count: 3; }
   .main { margin-left: 240px; }
   .projectDetails-bottom { display: none; }
   .contactForm {

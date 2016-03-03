@@ -4,7 +4,7 @@ namespace Carbon.Css
 {
     public class MixinNode : CssBlock
     {
-        public MixinNode(string name, IList<CssParameter> parameters)
+        public MixinNode(string name, List<CssParameter> parameters)
             : base(NodeKind.Mixin)
         {
             Name = name;
@@ -13,7 +13,7 @@ namespace Carbon.Css
 
         public string Name { get; }
 
-        public IList<CssParameter> Parameters { get; }
+        public List<CssParameter> Parameters { get; }
     }
 }
 

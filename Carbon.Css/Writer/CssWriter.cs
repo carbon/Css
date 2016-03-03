@@ -16,7 +16,7 @@ namespace Carbon.Css
         private int includeCount = 0;
         private int importCount = 0;
 
-        private Browser[] support;
+        private Browser[] browserSupport;
 
         private CssScope scope;
 
@@ -33,7 +33,7 @@ namespace Carbon.Css
             this.resolver = resolver;
             this.scope = this.context.Scope;
 
-            this.support = this.context.BrowserSupport;
+            this.browserSupport = this.context.BrowserSupport;
         }
 
         public void WriteRoot(StyleSheet sheet)
@@ -172,7 +172,7 @@ namespace Carbon.Css
             // Assume to be scss if there is no extension
             if (!absolutePath.Contains('.')) absolutePath += ".scss";
 
-            writer.Write(Environment.NewLine + "/* " + absolutePath.TrimStart('/') + " */" + Environment.NewLine);
+            writer.WriteLine(Environment.NewLine + "/* " + absolutePath.TrimStart('/') + " */");
 
             var text = resolver.GetText(absolutePath.TrimStart('/'));
 
@@ -188,8 +188,6 @@ namespace Carbon.Css
                     }
                     catch (SyntaxException ex)
                     {
-                        // response.StatusCode = 500;
-
                         writer.WriteLine("body, html { background-color: red !important; }");
                         writer.WriteLine("body * { display: none; }");
 
@@ -222,7 +220,7 @@ namespace Carbon.Css
             }
             else
             {
-                writer.Write("/* NOT FOUND */" + Environment.NewLine);
+                writer.WriteLine("/* NOT FOUND */");
             }
         }
 
@@ -393,7 +391,7 @@ namespace Carbon.Css
                 {
                     if (i != 0)
                     {
-                        writer.Write("," + Environment.NewLine);
+                        writer.WriteLine(",");
                     }
 
                     writer.Write(s);
@@ -443,16 +441,16 @@ namespace Carbon.Css
             writer.Write(rule.Name);
             writer.Write(" ");
 
-            support = null;
+            browserSupport = null;
 
             WriteBlock(rule, level); // super standards
 
-            support = context.BrowserSupport;
+            browserSupport = context.BrowserSupport;
         }
 
         private void WriteKeyframesRule(Browser browser, KeyframesRule rule, int level)
         {
-            support = new[] { browser };
+            browserSupport = new[] { browser };
 
             writer.Write("@");
             writer.Write(browser.Prefix.Text);
@@ -462,7 +460,7 @@ namespace Carbon.Css
 
             WriteBlock(rule, level);
 
-            support = context.BrowserSupport;
+            browserSupport = context.BrowserSupport;
         }
 
         public void WriteBlock(CssBlock block, int level)
@@ -498,7 +496,7 @@ namespace Carbon.Css
                 {
                     var declaration = (CssDeclaration)node;
 
-                    if (block.Children.Count == 1 && !declaration.Info.NeedsExpansion(support))
+                    if (block.Children.Count == 1 && !declaration.Info.NeedsExpansion(browserSupport))
                     {
                         condenced = true;
 
@@ -563,11 +561,11 @@ namespace Carbon.Css
         {
             var prop = declaration.Info;
 
-            if (support != null && prop.Compatibility.HasPatches)
+            if (browserSupport != null && prop.Compatibility.HasPatches)
             {
                 var prefixes = BrowserPrefixKind.None;
 
-                foreach (var browser in support)
+                foreach (var browser in browserSupport)
                 {
                     if (!prop.Compatibility.IsPrefixed(browser)) continue;
 
@@ -596,7 +594,6 @@ namespace Carbon.Css
 
             WriteDeclaration(declaration, level);
         }
-
 
         #region Compatibility helpers
 
@@ -754,7 +751,7 @@ namespace Carbon.Css
             return childScope;
         }
 
-        public CssScope GetScope(IList<CssParameter> paramaters, CssValue args)
+        public CssScope GetScope(List<CssParameter> paramaters, CssValue args)
         {
             var list = new List<CssValue>();
 
