@@ -119,9 +119,7 @@ namespace Carbon.Css
         public CssModule Module => module;
 
         public CssCompatibility Compatibility
-        {
-            get { return compatibility ?? CssCompatibility.Unknown; }
-        }
+            => compatibility ?? CssCompatibility.Unknown;
 
         public bool NeedsExpansion(Browser[] browsers)
         {

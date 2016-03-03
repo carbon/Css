@@ -2,21 +2,20 @@
 {
     public class CssModule : CssCompatibility
     {
-        private readonly CssModuleType type;
-        private readonly float level;
-
         public CssModule(CssModuleType type, float level,
             CompatibilityTable? prefixed = null,
             CompatibilityTable? standard = null)
             : base(prefixed, standard)
         {
-            this.type = type;
-            this.level = level;
+            Type = type;
+            Level = level;
         }
 
-        public CssModuleType Type => type;
+        public CssModuleType Type { get; }
 
-        public override string ToString() => type + " Level " + level;
+        public float Level { get; }
+
+        public override string ToString() => Type + " Level " + Level;
 
         public static readonly CssModule Core1 = new CssModule(CssModuleType.Core, 1,
             standard: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 6, Safari = 1 }
@@ -78,10 +77,7 @@
 
         #region Ruby
 
-        public static CssModule Ruby(float level)
-        {
-            return new CssModule(CssModuleType.Ruby, level);
-        }
+        public static CssModule Ruby(float level) => new CssModule(CssModuleType.Ruby, level);
 
         #endregion
 
@@ -117,9 +113,6 @@
 
         #endregion
 
-        public static CssModule UI(float level)
-        {
-            return new CssModule(CssModuleType.UI, level);
-        }
+        public static CssModule UI(float level) => new CssModule(CssModuleType.UI, level);
     }
 }

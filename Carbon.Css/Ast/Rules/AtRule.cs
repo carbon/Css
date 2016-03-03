@@ -2,18 +2,15 @@
 {
 	public class AtRule : CssRule
 	{
-		private readonly string name;
-		private readonly string selectorText;
-
 		public AtRule(string name, RuleType type, string selectorText)
 			: base(type) {
 		
-			this.name = name;
-			this.selectorText = selectorText;
+			Name = name;
+			SelectorText = selectorText;
 		}
 
-		public string Name => name;
+		public string Name { get; }
 
-		public string SelectorText => selectorText;
-	}
+		public string SelectorText { get; }
+    }
 }

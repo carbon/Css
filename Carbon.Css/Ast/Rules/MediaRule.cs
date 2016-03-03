@@ -1,15 +1,13 @@
 ﻿namespace Carbon.Css
 {
-	public sealed class MediaRule : CssRule
+	public class MediaRule : CssRule
 	{
-		private readonly string ruleText;
-
 		public MediaRule(string ruleText)
 			: base(RuleType.Media) {
 
-			this.ruleText = ruleText;
+			RuleText = ruleText;
 		}
 
-		public string RuleText => ruleText;
+		public string RuleText { get; }
 	}
 }

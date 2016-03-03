@@ -1,8 +1,8 @@
-﻿namespace Carbon.Css
-{
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
+namespace Carbon.Css
+{
     public class CssContext
     {
         private readonly Dictionary<string, MixinNode> mixins = new Dictionary<string, MixinNode>();

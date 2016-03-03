@@ -1,22 +1,20 @@
 ﻿namespace Carbon.Css
 {
-	public sealed class KeyframesRule : CssRule
+	public class KeyframesRule : CssRule
 	{
-		private readonly string name;
-
 		public KeyframesRule(string name)
 			: base(RuleType.Keyframes) { 
 		
-			this.name = name;
+			Name = name;
 		}
 
-		public string Name => name;
+		public string Name { get; }
 
 		// TODO: Keyframes
 
 		public override CssNode CloneNode()
 		{
-			var rule = new KeyframesRule(name);
+			var rule = new KeyframesRule(Name);
 
 			foreach (var x in children)
 			{

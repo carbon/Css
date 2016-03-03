@@ -77,9 +77,6 @@ namespace Carbon.Css
 
         public void Clear() => items.Clear();
 
-        public CssScope GetChildScope()
-        {
-            return new CssScope(this);
-        }
+        public CssScope GetChildScope() => new CssScope(this);
     }
 }

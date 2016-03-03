@@ -1,9 +1,8 @@
-﻿namespace Carbon.Css.Helpers
+﻿using System.Collections.Generic;
+using System.IO;
+
+namespace Carbon.Css.Helpers
 {
-    using System.Collections.Generic;
-
-    using System.IO;
-
     // Move to SourceReader
 
     public static class TextHelper
@@ -48,7 +47,7 @@
                 {
                     if ((i >= (number - window)) && (i <= (number + window)))
                     {
-                        yield return new LineInfo { Number = i, Text = line };
+                        yield return new LineInfo(i, line);
                     }
 
                     i++;
@@ -59,10 +58,16 @@
         }
     }
 
-    public class LineInfo
+    public struct LineInfo
     {
-        public int Number { get; set; }
+        public LineInfo(int number, string text)
+        {
+            Number = number;
+            Text = text;
+        }
 
-        public string Text { get; set; }
+        public int Number { get; }
+
+        public string Text { get; }
     }
 }

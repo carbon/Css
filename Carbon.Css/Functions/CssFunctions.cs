@@ -18,9 +18,8 @@ namespace Carbon.Css
 			["mix"]			= Mix,
 			["rgba"]		= Rgba,
 			["readability"] = Readability,
-			
-			// 
-			["if"]			= If
+
+            ["if"]			= If
 		};
 
 		public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
@@ -112,14 +111,10 @@ namespace Carbon.Css
 		#region Helpers
 
 		private static bool ToBoolean(CssValue value)
-		{
-			return value.ToString().ToLower() == "true";
-		}
+		    => value.ToString().ToLower() == "true";
 
 		private static Rgba GetColor(CssValue value)
-		{
-			return Color.Rgba.Parse(value.ToString());
-		}
+		    => Color.Rgba.Parse(value.ToString());
 
 		private static float GetAmount(CssValue value)
 		{

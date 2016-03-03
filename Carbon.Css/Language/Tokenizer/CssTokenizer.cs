@@ -1,7 +1,7 @@
-﻿namespace Carbon.Css.Parser
-{
-    using System;
+﻿using System;
 
+namespace Carbon.Css.Parser
+{
     public class CssTokenizer : IDisposable
     {
         private readonly SourceReader reader;
@@ -110,7 +110,7 @@
                 case '*': return new CssToken(TokenKind.Multiply, reader.Read(), reader.Position);
 
                 case '-':
-                    if (Char.IsDigit(reader.Peek()))
+                    if (char.IsDigit(reader.Peek()))
                         return ReadNumber();
                     else if (reader.Peek() == ' ')
                         return new CssToken(TokenKind.Subtract, reader.Read(), reader.Position);
@@ -144,7 +144,7 @@
         {
             reader.Mark();
 
-            while (Char.IsLetter(reader.Current) || reader.Current == '%')
+            while (char.IsLetter(reader.Current) || reader.Current == '%')
             {
                 if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Name");
 
@@ -226,13 +226,12 @@
             // Read a leading '-'
             if (reader.Current == '-') reader.Next();
 
-            while ((Char.IsDigit(reader.Current) || reader.Current == '.') && !reader.IsEof)
+            while ((char.IsDigit(reader.Current) || reader.Current == '.') && !reader.IsEof)
             {
                 reader.Next();
             }
 
-
-            if (reader.Current == '%' || Char.IsLetter(reader.Current))
+            if (reader.Current == '%' || char.IsLetter(reader.Current))
             {
                 mode.Enter(LexicalMode.Unit);
             }

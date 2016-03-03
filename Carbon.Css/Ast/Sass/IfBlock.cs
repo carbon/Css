@@ -26,19 +26,16 @@
     /*
 	public class EachBlock : CssNode
 	{
-		private readonly string variableName;
-		private readonly CssValue list;
-
 		public EachBlock(string variableName, CssValue list)
 			: base(NodeKind.Each)
 		{
-			this.variableName = variableName;
-			this.list = list;
+			VariableName = variableName;
+			List = list;
 		}
 
-		public string Variable => variableName;
+		public string Variable { get; }
 
-		public CssValue List => list;
+		public CssValue List { get; }
 	}
 
 	public class ForBlock : CssNode
@@ -47,9 +44,9 @@
 			: base(NodeKind.For)
 		{ }
 
-		public CssValue Variable { get; set; }
+		public CssValue Variable { get; }
 
-		public CssVariable List { get; set; }
+		public CssVariable List { get; }
 	}
 
 	public class WhileBlock : CssNode

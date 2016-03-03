@@ -1,27 +1,23 @@
-﻿namespace Carbon.Css
-{
-	using System.IO;
-	using System.Text;
+﻿using System.IO;
+using System.Text;
 
+namespace Carbon.Css
+{
 	// A StyleRule rule has a selector, and one or more declarations
 
 	public class CssRule : CssBlock
 	{
-		private readonly RuleType type;
-		
-		public CssRule(RuleType type)
-			: base(NodeKind.Rule)
-		{
-			this.type = type;
-		}
+        public CssRule(RuleType type)
+            : this(type, NodeKind.Rule)
+        { }
 
 		public CssRule(RuleType type, NodeKind kind)
 			: base(kind) 
-		{	
-			this.type = type;
+		{
+            Type = type;
 		}
 
-		public RuleType Type => type;
+		public RuleType Type { get; }
 
 		public override string ToString()
 		{

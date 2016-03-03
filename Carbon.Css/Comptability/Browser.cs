@@ -4,20 +4,17 @@ namespace Carbon.Css
 {
 	public struct Browser
 	{
-		private readonly BrowserType type;
-		private readonly float version;
-
 		public Browser(BrowserType type, float version)
 		{
-			this.type = type;
-			this.version = version;
+			Type = type;
+			Version = version;
 		}
 
-		public BrowserType Type => type;
+		public BrowserType Type { get; }
 
-		public float Version => version;
+		public float Version { get; }
 
-		public BrowserPrefix Prefix => GetPrefix(type);
+        public BrowserPrefix Prefix => GetPrefix(Type);
 
 		public static Browser Chrome(float version) => new Browser(BrowserType.Chrome, version);
 
@@ -82,7 +79,7 @@ namespace Carbon.Css
 
 		public override string ToString()
 		{
-			return type + "/" + version;
+			return Type + "/" + Version;
 		}
 	}
 
@@ -93,20 +90,18 @@ namespace Carbon.Css
 		public static readonly BrowserPrefix Opera	= new BrowserPrefix(BrowserPrefixKind.O);
 		public static readonly BrowserPrefix Webkit	= new BrowserPrefix(BrowserPrefixKind.Webkit);
 
-		private readonly BrowserPrefixKind kind;
-
 		public BrowserPrefix(BrowserPrefixKind kind)
 		{
-			this.kind = kind;
+			Kind = kind;
 		}
 
-		public BrowserPrefixKind Kind => kind;
+		public BrowserPrefixKind Kind { get; }
 
 		public string Text
 		{
 			get
 			{
-				switch (kind)
+				switch (Kind)
 				{
 					case BrowserPrefixKind.Moz	  : return "-moz-";
 					case BrowserPrefixKind.Ms	  : return "-ms-";
@@ -118,10 +113,7 @@ namespace Carbon.Css
 			}
 		}
 
-		public static implicit operator String(BrowserPrefix d)
-		{
-			return d.Text;
-		}
+		public static implicit operator string(BrowserPrefix d) => d.Text;
 	}
 
 

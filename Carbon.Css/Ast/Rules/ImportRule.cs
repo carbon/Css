@@ -1,18 +1,16 @@
 ﻿namespace Carbon.Css
 {
-	public sealed class ImportRule : CssRule
+	public class ImportRule : CssRule
 	{
-		private readonly CssUrlValue url;
-
 		public ImportRule(CssUrlValue url)
 			: base(RuleType.Import) {
 
-			this.url = url;
+			Url = url;
 		}
 
-		public CssUrlValue Url => url;
+		public CssUrlValue Url { get; }
 
-		public override string ToString() => $"@import {url};";
+		public override string ToString() => $"@import {Url};";
 	}
 }
 

@@ -1,7 +1,7 @@
-﻿namespace Carbon.Css.Parser
-{
-    using System.Text;
+﻿using System.Text;
 
+namespace Carbon.Css.Parser
+{
     public class StringBuffer
     {
         private readonly StringBuilder sb = new StringBuilder();

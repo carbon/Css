@@ -29,7 +29,7 @@ namespace Carbon.Css.Parser
 
         public bool IsEof => current == EofChar;
 
-        public bool IsWhiteSpace => Char.IsWhiteSpace(current);
+        public bool IsWhiteSpace => char.IsWhiteSpace(current);
 
         public int Position => position;
 
@@ -102,22 +102,19 @@ namespace Carbon.Css.Parser
         private int markStart = -1;
         private int marked = -1;
 
-        public int MarkStart
-        {
-            get { return markStart; }
-        }
+        public int MarkStart => markStart;
 
         public int Mark(bool appendCurrent = true)
         {
-            markStart = this.position;
-            marked = this.position;
+            markStart = position;
+            marked = position;
 
             if (appendCurrent == false)
             {
                 marked++;
             }
 
-            return this.position;
+            return position;
 
         }
 

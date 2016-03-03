@@ -2,17 +2,14 @@
 {
     public class CssParameter
     {
-        private readonly string name;
-        private readonly CssValue defaultValue;
-
         public CssParameter(string name, CssValue defaultValue = null)
         {
-            this.name = name;
-            this.defaultValue = defaultValue;
+            Name = name;
+            DefaultValue = defaultValue;
         }
 
-        public string Name => name;
+        public string Name { get; }
 
-        public CssValue DefaultValue => defaultValue;
+        public CssValue DefaultValue { get; }
     }
 }

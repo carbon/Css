@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	public enum RuleType : ushort
+	public enum RuleType
 	{
 		Unknown				= 0,
 		Style				= 1,
