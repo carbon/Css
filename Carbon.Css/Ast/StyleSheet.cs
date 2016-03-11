@@ -132,7 +132,7 @@ namespace Carbon.Css
 
         public void WriteTo(TextWriter textWriter)
         {
-            var writer = new CssWriter(textWriter, context, resolver);
+            var writer = new CssWriter(textWriter, context, new CssScope(), resolver);
 
             writer.WriteRoot(this);
         }
@@ -146,9 +146,7 @@ namespace Carbon.Css
                 scope.Add(v.Key, v.Value);
             }
 
-            var writer = new CssWriter(textWriter, context, resolver);
-
-            writer.SetScope(scope);
+            var writer = new CssWriter(textWriter, context, scope, resolver);
 
             writer.WriteRoot(this);
         }

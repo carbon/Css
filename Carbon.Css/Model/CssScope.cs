@@ -5,10 +5,7 @@ namespace Carbon.Css
 {
     public class CssScope
     {
-        private readonly CssScope parent;
         private readonly IDictionary<string, CssValue> items;
-
-        private int counter = 0;
 
         public CssScope(IDictionary<string, CssValue> items)
         {
@@ -17,13 +14,13 @@ namespace Carbon.Css
 
         public CssScope(CssScope parent = null)
         {
-            this.parent = parent;
-            this.items = new Dictionary<string, CssValue>(); // StringComparer.OrdinalIgnoreCase
+            Parent = parent;
+            this.items = new Dictionary<string, CssValue>();
         }
 
         public object This { get; set; }
 
-        public CssScope Parent => parent;
+        public CssScope Parent { get; }
 
         public CssValue this[string name]
         {
@@ -41,11 +38,9 @@ namespace Carbon.Css
             return items.TryGetValue(key, out value);
         }
 
-        public CssValue GetValue(string name)
+        public CssValue GetValue(string name, int counter = 0)
         {
-            counter++;
-
-            if (counter > 10000) throw new Exception("recussion detected");
+            if (counter > 50) throw new Exception($"recussion detected: {counter}");
 
             CssValue value;
 
@@ -57,25 +52,28 @@ namespace Carbon.Css
 
                     if (variable.Symbol == name) throw new Exception("Self referencing");
 
-                    return GetValue(variable.Symbol);
+                    return GetValue(variable.Symbol, counter + 1);
                 }
 
                 return value;
             }
 
-            if (parent != null)
+            if (Parent != null)
             {
-                return parent.GetValue(name);
+                return Parent.GetValue(name, Count + 1);
             }
             else
             {
-                return new CssString($"/* ${name} not found */");
+                return new CssUndefined(name);
             }
         }
 
         public int Count => items.Count;
 
-        public void Clear() => items.Clear();
+        public void Clear()
+        {
+            items.Clear();
+        }
 
         public CssScope GetChildScope() => new CssScope(this);
     }

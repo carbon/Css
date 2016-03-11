@@ -5,18 +5,11 @@ namespace Carbon.Css
 {
     public class CssContext
     {
-        private readonly Dictionary<string, MixinNode> mixins = new Dictionary<string, MixinNode>();
-        private readonly CssScope scope = new CssScope();
-
         private Browser[] browserSupport = null;
 
-        public CssScope Scope => scope;
-
-        public Dictionary<string, MixinNode> Mixins => mixins;
+        public Dictionary<string, MixinNode> Mixins { get; } = new Dictionary<string, MixinNode>();
 
         public Browser[] BrowserSupport => browserSupport;
-
-        public CssScope GetNestedScope() => new CssScope(scope);
 
         public void SetCompatibility(params Browser[] targets)
         {

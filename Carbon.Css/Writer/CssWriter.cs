@@ -8,19 +8,20 @@ namespace Carbon.Css
 {
     using Parser;
 
-    public class CssWriter
+    public class CssWriter : IDisposable
     {
         private readonly TextWriter writer;
         private readonly CssContext context;
         private readonly ICssResolver resolver;
         private int includeCount = 0;
         private int importCount = 0;
+        private int nodeCount = 0;
 
         private Browser[] browserSupport;
 
         private CssScope scope;
 
-        public CssWriter(TextWriter writer, CssContext context = null, ICssResolver resolver = null)
+        public CssWriter(TextWriter writer, CssContext context = null, CssScope scope = null, ICssResolver resolver = null)
         {
             #region Preconditions
 
@@ -31,7 +32,7 @@ namespace Carbon.Css
             this.writer = writer;
             this.context = context ?? new CssContext();
             this.resolver = resolver;
-            this.scope = this.context.Scope;
+            this.scope = scope ?? new CssScope();
 
             this.browserSupport = this.context.BrowserSupport;
         }
@@ -44,16 +45,36 @@ namespace Carbon.Css
 
             var i = 0;
 
-            foreach (var child in sheet.Children)
+            foreach (var node in sheet.Children)
             {
-                if (child.Kind == NodeKind.If)
+                if (node.Kind == NodeKind.If)
                 {
-                    EvaluateIf((IfBlock)child);
+                    EvaluateIf((IfBlock)node);
 
                     continue;
                 }
 
-                var rule = child as CssRule;
+                if (node.Kind == NodeKind.Comment)
+                {
+                    if (i != 0) writer.WriteLine();
+
+                    i++;
+
+                    WriteComment((CssComment)node);
+
+                    continue;
+                }
+
+                if (node.Kind == NodeKind.Assignment)
+                {
+                    var variable = (CssAssignment)node;
+
+                    scope[variable.Name] = variable.Value;
+
+                    continue;
+                }
+
+                var rule = node as CssRule;
 
                 if (rule == null) continue;
 
@@ -87,17 +108,33 @@ namespace Carbon.Css
         {
             var result = EvalulateExpression(block.Condition);
 
+            var i = 0;
+
             if (ToBoolean(result))
             {
                 foreach (var child in block.Children)
                 {
                     if (child is CssRule)
                     {
+                        if (i > 0) writer.WriteLine();
+
                         WriteRule((CssRule)child);
+
+                        i++;
+                    }
+                    else if (child is CssAssignment)
+                    {
+                        var variable = (CssAssignment)child;
+
+                        scope[variable.Name] = variable.Value;
                     }
                     else if (child is CssDeclaration)
                     {
+                        if (i > 0) writer.WriteLine();
+
                         WriteDeclaration((CssDeclaration)child, level);
+
+                        i++;
                     }
                 }
             }
@@ -106,7 +143,7 @@ namespace Carbon.Css
         public bool ToBoolean(object value)
         {
             if (value is CssBoolean) return ((CssBoolean)value).Value;
-
+   
             return false;
         }
 
@@ -114,10 +151,10 @@ namespace Carbon.Css
         {
             switch (expression.Kind)
             {
-                case NodeKind.Variable: return scope.GetValue(((CssVariable)expression).Symbol);
-                case NodeKind.Expression: return EvalBinaryExpression((BinaryExpression)expression);
-                case NodeKind.Function: return EvalFunction((CssFunction)expression);
-                default: return expression;
+                case NodeKind.Variable   : return scope.GetValue(((CssVariable)expression).Symbol);
+                case NodeKind.Expression : return EvalBinaryExpression((BinaryExpression)expression);
+                case NodeKind.Function   : return EvalFunction((CssFunction)expression);
+                default                  : return expression;
             }
         }
 
@@ -135,14 +172,19 @@ namespace Carbon.Css
             var leftS = left.ToString();
             var rightS = right.ToString();
 
+            if (left.Kind == NodeKind.Undefined)
+            {
+                leftS = "undefined";
+            }
+
             switch (expression.Operator)
             {
-                case BinaryOperator.Equals: return new CssBoolean(leftS == rightS);
-                case BinaryOperator.NotEquals: return new CssBoolean(leftS != rightS);
-                case BinaryOperator.Gt: return new CssBoolean(float.Parse(leftS) > float.Parse(rightS));
-                case BinaryOperator.Gte: return new CssBoolean(float.Parse(leftS) >= float.Parse(rightS));
-                case BinaryOperator.Lt: return new CssBoolean(float.Parse(leftS) < float.Parse(rightS));
-                case BinaryOperator.Lte: return new CssBoolean(float.Parse(leftS) <= float.Parse(rightS));
+                case BinaryOperator.Equals      : return new CssBoolean(leftS == rightS);
+                case BinaryOperator.NotEquals   : return new CssBoolean(leftS != rightS);
+                case BinaryOperator.Gt          : return new CssBoolean(float.Parse(leftS) > float.Parse(rightS));
+                case BinaryOperator.Gte         : return new CssBoolean(float.Parse(leftS) >= float.Parse(rightS));
+                case BinaryOperator.Lt          : return new CssBoolean(float.Parse(leftS) < float.Parse(rightS));
+                case BinaryOperator.Lte         : return new CssBoolean(float.Parse(leftS) <= float.Parse(rightS));
             }
 
             return new CssBoolean(true);
@@ -224,15 +266,26 @@ namespace Carbon.Css
             }
         }
 
+        public void WriteComment(CssComment comment)
+        {
+            writer.Write("/* ");
+            writer.Write(comment.Text);
+            writer.WriteLine(" */");
+        }
+
         public void WriteValue(CssNode value)
         {
+            if (nodeCount > 50000) throw new Exception("Greater then 50000 nodes written");
+
+            nodeCount++;
+
             switch (value.Kind)
             {
-                case NodeKind.Variable: WriteVariable((CssVariable)value); break;
-                case NodeKind.ValueList: WriteValueList((CssValueList)value); break;
-                case NodeKind.Function: WriteFunction((CssFunction)value); break;
-                case NodeKind.Expression: WriteValue(EvalulateExpression((CssValue)value)); break;
-                default: writer.Write(value.ToString()); break;
+                case NodeKind.Variable   : WriteVariable((CssVariable)value); break;
+                case NodeKind.ValueList  : WriteValueList((CssValueList)value); break;
+                case NodeKind.Function   : WriteFunction((CssFunction)value); break;
+                case NodeKind.Expression : WriteValue(EvalulateExpression((CssValue)value)); break;
+                default                  : writer.Write(value.ToString()); break;
             }
         }
 
@@ -287,22 +340,27 @@ namespace Carbon.Css
                     break;
 
                 case NodeKind.ValueList:
+                    var list = (CssValueList)value;
+
+                    if (list.Seperator == ValueSeperator.Space) yield return list;
+
+                    // Break out comma seperated values
+                    foreach (var v in list)
                     {
-                        var list = (CssValueList)value;
-
-                        if (list.Seperator == ValueSeperator.Space) yield return list;
-
-                        // Break out comma seperated values
-                        foreach (var v in list)
-                        {
-                            foreach (var item in GetArgs((CssValue)v)) yield return item;
-                        }
+                        foreach (var item in GetArgs(v)) yield return item;
                     }
 
                     break;
+                    
+                case NodeKind.Expression:
+                  yield return EvalBinaryExpression((BinaryExpression)value);
 
-                case NodeKind.Function: yield return value; break;
-                default: yield return value; break;
+                  break;
+
+                // Function, etc 
+                default:
+                    yield return value;
+                    break;
             }
 
         }
@@ -880,6 +938,12 @@ namespace Carbon.Css
             }
 
             return sb.ToString();
+        }
+
+
+        public void Dispose()
+        {
+            writer.Dispose();
         }
 
         #endregion
