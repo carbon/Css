@@ -78,7 +78,9 @@ $foregroundColor: #000000;
 			Assert.Equal("div { background-color: red; }", sheet.ToString());
 		}
 
-		[Fact]
+
+        
+        [Fact]
 		public void ExpressionTest4()
 		{
 			var sheet = StyleSheet.Parse(@"
@@ -94,7 +96,7 @@ div {
   }
 }
 ");
-			var ifBlock = (IfBlock)((CssRule)sheet.Children[0]).Children[1];
+			var ifBlock = (IfBlock)((CssRule)sheet.Children[2]).Children[1];
 
             Assert.Equal(NodeKind.If, ifBlock.Kind);
 			Assert.Equal(ifBlock.Children.Count, 1);
@@ -106,5 +108,62 @@ div {
 }", sheet.ToString());
 		}
 
-	}
+
+        [Fact]
+        public void ExpressionTest5()
+        {
+            var sheet = StyleSheet.Parse(@"
+$bgColor: #ffffff;
+
+@if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
+  $bgColor: purple;  
+}
+
+div {
+  background-color: $bgColor;
+}
+
+");
+
+            Assert.Equal("div { background-color: purple; }", sheet.ToString());
+        }
+
+        [Fact]
+        public void IfTest7()
+        {
+            var sheet = StyleSheet.Parse(@"div { color: if(red == red, purple, green) }");
+
+            Assert.Equal("div { color: purple; }", sheet.ToString());
+        }
+
+        [Fact]
+        public void IfTest8()
+        {
+            var sheet = StyleSheet.Parse(@"div { color: if(red == orange, purple, green) }");
+
+            Assert.Equal("div { color: green; }", sheet.ToString());
+        }
+
+
+        [Fact]
+        public void IfTest4()
+        {
+            var sheet = StyleSheet.Parse(@"
+$bgColor: #ffffff;
+
+@if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
+  div { color: red; display: none; }
+  div { background-color: orange; }
+}
+");
+
+
+            Assert.Equal(
+@"div {
+  color: red;
+  display: none;
+}
+div { background-color: orange; }", sheet.ToString());
+        }
+    }
 }
