@@ -282,6 +282,13 @@ div { transition: width: 5px; }"
 		
 		}
 
+        [Fact]
+        public void ParseEmpty()
+        {
+            StyleSheet.Parse(@"a {
+      }");
+
+        }
 
 		
 		[Fact]
