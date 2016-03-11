@@ -45,14 +45,10 @@ namespace Carbon.Css
         #region IEnumerator
 
         IEnumerator<CssValue> IEnumerable<CssValue>.GetEnumerator()
-        {
-            return items.GetEnumerator();
-        }
+            => items.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            return items.GetEnumerator();
-        }
+            => items.GetEnumerator();
 
         #endregion
     }

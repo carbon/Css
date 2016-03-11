@@ -1,7 +1,7 @@
-﻿namespace Carbon.Css
-{
-	using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace Carbon.Css
+{
 	public class IEOpacityTransform : ICssRewriter
 	{
 		public IEnumerable<CssRule> Rewrite(CssRule rule)
@@ -27,7 +27,7 @@
 			var index = rule.IndexOf(declaration);
 
 			// Add the filter before the standard
-			rule.Insert(index, new CssDeclaration("filter", "alpha(opacity=" + value + ")"));
+			rule.Insert(index, new CssDeclaration("filter", $"alpha(opacity={value})"));
 
 			yield return rule;
 		}

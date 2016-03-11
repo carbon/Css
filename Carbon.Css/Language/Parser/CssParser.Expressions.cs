@@ -15,8 +15,12 @@ namespace Carbon.Css.Parser
                 return left;
             }
 
-            // Read operator
-            var opToken = Read();
+            return ReadExpressionFrom(left);
+        }
+
+        public CssValue ReadExpressionFrom(CssValue left)
+        {
+            var opToken = Read(); // Read operator
 
             ReadTrivia();
 

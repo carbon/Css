@@ -10,30 +10,26 @@ namespace Carbon.Css
 		// http://lesscss.org/functions/#color-operations-saturate
 
 		private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new Dictionary<string, Func<CssValue[], CssValue>>(9) {
-			["darken"]		= Darken,
-			["lighten"]		= Lighten,
-			["saturate"]	= Saturate,
-			["desaturate"]	= Desaturate,
-			["adjust-hue"]	= AdjustHue,
-			["mix"]			= Mix,
-			["rgba"]		= Rgba,
-			["readability"] = Readability,
+			["darken"]		    = Darken,
+			["lighten"]		    = Lighten,
+			["saturate"]	    = Saturate,
+			["desaturate"]	    = Desaturate,
+			["adjust-hue"]	    = AdjustHue,
+			["mix"]			    = Mix,
+			["rgba"]		    = Rgba,
+			["readability"]     = Readability,
 
-            ["if"]			= If
-		};
+            ["if"]			    = If
+        };
 
 		public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
-		{
-			return dic.TryGetValue(name, out func);
-		}
+		    => dic.TryGetValue(name, out func);
 		
 		// if($condition, $if-true, $if-false)
 		public static CssValue If(CssValue[] args)
-		{
-			return (ToBoolean(args[0])) ? args[1] : args[2];
-		}
+		    => (ToBoolean(args[0])) ? args[1] : args[2];
 
-		public static CssValue Mix(CssValue[] args)
+        public static CssValue Mix(CssValue[] args)
 		{
 			var color1 = GetColor(args[0]);
 			var color2 = GetColor(args[1]);
@@ -108,10 +104,14 @@ namespace Carbon.Css
 			return new CssNumber((float)color1.CalculateReadability(color2).Color);
 		}
 
-		#region Helpers
+        #region Helpers
 
-		private static bool ToBoolean(CssValue value)
-		    => value.ToString().ToLower() == "true";
+        private static bool ToBoolean(CssValue value)
+        {
+            if (value.Kind == NodeKind.Boolean) return ((CssBoolean)value).Value;
+
+            return value.ToString().ToLower() == "true";
+        }
 
 		private static Rgba GetColor(CssValue value)
 		    => Color.Rgba.Parse(value.ToString());

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Ast\Expressions\Operator.cs" />
     <Compile Include="Ast\Expressions\UnaryExpression.cs" />
+    <Compile Include="Ast\CssComment.cs" />
     <Compile Include="Ast\Sass\IfBlock.cs" />
     <Compile Include="Ast\CssRoot.cs" />
     <Compile Include="Ast\Rules\AtRule.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Ast\Expressions\BinaryExpression.cs" />
     <Compile Include="Ast\Values\CssNumber.cs" />
     <Compile Include="Ast\Values\CssBoolean.cs" />
+    <Compile Include="Ast\Values\CssUndefined.cs" />
     <Compile Include="Ast\Values\CssVariable.cs" />
     <Compile Include="Ast\Values\CssMeasurement.cs" />
     <Compile Include="Ast\Values\CssUrl.cs" />
