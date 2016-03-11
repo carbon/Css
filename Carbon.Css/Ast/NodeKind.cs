@@ -27,6 +27,7 @@
         String,
         Boolean,
         Color,
+        Undefined,
 
         // Measurements
         Angle,
