@@ -70,9 +70,9 @@ namespace Carbon.Css.Parser
         {
             switch (current.Kind)
             {
-                case TokenKind.Directive: return ReadDirective();
-                case TokenKind.AtSymbol: return ReadAtRule();
-                case TokenKind.Dollar: return ReadAssignment();
+                case TokenKind.Directive : return ReadDirective();
+                case TokenKind.AtSymbol  : return ReadAtRule();
+                case TokenKind.Dollar    : return ReadAssignment();
             }
 
             var selector = ReadSelector();
@@ -98,8 +98,8 @@ namespace Carbon.Css.Parser
         {
             switch (current.Kind)
             {
-                case TokenKind.Name: return ReadStyleRule();
-                case TokenKind.AtSymbol: return ReadAtRule();
+                case TokenKind.Name     : return ReadStyleRule();
+                case TokenKind.AtSymbol : return ReadAtRule();
 
                 default: throw new UnexpectedTokenException(LexicalMode.Rule, current);
             }
@@ -125,14 +125,14 @@ namespace Carbon.Css.Parser
 
             switch (atName.Text)
             {
-                case "charset": ruleType = RuleType.Charset; break;
-                case "import": return ReadImportRule();
-                case "font-face": return ReadFontFaceRule();
-                case "media": return ReadMediaRule();
-                case "page": ruleType = RuleType.Page; break;
-                case "keyframes": return ReadKeyframesRule();
-                case "mixin": return ReadMixinBody();
-                case "if": return ReadIfRule();
+                case "charset"   : ruleType = RuleType.Charset; break;
+                case "import"    : return ReadImportRule();
+                case "font-face" : return ReadFontFaceRule();
+                case "media"     : return ReadMediaRule();
+                case "page"      : ruleType = RuleType.Page; break;
+                case "keyframes" : return ReadKeyframesRule();
+                case "mixin"     : return ReadMixinBody();
+                case "if"        : return ReadIfRule();
             }
 
             string selectorText = null;
@@ -278,7 +278,16 @@ namespace Carbon.Css.Parser
         {
             while (!isEnd)
             {
-                yield return ReadComponent();
+                var component = ReadComponent();
+
+                if (current.IsBinaryOperator)
+                {
+                    yield return ReadExpressionFrom(component);
+                }
+                else
+                {
+                    yield return component;
+                }
 
                 if (current.Kind == TokenKind.BlockStart
                     || current.Kind == TokenKind.BlockEnd
@@ -316,26 +325,7 @@ namespace Carbon.Css.Parser
 
             if (current.Kind == TokenKind.LeftParenthesis)
             {
-                Read(); // Read (
-
-                ReadTrivia();       // Read leading trivia
-
-                var args = ReadValueList();
-
-                Read(TokenKind.RightParenthesis, LexicalMode.Function);
-
-                if (value.Text == "url")
-                {
-                    return new CssUrl(value, args)
-                    {
-                        Trailing = ReadTrivia()
-                    };
-                }
-
-                return new CssFunction(value.Text, args)
-                {
-                    Trailing = ReadTrivia()
-                };
+                return ReadFunctionCall(value);
             }
 
             // ReadString (consider context)
@@ -345,8 +335,29 @@ namespace Carbon.Css.Parser
             // :link
             // :not
 
-            return new CssString(value)
+            return new CssString(value) {
+                Trailing = ReadTrivia()
+            };
+        }
+
+        public CssFunction ReadFunctionCall(CssToken name)
+        {
+            Read();                 // (
+
+            ReadTrivia();           // trivia
+
+            var args = ReadValueList();
+
+            Read(TokenKind.RightParenthesis, LexicalMode.Function); // )
+
+            if (name.Text == "url")
             {
+                return new CssUrl(name, args) {
+                    Trailing = ReadTrivia()
+                };
+            }
+
+            return new CssFunction(name.Text, args) {
                 Trailing = ReadTrivia()
             };
         }
@@ -397,7 +408,7 @@ namespace Carbon.Css.Parser
 
             Read(TokenKind.Colon, LexicalMode.Assignment);              // read :
 
-            ReadTrivia();                                               // Read trivia
+            ReadTrivia();                                               // read trivia
 
             var value = ReadValueList();
 
@@ -575,7 +586,7 @@ namespace Carbon.Css.Parser
 
             ReadTrivia();
 
-            while (current.Kind != TokenKind.BlockEnd)
+            while(current.Kind != TokenKind.BlockEnd)
             {
                 if (isEnd) throw new UnbalancedBlock(LexicalMode.Block, blockStart);
 
@@ -589,21 +600,29 @@ namespace Carbon.Css.Parser
 
                     switch (name.Text)
                     {
-                        case "include": block.Add(ReadInclude()); continue;
-                        case "if": block.Add(ReadIfRule()); continue;
+                        case "include"  : block.Add(ReadInclude()); continue;
+                        case "if"       : block.Add(ReadIfRule()); continue;
                     }
+                }
+
+                if (current.Kind == TokenKind.Dollar)
+                {
+                    block.Add(ReadAssignment());
+
+                    continue;
+
                 }
 
                 var statement = ReadSpan();
 
                 switch (current.Kind)
                 {
-                    case TokenKind.Colon: block.Add(ReadDeclarationFromName(statement)); break; // DeclarationName
-                    case TokenKind.BlockStart: block.Add(ReadRuleBlock(new CssSelector(statement))); break;
-                    case TokenKind.BlockEnd: break;
+                    case TokenKind.Colon        : block.Add(ReadDeclarationFromName(statement)); break; // DeclarationName
+                    case TokenKind.BlockStart   : block.Add(ReadRuleBlock(new CssSelector(statement))); break;
+                    case TokenKind.BlockEnd     : break;
 
                     // TODO: Figure out where we missed reading the semicolon TEMP
-                    case TokenKind.Semicolon: tokenizer.Read(); break;
+                    case TokenKind.Semicolon    : tokenizer.Read(); break;
 
                     default: throw new UnexpectedTokenException(LexicalMode.Block, current);
                 }
