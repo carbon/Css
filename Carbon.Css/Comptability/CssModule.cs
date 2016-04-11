@@ -3,8 +3,8 @@
     public class CssModule : CssCompatibility
     {
         public CssModule(CssModuleType type, float level,
-            CompatibilityTable? prefixed = null,
-            CompatibilityTable? standard = null)
+            CompatibilityTable prefixed = new CompatibilityTable(),
+            CompatibilityTable standard = new CompatibilityTable())
             : base(prefixed, standard)
         {
             Type = type;
@@ -18,22 +18,22 @@
         public override string ToString() => Type + " Level " + Level;
 
         public static readonly CssModule Core1 = new CssModule(CssModuleType.Core, 1,
-            standard: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 6, Safari = 1 }
+            standard: new CompatibilityTable(chrome: 1, firefox: 1, safari: 1)
         );
 
         public static readonly CssModule Core2 = new CssModule(CssModuleType.Core, 2,
-            standard: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 6, Safari = 1 }
+            standard: new CompatibilityTable(chrome: 1, firefox: 1, ie: 6, safari: 1)
         );
 
         public static readonly CssModule Core2_1 = new CssModule(CssModuleType.Core, 2.1f,
-            standard: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 8, Safari = 1 }
+            standard: new CompatibilityTable(chrome: 1, firefox: 1, ie: 8, safari: 1)
         );
 
         #region Animations
 
         public static readonly CssModule Animations3 = new CssModule(CssModuleType.Animations, 3,
-            prefixed: new CompatibilityTable { Chrome = 1, Firefox = 5, Safari = 4 },
-            standard: new CompatibilityTable { Chrome = 26, Firefox = 16, IE = 10 }
+            prefixed: new CompatibilityTable(chrome: 1, firefox: 5, safari: 4),
+            standard: new CompatibilityTable(chrome: 26, firefox: 16, ie: 10, safari: 9)
         );
 
         #endregion
@@ -46,8 +46,8 @@
 
         #region Color
 
-        public static CssModule Color3 = new CssModule(CssModuleType.Columns, 3f,
-            standard: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 9, Safari = 1.2f }
+        public static CssModule Color3 = new CssModule(CssModuleType.Color, 3f,
+            standard: new CompatibilityTable(chrome: 1, firefox: 1, ie: 9, safari: 1.2f)
         );
 
         #endregion
@@ -56,9 +56,10 @@
 
         // Columns (Level 3)
         public static readonly CssModule Columns3 = new CssModule(CssModuleType.Columns, 3,
-            prefixed: new CompatibilityTable { Chrome = 10, Firefox = 9, Safari = 3 },
-            standard: new CompatibilityTable { IE = 10 }
+            prefixed: new CompatibilityTable(chrome: 10, firefox: 9, safari: 7),
+            standard: new CompatibilityTable(ie: 10, chrome: 50, safari: 9)
         );
+
 
         #endregion
 
@@ -89,11 +90,9 @@
 
         #region Transforms
 
-        // IE: prefixed(9), standard(10)
-
         public static readonly CssModule Transforms3 = new CssModule(CssModuleType.Transforms, 3,
-            prefixed: new CompatibilityTable { Chrome = 10, Firefox = 3.5f, IE = 9, Safari = 4 },
-            standard: new CompatibilityTable { Chrome = 36, Firefox = 16, IE = 10 }
+            prefixed: new CompatibilityTable(chrome: 10, firefox: 3.5f, ie: 9, safari: 4),
+            standard: new CompatibilityTable(chrome: 36, firefox: 16, ie: 10, safari: 9)
         );
 
         #endregion
@@ -104,10 +103,9 @@
         // Standard in IE10
 
         public static readonly CssModule Transitions3 = new CssModule(CssModuleType.Transitions, 3,
-            prefixed: new CompatibilityTable { Chrome = 1, Firefox = 4, Safari = 3 },
-            standard: new CompatibilityTable { Chrome = 26, Firefox = 20, IE = 10 }
-        )
-        { HasValuePatches = true };
+            prefixed: new CompatibilityTable(chrome: 1, firefox: 4, safari: 3),
+            standard: new CompatibilityTable(chrome: 26, firefox: 20, ie: 10, safari: 9)
+        ) { PatchValues = true };
 
         // TODO: Limit value patch scope to transition
 

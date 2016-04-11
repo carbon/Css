@@ -196,7 +196,6 @@ namespace Carbon.Css
 
                     try
                     {
-
                         foreach (var node in Parse(text, context).Children)
                         {
                             AddChild(node);

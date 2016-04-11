@@ -3,82 +3,6 @@ using System.Collections.Generic;
 
 namespace Carbon.Css
 {
-    // TODO: Make immutable
-    public struct CompatibilityTable
-    {
-        public float Chrome { get; set; }
-
-        public float Firefox { get; set; }
-
-        public float IE { get; set; }
-
-        public float Safari { get; set; }
-    }
-
-    public class CssCompatibility
-    {
-        public static readonly CssCompatibility Unknown = new CssCompatibility();
-
-        private readonly CompatibilityTable prefixed;
-        private readonly CompatibilityTable standard;
-
-        public CssCompatibility(CompatibilityTable? prefixed = null, CompatibilityTable? standard = null)
-        {
-            this.prefixed = prefixed ?? new CompatibilityTable();
-            this.standard = standard ?? new CompatibilityTable();
-        }
-
-        public bool HasValuePatches { get; set; }
-
-        public CompatibilityTable Prefixed => prefixed;
-
-        public CompatibilityTable Standard => standard;
-
-        public bool IsPrefixed(Browser browser)
-        {
-            // Check if it's standard
-            switch (browser.Type)
-            {
-                case BrowserType.Chrome: return prefixed.Chrome > 0f && !IsStandard(browser);
-                case BrowserType.Firefox: return prefixed.Firefox > 0f && !IsStandard(browser);
-                case BrowserType.IE: return prefixed.IE > 0f && !IsStandard(browser);
-                case BrowserType.Safari: return prefixed.Safari > 0f && !IsStandard(browser);
-            }
-
-            return false;
-        }
-
-        public bool IsStandard(Browser browser)
-        {
-            // Check if it's standard
-            switch (browser.Type)
-            {
-                case BrowserType.Chrome: return standard.Safari != 0 && standard.Chrome <= browser.Version;
-                case BrowserType.Firefox: return standard.Firefox != 0 && standard.Firefox <= browser.Version;
-                case BrowserType.IE: return standard.IE != 0 && standard.IE <= browser.Version;
-                case BrowserType.Safari: return standard.Safari != 0 && standard.Safari <= browser.Version;
-            }
-
-            return false;
-        }
-
-
-        public bool HasPatches
-        {
-            get
-            {
-                return
-                    prefixed.Chrome > 0 ||
-                    prefixed.Firefox > 0 ||
-                    prefixed.IE > 0 ||
-                    prefixed.Safari > 0;
-
-            }
-        }
-
-        // Rewrite
-    }
-
     public class CssProperty
     {
         private readonly string name;
@@ -121,7 +45,8 @@ namespace Carbon.Css
         public CssCompatibility Compatibility
             => compatibility ?? CssCompatibility.Unknown;
 
-        public bool NeedsExpansion(Browser[] browsers)
+ 
+        public bool NeedsExpansion(CssDeclaration declaration, Browser[] browsers)
         {
             if (browsers == null || browsers.Length == 0) return false;
 
@@ -129,7 +54,7 @@ namespace Carbon.Css
 
             foreach (var browser in browsers)
             {
-                if (Compatibility.IsPrefixed(browser)) return true;
+                if (Compatibility.HasPatch(declaration, browser)) return true;
             }
 
             return false;
@@ -174,7 +99,7 @@ namespace Carbon.Css
         public static readonly CssProperty AnimationTimingFunction = new CssProperty("animation-timing-function", CssModule.Animations3);
 
         public static readonly CssProperty Appearance = new CssProperty("appearance", new CssCompatibility(
-            prefixed: new CompatibilityTable { Chrome = 1, Firefox = 1, Safari = 3 }
+            prefixed: new CompatibilityTable(chrome: 1, firefox: 1, safari: 3)
         ));
 
         public static readonly CssProperty Azimuth = new CssProperty("azimuth", CssModule.Core2_1);
@@ -186,15 +111,15 @@ namespace Carbon.Css
         public static readonly CssProperty BackgroundAttachment = new CssProperty("background-attachment", CssModule.Core1);
 
         public static readonly CssProperty BackgroundClip = new CssProperty("background-clip", CssModule.BackgroundsAndBorders3, new CssCompatibility(
-            prefixed: new CompatibilityTable { Chrome = 4, Firefox = 4, Safari = 4 },
-            standard: new CompatibilityTable { Firefox = 4, IE = 9 }
+            prefixed: new CompatibilityTable(chrome: 4, firefox: 4, safari: 4),
+            standard: new CompatibilityTable(firefox: 4, chrome: 15, ie: 9, safari: 7)
         ));
 
         public static readonly CssProperty BackgroundColor = new CssProperty("background-color", CssModule.Core1);
         public static readonly CssProperty BackgroundImage = new CssProperty("background-image", CssModule.Core1);
 
         public static readonly CssProperty BackgroundOrigin = new CssProperty("background-origin", CssModule.BackgroundsAndBorders3, new CssCompatibility(
-            standard: new CompatibilityTable { Chrome = 1, Firefox = 4, IE = 9, Safari = 3 }
+            standard: new CompatibilityTable(chrome: 1, firefox: 4, ie: 9, safari: 3)
         ));
 
         public static readonly CssProperty BackgroundPosition = new CssProperty("background-position", CssModule.Core1);
@@ -203,8 +128,8 @@ namespace Carbon.Css
 
         // Borders -------------------------------------------------------------------------------------------------------
         public static readonly CssCompatibility BorderImageCompatibility = new CssCompatibility(
-            prefixed: new CompatibilityTable { Chrome = 7, Firefox = 3.5f, Safari = 3 },
-            standard: new CompatibilityTable { Chrome = 16, Firefox = 15, IE = 11, Safari = 6.1f }
+            prefixed: new CompatibilityTable(chrome: 7, firefox: 3.5f, safari: 3),
+            standard: new CompatibilityTable(chrome: 16, firefox: 15, ie: 11, safari: 6.1f)
         );
 
         public static readonly CssProperty Border = new CssProperty("border", CssModule.Core1);
@@ -246,20 +171,19 @@ namespace Carbon.Css
         public static readonly CssProperty BoxDecorationBreak = new CssProperty("box-decoration-break");
 
         public static readonly CssProperty BoxShadow = new CssProperty("box-shadow", CssModule.UI(3), new CssCompatibility(
-            prefixed: new CompatibilityTable { Chrome = 1, Firefox = 3.5f, Safari = 3.1f },
-            standard: new CompatibilityTable { Chrome = 10, Firefox = 4, IE = 9, Safari = 5.1f }
+            prefixed: new CompatibilityTable(chrome: 1, firefox: 3.5f, safari: 3.1f),
+            standard: new CompatibilityTable(chrome: 10, firefox: 4, ie: 9, safari: 5.1f)
         ));
 
         public static readonly CssProperty BoxSizing = new CssProperty("box-sizing", CssModule.UI(3), new CssCompatibility(
-            prefixed: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 8, Safari = 3 },
-            standard: new CompatibilityTable { Chrome = 10, Firefox = 29, IE = 9, Safari = 5.1f }
+            prefixed: new CompatibilityTable(chrome: 1, firefox: 1, ie: 8, safari: 3),
+            standard: new CompatibilityTable(chrome: 10, firefox: 29, ie: 9, safari: 5.1f)
         ));
 
         // Breaks
         public static readonly CssProperty BreakAfter = new CssProperty("break-after");
         public static readonly CssProperty BreakBefore = new CssProperty("break-before");
         public static readonly CssProperty BreakInside = new CssProperty("break-inside");
-
 
         public static readonly CssProperty CaptionSide = new CssProperty("caption-side");
         public static readonly CssProperty Clear = new CssProperty("clear");
@@ -268,7 +192,7 @@ namespace Carbon.Css
 
         // TODO: Confirm support
         public static readonly CssProperty ClipPath = new CssProperty("clip-path", new CssCompatibility(
-            prefixed: new CompatibilityTable { Safari = 5.1f }          // Nightly support
+            prefixed: new CompatibilityTable(chrome: 24f, safari: 7)   
         ));
 
         public static readonly CssProperty Color = new CssProperty("color", CssModule.Core1);
@@ -290,7 +214,7 @@ namespace Carbon.Css
         public static readonly CssProperty CounterIncrement = new CssProperty("counter-increment");
         public static readonly CssProperty CounterReset = new CssProperty("counter-reset");
 
-        public static readonly CssProperty Cursor = new CssProperty("cursor", CssModule.Core2_1);
+        public static readonly CssProperty Cursor = new CssProperty("cursor", new CursorCompatibility());
         public static readonly CssProperty Direction = new CssProperty("direction");
         public static readonly CssProperty Display = new CssProperty("display", CssModule.Core1);
 
@@ -322,7 +246,9 @@ namespace Carbon.Css
         public static readonly CssProperty FontWeight = new CssProperty("font-weight", CssModule.Core1);
 
         // Grids ---------------------------------------------------------------------------------------
-        public static readonly CssCompatibility GridComptability = new CssCompatibility(prefixed: new CompatibilityTable { IE = 10 });
+        public static readonly CssCompatibility GridComptability = new CssCompatibility(
+            prefixed: new CompatibilityTable(ie: 10)
+        );
 
         public static readonly CssProperty GridColumns = new CssProperty("grid-columns", GridComptability);
         public static readonly CssProperty GridRows = new CssProperty("grid-rows", GridComptability);
@@ -337,8 +263,9 @@ namespace Carbon.Css
         public static readonly CssProperty HyphenateResource = new CssProperty("hyphenate-resource");
 
         public static readonly CssProperty Hyphens = new CssProperty("hyphens", new CssModule(CssModuleType.Text, 3), new CssCompatibility(
-                                                                        prefixed: new CompatibilityTable { Chrome = 13, Firefox = 6, IE = 10, Safari = 5.1f }
-                                                                    ));
+            prefixed: new CompatibilityTable(chrome: 15, firefox: 6, ie: 10, safari: 5.1f),
+            standard: new CompatibilityTable(firefox: 43)
+        ));
 
         // https://developer.mozilla.org/en-US/docs/Web/CSS/hyphens
 
@@ -383,7 +310,7 @@ namespace Carbon.Css
         public static readonly CssProperty Opacity = new CssProperty("opacity", CssModule.Color3);
 
         public static readonly CssProperty Orphans = new CssProperty("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility(
-            standard: new CompatibilityTable { IE = 8 }
+            standard: new CompatibilityTable(ie: 8)
         ));
 
         // Outlines -------------------------------------------------------------------------------
@@ -459,9 +386,8 @@ namespace Carbon.Css
         public static readonly CssProperty TextOutline = new CssProperty("text-outline");
 
         public static readonly CssProperty TextShadow = new CssProperty("text-shadow", new CssCompatibility(
-            standard: new CompatibilityTable { Chrome = 2, Firefox = 3.5f, IE = 10, Safari = 4f }
+            standard: new CompatibilityTable(chrome: 2, firefox: 3.5f, ie: 10, safari: 4)
         ));
-
 
         public static readonly CssProperty TextSpaceCollapse = new CssProperty("text-space-collapse");
         public static readonly CssProperty TextTransform = new CssProperty("text-transform", CssModule.Core1);
@@ -488,7 +414,7 @@ namespace Carbon.Css
         public static readonly CssProperty UnicodeRange = new CssProperty("unicode-range");
 
         public static readonly CssProperty UserSelect = new CssProperty("user-select", new CssCompatibility(
-            prefixed: new CompatibilityTable { Chrome = 1, Firefox = 1, IE = 10, Safari = 3 }
+            prefixed: new CompatibilityTable(chrome: 1, firefox: 1, ie: 10, safari: 3)
         ));
 
         public static readonly CssProperty VerticalAlign = new CssProperty("vertical-align", CssModule.Core1);

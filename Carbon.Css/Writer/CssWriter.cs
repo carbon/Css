@@ -554,7 +554,7 @@ namespace Carbon.Css
                 {
                     var declaration = (CssDeclaration)node;
 
-                    if (block.Children.Count == 1 && !declaration.Info.NeedsExpansion(browserSupport))
+                    if (block.Children.Count == 1 && !declaration.Info.NeedsExpansion(declaration, browserSupport))
                     {
                         condenced = true;
 
@@ -625,21 +625,18 @@ namespace Carbon.Css
 
                 foreach (var browser in browserSupport)
                 {
-                    if (!prop.Compatibility.IsPrefixed(browser)) continue;
-
                     // Skip the prefix if we've already added it
                     if (prefixes.HasFlag(browser.Prefix.Kind)) continue;
 
-                    var patchedValue = (prop.Compatibility.HasValuePatches)
-                        ? GetPatchedValueFor(declaration.Value, browser)
-                        : declaration.Value;
+                    if (!prop.Compatibility.HasPatch(declaration, browser)) continue;
+
+                    var patch = prop.Compatibility.GetPatch(browser, declaration);
 
                     Indent(level);
 
-                    writer.Write(browser.Prefix);   // Write the prefix
-                    writer.Write(prop.Name);        // Write the standard name
+                    writer.Write(patch.Name);
                     writer.Write(": ");
-                    WriteValue(patchedValue);
+                    WriteValue(patch.Value);
                     writer.Write(";");
 
                     writer.WriteLine();
@@ -652,39 +649,6 @@ namespace Carbon.Css
 
             WriteDeclaration(declaration, level);
         }
-
-        #region Compatibility helpers
-
-        // transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
-
-        private CssValue GetPatchedValueFor(CssValue value, Browser browser)
-        {
-            if (value.Kind != NodeKind.ValueList) return value;
-
-            var a = (CssValueList)value;
-
-            var list = new CssValueList(a.Seperator);
-
-            foreach (var node in a)
-            {
-                if (node.Kind == NodeKind.ValueList) // For comma seperated componented lists
-                {
-                    list.Add(GetPatchedValueFor(node, browser));
-                }
-                else if (node.Kind == NodeKind.String && node.ToString() == "transform")
-                {
-                    list.Add(new CssString(browser.Prefix.Text + "transform"));
-                }
-                else
-                {
-                    list.Add(node);
-                }
-            }
-
-            return list;
-        }
-
-        #endregion
 
         #region Helpers
 

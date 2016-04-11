@@ -60,6 +60,8 @@
     <Compile Include="Ast\Values\CssMeasurement.cs" />
     <Compile Include="Ast\Values\CssUrl.cs" />
     <Compile Include="Ast\Values\CssString.cs" />
+    <Compile Include="Comptability\CssCompatibility.cs" />
+    <Compile Include="Comptability\CssCursor.cs" />
     <Compile Include="Functions\CssFunctions.cs" />
     <Compile Include="Language\Parser\CssParser.Expressions.cs" />
     <Compile Include="Model\CssScope.cs" />
