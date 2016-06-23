@@ -479,17 +479,17 @@ namespace Carbon.Css
             if (context.BrowserSupport != null)
             {
                 // -moz-
-                if (context.BrowserSupport.Any(a => a.Type == BrowserType.Firefox && a.Version < 16))
+                if (context.Compatibility.Firefox > 0 && context.Compatibility.Firefox < 16)
                 {
-                    WriteKeyframesRule(context.BrowserSupport.First(b => b.Type == BrowserType.Firefox), rule, level);
+                    WriteKeyframesRule(Browser.Firefox(context.Compatibility.Firefox), rule, level);
 
                     writer.WriteLine();
                 }
 
                 // -webkit- 
-                if (context.BrowserSupport.Any(a => a.Type == BrowserType.Safari))
+                if (context.Compatibility.Safari > 0 && context.Compatibility.Safari < 9)
                 {
-                    WriteKeyframesRule(context.BrowserSupport.First(b => b.Type == BrowserType.Safari), rule, level);
+                    WriteKeyframesRule(Browser.Safari(context.Compatibility.Safari), rule, level);
 
                     writer.WriteLine();
                 }
