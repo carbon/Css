@@ -45,7 +45,6 @@ namespace Carbon.Css
         public CssCompatibility Compatibility
             => compatibility ?? CssCompatibility.Unknown;
 
- 
         public bool NeedsExpansion(CssDeclaration declaration, Browser[] browsers)
         {
             if (browsers == null || browsers.Length == 0) return false;
@@ -219,7 +218,11 @@ namespace Carbon.Css
         public static readonly CssProperty Display = new CssProperty("display", CssModule.Core1);
 
         public static readonly CssProperty EmptyCells = new CssProperty("empty-cells");
-        public static readonly CssProperty Filter = new CssProperty("filter");
+
+        public static readonly CssProperty Filter = new CssProperty("filter", new CssCompatibility(
+           prefixed: new CompatibilityTable(chrome: 18, firefox: 3.6f, ie: 13, safari: 6),
+           standard: new CompatibilityTable(firefox: 35, safari: 9.1f)
+       ));
 
         // Fit ---------------------------------------------------------------------------------------
         public static readonly CssProperty Fit = new CssProperty("fit");
