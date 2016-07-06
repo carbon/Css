@@ -69,7 +69,20 @@ namespace Carbon.Css.Parser
                     else
                         return new CssToken(TokenKind.Divide, reader.Read(), reader.Position);
 
-                case ':': mode.Enter(LexicalMode.Value); return new CssToken(TokenKind.Colon, reader.Read(), reader.Position);
+                case ':':
+                    // ::placeholder {
+                    // :-ms-placeholder {
+                    if (reader.Peek() == ':' || reader.Peek() == '-')
+                    {
+                        return ReadValue();
+                    }
+                    else
+                    {
+                        mode.Enter(LexicalMode.Value);
+
+                        return new CssToken(TokenKind.Colon, reader.Read(), reader.Position);
+                    }
+
                 case ',': return new CssToken(TokenKind.Comma, reader.Read(), reader.Position);
                 case ';': LeaveValueMode(); return new CssToken(TokenKind.Semicolon, reader.Read(), reader.Position);
                 case '{': mode.Enter(LexicalMode.Block); return new CssToken(TokenKind.BlockStart, reader.Read(), reader.Position);
