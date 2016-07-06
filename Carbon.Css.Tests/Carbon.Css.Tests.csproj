@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PlaceholderTests.cs" />
     <Compile Include="ExpressionTests.cs" />
     <Compile Include="ParserTests.cs" />
     <Compile Include="WriterTests.cs" />

@@ -4,70 +4,71 @@ using System.Text;
 
 namespace Carbon.Css
 {
-	public class StyleRule : CssRule
-	{
-		private readonly CssSelector selector;
+    public class StyleRule : CssRule
+    {
+        private readonly CssSelector selector;
 
-		public StyleRule(CssSelector selector)
-			: base(RuleType.Style) {
-		
-			this.selector = selector;
-		}
+        public StyleRule(CssSelector selector)
+            : base(RuleType.Style)
+        {
 
-		public StyleRule(string selectorText)
-			: this(new CssSelector(selectorText)) { }
+            this.selector = selector;
+        }
 
-		public StyleRule(string selectorText, List<CssNode> children)
-			: this(new CssSelector(selectorText)) 
-		{
-			foreach (var child in children)
-			{
-				child.Parent = this;
+        public StyleRule(string selectorText)
+            : this(new CssSelector(selectorText)) { }
 
-				base.Children.Add(child);
-			}
-		}
+        public StyleRule(string selectorText, List<CssNode> children)
+            : this(new CssSelector(selectorText))
+        {
+            foreach (var child in children)
+            {
+                child.Parent = this;
 
-		public CssSelector Selector => selector;
+                base.Children.Add(child);
+            }
+        }
 
-		public override CssNode CloneNode()
-		{
-			var clone = new StyleRule(selector);
+        public CssSelector Selector => selector;
 
-			foreach(var child in Children)
-			{
-				clone.Add(child.CloneNode());
-			}
+        public override CssNode CloneNode()
+        {
+            var clone = new StyleRule(selector);
 
-			return clone;
-		}
+            foreach (var child in Children)
+            {
+                clone.Add(child.CloneNode());
+            }
 
-		public override string ToString()
-		{
-			var sb = new StringBuilder();
+            return clone;
+        }
 
-			using (var sw = new StringWriter(sb))
-			{
-				var writer = new CssWriter(sw);
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
 
-				writer.WriteStyleRule(this, 0);
+            using (var sw = new StringWriter(sb))
+            {
+                var writer = new CssWriter(sw);
 
-				return sb.ToString();
-			}
-		}
+                writer.WriteStyleRule(this, 0);
 
-		public void WriteTo(TextWriter writer)
-		{			
-			new CssWriter(writer).WriteStyleRule(this, 0);			
-		}
+                return sb.ToString();
+            }
+        }
 
-		#region Add Helper
+        public void WriteTo(TextWriter writer)
+        {
+            new CssWriter(writer).WriteStyleRule(this, 0);
+        }
 
-		public void Add(string name, string value)
-		{
-			children.Add(new CssDeclaration(name, value));
-		}
+        #region Add Helper
 
-		#endregion
-	}
+        public void Add(string name, string value)
+        {
+            children.Add(new CssDeclaration(name, value));
+        }
+
+        #endregion
+    }
 }

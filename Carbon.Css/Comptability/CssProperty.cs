@@ -88,14 +88,14 @@ namespace Carbon.Css
         }
 
         // Animations (Level 3) -----------------------------------------------------------------------------------------------------------
-        public static readonly CssProperty Animation = new CssProperty("animation", CssModule.Animations3);
-        public static readonly CssProperty AnimationDelay = new CssProperty("animation-delay", CssModule.Animations3);
-        public static readonly CssProperty AnimationDirection = new CssProperty("animation-direction", CssModule.Animations3);
-        public static readonly CssProperty AnimationDuration = new CssProperty("animation-duration", CssModule.Animations3);
-        public static readonly CssProperty AnimationIterationCount = new CssProperty("animation-iteration-count", CssModule.Animations3);
-        public static readonly CssProperty AnimationName = new CssProperty("animation-name", CssModule.Animations3);
-        public static readonly CssProperty AnimationPlayState = new CssProperty("animation-play-state", CssModule.Animations3);
-        public static readonly CssProperty AnimationTimingFunction = new CssProperty("animation-timing-function", CssModule.Animations3);
+        public static readonly CssProperty Animation                = new CssProperty("animation", CssModule.Animations3);
+        public static readonly CssProperty AnimationDelay           = new CssProperty("animation-delay", CssModule.Animations3);
+        public static readonly CssProperty AnimationDirection       = new CssProperty("animation-direction", CssModule.Animations3);
+        public static readonly CssProperty AnimationDuration        = new CssProperty("animation-duration", CssModule.Animations3);
+        public static readonly CssProperty AnimationIterationCount  = new CssProperty("animation-iteration-count", CssModule.Animations3);
+        public static readonly CssProperty AnimationName            = new CssProperty("animation-name", CssModule.Animations3);
+        public static readonly CssProperty AnimationPlayState       = new CssProperty("animation-play-state", CssModule.Animations3);
+        public static readonly CssProperty AnimationTimingFunction  = new CssProperty("animation-timing-function", CssModule.Animations3);
 
         public static readonly CssProperty Appearance = new CssProperty("appearance", new CssCompatibility(
             prefixed: new CompatibilityTable(chrome: 1, firefox: 1, safari: 3)
