@@ -105,7 +105,8 @@
         public static readonly CssModule Transitions3 = new CssModule(CssModuleType.Transitions, 3,
             prefixed: new CompatibilityTable(chrome: 1, firefox: 4, safari: 3),
             standard: new CompatibilityTable(chrome: 26, firefox: 20, ie: 10, safari: 9)
-        ) { PatchValues = true };
+        )
+        { PatchValues = true };
 
         // TODO: Limit value patch scope to transition
 
