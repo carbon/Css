@@ -113,9 +113,9 @@ namespace Carbon.Color
                 tg = th;
                 tb = th - (1.0f / 3.0f);
 
-                tr = ColorCalc(tr, t1, t2);
-                tg = ColorCalc(tg, t1, t2);
-                tb = ColorCalc(tb, t1, t2);
+                tr = _calc(tr, t1, t2);
+                tg = _calc(tg, t1, t2);
+                tb = _calc(tb, t1, t2);
 
                 r = (byte)Math.Round(tr * 255f);
                 g = (byte)Math.Round(tg * 255f);
@@ -166,15 +166,15 @@ namespace Carbon.Color
             return new Hsla(h, s, l, color.A);
         }
 
-        private static float ColorCalc(float c, float t1, float t2)
+        private static float _calc(float c, float a, float b)
         {
             if (c < 0) c += 1f;
             if (c > 1) c -= 1f;
-            if (6.0f * c < 1.0f) return t1 + (t2 - t1) * 6.0f * c;
-            if (2.0f * c < 1.0f) return t2;
-            if (3.0f * c < 2.0f) return t1 + (t2 - t1) * (2.0f / 3.0f - c) * 6.0f;
+            if (6.0f * c < 1.0f) return a + (b - a) * 6.0f * c;
+            if (2.0f * c < 1.0f) return b;
+            if (3.0f * c < 2.0f) return a + (b - a) * (2.0f / 3.0f - c) * 6.0f;
 
-            return t1;
+            return a;
         }
     }
 }

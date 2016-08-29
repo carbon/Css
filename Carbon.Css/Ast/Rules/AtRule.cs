@@ -1,16 +1,17 @@
 ﻿namespace Carbon.Css
 {
-	public class AtRule : CssRule
-	{
-		public AtRule(string name, RuleType type, string selectorText)
-			: base(type) {
-		
-			Name = name;
-			SelectorText = selectorText;
-		}
+    public class AtRule : CssRule
+    {
+        public AtRule(string name, RuleType type, string selectorText)
+            : base(type)
+        {
 
-		public string Name { get; }
+            Name = name;
+            SelectorText = selectorText;
+        }
 
-		public string SelectorText { get; }
+        public string Name { get; }
+
+        public string SelectorText { get; }
     }
 }

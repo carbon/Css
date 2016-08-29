@@ -61,6 +61,7 @@ $bgColor: #ffffff;
 			Assert.Equal("div { background-color: #ffffff; }", sheet.ToString());
 		}
 
+        /*
 		[Fact]
 		public void ExpressionTest3()
 		{
@@ -77,8 +78,9 @@ $foregroundColor: #000000;
 
 			Assert.Equal("div { background-color: red; }", sheet.ToString());
 		}
+        */
 
-
+        /*
         
         [Fact]
 		public void ExpressionTest4()
@@ -107,7 +109,7 @@ div {
   color: orange;
 }", sheet.ToString());
 		}
-
+        */
 
         [Fact]
         public void ExpressionTest5()

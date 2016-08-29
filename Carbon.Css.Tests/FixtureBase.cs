@@ -1,15 +1,18 @@
 ﻿namespace Carbon.Css.Tests
 {
-	using System.IO;
-	using System.Reflection;
+    using System;
+    using System.IO;
+    using System.Reflection;
 
-	public class FixtureBase
-	{
-		public static readonly string ExecutingAssemblyCodeBasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+    public class FixtureBase
+    {
+        // Assembly.GetExecutingAssembly().CodeBase
 
-		public FileInfo GetTestFile(string name)
-		{
-			return new FileInfo(ExecutingAssemblyCodeBasePath.Replace("file:\\", "") + "\\..\\..\\data\\" + name);
-		}
-	}
+        public static readonly string ExecutingAssemblyCodeBasePath = Path.GetDirectoryName(AppContext.BaseDirectory);
+
+        public FileInfo GetTestFile(string name)
+        {
+            return new FileInfo(ExecutingAssemblyCodeBasePath.Replace("file:\\", "") + "\\..\\..\\data\\" + name);
+        }
+    }
 }
