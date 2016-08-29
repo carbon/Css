@@ -135,7 +135,7 @@ namespace Carbon.Css.Parser
         {
             if (isDisposed) return;
 
-            textReader.Close();
+            textReader.Dispose();
 
             isDisposed = true;
         }

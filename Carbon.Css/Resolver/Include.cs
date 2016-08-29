@@ -16,7 +16,7 @@ namespace Carbon.Css.Resolver
 
         public void WriteTo(TextWriter writer)
         {
-            using (var reader = new StreamReader(file.FullName, true))
+            using (var reader = file.OpenText())
             {
                 writer.Write(reader.ReadToEnd());
             }

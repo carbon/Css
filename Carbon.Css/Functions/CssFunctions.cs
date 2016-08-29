@@ -17,8 +17,6 @@ namespace Carbon.Css
 			["adjust-hue"]	    = AdjustHue,
 			["mix"]			    = Mix,
 			["rgba"]		    = Rgba,
-			["readability"]     = Readability,
-
             ["if"]			    = If
         };
 
@@ -94,14 +92,6 @@ namespace Carbon.Css
 			var color = Color.Rgba.Parse(args[0].ToString());
 			
 			return CssColor.FromRgba(color.R, color.G, color.B, float.Parse(args[1].ToString()));
-		}
-
-		public static CssValue Readability(CssValue[] args)
-		{ 
-			var color1 = GetColor(args[0]);
-			var color2 = GetColor(args[1]);
-
-			return new CssNumber((float)color1.CalculateReadability(color2).Color);
 		}
 
         #region Helpers
