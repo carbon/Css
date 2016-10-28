@@ -4,13 +4,19 @@
 [assembly: AssemblyProduct("Carbon")]
 [assembly: AssemblyCopyright("© 2012-2016 Jason Nelson")]
 
-[assembly: AssemblyVersion("0.3.0")]
+[assembly: AssemblyVersion("0.1.0")]
 
 /*
- 0.3 
+ 0.1
+ - Move to dotnetcore 
+ - Initial NuGet release
+ - Remove Carbon.Color depedency
+ - Remove Readability function
+
+ 0.0.2 
  cursor patches
 
- 0.1
+ 0.0/1
  - Breakout Carbon.Color
 
  - CssPropertyInfo

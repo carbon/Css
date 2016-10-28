@@ -142,19 +142,17 @@ namespace Carbon.Css
 
         public bool ToBoolean(object value)
         {
-            if (value is CssBoolean) return ((CssBoolean)value).Value;
-   
-            return false;
+            return (value is CssBoolean) ? ((CssBoolean)value).Value : false;
         }
 
         public CssValue EvalulateExpression(CssValue expression)
         {
             switch (expression.Kind)
             {
-                case NodeKind.Variable   : return scope.GetValue(((CssVariable)expression).Symbol);
-                case NodeKind.Expression : return EvalBinaryExpression((BinaryExpression)expression);
-                case NodeKind.Function   : return EvalFunction((CssFunction)expression);
-                default                  : return expression;
+                case NodeKind.Variable: return scope.GetValue(((CssVariable)expression).Symbol);
+                case NodeKind.Expression: return EvalBinaryExpression((BinaryExpression)expression);
+                case NodeKind.Function: return EvalFunction((CssFunction)expression);
+                default: return expression;
             }
         }
 
@@ -281,11 +279,11 @@ namespace Carbon.Css
 
             switch (value.Kind)
             {
-                case NodeKind.Variable   : WriteVariable((CssVariable)value); break;
-                case NodeKind.ValueList  : WriteValueList((CssValueList)value); break;
-                case NodeKind.Function   : WriteFunction((CssFunction)value); break;
-                case NodeKind.Expression : WriteValue(EvalulateExpression((CssValue)value)); break;
-                default                  : writer.Write(value.ToString()); break;
+                case NodeKind.Variable: WriteVariable((CssVariable)value); break;
+                case NodeKind.ValueList: WriteValueList((CssValueList)value); break;
+                case NodeKind.Function: WriteFunction((CssFunction)value); break;
+                case NodeKind.Expression: WriteValue(EvalulateExpression((CssValue)value)); break;
+                default: writer.Write(value.ToString()); break;
             }
         }
 
@@ -351,11 +349,11 @@ namespace Carbon.Css
                     }
 
                     break;
-                    
-                case NodeKind.Expression:
-                  yield return EvalBinaryExpression((BinaryExpression)value);
 
-                  break;
+                case NodeKind.Expression:
+                    yield return EvalBinaryExpression((BinaryExpression)value);
+
+                    break;
 
                 // Function, etc 
                 default:

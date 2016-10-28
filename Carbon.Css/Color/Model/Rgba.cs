@@ -149,7 +149,7 @@ namespace Carbon.Color
 
                 if (NamedColor.TryGetHex(text, out hex))
                 {
-                    return Rgba.Parse('#' + hex);
+                    return Parse('#' + hex);
                 }
 
                 throw new Exception("Unexpected color:" + text);

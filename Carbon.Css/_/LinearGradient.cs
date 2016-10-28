@@ -2,54 +2,54 @@
 
 namespace Carbon.Css
 {
-	public class LinearGradient
-	{
-		private readonly CssValueList args;
+    public class LinearGradient
+    {
+        private readonly CssValueList args;
 
-		public LinearGradient(CssValueList args)
-		{
-			this.args = args;
+        public LinearGradient(CssValueList args)
+        {
+            this.args = args;
 
-		}
+        }
 
-		// TODO (Direction)
-		// TODO (Stops)
+        // TODO (Direction)
+        // TODO (Stops)
 
-		// Standard
-		public override string ToString()
-		{
-			return "linear-gradient(" + args.ToString() + ")";
-		}
+        // Standard
+        public override string ToString()
+        {
+            return "linear-gradient(" + args.ToString() + ")";
+        }
 
-		public IEnumerable<CssFunction> ExpandFor(Browser[] browsers)
-		{
-			foreach(var browser in browsers)
-			{
-				var args2 = new CssValueList(ValueSeperator.Comma);
+        public IEnumerable<CssFunction> ExpandFor(Browser[] browsers)
+        {
+            foreach (var browser in browsers)
+            {
+                var args2 = new CssValueList(ValueSeperator.Comma);
 
-				var i = 0;
-				foreach(var arg in args)
-				{
-					// The legacy syntax didn't contain to on the direction
-					if(i == 0 && arg.ToString().StartsWith("to "))
-					{
-						args2.Add(CssValue.Parse(arg.ToString().Replace("to ", "")));
-					}
-					else
-					{
-						args2.Add(arg);
-					}
+                var i = 0;
+                foreach (var arg in args)
+                {
+                    // The legacy syntax didn't contain to on the direction
+                    if (i == 0 && arg.ToString().StartsWith("to "))
+                    {
+                        args2.Add(CssValue.Parse(arg.ToString().Replace("to ", "")));
+                    }
+                    else
+                    {
+                        args2.Add(arg);
+                    }
 
-					i++;
-				}
+                    i++;
+                }
 
-				var name = browser.Prefix.Text + "linear-gradient";
+                var name = browser.Prefix.Text + "linear-gradient";
 
-				yield return new CssFunction(name, args2);
-			}
-		}
+                yield return new CssFunction(name, args2);
+            }
+        }
 
-		/*
+        /*
 		public CssFunction ToLegacyWebkitSyntax()
 		{
 			// -webkit-gradient(linear, right top, right top, color-stop(0%,rgba(237,102,136,1)), color-stop(100%,rgba(250,179,42,1)));
@@ -61,18 +61,18 @@ namespace Carbon.Css
 			args2.Add(new CssString("right top"));
 		}
 		*/
-	}
+    }
 
-	public enum Direction
-	{
-		Top,
-		Bottom,
-		Left,
-		Right
-	}
+    public enum Direction
+    {
+        Top,
+        Bottom,
+        Left,
+        Right
+    }
 
-	// background: linear-gradient(angle, color-stop1, color-stop2);
-	// [ <angle> | to [top | bottom] || [left | right] ],]? <color-stop>[, <color-stop>]+);
+    // background: linear-gradient(angle, color-stop1, color-stop2);
+    // [ <angle> | to [top | bottom] || [left | right] ],]? <color-stop>[, <color-stop>]+);
 }
 
 /*

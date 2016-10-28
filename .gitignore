@@ -9,3 +9,4 @@ bin
 packages
 *.xproj.user
 *.lock.json
+/build

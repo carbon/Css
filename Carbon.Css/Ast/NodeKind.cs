@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public enum NodeKind : ushort
+    public enum NodeKind
     {
         Unknown = 0,
 
