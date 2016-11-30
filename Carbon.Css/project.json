@@ -1,25 +1,34 @@
-﻿{
-  "version": "0.1.0",
+{
+  "title": "CSS Parser",
+  "description": "High-performance .netcore CSS parser & auto-prefixer.",
+
+  "authors": [ "iamcarbon" ],
+
+  "version": "0.5.1",
 
   "dependencies": {
-
+    "Carbon.Color": "1.0.0"
   },
 
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50",
       "dependencies": {
-        "NETStandard.Library": "1.6.0"
+        "System.Runtime": "4.3.0",
+        "System.Runtime.Extensions": "4.3.0",
+        "System.IO": "4.3.0",
+        "System.Linq": "4.3.0",
+        "System.IO.FileSystem": "4.3.0",
+        "System.Collections": "4.3.0"
       }
     },
-    "net461": { }
+    "net451": { }
   },
 
   "packOptions": {
-    "summary": "Native scss library",
-    "tags": [ "css", "scss" ],
+    "tags": [ "css", "scss", "autoprefix" ],
     "owners": [ "Jason Nelson" ],
-    "requireLicenseAcceptance": false,
+    "licenseUrl": "https://opensource.org/licenses/MIT",
     "repository": {
       "type": "git",
       "url": "https://github.com/carbon/css"
