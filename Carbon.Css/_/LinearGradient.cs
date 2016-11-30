@@ -2,14 +2,13 @@
 
 namespace Carbon.Css
 {
-    public class LinearGradient
+    internal class LinearGradient
     {
         private readonly CssValueList args;
 
         public LinearGradient(CssValueList args)
         {
             this.args = args;
-
         }
 
         // TODO (Direction)
@@ -17,9 +16,7 @@ namespace Carbon.Css
 
         // Standard
         public override string ToString()
-        {
-            return "linear-gradient(" + args.ToString() + ")";
-        }
+            => $"linear-gradient({args})";
 
         public IEnumerable<CssFunction> ExpandFor(Browser[] browsers)
         {
@@ -48,19 +45,6 @@ namespace Carbon.Css
                 yield return new CssFunction(name, args2);
             }
         }
-
-        /*
-		public CssFunction ToLegacyWebkitSyntax()
-		{
-			// -webkit-gradient(linear, right top, right top, color-stop(0%,rgba(237,102,136,1)), color-stop(100%,rgba(250,179,42,1)));
-
-			var args2 = new CssValueList(ValueListSeperator.Comma);
-
-			args2.Add(new CssString("linear"));
-			args2.Add(new CssString("right top"));
-			args2.Add(new CssString("right top"));
-		}
-		*/
     }
 
     public enum Direction

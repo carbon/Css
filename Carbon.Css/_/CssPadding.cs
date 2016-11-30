@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Carbon.Css
 {
-    public class CssPadding
+    internal class CssPadding
     {
         public CssPadding() { }
 
@@ -14,7 +14,7 @@ namespace Carbon.Css
 
             if (property == "padding")
             {
-                var parts = value.Split(' ');
+                var parts = value.Split(Seperators.Space);
 
                 for (int i = 0; i < parts.Length; i++)
                 {
@@ -72,7 +72,7 @@ namespace Carbon.Css
 
                 try
                 {
-                    switch (property.Split('-')[1])
+                    switch (property.Split(Seperators.Dash)[1]) // -
                     {
                         case "top": Top = part; break;
                         case "left": Left = part; break;

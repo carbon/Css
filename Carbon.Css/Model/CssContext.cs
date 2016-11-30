@@ -40,16 +40,15 @@ namespace Carbon.Css
             {
                 switch (browser.Type)
                 {
-                    case BrowserType.Chrome  : chrome = browser.Version; break;
-                    case BrowserType.Firefox : firefox = browser.Version; break;
-                    case BrowserType.IE      : ie = browser.Version; break;
-                    case BrowserType.Safari  : safari = browser.Version; break;
+                    case BrowserType.Chrome  : chrome = browser.Version;    break;
+                    case BrowserType.Firefox : firefox = browser.Version;   break;
+                    case BrowserType.IE      : ie = browser.Version;        break;
+                    case BrowserType.Safari  : safari = browser.Version;    break;
                 }
             }
 
             compatibility = new CompatibilityTable(chrome, firefox, ie, safari);
         }
-        
     }
 
     public enum CssFormatting

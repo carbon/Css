@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public class FontSrcValue
+    internal class FontSrcValue
     {
         public FontSrcValue(string url, string format)
         {
@@ -13,9 +13,7 @@
         public string Format { get; }
 
         public override string ToString()
-        {
-            return $"url('{Url}') format('{Format}')";
-        }
+            => $"url('{Url}') format('{Format}')";
     }
 }
 

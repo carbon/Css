@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Carbon.Css.Resolver
 {
-    public class Include
+    internal class Include
     {
         private readonly FileInfo file;
 

@@ -9,14 +9,13 @@ namespace Carbon.Css.Helpers
     {
         public static SourceLocation GetLocation(this string text, int position)
         {
+            int i = 1;
+            int line = 1;
+            int column = 1;
+            int charCode = 0;
+
             using (var reader = new StringReader(text))
             {
-                int i = 1;
-                int line = 1;
-                int column = 1;
-
-                int charCode = 0;
-
                 while ((charCode = reader.Read()) != -1)
                 {
                     var c = (char)charCode;

@@ -11,70 +11,77 @@ namespace Carbon.Css
 
     public class StyleSheet : CssRoot, IStylesheet
     {
-        private readonly CssContext context;
-
         public StyleSheet(List<CssNode> children, CssContext context)
             : base(children)
         {
-            this.context = context;
+            Context = context;
         }
 
         public StyleSheet(CssContext context)
             : base()
         {
-            this.context = context;
+            Context = context;
         }
 
-        public CssContext Context => context;
+        public CssContext Context { get; }
+
+        public static StyleSheet Parse(Stream stream, CssContext context = null)
+         => Parse(new StreamReader(stream), context);
 
         public static StyleSheet Parse(string text, CssContext context = null)
-        {
-            if (context == null)
-            {
-                context = new CssContext();
-            }
+            => Parse(new StringReader(text), context);
 
-            var sheet = new StyleSheet(context);
+        public static StyleSheet Parse(TextReader reader, CssContext context = null)
+        {
+            var sheet = new StyleSheet(context ?? new CssContext());
 
             var rules = new List<CssRule>();
 
-            var parser = new CssParser(text);
+            IList<Browser> browsers = null;
 
-            var browsers = new List<Browser>();
-
-            foreach (var node in parser.ReadNodes())
+            using (var parser = new CssParser(reader))
             {
-                if (node.Kind == NodeKind.Mixin)
+                foreach (var node in parser.ReadNodes())
                 {
-                    var mixin = (MixinNode)node;
-
-                    context.Mixins.Add(mixin.Name, mixin);
-                }
-                else if (node.Kind == NodeKind.Directive)
-                {
-                    var directive = (CssDirective)node;
-
-                    if (directive.Name == "support")
+                    if (node.Kind == NodeKind.Mixin)
                     {
+                        var mixin = (MixinNode)node;
 
-                        var parts = directive.Value.Split(' ');
+                        sheet.Context.Mixins.Add(mixin.Name, mixin);
+                    }
+                    else if (node.Kind == NodeKind.Directive)
+                    {
+                        var directive = (CssDirective)node;
 
-                        var browserType = (BrowserType)Enum.Parse(typeof(BrowserType), parts[0].Trim(), true);
-                        // var compare = parts[1].Trim();
-                        var browserVersion = float.Parse(parts.Last().Trim(' ', '+'));
+                        if (directive.Name == "support")
+                        {
+                            var parts = directive.Value.Split(Seperators.Space); // SpaceArray...
 
-                        browsers.Add(new Browser(browserType, browserVersion));
+                            BrowserType browserType;
+
+                            if (Enum.TryParse(parts[0].Trim(), true, out browserType))
+                            {
+                                if (browsers == null)
+                                {
+                                    browsers = new List<Browser>();
+                                }
+
+                                var browserVersion = float.Parse(parts[parts.Length - 1].Trim(' ', '+'));
+
+                                browsers.Add(new Browser(browserType, browserVersion));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        sheet.AddChild(node);
                     }
                 }
-                else
-                {
-                    sheet.AddChild(node);
-                }
-            }
 
-            if (browsers.Count > 0)
-            {
-                sheet.Context.SetCompatibility(browsers.ToArray());
+                if (browsers != null)
+                {
+                    sheet.Context.SetCompatibility(browsers.ToArray());
+                }
             }
 
             return sheet;
@@ -84,20 +91,20 @@ namespace Carbon.Css
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
 
-            foreach (var rule in this.Children.OfType<ImportRule>().ToArray())
+            foreach (var rule in Children.OfType<ImportRule>().ToArray())
             {
                 if (rule.Url.IsPath)
                 {
                     ImportInline(rule);
                 }
 
-                this.children.Remove(rule);
+                Children.Remove(rule);
             }
         }
 
         public static StyleSheet FromFile(FileInfo file, CssContext context = null)
         {
-            var text = "";
+            string text;
 
             using (var reader = file.OpenText())
             {
@@ -132,7 +139,7 @@ namespace Carbon.Css
 
         public void WriteTo(TextWriter textWriter)
         {
-            var writer = new CssWriter(textWriter, context, new CssScope(), resolver);
+            var writer = new CssWriter(textWriter, Context, new CssScope(), resolver);
 
             writer.WriteRoot(this);
         }
@@ -146,7 +153,7 @@ namespace Carbon.Css
                 scope.Add(v.Key, v.Value);
             }
 
-            var writer = new CssWriter(textWriter, context, scope, resolver);
+            var writer = new CssWriter(textWriter, Context, scope, resolver);
 
             writer.WriteRoot(this);
         }
@@ -158,9 +165,9 @@ namespace Carbon.Css
             using (var sw = new StringWriter(sb))
             {
                 WriteTo(sw, variables);
-
-                return sb.ToString();
             }
+
+            return sb.ToString();
         }
 
         public override string ToString()
@@ -170,11 +177,10 @@ namespace Carbon.Css
             using (var sw = new StringWriter(sb))
             {
                 WriteTo(sw);
-
-                return sb.ToString();
             }
-        }
 
+            return sb.ToString();
+        }
 
         #region Helpers
 
@@ -184,23 +190,25 @@ namespace Carbon.Css
             var absolutePath = rule.Url.GetAbsolutePath(resolver.ScopedPath);
 
             // Assume to be scss if there is no extension
-            if (!absolutePath.Contains('.')) absolutePath += ".scss";
-
-            var text = resolver.GetText(absolutePath.TrimStart('/'));
-
-            if (text != null)
+            if (!absolutePath.Contains('.'))
             {
-                if (Path.GetExtension(absolutePath) == ".scss")
+                absolutePath += ".scss";
+            }
+            
+            var stream = resolver.Open(absolutePath.TrimStart(Seperators.ForwardSlash));
+
+            if (stream != null)
+            {
+                if (absolutePath.EndsWith(".scss"))
                 {
                     AddChild(new CssComment($"imported: '{absolutePath}"));
 
                     try
                     {
-                        foreach (var node in Parse(text, context).Children)
+                        foreach (var node in Parse(stream, Context).Children)
                         {
                             AddChild(node);
                         }
-
                     }
                     catch (SyntaxException ex)
                     {
@@ -220,7 +228,8 @@ namespace Carbon.Css
                         {
                             foreach (var line in ex.Lines)
                             {
-                                sb.Append(string.Format("{0}. ", line.Number.ToString().PadLeft(5)));
+                                sb.Append(line.Number.ToString().PadLeft(5));
+                                sb.Append(". ");
 
                                 if (line.Number == ex.Location.Line)
                                 {
