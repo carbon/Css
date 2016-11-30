@@ -141,18 +141,16 @@ namespace Carbon.Css
         }
 
         public bool ToBoolean(object value)
-        {
-            return (value is CssBoolean) ? ((CssBoolean)value).Value : false;
-        }
+            => (value is CssBoolean) ? ((CssBoolean)value).Value : false;
 
         public CssValue EvalulateExpression(CssValue expression)
         {
             switch (expression.Kind)
             {
-                case NodeKind.Variable: return scope.GetValue(((CssVariable)expression).Symbol);
-                case NodeKind.Expression: return EvalBinaryExpression((BinaryExpression)expression);
-                case NodeKind.Function: return EvalFunction((CssFunction)expression);
-                default: return expression;
+                case NodeKind.Variable   : return scope.GetValue(((CssVariable)expression).Symbol);
+                case NodeKind.Expression : return EvalBinaryExpression((BinaryExpression)expression);
+                case NodeKind.Function   : return EvalFunction((CssFunction)expression);
+                default                  : return expression;
             }
         }
 
@@ -204,63 +202,84 @@ namespace Carbon.Css
 
         #endregion
 
+
         public void InlineImport(ImportRule importRule, StyleSheet sheet)
         {
             // var relativePath = importRule.Url;
             var absolutePath = importRule.Url.GetAbsolutePath(resolver.ScopedPath);
 
-            // Assume to be scss if there is no extension
-            if (!absolutePath.Contains('.')) absolutePath += ".scss";
-
-            writer.WriteLine(Environment.NewLine + "/* " + absolutePath.TrimStart('/') + " */");
-
-            var text = resolver.GetText(absolutePath.TrimStart('/'));
-
-            if (text != null)
+            if (absolutePath[0] == '/')
             {
-                if (Path.GetExtension(absolutePath) == ".scss")
+                absolutePath = absolutePath.TrimStart(Seperators.ForwardSlash);
+            }
+
+            // Assume to be scss if there is no extension
+            if (!absolutePath.Contains('.'))
+            {
+                absolutePath += ".scss";
+            }
+
+            writer.WriteLine();
+            writer.WriteLine("/* " + absolutePath + " */");
+
+            var stream = resolver.Open(absolutePath);
+
+            if (stream == null)
+            { 
+                writer.WriteLine("/* NOT FOUND */");
+
+                return;
+            }
+
+            if (absolutePath.EndsWith(".scss"))
+            {
+                try
                 {
-                    try
-                    {
-                        var css = StyleSheet.Parse(text, context);
+                    var css = StyleSheet.Parse(stream, context);
 
-                        WriteRoot(css);
-                    }
-                    catch (SyntaxException ex)
-                    {
-                        writer.WriteLine("body, html { background-color: red !important; }");
-                        writer.WriteLine("body * { display: none; }");
-
-                        writer.WriteLine($"/* --- Parse Error in '{absolutePath}':{ex.Message} ");
-
-                        if (ex.Lines != null)
-                        {
-                            foreach (var line in ex.Lines)
-                            {
-                                writer.Write(string.Format("{0}. ", line.Number.ToString().PadLeft(5)));
-
-                                if (line.Number == ex.Location.Line)
-                                {
-                                    writer.Write("* ");
-                                }
-
-                                writer.WriteLine(line.Text);
-                            }
-                        }
-
-                        writer.Write("*/");
-
-                        return;
-                    }
+                    WriteRoot(css);
                 }
-                else
+                catch (SyntaxException ex)
                 {
-                    writer.Write(text);
+                    writer.WriteLine("body, html { background-color: red !important; }");
+                    writer.WriteLine("body * { display: none; }");
+
+                    writer.WriteLine($"/* --- Parse Error in '{absolutePath}' : {ex.Message} ");
+
+                    if (ex.Lines != null)
+                    {
+                        foreach (var line in ex.Lines)
+                        {
+                            writer.Write(line.Number.ToString().PadLeft(4)); // 1
+                            writer.Write(". ");
+
+                            if (line.Number == ex.Location.Line)
+                            {
+                                writer.Write("* ");
+                            }
+
+                            writer.WriteLine(line.Text);
+                        }
+                    }
+
+                    writer.Write("*/");
+
+                    return;
                 }
             }
             else
             {
-                writer.WriteLine("/* NOT FOUND */");
+                // Copy the file line by line...
+
+                using (var reader = new StreamReader(stream))
+                {
+                    string line;
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        writer.Write(line);
+                    }
+                }
             }
         }
 
@@ -279,11 +298,11 @@ namespace Carbon.Css
 
             switch (value.Kind)
             {
-                case NodeKind.Variable: WriteVariable((CssVariable)value); break;
-                case NodeKind.ValueList: WriteValueList((CssValueList)value); break;
-                case NodeKind.Function: WriteFunction((CssFunction)value); break;
-                case NodeKind.Expression: WriteValue(EvalulateExpression((CssValue)value)); break;
-                default: writer.Write(value.ToString()); break;
+                case NodeKind.Variable   : WriteVariable((CssVariable)value); break;
+                case NodeKind.ValueList  : WriteValueList((CssValueList)value); break;
+                case NodeKind.Function   : WriteFunction((CssFunction)value); break;
+                case NodeKind.Expression : WriteValue(EvalulateExpression((CssValue)value)); break;
+                default                  : writer.Write(value.ToString()); break;
             }
         }
 
@@ -396,11 +415,11 @@ namespace Carbon.Css
 
             switch (rule.Type)
             {
-                case RuleType.Import: WriteImportRule((ImportRule)rule); break;
-                case RuleType.Media: WriteMediaRule((MediaRule)rule, level); break;
-                case RuleType.Style: WriteStyleRule((StyleRule)rule, level); break;
-                case RuleType.FontFace: WriteFontFaceRule((FontFaceRule)rule, level); break;
-                case RuleType.Keyframes: WriteKeyframesRule((KeyframesRule)rule, level); break;
+                case RuleType.Import    : WriteImportRule((ImportRule)rule); break;
+                case RuleType.Media     : WriteMediaRule((MediaRule)rule, level); break;
+                case RuleType.Style     : WriteStyleRule((StyleRule)rule, level); break;
+                case RuleType.FontFace  : WriteFontFaceRule((FontFaceRule)rule, level); break;
+                case RuleType.Keyframes : WriteKeyframesRule((KeyframesRule)rule, level); break;
 
                 // Unknown rules
                 default:
@@ -824,7 +843,7 @@ namespace Carbon.Css
 
                 if (parts.Count > 6)
                 {
-                    throw new Exception(string.Format("Cannot nest more than 6 levels deep. Was {0}. ", string.Join(" ", parts)));
+                    throw new Exception(string.Format("May not nest more than 6 levels deep. Was {0}. ", string.Join(" ", parts)));
                 }
             }
 

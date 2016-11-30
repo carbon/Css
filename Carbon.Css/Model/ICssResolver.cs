@@ -1,10 +1,12 @@
-﻿namespace Carbon.Css
+﻿using System.IO;
+
+namespace Carbon.Css
 {
     public interface ICssResolver
     {
         string ScopedPath { get; }
 
-        string GetText(string absolutePath);
+        Stream Open(string absolutePath);
 
         // TODO: GetStreamAsync
     }
