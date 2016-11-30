@@ -85,7 +85,7 @@ namespace Carbon.Css.Parser
             var text = Read().Text;
 
             // READ: //=
-            var parts = text.Substring(3).TrimStart().Split(new[] { ' ' }, 2);
+            var parts = text.Substring(3).TrimStart().Split(Seperators.Space, 2);
 
             //= support Safari 5.1
             return new CssDirective(
@@ -600,8 +600,8 @@ namespace Carbon.Css.Parser
 
                     switch (name.Text)
                     {
-                        case "include"  : block.Add(ReadInclude()); continue;
-                        case "if"       : block.Add(ReadIfRule()); continue;
+                        case "include" : block.Add(ReadInclude()); continue;
+                        case "if"      : block.Add(ReadIfRule());  continue;
                     }
                 }
 

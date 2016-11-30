@@ -49,13 +49,14 @@ namespace Carbon.Css
         {
             #region Preconditions
 
-            if (text == null) throw new ArgumentNullException("text");
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
 
             #endregion
 
             if (text.Contains(','))
             {
-                this.parts = new List<string>(text.Split(',').Select(t => t.Trim()));
+                this.parts = new List<string>(text.Split(Seperators.Comma).Select(t => t.Trim()));
             }
             else
             {
@@ -67,7 +68,6 @@ namespace Carbon.Css
         {
             this.parts = parts;
         }
-
 
         public CssSelector(CssValue list)
         {

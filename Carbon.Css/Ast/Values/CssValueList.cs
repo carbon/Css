@@ -9,21 +9,19 @@ namespace Carbon.Css
 
     public class CssValueList : CssValue, IEnumerable<CssValue>
     {
-        private readonly List<CssValue> items = new List<CssValue>();
-
+        private readonly List<CssValue> items;
         private readonly ValueSeperator seperator;
 
         public CssValueList(ValueSeperator seperator = ValueSeperator.Comma)
-            : base(NodeKind.ValueList)
-        {
-            this.seperator = seperator;
-        }
+            : this(new List<CssValue>(), seperator) { }
 
         public CssValueList(IEnumerable<CssValue> values, ValueSeperator seperator = ValueSeperator.Comma)
-            : base(NodeKind.ValueList)
-        {
-            this.items.AddRange(values);
+            : this(new List<CssValue>(values), seperator) { }
 
+        public CssValueList(List<CssValue> values, ValueSeperator seperator = ValueSeperator.Comma)
+           : base(NodeKind.ValueList)
+        {
+            this.items = values;
             this.seperator = seperator;
         }
 
@@ -35,7 +33,17 @@ namespace Carbon.Css
 
         public int Count => items.Count;
 
-        public override CssNode CloneNode() => new CssValueList(items.Select(c => (CssValue)c.CloneNode()), seperator);
+        public override CssNode CloneNode()
+        {
+            var clonedValues = new List<CssValue>();
+
+            foreach (var item in items)
+            {
+                clonedValues.Add((CssValue)item.CloneNode());
+            }
+
+            return new CssValueList(clonedValues, seperator);
+        }
 
         public override string ToString()
         {

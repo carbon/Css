@@ -6,40 +6,40 @@ namespace Carbon.Css
     {
         // url('')
 
-        private readonly string value;
-
         public CssUrlValue(string value)
         {
-            this.value = value;
+            Value = value;
         }
 
         public CssUrlValue(byte[] data, string contentType)
         {
             // Works for resources only up to 32k in size in IE8.
 
-            this.value = "data:" + contentType + ";base64," + Convert.ToBase64String(data);
+            Value = "data:" + contentType + ";base64," + Convert.ToBase64String(data);
         }
 
-        public string Value => value;
+        public string Value { get; }
 
-        public override string ToString() => $"url('{value}')";
+        public override string ToString() => $"url('{Value}')";
 
         #region Helpers
 
-        public bool IsPath => !value.Contains(":");
+        public bool IsPath => !Value.Contains(":");
+
+        public bool IsExternal => !IsPath;
 
         public string GetAbsolutePath(string basePath) /* /styles/ */
         {
-            if (!IsPath) throw new ArgumentException("Has scheme:" + value.Split(':')[0]);
+            if (!IsPath) throw new ArgumentException("Has scheme:" + Value.Split(Seperators.Colon)[0]);
 
             // Already absolute
-            if (value.StartsWith("/")) return value;
+            if (Value.StartsWith("/")) return Value;
 
             // "http://dev/styles/"
-            var baseUri = new Uri("http://dev/" + basePath.TrimStart('/'));
+            var baseUri = new Uri("http://dev/" + basePath.TrimStart(Seperators.ForwardSlash));
 
             // Absolute path
-            return new Uri(baseUri, relativeUri: value).AbsolutePath;
+            return new Uri(baseUri, relativeUri: Value).AbsolutePath;
         }
 
         #endregion
