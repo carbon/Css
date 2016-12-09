@@ -277,7 +277,7 @@ namespace Carbon.Css
 
                     while ((line = reader.ReadLine()) != null)
                     {
-                        writer.Write(line);
+                        writer.WriteLine(line);
                     }
                 }
             }
