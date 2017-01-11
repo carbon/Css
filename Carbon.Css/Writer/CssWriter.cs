@@ -17,7 +17,7 @@ namespace Carbon.Css
         private int importCount = 0;
         private int nodeCount = 0;
 
-        private Browser[] browserSupport;
+        private BrowserInfo[] browserSupport;
 
         private CssScope scope;
 
@@ -41,7 +41,10 @@ namespace Carbon.Css
         {
             importCount++;
 
-            if (importCount > 200) throw new Exception("Exceded importCount of 200");
+            if (importCount > 200)
+            {
+                throw new Exception("Exceded importCount of 200");
+            }
 
             var i = 0;
 
@@ -498,7 +501,7 @@ namespace Carbon.Css
                 // -moz-
                 if (context.Compatibility.Firefox > 0 && context.Compatibility.Firefox < 16)
                 {
-                    WriteKeyframesRule(Browser.Firefox(context.Compatibility.Firefox), rule, level);
+                    WriteKeyframesRule(BrowserInfo.Firefox(context.Compatibility.Firefox), rule, level);
 
                     writer.WriteLine();
                 }
@@ -506,7 +509,7 @@ namespace Carbon.Css
                 // -webkit- 
                 if (context.Compatibility.Safari > 0 && context.Compatibility.Safari < 9)
                 {
-                    WriteKeyframesRule(Browser.Safari(context.Compatibility.Safari), rule, level);
+                    WriteKeyframesRule(BrowserInfo.Safari(context.Compatibility.Safari), rule, level);
 
                     writer.WriteLine();
                 }
@@ -523,7 +526,7 @@ namespace Carbon.Css
             browserSupport = context.BrowserSupport;
         }
 
-        private void WriteKeyframesRule(Browser browser, KeyframesRule rule, int level)
+        private void WriteKeyframesRule(BrowserInfo browser, KeyframesRule rule, int level)
         {
             browserSupport = new[] { browser };
 
@@ -866,7 +869,10 @@ namespace Carbon.Css
                     continue;
                 }
 
-                if (i != 0) sb.Append(" ");
+                if (i != 0)
+                {
+                    sb.Append(" ");
+                }
 
                 i++;
 
@@ -909,8 +915,10 @@ namespace Carbon.Css
 
         private static string GetSelector(IEnumerable<CssSelector> selectors)
         {
-            // TODO: & support
+            // TODO: Avoid StringBuilder allocation if there's only a single selector
 
+            // TODO: & support
+            
             var sb = new StringBuilder();
 
             foreach (var selector in selectors)

@@ -617,9 +617,9 @@ namespace Carbon.Css.Parser
 
                 switch (current.Kind)
                 {
-                    case TokenKind.Colon        : block.Add(ReadDeclarationFromName(statement)); break; // DeclarationName
-                    case TokenKind.BlockStart   : block.Add(ReadRuleBlock(new CssSelector(statement))); break;
-                    case TokenKind.BlockEnd     : break;
+                    case TokenKind.Colon      : block.Add(ReadDeclarationFromName(statement));        break; // DeclarationName
+                    case TokenKind.BlockStart : block.Add(ReadRuleBlock(new CssSelector(statement))); break;
+                    case TokenKind.BlockEnd   : break;
 
                     // TODO: Figure out where we missed reading the semicolon TEMP
                     case TokenKind.Semicolon    : tokenizer.Read(); break;

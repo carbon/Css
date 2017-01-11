@@ -7,13 +7,13 @@ namespace Carbon.Css
     {
         private CompatibilityTable compatibility = new CompatibilityTable();
 
-        private Browser[] browserSupport = null;
+        private BrowserInfo[] browserSupport = null;
 
         public Dictionary<string, MixinNode> Mixins { get; } = new Dictionary<string, MixinNode>();
 
-        public Browser[] BrowserSupport => browserSupport;
+        public BrowserInfo[] BrowserSupport => browserSupport;
 
-        internal Browser? GetBrowser(BrowserType type)
+        internal BrowserInfo? GetBrowser(BrowserType type)
         {
             foreach (var browser in browserSupport)
             {
@@ -25,7 +25,7 @@ namespace Carbon.Css
 
         public CompatibilityTable Compatibility => compatibility;
 
-        public void SetCompatibility(params Browser[] targets)
+        public void SetCompatibility(params BrowserInfo[] targets)
         {
             if (browserSupport != null) return;
 

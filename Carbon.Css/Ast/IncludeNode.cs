@@ -21,7 +21,8 @@ namespace Carbon.Css
 
         public CssValue Args { get; }
 
-        public override CssNode CloneNode() => new IncludeNode(Name, Args);
+        public override CssNode CloneNode() 
+            => new IncludeNode(Name, Args);
     }
 }
 

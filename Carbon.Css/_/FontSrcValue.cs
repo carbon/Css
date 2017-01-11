@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    internal class FontSrcValue
+    internal struct FontSrcValue
     {
         public FontSrcValue(string url, string format)
         {

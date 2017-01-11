@@ -32,7 +32,7 @@
 		{
 			var ss = StyleSheet.Parse(File.ReadAllText(GetTestFile("nested.css").FullName));
 
-			ss.Context.SetCompatibility(Browser.Chrome1, Browser.Safari1);
+			ss.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1);
 
 			Assert.Equal(@"#networkLinks .block .edit:before {
   font-family: 'carbonmade';
@@ -113,7 +113,7 @@ body {
 }
 ");
 
-			sheet.Context.SetCompatibility(Browser.Chrome1, Browser.Safari1, Browser.Firefox1, Browser.IE9);
+			sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1, BrowserInfo.Firefox1, BrowserInfo.IE9);
 
 			Assert.Equal(@"body {
   -moz-transform: rotate(90);

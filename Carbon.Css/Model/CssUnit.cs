@@ -2,14 +2,14 @@
 {
     public struct CssUnit
     {
-        private static readonly CssUnit CH   = new CssUnit("ch", NodeKind.Length);
-        private static readonly CssUnit CM   = new CssUnit("cm", NodeKind.Length);
-        private static readonly CssUnit EM   = new CssUnit("em", NodeKind.Length);
-        private static readonly CssUnit EX   = new CssUnit("ex", NodeKind.Length);
-        private static readonly CssUnit PX   = new CssUnit("px", NodeKind.Length);
-        private static readonly CssUnit REM  = new CssUnit("rem", NodeKind.Length);
-        private static readonly CssUnit VH   = new CssUnit("vh", NodeKind.Length);
-        private static readonly CssUnit VW   = new CssUnit("vw", NodeKind.Length);
+        private static readonly CssUnit CH   = new CssUnit("ch",   NodeKind.Length);
+        private static readonly CssUnit CM   = new CssUnit("cm",   NodeKind.Length);
+        private static readonly CssUnit EM   = new CssUnit("em",   NodeKind.Length);
+        private static readonly CssUnit EX   = new CssUnit("ex",   NodeKind.Length);
+        private static readonly CssUnit PX   = new CssUnit("px",   NodeKind.Length);
+        private static readonly CssUnit REM  = new CssUnit("rem",  NodeKind.Length);
+        private static readonly CssUnit VH   = new CssUnit("vh",   NodeKind.Length);
+        private static readonly CssUnit VW   = new CssUnit("vw",   NodeKind.Length);
         private static readonly CssUnit VMIN = new CssUnit("vmin", NodeKind.Length);
 
         private static readonly CssUnit Percentage = new CssUnit("%", NodeKind.Percentage);
@@ -17,7 +17,7 @@
         private static readonly CssUnit S = new CssUnit("s", NodeKind.Time);
         private static readonly CssUnit MS = new CssUnit("ms", NodeKind.Time);
 
-        public CssUnit(string name, NodeKind kind)
+        internal CssUnit(string name, NodeKind kind)
         {
             Name = name;
             Kind = kind;

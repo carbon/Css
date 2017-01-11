@@ -45,7 +45,7 @@ namespace Carbon.Css
         public CssCompatibility Compatibility
             => compatibility ?? CssCompatibility.Unknown;
 
-        public bool NeedsExpansion(CssDeclaration declaration, Browser[] browsers)
+        public bool NeedsExpansion(CssDeclaration declaration, BrowserInfo[] browsers)
         {
             if (browsers == null || browsers.Length == 0) return false;
 

@@ -39,7 +39,7 @@ namespace Carbon.Css
         };
 
 
-        public static bool NeedsPatch(string value, Browser browser)
+        public static bool NeedsPatch(string value, BrowserInfo browser)
         {
             CssCompatibility c;
 

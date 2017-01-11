@@ -116,7 +116,7 @@ nav a {
 
 			var sheet = StyleSheet.Parse("a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
 
-			sheet.Context.SetCompatibility(Browser.Chrome1, Browser.Safari5);
+			sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari5);
 
 			Assert.Equal(@"a {
   -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
@@ -217,7 +217,7 @@ nav a {
 }");
 
 
-			sheet.Context.SetCompatibility(Browser.Chrome26, Browser.Safari5);
+			sheet.Context.SetCompatibility(BrowserInfo.Chrome26, BrowserInfo.Safari5);
 
 			Assert.Equal(@".form {
   padding-bottom: 3em;

@@ -52,16 +52,19 @@ namespace Carbon.Css
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
+            // if (text.Length == 0)
+            //   throw new ArgumentException("Must not be empty", nameof(text));
+
             #endregion
 
-            if (text.Contains(','))
+            var items = text.Split(Seperators.Comma);
+
+            this.parts = new List<string>(items.Length);
+
+            foreach (var item in items)
             {
-                this.parts = new List<string>(text.Split(Seperators.Comma).Select(t => t.Trim()));
-            }
-            else
-            {
-                this.parts = new List<string>(new[] { text });
-            }
+                this.parts.Add(item.Trim());
+            }           
         }
 
         public CssSelector(List<string> parts)
@@ -83,11 +86,15 @@ namespace Carbon.Css
 
         public int Count => parts.Count;
 
-        public string this[int index] => parts[index];
+        public string this[int index] 
+            => parts[index];
 
         public bool Contains(string text)
         {
-            if (parts.Count == 1) return parts[0].Contains(text);
+            if (parts.Count == 1)
+            {
+                return parts[0].Contains(text);
+            }
 
             foreach (var part in parts)
             {
@@ -104,9 +111,15 @@ namespace Carbon.Css
             return string.Join(", ", parts);
         }
 
-        public IEnumerator<string> GetEnumerator() => parts.GetEnumerator();
+        #region IEnumerator
 
-        IEnumerator IEnumerable.GetEnumerator() => parts.GetEnumerator();
+        public IEnumerator<string> GetEnumerator() 
+            => parts.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => parts.GetEnumerator();
+
+        #endregion
     }
 
     // a:hover

@@ -10,14 +10,14 @@ namespace Carbon.Css
 		// http://lesscss.org/functions/#color-operations-saturate
 
 		private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new Dictionary<string, Func<CssValue[], CssValue>>(9) {
-			["darken"]		    = Darken,
-			["lighten"]		    = Lighten,
-			["saturate"]	    = Saturate,
-			["desaturate"]	    = Desaturate,
-			["adjust-hue"]	    = AdjustHue,
-			["mix"]			    = Mix,
-			["rgba"]		    = Rgba,
-            ["if"]			    = If
+			["darken"]		= Darken,
+			["lighten"]		= Lighten,
+			["saturate"]	= Saturate,
+			["desaturate"]	= Desaturate,
+			["adjust-hue"]	= AdjustHue,
+			["mix"]			= Mix,
+			["rgba"]		= Rgba,
+            ["if"]			= If
         };
 
 		public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
@@ -105,7 +105,7 @@ namespace Carbon.Css
 
 		private static Rgba GetColor(CssValue value)
 		    => Color.Rgba.Parse(value.ToString());
-
+        
 		private static float GetAmount(CssValue value)
 		{
 			// TODO: consider value.kind
@@ -118,7 +118,7 @@ namespace Carbon.Css
 				case NodeKind.Percentage : return ((CssMeasurement)value).Value / 100;
 				case NodeKind.Number     : return ((CssNumber)value).Value;
 
-				default: throw new Exception("Unknown numeric value:" + value.ToString());
+				default: throw new Exception("Unknown numeric value: " + value);
 			}
 		}
 

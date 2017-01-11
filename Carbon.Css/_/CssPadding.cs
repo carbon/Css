@@ -74,10 +74,10 @@ namespace Carbon.Css
                 {
                     switch (property.Split(Seperators.Dash)[1]) // -
                     {
-                        case "top": Top = part; break;
-                        case "left": Left = part; break;
-                        case "bottom": Bottom = part; break;
-                        case "right": Right = part; break;
+                        case "top"    : Top = part; break;
+                        case "left"   : Left = part; break;
+                        case "bottom" : Bottom = part; break;
+                        case "right"  : Right = part; break;
                     }
                 }
 
@@ -98,21 +98,19 @@ namespace Carbon.Css
 
         public CssDeclaration ToDeclaration()
         {
-            var sb = new StringBuilder();
-
-            if (new[] { Top, Left, Bottom, Right }.All(v => v == Top))
+            if (Left == Top && Bottom == Top && Right == Top)
             {
                 return new CssDeclaration("padding", Top);
             }
-            else
-            {
-                sb.Append(Top ?? "0").Append(" ");
-                sb.Append(Left ?? "0").Append(" ");
-                sb.Append(Bottom ?? "0").Append(" ");
-                sb.Append(Right ?? "0");
-            }
+            
+            var sb = new StringBuilder()
+                .Append(Top    ?? "0").Append(" ")
+                .Append(Left   ?? "0").Append(" ")
+                .Append(Bottom ?? "0").Append(" ")
+                .Append(Right  ?? "0");
 
             return new CssDeclaration("padding", sb.ToString());
+            
         }
     }
 }

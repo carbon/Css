@@ -21,7 +21,6 @@
         public bool IsDefined => Chrome > 0 || Firefox > 0 || IE > 0 || Safari > 0;
     }
 
-
     public struct Patch
     {
         public Patch(string name, CssValue value)
@@ -37,32 +36,30 @@
 
     public interface ICssPatcher
     {
-        Patch Patch(Browser browser, CssDeclaration declaration);
+        Patch Patch(BrowserInfo browser, CssDeclaration declaration);
     }
 
     public class PrefixName : ICssPatcher
     {
-        public Patch Patch(Browser browser, CssDeclaration declaration)
+        public Patch Patch(BrowserInfo browser, CssDeclaration declaration)
             => new Patch(browser.Prefix + declaration.Name, declaration.Value);
     }
 
     public class PrefixNameAndValuePatcher : ICssPatcher
     {
-        public Patch Patch(Browser browser, CssDeclaration declaration)
+        public Patch Patch(BrowserInfo browser, CssDeclaration declaration)
             => new Patch(browser.Prefix + declaration.Name, CssPatcher.PatchValue(declaration.Value, browser));
     }
-
  
     public static class CssPatcher
     {
-
         public static readonly ICssPatcher PrefixName = new PrefixName();
         public static readonly ICssPatcher PrefixNameAndValue = new PrefixNameAndValuePatcher();
 
         // transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
         // -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
 
-        public static CssValue PatchValue(CssValue value, Browser browser)
+        public static CssValue PatchValue(CssValue value, BrowserInfo browser)
         {
             if (value.Kind != NodeKind.ValueList) return value;
 
@@ -93,22 +90,14 @@
 
     public class CursorCompatibility : CssCompatibility
     {
-        public static new readonly CssCompatibility All = new CssCompatibility();
-
         public CursorCompatibility()
             : base() { }
 
-        public override bool HasPatch(CssDeclaration declaration, Browser browser)
-        {
-            return CssCursor.NeedsPatch(declaration.Value.ToString(), browser);
-          
-        }
+        public override bool HasPatch(CssDeclaration declaration, BrowserInfo browser)
+            => CssCursor.NeedsPatch(declaration.Value.ToString(), browser);
 
-        public override Patch GetPatch(Browser browser, CssDeclaration declaration)
-        {
-            return new Patch(declaration.Name, new CssString(browser.Prefix + declaration.Value.ToString()));
-
-        }
+        public override Patch GetPatch(BrowserInfo browser, CssDeclaration declaration)
+            => new Patch(declaration.Name, new CssString(browser.Prefix + declaration.Value.ToString()));
 
         public override bool HasPatches => true;
     }
@@ -130,7 +119,7 @@
 
         public CompatibilityTable Standard { get; }
 
-        public virtual Patch GetPatch(Browser browser, CssDeclaration declaration)
+        public virtual Patch GetPatch(BrowserInfo browser, CssDeclaration declaration)
         {
 
             if (PatchValues)
@@ -142,10 +131,10 @@
             return CssPatcher.PrefixNameAndValue.Patch(browser, declaration);
         }
 
-        public virtual bool HasPatch(CssDeclaration declaration, Browser browser)
+        public virtual bool HasPatch(CssDeclaration declaration, BrowserInfo browser)
             => IsPrefixed(browser);
 
-        public bool IsPrefixed(Browser browser)
+        public bool IsPrefixed(BrowserInfo browser)
         {
             switch (browser.Type)
             {
@@ -158,7 +147,7 @@
             return false;
         }
 
-        public bool IsStandard(Browser browser)
+        public bool IsStandard(BrowserInfo browser)
         {
             switch (browser.Type)
             {

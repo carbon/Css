@@ -37,7 +37,7 @@ namespace Carbon.Css
 
             var rules = new List<CssRule>();
 
-            IList<Browser> browsers = null;
+            IList<BrowserInfo> browsers = null;
 
             using (var parser = new CssParser(reader))
             {
@@ -63,12 +63,12 @@ namespace Carbon.Css
                             {
                                 if (browsers == null)
                                 {
-                                    browsers = new List<Browser>();
+                                    browsers = new List<BrowserInfo>();
                                 }
 
                                 var browserVersion = float.Parse(parts[parts.Length - 1].Trim(' ', '+'));
 
-                                browsers.Add(new Browser(browserType, browserVersion));
+                                browsers.Add(new BrowserInfo(browserType, browserVersion));
                             }
                         }
                     }

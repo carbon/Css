@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Carbon.Css
@@ -8,23 +7,15 @@ namespace Carbon.Css
 
     public class TokenList : Collection<CssToken>
     {
-        public TokenList() { }
-
-        public TokenList(CssToken[] tokens)
-            : base(tokens)
-        { }
-
-        private void AddRange(IEnumerable<CssToken> tokens)
-        {
-            if (tokens == null) return;
-
-            AddRange(tokens);
-        }
-
         public string RawText
         {
             get
             {
+                if (Count == 1)
+                {
+                    return this[0].Text;
+                }
+
                 var sb = new StringBuilder();
 
                 foreach (var token in this)
@@ -38,6 +29,11 @@ namespace Carbon.Css
 
         public override string ToString()
         {
+            if (Count == 1)
+            {
+                return this[0].IsTrivia ? string.Empty : this[0].Text;
+            }
+
             var sb = new StringBuilder();
 
             foreach (var token in this)

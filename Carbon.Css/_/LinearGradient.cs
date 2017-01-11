@@ -18,7 +18,7 @@ namespace Carbon.Css
         public override string ToString()
             => $"linear-gradient({args})";
 
-        public IEnumerable<CssFunction> ExpandFor(Browser[] browsers)
+        public IEnumerable<CssFunction> ExpandFor(BrowserInfo[] browsers)
         {
             foreach (var browser in browsers)
             {

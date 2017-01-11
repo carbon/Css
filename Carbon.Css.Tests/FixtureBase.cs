@@ -1,9 +1,8 @@
-﻿namespace Carbon.Css.Tests
-{
-    using System;
-    using System.IO;
-    using System.Reflection;
+﻿using System;
+using System.IO;
 
+namespace Carbon.Css.Tests
+{
     public class FixtureBase
     {
         // Assembly.GetExecutingAssembly().CodeBase
