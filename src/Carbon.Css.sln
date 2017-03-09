@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Carbon.Css", "Carbon.Css\Carbon.Css.xproj", "{4711D09A-A6CD-46D0-ABD9-12DECD904976}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbon.Css", "Carbon.Css\Carbon.Css.csproj", "{4711D09A-A6CD-46D0-ABD9-12DECD904976}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Carbon.Css.Tests", "Carbon.Css.Tests\Carbon.Css.Tests.xproj", "{1C6E034B-5240-472A-A11A-17AE110D059F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbon.Css.Tests", "Carbon.Css.Tests\Carbon.Css.Tests.csproj", "{1C6E034B-5240-472A-A11A-17AE110D059F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

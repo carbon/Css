@@ -23,13 +23,7 @@ namespace Carbon.Css
 
         public CssWriter(TextWriter writer, CssContext context = null, CssScope scope = null, ICssResolver resolver = null)
         {
-            #region Preconditions
-
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
-
-            #endregion
-
-            this.writer = writer;
+            this.writer = writer ?? throw new ArgumentNullException(nameof(writer));
             this.context = context ?? new CssContext();
             this.resolver = resolver;
             this.scope = scope ?? new CssScope();
@@ -117,25 +111,23 @@ namespace Carbon.Css
             {
                 foreach (var child in block.Children)
                 {
-                    if (child is CssRule)
+                    if (child is CssRule rule)
                     {
                         if (i > 0) writer.WriteLine();
 
-                        WriteRule((CssRule)child);
+                        WriteRule(rule);
 
                         i++;
                     }
-                    else if (child is CssAssignment)
+                    else if (child is CssAssignment assignment)
                     {
-                        var variable = (CssAssignment)child;
-
-                        scope[variable.Name] = variable.Value;
+                        scope[assignment.Name] = assignment.Value;
                     }
-                    else if (child is CssDeclaration)
+                    else if (child is CssDeclaration declaration)
                     {
                         if (i > 0) writer.WriteLine();
 
-                        WriteDeclaration((CssDeclaration)child, level);
+                        WriteDeclaration(declaration, level);
 
                         i++;
                     }
@@ -144,7 +136,7 @@ namespace Carbon.Css
         }
 
         public bool ToBoolean(object value)
-            => (value is CssBoolean) ? ((CssBoolean)value).Value : false;
+            => (value is CssBoolean b) ? b.Value : false;
 
         public CssValue EvalulateExpression(CssValue expression)
         {
@@ -164,8 +156,8 @@ namespace Carbon.Css
 
             switch (expression.Operator)
             {
-                case BinaryOperator.Multiply: return ((CssMeasurement)expression.Left).Multiply(expression.Right);
-                case BinaryOperator.Add: return ((CssMeasurement)expression.Left).Add(expression.Right);
+                case BinaryOperator.Multiply : return ((CssMeasurement)expression.Left).Multiply(expression.Right);
+                case BinaryOperator.Add      : return ((CssMeasurement)expression.Left).Add(expression.Right);
             }
 
             var leftS = left.ToString();
@@ -191,9 +183,7 @@ namespace Carbon.Css
 
         public CssValue EvalFunction(CssFunction function)
         {
-            Func<CssValue[], CssValue> func;
-
-            if (CssFunctions.TryGet(function.Name, out func))
+            if (CssFunctions.TryGet(function.Name, out var func))
             {
                 var args = GetArgs(function.Arguments).ToArray();
 
@@ -330,9 +320,7 @@ namespace Carbon.Css
         {
             // {name}({args})
 
-            Func<CssValue[], CssValue> func;
-
-            if (CssFunctions.TryGet(function.Name, out func))
+            if (CssFunctions.TryGet(function.Name, out var func))
             {
                 var args = GetArgs(function.Arguments).ToArray();
 
@@ -555,9 +543,9 @@ namespace Carbon.Css
             {
                 if (node.Kind == NodeKind.Include)
                 {
-                    var b2 = new CssBlock(NodeKind.Block);
-
-                    b2.Add(node);
+                    var b2 = new CssBlock(NodeKind.Block) {
+                        node
+                    };
 
                     scope = ExpandInclude((IncludeNode)node, b2);
 
@@ -732,10 +720,8 @@ namespace Carbon.Css
 
             foreach (var childNode in rule.Children.ToArray())
             {
-                if (childNode is StyleRule)
+                if (childNode is StyleRule childRule)
                 {
-                    var childRule = (StyleRule)childNode;
-
                     foreach (var r in ExpandStyleRule(childRule, rule))
                     {
                         yield return r;
@@ -758,9 +744,7 @@ namespace Carbon.Css
 
             if (includeCount > 1000) throw new Exception("Exceded include limit of 1,000");
 
-            MixinNode mixin;
-
-            if (!context.Mixins.TryGetValue(include.Name, out mixin))
+            if (!context.Mixins.TryGetValue(include.Name, out MixinNode mixin))
             {
                 throw new Exception($"Mixin '{include.Name}' not registered");
             }
@@ -775,12 +759,9 @@ namespace Carbon.Css
             {
                 // Bind variables
 
-                if (node is IncludeNode)
+                if (node is IncludeNode includeNode)
                 {
-                    ExpandInclude(
-                        (IncludeNode)node,
-                        rule
-                    );
+                    ExpandInclude(includeNode, rule);
 
                     mixin.Children.Remove(node);
                 }
@@ -846,7 +827,9 @@ namespace Carbon.Css
 
                 if (parts.Count > 6)
                 {
-                    throw new Exception(string.Format("May not nest more than 6 levels deep. Was {0}. ", string.Join(" ", parts)));
+                    var debugParts = string.Join(" ", parts);
+
+                    throw new Exception($"May not nest more than 6 levels deep. Was {debugParts}.");
                 }
             }
 

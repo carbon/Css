@@ -537,7 +537,6 @@ p { font-color: red; background: url(http://google.com); }
             Assert.Equal(NodeKind.Number, CssValue.Parse("123.5").Kind);
         }
 
-
         [Fact]
         public void Declares()
         {

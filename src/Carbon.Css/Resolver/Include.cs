@@ -9,7 +9,7 @@ namespace Carbon.Css.Resolver
 
         public Include(FileInfo file)
         {
-            this.file = file;
+            this.file = file ?? throw new ArgumentNullException(nameof(file));
         }
 
         public DateTime Modified => file.LastWriteTime;
