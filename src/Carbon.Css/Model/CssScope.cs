@@ -42,9 +42,7 @@ namespace Carbon.Css
         {
             if (counter > 50) throw new Exception($"recussion detected: {counter}");
 
-            CssValue value;
-
-            if (items.TryGetValue(name, out value))
+            if (items.TryGetValue(name, out CssValue value))
             {
                 if (value.Kind == NodeKind.Variable)
                 {

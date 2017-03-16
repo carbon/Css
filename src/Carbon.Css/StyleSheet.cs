@@ -57,9 +57,7 @@ namespace Carbon.Css
                         {
                             var parts = directive.Value.Split(Seperators.Space); // SpaceArray...
 
-                            BrowserType browserType;
-
-                            if (Enum.TryParse(parts[0].Trim(), true, out browserType))
+                            if (Enum.TryParse(parts[0].Trim(), true, out BrowserType browserType))
                             {
                                 if (browsers == null)
                                 {
@@ -104,8 +102,17 @@ namespace Carbon.Css
 
         public static StyleSheet FromFile(FileInfo file, CssContext context = null)
         {
-            string text;
+            #region Preconditions
 
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
+            #endregion
+
+            string text;
+            
             using (var reader = file.OpenText())
             {
                 text = reader.ReadToEnd();

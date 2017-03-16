@@ -12,7 +12,7 @@ namespace Carbon.Css.Parser
 
         public CssTokenizer(SourceReader reader, LexicalMode mode = LexicalMode.Selector)
         {
-            this.reader = reader;
+            this.reader = reader ?? throw new ArgumentNullException(nameof(reader));
 
             this.reader.Next(); // Start the reader
 

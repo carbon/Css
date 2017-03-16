@@ -2,42 +2,37 @@
 {
 	public struct CssToken
 	{
-		private readonly TokenKind kind;
-		private readonly string text;
-		private readonly int position;
-
 		public CssToken(TokenKind kind, char value, int position)
 		{
-			this.kind = kind;
-			this.text = value.ToString();
-			this.position = position;
+			Kind = kind;
+			Text = value.ToString();
+			Position = position;
 		}
 
 		public CssToken(TokenKind kind, string value, int position)
 		{
-			this.kind = kind;
-			this.text = value;
-			this.position = position;
+			Kind = kind;
+			Text = value;
+			Position = position;
 		}
 
-		public TokenKind Kind => kind;
+		public TokenKind Kind { get; }
 
-		public int Position => position;
+		public int Position { get; }
 
-		public string Text => text;
+        public string Text { get; }
 
-		public override string ToString() => $"{Kind}: '{Text}'";
-
+        public override string ToString() => $"{Kind}: '{Text}'";
 
 		#region Helpers
 
-		public bool IsTrivia => kind == TokenKind.Whitespace || kind == TokenKind.Comment;
+		public bool IsTrivia => Kind == TokenKind.Whitespace || Kind == TokenKind.Comment;
 
-		public bool IsBinaryOperator => (int)kind > 30 && (int)kind < 60;
+		public bool IsBinaryOperator => (int)Kind > 30 && (int)Kind < 60;
 
-		public bool IsEqualityOperator => kind == TokenKind.Equals || kind == TokenKind.NotEquals;
+		public bool IsEqualityOperator => Kind == TokenKind.Equals || Kind == TokenKind.NotEquals;
 
-		public bool IsLogicalOperator => kind == TokenKind.And || kind == TokenKind.Or;
+		public bool IsLogicalOperator => Kind == TokenKind.And || Kind == TokenKind.Or;
 
 
 		#endregion
