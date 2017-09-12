@@ -50,11 +50,4 @@ namespace Carbon.Css
             compatibility = new CompatibilityTable(chrome, firefox, ie, safari);
         }
     }
-
-    public enum CssFormatting
-    {
-        Original = 1,
-        Pretty = 2,
-        None = 3
-    }
 }

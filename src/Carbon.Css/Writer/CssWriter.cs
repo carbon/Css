@@ -696,9 +696,10 @@ namespace Carbon.Css
                 clone.Children.Remove(includeNode);
             }
 
-            var root = new List<CssRule>();
-
-            root.Add(clone);
+            var root = new List<CssRule>
+            {
+                clone
+            };
 
             foreach (var nestedRule in clone.Children.OfType<StyleRule>().ToArray())
             {

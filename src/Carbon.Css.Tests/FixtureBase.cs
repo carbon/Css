@@ -5,13 +5,16 @@ namespace Carbon.Css.Tests
 {
     public class FixtureBase
     {
-        // Assembly.GetExecutingAssembly().CodeBase
-
-        public static readonly string ExecutingAssemblyCodeBasePath = Path.GetDirectoryName(AppContext.BaseDirectory);
-
         public FileInfo GetTestFile(string name)
         {
-            return new FileInfo(ExecutingAssemblyCodeBasePath.Replace("file:\\", "") + "\\..\\..\\data\\" + name);
+            var b = new DirectoryInfo(AppContext.BaseDirectory).Parent.Parent.Parent.FullName;
+
+            var c = Path.Combine(b, "data", name);
+
+            // throw new Exception(c);
+
+
+            return new FileInfo(c);
         }
     }
 }
