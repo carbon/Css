@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Carbon.Css
 {
-    public class CssProperty
+    public sealed class CssProperty
     {
         private readonly string name;
         private readonly CssModule module;
@@ -19,13 +19,7 @@ namespace Carbon.Css
 
         public CssProperty(string name, CssModule module = null, CssCompatibility compatibility = null)
         {
-            #region Preconditions
-
-            if (name == null) throw new ArgumentNullException("name");
-
-            #endregion
-
-            this.name = name;
+            this.name = name ?? throw new ArgumentNullException(nameof(name));
             this.module = module;
 
             this.compatibility = compatibility;
@@ -77,9 +71,7 @@ namespace Carbon.Css
 
         public static CssProperty Get(string name)
         {
-            CssProperty propertyInfo;
-
-            if (!Map.TryGetValue(name, out propertyInfo))
+            if (!Map.TryGetValue(name, out CssProperty propertyInfo))
             {
                 propertyInfo = new CssProperty(name);
             }

@@ -2,18 +2,12 @@
 
 namespace Carbon.Css
 {
-    public class IncludeNode : CssNode
+    public sealed class IncludeNode : CssNode
     {
         public IncludeNode(string name, CssValue args)
             : base(NodeKind.Include)
         {
-            #region Preconditions
-
-            if (name == null) throw new ArgumentNullException(nameof(name));
-
-            #endregion
-
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
             Args = args;
         }
 
@@ -21,8 +15,7 @@ namespace Carbon.Css
 
         public CssValue Args { get; }
 
-        public override CssNode CloneNode() 
-            => new IncludeNode(Name, Args);
+        public override CssNode CloneNode() => new IncludeNode(Name, Args);
     }
 }
 

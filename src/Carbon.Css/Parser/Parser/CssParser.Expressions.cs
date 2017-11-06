@@ -10,7 +10,7 @@ namespace Carbon.Css.Parser
             var left = ReadComponent();
 
             // Check if there's a binary operator
-            if (!current.IsBinaryOperator)
+            if (!Current.IsBinaryOperator)
             {
                 return left;
             }

@@ -24,13 +24,12 @@ namespace Carbon.Css
 
         public bool HasChildren => children.Count > 0;
 
-        public CssDeclaration GetDeclaration(string name)
-            => children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
+        public CssDeclaration GetDeclaration(string name) =>
+            children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
 
         #region List<CssNode> Members
 
-        public int IndexOf(CssNode node)
-            => children.IndexOf(node);
+        public int IndexOf(CssNode node) => children.IndexOf(node);
 
         public void Insert(int index, CssNode item)
         {
@@ -39,13 +38,12 @@ namespace Carbon.Css
             children.Insert(index, item);
         }
 
-        public void RemoveAt(int index) 
-            => children.RemoveAt(index);
+        public void RemoveAt(int index) => children.RemoveAt(index);
 
         public CssNode this[int index]
         {
-            get { return children[index]; }
-            set { children[index] = value; }
+            get => children[index];
+            set => children[index] = value;
         }
 
         public void Add(CssNode node)
@@ -55,14 +53,11 @@ namespace Carbon.Css
             children.Add(node);
         }
 
-        public bool Remove(CssNode item) 
-            => children.Remove(item);
+        public bool Remove(CssNode item) => children.Remove(item);
 
-        IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator()
-            => children.GetEnumerator();
+        IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator() => children.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() 
-            => children.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => children.GetEnumerator();
 
         #endregion
     }

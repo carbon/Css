@@ -1,13 +1,15 @@
-﻿namespace Carbon.Css
+﻿using System;
+
+namespace Carbon.Css
 {
-    public class ImportRule : CssRule
+    public sealed class ImportRule : CssRule
     {
         public ImportRule(CssUrlValue url)
-            : base(RuleType.Import)
         {
-
-            Url = url;
+            Url = url ?? throw new ArgumentNullException(nameof(url));
         }
+
+        public override RuleType Type => RuleType.Import;
 
         public CssUrlValue Url { get; }
 

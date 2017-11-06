@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Carbon.Css
 {
-    public class CssDeclaration : CssNode
+    public sealed class CssDeclaration : CssNode
     {
         public CssDeclaration(string name, string value, string priority = null)
             : this(name, CssValue.Parse(value), priority)
@@ -17,12 +17,9 @@ namespace Carbon.Css
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
             #endregion
 
-            Value = value;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
             Priority = priority;
             Info = CssProperty.Get(name);
         }

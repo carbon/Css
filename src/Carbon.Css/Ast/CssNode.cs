@@ -4,22 +4,15 @@ namespace Carbon.Css
 {
     public abstract class CssNode
     {
-        private CssNode parent;
-
         public CssNode(NodeKind kind, CssNode parent = null)
         {
-            Kind = kind;
-
-            this.parent = parent;
+            Kind   = kind;
+            Parent = parent;
         }
 
         public NodeKind Kind { get; }
 
-        public CssNode Parent
-        {
-            get { return parent; }
-            set { parent = value; }
-        }
+        public CssNode Parent { get; set; }
 
         internal Trivia Leading { get; set; }
 

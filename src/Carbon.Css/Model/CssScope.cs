@@ -24,8 +24,8 @@ namespace Carbon.Css
 
         public CssValue this[string name]
         {
-            get { return GetValue(name); }
-            set { items[name] = value; }
+            get => GetValue(name);
+            set => items[name] = value;
         }
 
         public void Add(string name, CssValue value)

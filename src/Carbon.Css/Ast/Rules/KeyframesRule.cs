@@ -1,13 +1,15 @@
-﻿namespace Carbon.Css
+﻿using System;
+
+namespace Carbon.Css
 {
-    public class KeyframesRule : CssRule
+    public sealed class KeyframesRule : CssRule
     {
         public KeyframesRule(string name)
-            : base(RuleType.Keyframes)
         {
-
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
+
+        public override RuleType Type => RuleType.Keyframes;
 
         public string Name { get; }
 
@@ -17,7 +19,7 @@
         {
             var rule = new KeyframesRule(Name);
 
-            foreach (var x in children)
+            foreach (var x in Children)
             {
                 rule.Add(x.CloneNode());
             }

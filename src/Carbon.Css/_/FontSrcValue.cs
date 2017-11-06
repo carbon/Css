@@ -1,10 +1,12 @@
-﻿namespace Carbon.Css
+﻿using System;
+
+namespace Carbon.Css
 {
     internal struct FontSrcValue
     {
         public FontSrcValue(string url, string format)
         {
-            Url = url;
+            Url    = url ?? throw new ArgumentNullException(nameof(url));
             Format = format;
         }
 

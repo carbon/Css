@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Carbon.Css
 {
@@ -8,15 +9,14 @@ namespace Carbon.Css
 
         public LinearGradient(CssValueList args)
         {
-            this.args = args;
+            this.args = args ?? throw new ArgumentNullException(nameof(args));
         }
 
         // TODO (Direction)
         // TODO (Stops)
 
         // Standard
-        public override string ToString()
-            => $"linear-gradient({args})";
+        public override string ToString() => $"linear-gradient({args})";
 
         public IEnumerable<CssFunction> ExpandFor(BrowserInfo[] browsers)
         {

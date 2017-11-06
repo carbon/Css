@@ -1,13 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace Carbon.Css
 {
-    using Parser;
     using Helpers;
+    using Parser;
 
     public class StyleSheet : CssRoot, IStylesheet
     {
@@ -25,11 +25,11 @@ namespace Carbon.Css
 
         public CssContext Context { get; }
 
-        public static StyleSheet Parse(Stream stream, CssContext context = null)
-         => Parse(new StreamReader(stream), context);
+        public static StyleSheet Parse(Stream stream, CssContext context = null) =>
+            Parse(new StreamReader(stream), context);
 
-        public static StyleSheet Parse(string text, CssContext context = null)
-            => Parse(new StringReader(text), context);
+        public static StyleSheet Parse(string text, CssContext context = null) =>
+            Parse(new StringReader(text), context);
 
         public static StyleSheet Parse(TextReader reader, CssContext context = null)
         {
@@ -112,7 +112,7 @@ namespace Carbon.Css
             #endregion
 
             string text;
-            
+
             using (var reader = file.OpenText())
             {
                 text = reader.ReadToEnd();
@@ -201,7 +201,7 @@ namespace Carbon.Css
             {
                 absolutePath += ".scss";
             }
-            
+
             var stream = resolver.Open(absolutePath.TrimStart(Seperators.ForwardSlash));
 
             if (stream != null)
@@ -226,7 +226,7 @@ namespace Carbon.Css
                         AddChild(new StyleRule("body *") {
                             { "display", "none" }
                         });
-                        
+
                         AddChild(new CssComment($" --- Syntax error reading '{absolutePath}' : {ex.Message} --- "));
 
                         var sb = new StringBuilder();

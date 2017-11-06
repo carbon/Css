@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Carbon.Css
 {
@@ -7,7 +8,7 @@ namespace Carbon.Css
         public MixinNode(string name, List<CssParameter> parameters)
             : base(NodeKind.Mixin)
         {
-            Name = name;
+            Name       = name ?? throw new ArgumentNullException(nameof(name));
             Parameters = parameters;
         }
 

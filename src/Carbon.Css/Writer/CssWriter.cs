@@ -404,23 +404,20 @@ namespace Carbon.Css
         {
             Indent(level);
 
-            switch (rule.Type)
+            switch (rule)
             {
-                case RuleType.Import    : WriteImportRule((ImportRule)rule); break;
-                case RuleType.Media     : WriteMediaRule((MediaRule)rule, level); break;
-                case RuleType.Style     : WriteStyleRule((StyleRule)rule, level); break;
-                case RuleType.FontFace  : WriteFontFaceRule((FontFaceRule)rule, level); break;
-                case RuleType.Keyframes : WriteKeyframesRule((KeyframesRule)rule, level); break;
+                case ImportRule importRule      : WriteImportRule(importRule);             break;
+                case MediaRule mediaRule        : WriteMediaRule(mediaRule, level);        break;
+                case StyleRule styleRule        : WriteStyleRule(styleRule, level);        break;
+                case FontFaceRule fontFaceRule  : WriteFontFaceRule(fontFaceRule, level);  break;
+                case KeyframesRule keyFrameRule : WriteKeyframesRule(keyFrameRule, level); break;
+                case UnknownRule atRule              : WriteAtRule(atRule, level);              break;
 
-                // Unknown rules
-                default:
-                    if (rule is AtRule) WriteAtRule((AtRule)rule, level);
-
-                    break;
+                default: throw new Exception("Unhandled rule:" + rule.GetType().Name);
             }
         }
 
-        public void WriteAtRule(AtRule rule, int level)
+        public void WriteAtRule(UnknownRule rule, int level)
         {
             writer.Write("@" + rule.Name);
 

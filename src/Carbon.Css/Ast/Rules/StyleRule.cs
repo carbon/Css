@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace Carbon.Css
 {
-    public class StyleRule : CssRule
+    public sealed class StyleRule : CssRule
     {
         private readonly CssSelector selector;
 
         public StyleRule(CssSelector selector)
-            : base(RuleType.Style)
         {
-
-            this.selector = selector;
+            this.selector = selector ?? throw new ArgumentNullException(nameof(selector));
         }
 
         public StyleRule(string selectorText)
@@ -28,6 +27,8 @@ namespace Carbon.Css
                 base.Children.Add(child);
             }
         }
+
+        public override RuleType Type => RuleType.Style;
 
         public CssSelector Selector => selector;
 

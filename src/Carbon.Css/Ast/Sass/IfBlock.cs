@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public class IfBlock : CssBlock
+    public sealed class IfBlock : CssBlock
     {
         public IfBlock(CssValue condition)
             : base(NodeKind.If)

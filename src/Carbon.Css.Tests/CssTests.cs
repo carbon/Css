@@ -238,7 +238,7 @@ div { transition: width: 5px; }"
 	to {opacity: 0.25;}
 }");
 
-            var atRule = (sheet.Children[0] as AtRule);
+            var atRule = (sheet.Children[0] as UnknownRule);
 
             Assert.Equal("-webkit-keyframes", atRule.Name);
             Assert.Equal("fade", atRule.SelectorText);
@@ -301,6 +301,15 @@ div { transition: width: 5px; }"
   margin: 0.5in;
   width: calc(100% / 3 - 2 * 1em - 2 * 1px);
 }", StyleSheet.Parse(styles).ToString());
+
+        }
+
+
+
+        [Fact]
+        public void CharsetRuleTest()
+        {
+            // var styles = "@charset \"UTF-8\";", StyleSheet.Parse(styles).ToString());
 
         }
 

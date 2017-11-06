@@ -19,7 +19,6 @@
 
         public BinaryOperator Operator { get; }
 
-        public override CssNode CloneNode() 
-            => new BinaryExpression(Left, Operator, Right);
+        public override CssNode CloneNode() => new BinaryExpression(Left, Operator, Right);
     }
 }
