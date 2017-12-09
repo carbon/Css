@@ -331,11 +331,11 @@ namespace Carbon.Css
 
             writer.Write(function.Name);
 
-            writer.Write("(");
+            writer.Write('(');
 
             WriteValue(function.Arguments);
 
-            writer.Write(")");
+            writer.Write(')');
         }
 
         public IEnumerable<CssValue> GetArgs(CssValue value)
@@ -423,10 +423,11 @@ namespace Carbon.Css
 
             if (rule.SelectorText != null)
             {
-                writer.Write(" " + rule.SelectorText);
+                writer.Write(' ');
+                writer.Write(rule.SelectorText);
             }
 
-            writer.Write(" ");
+            writer.Write(' ');
 
             WriteBlock(rule, level);
         }
@@ -435,7 +436,7 @@ namespace Carbon.Css
         {
             WriteSelector(rule.Selector);
 
-            writer.Write(" ");
+            writer.Write(' ');
 
             WriteBlock(rule, level);
         }
@@ -468,7 +469,7 @@ namespace Carbon.Css
         {
             writer.Write("@media ");
             writer.Write(rule.RuleText); // Write rule text
-            writer.Write(" ");
+            writer.Write(' ');
             WriteBlock(rule, level);
         }
 
@@ -502,7 +503,7 @@ namespace Carbon.Css
 
             writer.Write("@keyframes ");
             writer.Write(rule.Name);
-            writer.Write(" ");
+            writer.Write(' ');
 
             browserSupport = null;
 
@@ -515,11 +516,11 @@ namespace Carbon.Css
         {
             browserSupport = new[] { browser };
 
-            writer.Write("@");
+            writer.Write('@');
             writer.Write(browser.Prefix.Text);
             writer.Write("keyframes ");
             writer.Write(rule.Name);
-            writer.Write(" ");
+            writer.Write(' ');
 
             WriteBlock(rule, level);
 
@@ -530,7 +531,7 @@ namespace Carbon.Css
         {
             var prevScope = scope;
 
-            writer.Write("{"); // Block start
+            writer.Write('{'); // Block start
 
             var condenced = false;
             var count = 0;
@@ -563,7 +564,7 @@ namespace Carbon.Css
                     {
                         condenced = true;
 
-                        writer.Write(" ");
+                        writer.Write(' ');
 
                         WriteDeclaration(declaration, 0);
                     }
@@ -598,14 +599,14 @@ namespace Carbon.Css
             // Limit to declaration
             if (condenced)
             {
-                writer.Write(" ");
+                writer.Write(' ');
             }
             else
             {
                 Indent(level);
             }
 
-            writer.Write("}"); // Block end
+            writer.Write('}'); // Block end
 
             prevScope = scope;
         }
@@ -617,7 +618,7 @@ namespace Carbon.Css
             writer.Write(declaration.Name);
             writer.Write(": ");
             WriteValue(declaration.Value);
-            writer.Write(";");
+            writer.Write(';');
         }
 
         public void WritePatchedDeclaration(CssDeclaration declaration, int level)
@@ -635,14 +636,14 @@ namespace Carbon.Css
 
                     if (!prop.Compatibility.HasPatch(declaration, browser)) continue;
 
-                    var patch = prop.Compatibility.GetPatch(browser, declaration);
+                    var patch = prop.Compatibility.GetPatch(declaration, browser);
 
                     Indent(level);
 
                     writer.Write(patch.Name);
                     writer.Write(": ");
                     WriteValue(patch.Value);
-                    writer.Write(";");
+                    writer.Write(';');
 
                     writer.WriteLine();
 
@@ -852,7 +853,7 @@ namespace Carbon.Css
 
                 if (i != 0)
                 {
-                    sb.Append(" ");
+                    sb.Append(' ');
                 }
 
                 i++;
@@ -877,7 +878,8 @@ namespace Carbon.Css
 
                         if (c != null)
                         {
-                            sb.Append(" " + c);
+                            sb.Append(' ');
+                            sb.Append(c);
                         }
 
                         q++;

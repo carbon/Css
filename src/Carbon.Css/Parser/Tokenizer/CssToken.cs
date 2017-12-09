@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css.Parser
 {
-	public struct CssToken
+	public readonly struct CssToken
 	{
 		public CssToken(TokenKind kind, char value, int position)
 		{

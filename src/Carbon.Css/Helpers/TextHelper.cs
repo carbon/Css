@@ -57,7 +57,7 @@ namespace Carbon.Css.Helpers
         }
     }
 
-    public struct LineInfo
+    public readonly struct LineInfo
     {
         public LineInfo(int number, string text)
         {

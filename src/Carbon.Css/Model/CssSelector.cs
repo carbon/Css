@@ -31,7 +31,7 @@ namespace Carbon.Css
 
                 if (token.IsTrivia)
                 {
-                    sb.Append(" "); // Prettify the trivia
+                    sb.Append(' '); // Prettify the trivia
                 }
                 else
                 {

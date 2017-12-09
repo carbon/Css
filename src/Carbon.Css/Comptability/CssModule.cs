@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public class CssModule : CssCompatibility
+    public sealed class CssModule : CssCompatibility
     {
         public CssModule(CssModuleType type, float level,
             CompatibilityTable prefixed = new CompatibilityTable(),

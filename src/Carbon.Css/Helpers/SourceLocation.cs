@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css.Helpers
 {
-    public struct SourceLocation
+    public readonly struct SourceLocation
     {
         public SourceLocation(int position, int line, int column)
         {

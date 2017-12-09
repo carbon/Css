@@ -103,9 +103,9 @@ namespace Carbon.Css
             }
             
             var sb = new StringBuilder()
-                .Append(Top    ?? "0").Append(" ")
-                .Append(Left   ?? "0").Append(" ")
-                .Append(Bottom ?? "0").Append(" ")
+                .Append(Top    ?? "0").Append(' ')
+                .Append(Left   ?? "0").Append(' ')
+                .Append(Bottom ?? "0").Append(' ')
                 .Append(Right  ?? "0");
 
             return new CssDeclaration("padding", sb.ToString());

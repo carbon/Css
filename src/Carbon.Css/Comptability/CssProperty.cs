@@ -5,8 +5,6 @@ namespace Carbon.Css
 {
     public sealed class CssProperty
     {
-        private readonly string name;
-        private readonly CssModule module;
         private readonly CssCompatibility compatibility;
 
         public CssProperty(string name)
@@ -19,8 +17,8 @@ namespace Carbon.Css
 
         public CssProperty(string name, CssModule module = null, CssCompatibility compatibility = null)
         {
-            this.name = name ?? throw new ArgumentNullException(nameof(name));
-            this.module = module;
+            Name   = name ?? throw new ArgumentNullException(nameof(name));
+            Module = module;
 
             this.compatibility = compatibility;
 
@@ -32,12 +30,11 @@ namespace Carbon.Css
 
         public bool IsStandard => Module != null;
 
-        public string Name => name;
+        public string Name { get; }
 
-        public CssModule Module => module;
+        public CssModule Module { get; }
 
-        public CssCompatibility Compatibility
-            => compatibility ?? CssCompatibility.Unknown;
+        public CssCompatibility Compatibility => compatibility ?? CssCompatibility.Default;
 
         public bool NeedsExpansion(CssDeclaration declaration, BrowserInfo[] browsers)
         {
@@ -53,21 +50,21 @@ namespace Carbon.Css
             return false;
         }
 
-        public override int GetHashCode() => name.GetHashCode();
+        public override int GetHashCode() => Name.GetHashCode();
 
         public override bool Equals(object obj)
         {
             if (obj is string)
-                return (string)obj == this.name;
+                return (string)obj == this.Name;
 
-            var a = obj as CssProperty;
+            var other = obj as CssProperty;
 
-            if (a == null) return false;
+            if (other == null) return false;
 
-            return a.Name == this.name;
+            return other.Name == this.Name;
         }
 
-        public override string ToString() => name;
+        public override string ToString() => Name;
 
         public static CssProperty Get(string name)
         {
@@ -123,21 +120,21 @@ namespace Carbon.Css
             standard: new CompatibilityTable(chrome: 16, firefox: 15, ie: 11, safari: 6.1f)
         );
 
-        public static readonly CssProperty Border = new CssProperty("border", CssModule.Core1);
-        public static readonly CssProperty BorderBottom = new CssProperty("border-bottom", CssModule.Core1);
-        public static readonly CssProperty BorderBottomColor = new CssProperty("border-bottom-color", CssModule.Core1);
-        public static readonly CssProperty BorderBottomLeftRadius = new CssProperty("border-bottom-left-radius");
+        public static readonly CssProperty Border                  = new CssProperty("border", CssModule.Core1);
+        public static readonly CssProperty BorderBottom            = new CssProperty("border-bottom", CssModule.Core1);
+        public static readonly CssProperty BorderBottomColor       = new CssProperty("border-bottom-color", CssModule.Core1);
+        public static readonly CssProperty BorderBottomLeftRadius  = new CssProperty("border-bottom-left-radius");
         public static readonly CssProperty BorderBottomRightRadius = new CssProperty("border-bottom-right-radius");
-        public static readonly CssProperty BorderBottomStyle = new CssProperty("border-bottom-style");
-        public static readonly CssProperty BorderBottomWidth = new CssProperty("border-bottom-width");
-        public static readonly CssProperty BorderCollapse = new CssProperty("border-collapse");
-        public static readonly CssProperty BorderColor = new CssProperty("border-color", CssModule.Core1);
-        public static readonly CssProperty BorderImage = new CssProperty("border-image", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageOutset = new CssProperty("border-image-outset", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageRepeat = new CssProperty("border-image-repeat", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageSlice = new CssProperty("border-image-slice", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageSource = new CssProperty("border-image-source", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageWidth = new CssProperty("border-image-width", BorderImageCompatibility);
+        public static readonly CssProperty BorderBottomStyle       = new CssProperty("border-bottom-style");
+        public static readonly CssProperty BorderBottomWidth       = new CssProperty("border-bottom-width");
+        public static readonly CssProperty BorderCollapse          = new CssProperty("border-collapse");
+        public static readonly CssProperty BorderColor             = new CssProperty("border-color", CssModule.Core1);
+        public static readonly CssProperty BorderImage             = new CssProperty("border-image", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageOutset       = new CssProperty("border-image-outset", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageRepeat       = new CssProperty("border-image-repeat", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageSlice        = new CssProperty("border-image-slice", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageSource       = new CssProperty("border-image-source", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageWidth        = new CssProperty("border-image-width", BorderImageCompatibility);
 
         public static readonly CssProperty BorderLeft = new CssProperty("border-left", CssModule.Core1);
         public static readonly CssProperty BorderLeftColor = new CssProperty("border-left-color");

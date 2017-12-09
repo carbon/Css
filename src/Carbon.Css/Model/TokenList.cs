@@ -40,7 +40,7 @@ namespace Carbon.Css
             {
                 if (token.IsTrivia) continue;
 
-                if (sb.Length != 0) sb.Append(" ");
+                if (sb.Length != 0) sb.Append(' ');
 
                 sb.Append(token.Text);
             }

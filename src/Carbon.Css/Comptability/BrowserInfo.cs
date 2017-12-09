@@ -2,7 +2,7 @@
 
 namespace Carbon.Css
 {
-    public struct BrowserInfo
+    public class BrowserInfo
     {
         public BrowserInfo(BrowserType type, float version)
         {
@@ -16,20 +16,11 @@ namespace Carbon.Css
 
         public BrowserPrefix Prefix => GetPrefix(Type);
 
-        public static BrowserInfo Chrome(float version) 
-            => new BrowserInfo(BrowserType.Chrome, version);
-
-        public static BrowserInfo Firefox(float version)
-            => new BrowserInfo(BrowserType.Firefox, version);
-
-        public static BrowserInfo Safari(float version)
-            => new BrowserInfo(BrowserType.Safari, version);
-
-        public static BrowserInfo Opera(float version)
-            => new BrowserInfo(BrowserType.Opera, version);
-
-        public static BrowserInfo IE(float version)
-            => new BrowserInfo(BrowserType.IE, version);
+        public static BrowserInfo Chrome(float version)  => new BrowserInfo(BrowserType.Chrome, version);
+        public static BrowserInfo Firefox(float version) => new BrowserInfo(BrowserType.Firefox, version);
+        public static BrowserInfo Safari(float version)  => new BrowserInfo(BrowserType.Safari, version);
+        public static BrowserInfo Opera(float version)   => new BrowserInfo(BrowserType.Opera, version);
+        public static BrowserInfo IE(float version)      => new BrowserInfo(BrowserType.IE, version);
 
         public static readonly BrowserInfo Chrome1  = Chrome(1);
         public static readonly BrowserInfo Chrome4  = Chrome(4);
@@ -51,13 +42,13 @@ namespace Carbon.Css
         public static readonly BrowserInfo Firefox21 = Firefox(21);
         public static readonly BrowserInfo Firefox29 = Firefox(29);
 
-        public static readonly BrowserInfo IE6  = IE(6);
-        public static readonly BrowserInfo IE7  = IE(7);
-        public static readonly BrowserInfo IE8  = IE(8);
-        public static readonly BrowserInfo IE9  = IE(9);
-        public static readonly BrowserInfo IE10 = IE(10);
-        public static readonly BrowserInfo IE11 = IE(11);
-        public static readonly BrowserInfo IE12 = IE(12); // edge
+        public static readonly BrowserInfo IE6       = IE(6);
+        public static readonly BrowserInfo IE7       = IE(7);
+        public static readonly BrowserInfo IE8       = IE(8);
+        public static readonly BrowserInfo IE9       = IE(9);
+        public static readonly BrowserInfo IE10      = IE(10);
+        public static readonly BrowserInfo IE11      = IE(11);
+        public static readonly BrowserInfo IE12      = IE(12); // edge
 
         public static readonly BrowserInfo Opera4  = Opera(3);
         public static readonly BrowserInfo Opera9  = Opera(9);

@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public struct CssUnit
+    public readonly struct CssUnit
     {
         private static readonly CssUnit CH   = new CssUnit("ch",   NodeKind.Length);
         private static readonly CssUnit CM   = new CssUnit("cm",   NodeKind.Length);

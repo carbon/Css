@@ -13,7 +13,7 @@ namespace Carbon.Css
 
         public BrowserInfo[] BrowserSupport => browserSupport;
 
-        internal BrowserInfo? GetBrowser(BrowserType type)
+        internal BrowserInfo GetBrowser(BrowserType type)
         {
             foreach (var browser in browserSupport)
             {
