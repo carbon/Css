@@ -24,9 +24,19 @@ namespace Carbon.Css
 
         public bool HasChildren => children.Count > 0;
 
-        public CssDeclaration GetDeclaration(string name) =>
-            children.OfType<CssDeclaration>().FirstOrDefault(d => d.Name == name);
+        public CssDeclaration GetDeclaration(string name)
+        {
+            foreach (var child in children)
+            {
+                if (child is CssDeclaration declaration && declaration.Name == name)
+                {
+                    return declaration;
+                }
+            }
 
+            return null;
+        }
+        
         #region List<CssNode> Members
 
         public int IndexOf(CssNode node) => children.IndexOf(node);
