@@ -491,13 +491,10 @@ namespace Carbon.Css.Parser
 
             ReadTrivia();
 
-            var parameters = new List<CssParameter>();
-
-            if (Current.Kind == TokenKind.LeftParenthesis)
-            {
-                parameters = ReadParameterList();
-            }
-
+            IReadOnlyList<CssParameter> parameters = (Current.Kind == TokenKind.LeftParenthesis)
+                ? ReadParameterList()
+                : (IReadOnlyList<CssParameter>)Array.Empty<CssParameter>();
+            
             var mixin = new MixinNode(name.Text, parameters);
 
             ReadBlock(mixin);
@@ -505,7 +502,7 @@ namespace Carbon.Css.Parser
             return mixin;
         }
 
-        public List<CssParameter> ReadParameterList()
+        private List<CssParameter> ReadParameterList()
         {
             // ($color, $width: 1in)
 
@@ -634,7 +631,6 @@ namespace Carbon.Css.Parser
                     block.Add(ReadAssignment());
 
                     continue;
-
                 }
 
                 var statement = ReadSpan();

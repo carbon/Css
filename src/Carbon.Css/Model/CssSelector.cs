@@ -8,15 +8,15 @@ namespace Carbon.Css
 {
     using Parser;
 
-    public class CssSelector : IEnumerable<string>
+    public readonly struct CssSelector : IEnumerable<string>
     {
-        private readonly List<string> parts;
+        private readonly IList<string> items;
 
         public CssSelector(TokenList tokens)
         {
             var sb = new StringBuilder();
 
-            this.parts = new List<string>();
+            var parts = new List<string>();
 
             foreach (var token in tokens)
             {
@@ -43,60 +43,63 @@ namespace Carbon.Css
             {
                 parts.Add(sb.ToString().Trim());
             }
+
+            this.items = parts;
         }
 
         public CssSelector(string text)
         {
-            #region Preconditions
+            if (text == null) throw new ArgumentNullException(nameof(text));
 
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
+            string[] parts = text.Split(Seperators.Comma);
 
-            // if (text.Length == 0)
-            //   throw new ArgumentException("Must not be empty", nameof(text));
-
-            #endregion
-
-            var items = text.Split(Seperators.Comma);
-
-            this.parts = new List<string>(items.Length);
-
-            foreach (var item in items)
+            for (var i = 0; i < parts.Length; i++)
             {
-                this.parts.Add(item.Trim());
-            }           
+                if (parts[i].IndexOf(' ') > -1)
+                {
+                    parts[i] = parts[i].Trim();
+                }
+            }
+            
+            this.items = parts;
         }
 
-        public CssSelector(List<string> parts)
+        public CssSelector(string[] items)
         {
-            this.parts = parts;
+            this.items = items;
         }
 
         public CssSelector(CssValue list)
         {
-            if (list is CssValueList)
+            if (list is CssValueList cssList)
             {
-                this.parts = new List<string>(((CssValueList)list).Select(l => l.ToString()));
+                var parts = new string[cssList.Count];
+
+                for (var i = 0; i < cssList.Count; i++)
+                {
+                    parts[i] = cssList[i].ToString();
+                }
+
+                this.items = parts;
             }
             else
             {
-                this.parts = new List<string>(new[] { list.ToString() });
+                this.items = new[] { list.ToString() };
             }
         }
 
-        public int Count => parts.Count;
+        public int Count => items.Count;
 
-        public string this[int index] 
-            => parts[index];
+        public string this[int index] => items[index];
 
         public bool Contains(string text)
         {
-            if (parts.Count == 1)
+            if (items.Count == 1)
             {
-                return parts[0].Contains(text);
+                return items[0].Contains(text);
             }
 
-            foreach (var part in parts)
+            foreach (var part in items)
             {
                 if (part.Contains(text)) return true;
             }
@@ -106,24 +109,22 @@ namespace Carbon.Css
 
         public override string ToString()
         {
-            if (parts.Count == 1) return parts[0];
+            if (items.Count == 1) return items[0];
 
-            return string.Join(", ", parts);
+            return string.Join(", ", items);
         }
 
         #region IEnumerator
 
-        public IEnumerator<string> GetEnumerator() 
-            => parts.GetEnumerator();
+        public IEnumerator<string> GetEnumerator() => items.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => parts.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 
         #endregion
     }
-
-    // a:hover
-    // #id
-    // .className
-    // .className, .anotherName			(Multiselector or group)
 }
+
+// a:hover
+// #id
+// .className
+// .className, .anotherName			(Multiselector or group)
