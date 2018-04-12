@@ -2,7 +2,7 @@
 {
 	using Color;
 
-	public class CssColor : CssValue
+	public sealed class CssColor : CssValue
 	{
 		private readonly string value;
 

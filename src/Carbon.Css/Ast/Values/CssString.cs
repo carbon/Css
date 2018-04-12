@@ -2,7 +2,7 @@
 {
     using Parser;
 
-    public class CssString : CssValue
+    public sealed class CssString : CssValue
     {
         public CssString(CssToken token)
             : this(token.Text)

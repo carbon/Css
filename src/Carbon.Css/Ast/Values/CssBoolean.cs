@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public class CssBoolean : CssValue
+    public sealed class CssBoolean : CssValue
     {
         public CssBoolean(bool value)
             : base(NodeKind.Boolean)

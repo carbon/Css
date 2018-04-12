@@ -2,10 +2,8 @@
 {
     using Parser;
 
-    public class CssVariable : CssValue
+    public sealed class CssVariable : CssValue
     {
-        private readonly string text;
-
         public CssVariable(CssToken token)
             : this(token.Text)
         { }
@@ -13,14 +11,14 @@
         public CssVariable(string text)
             : base(NodeKind.Variable)
         {
-            this.text = text;
+            Symbol = text;
         }
 
-        public string Symbol => text;
+        public string Symbol { get; }
 
-        public override CssNode CloneNode() => new CssVariable(text);
+        public override CssNode CloneNode() => new CssVariable(Symbol);
 
-        public override string ToString() => "$" + text;
+        public override string ToString() => "$" + Symbol;
     }
 }
 

@@ -2,7 +2,7 @@
 {
 	using System;
 
-	public class CssMeasurement : CssValue
+	public sealed class CssMeasurement : CssValue
 	{
 		private readonly float value;
 		private readonly CssUnit unit;
@@ -34,19 +34,16 @@
 			{
 				return new CssMeasurement(this.value * (((CssNumber)node).Value / 100), unit);
             }
-			else if (node is CssMeasurement)
-			{
-				var measurement = (CssMeasurement)node;
+			else if (node is CssMeasurement measurement)
+            {
+                if (node.Kind == this.Kind)
+                {
+                    return new CssMeasurement(this.value * measurement.value, measurement.unit);
+                }
+            }
 
-				if (node.Kind == this.Kind)
-				{
-					return new CssMeasurement(this.value * measurement.value, measurement.unit);
-				}
-			}
-		
-			throw new Exception("cannot multiply types");
+            throw new Exception("cannot multiply types");
 		}
-
 
 		public CssValue Add(CssValue node)
 		{
@@ -54,17 +51,15 @@
 			{
 				return new CssMeasurement(this.value + ((CssNumber)node).Value, unit);
 			}
-			else if (node is CssMeasurement)
-			{
-				var measurement = (CssMeasurement)node;
+			else if (node is CssMeasurement measurement)
+            {
+                if (node.Kind == this.Kind)
+                {
+                    return new CssMeasurement(this.value + measurement.value, measurement.unit);
+                }
+            }
 
-				if (node.Kind == this.Kind)
-				{
-					return new CssMeasurement(this.value + measurement.value, measurement.unit);
-				}
-			}
-
-			throw new Exception("cannot add types");
+            throw new Exception("cannot add types");
 		}
 
 		#endregion

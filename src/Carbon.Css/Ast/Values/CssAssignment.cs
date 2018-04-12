@@ -2,7 +2,7 @@
 {
     using Parser;
 
-    public class CssAssignment : CssNode
+    public sealed class CssAssignment : CssNode
     {
         public CssAssignment(string name, CssValue value)
             : base(NodeKind.Assignment)

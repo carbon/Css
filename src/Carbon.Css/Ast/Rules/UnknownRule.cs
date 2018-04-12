@@ -2,11 +2,10 @@
 
 namespace Carbon.Css
 {
-    public class UnknownRule : CssRule
+    public sealed class UnknownRule : CssRule
     {
         public UnknownRule(string name, string selectorText)
         {
-
             Name = name ?? throw new ArgumentNullException(nameof(name));
             SelectorText = selectorText;
         }

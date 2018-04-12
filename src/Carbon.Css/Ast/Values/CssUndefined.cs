@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public class CssUndefined : CssValue
+    public sealed class CssUndefined : CssValue
     {
         public CssUndefined(string variableName)
             : base(NodeKind.Undefined)

@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	public class CssNumber : CssValue
+	public sealed class CssNumber : CssValue
 	{
 		private readonly float value;
 

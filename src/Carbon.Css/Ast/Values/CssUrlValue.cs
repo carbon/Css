@@ -2,7 +2,7 @@
 
 namespace Carbon.Css
 {
-    public class CssUrlValue
+    public readonly struct CssUrlValue
     {
         // url('')
 
