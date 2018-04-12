@@ -72,6 +72,9 @@ namespace Carbon.Css.Parser
                 case ':':
                     // ::placeholder {
                     // :-ms-placeholder {
+                    
+                    // :not(
+
                     if (reader.Peek() == ':' || reader.Peek() == '-')
                     {
                         return ReadValue();
@@ -84,9 +87,19 @@ namespace Carbon.Css.Parser
                     }
 
                 case ',': return new CssToken(TokenKind.Comma, reader.Read(), reader.Position);
-                case ';': LeaveValueMode(); return new CssToken(TokenKind.Semicolon, reader.Read(), reader.Position);
-                case '{': mode.Enter(LexicalMode.Block); return new CssToken(TokenKind.BlockStart, reader.Read(), reader.Position);
-                case '}': LeaveValueMode(); mode.Leave(LexicalMode.Block, this); return new CssToken(TokenKind.BlockEnd, reader.Read(), reader.Position);
+                case ';':
+                    LeaveValueMode();
+                    return new CssToken(TokenKind.Semicolon, reader.Read(), reader.Position);
+                case '{':
+                    mode.Enter(LexicalMode.Block);
+
+                    return new CssToken(TokenKind.BlockStart, reader.Read(), reader.Position);
+                case '}':
+                    LeaveValueMode();
+
+                    mode.Leave(LexicalMode.Block, this);
+                    
+                    return new CssToken(TokenKind.BlockEnd, reader.Read(), reader.Position);
 
                 case '(': return new CssToken(TokenKind.LeftParenthesis, reader.Read(), reader.Position);
                 case ')': return new CssToken(TokenKind.RightParenthesis, reader.Read(), reader.Position);
@@ -130,6 +143,10 @@ namespace Carbon.Css.Parser
                     else
                         break;
 
+                case '\'':
+                case '"':
+                    return ReadQuotedString(reader.Current);
+
                 case '0':
                 case '1':
                 case '2':
@@ -146,10 +163,10 @@ namespace Carbon.Css.Parser
 
             switch (mode.Current)
             {
-                case LexicalMode.Symbol: return ReadSymbol();
-                case LexicalMode.Value: return ReadValue();
-                case LexicalMode.Unit: return ReadUnit();
-                default: return ReadName();
+                case LexicalMode.Symbol : return ReadSymbol();
+                case LexicalMode.Value  : return ReadValue();
+                case LexicalMode.Unit   : return ReadUnit();
+                default                 : return ReadName();
             }
         }
 
@@ -219,12 +236,34 @@ namespace Carbon.Css.Parser
             }
         }
 
+        private CssToken ReadQuotedString(char quoteChar)
+        {
+            reader.Mark();
+
+            reader.Next(); // "
+
+            while (reader.Current != quoteChar && !reader.IsEof)
+            {
+                reader.Next();
+            }
+
+            reader.Next(); // "
+
+            return new CssToken(TokenKind.String, reader.Unmark(), reader.MarkStart);
+        }
+
         private CssToken ReadValue()
         {
             reader.Mark();
 
-            while (!reader.IsWhiteSpace && reader.Current != '{' && reader.Current != '}'
-                && reader.Current != ')' && reader.Current != '(' && reader.Current != ';' && reader.Current != ',' && !reader.IsEof)
+            while (!reader.IsWhiteSpace && 
+                reader.Current != '{' &&
+                reader.Current != '}'&& 
+                reader.Current != ')' && 
+                reader.Current != '(' && 
+                reader.Current != ';' && 
+                reader.Current != ',' && 
+                !reader.IsEof)
             {
                 reader.Next();
             }
