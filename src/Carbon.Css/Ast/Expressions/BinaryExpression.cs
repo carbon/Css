@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public class BinaryExpression : CssValue
+    public sealed class BinaryExpression : CssValue
     {
         // ||, &&, ==, !=
         // +, -, *, /, %

@@ -19,9 +19,9 @@ namespace Carbon.Css
         {
             var rule = new KeyframesRule(Name);
 
-            foreach (var x in Children)
+            foreach (var child in Children)
             {
-                rule.Add(x.CloneNode());
+                rule.Add(child.CloneNode());
             }
 
             return rule;

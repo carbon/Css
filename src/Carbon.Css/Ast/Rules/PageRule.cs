@@ -4,7 +4,7 @@ namespace Carbon.Css
 {
     public sealed class PageRule : CssRule
     {
-        public PageRule(string selectorText, List<CssNode> children)
+        public PageRule(string selectorText, IReadOnlyList<CssNode> children)
         {
             Selector = new CssSelector(selectorText);
 

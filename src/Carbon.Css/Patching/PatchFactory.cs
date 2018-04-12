@@ -1,4 +1,6 @@
-﻿namespace Carbon.Css
+﻿using System.Collections.Generic;
+
+namespace Carbon.Css
 {
     internal static class PatchFactory
     {
@@ -14,7 +16,7 @@
 
             var a = (CssValueList)value;
 
-            var list = new CssValueList(a.Seperator);
+            var list = new List<CssValue>();
 
             foreach (var node in a)
             {
@@ -32,41 +34,7 @@
                 }
             }
 
-            return list;
+            return new CssValueList(list, a.Seperator);
         }
-    }
-
-    public readonly struct CssPatch
-    {
-        public CssPatch(string name, CssValue value)
-        {
-            Name = name;
-            Value = value;
-        }
-
-        public string Name { get; }
-
-        public CssValue Value { get; }
-    }
-
-    public abstract class CssPatcher
-    {
-        public abstract CssPatch Patch(BrowserInfo browser, CssDeclaration declaration);
-    }
-
-    public sealed class PrefixNamePatcher : CssPatcher
-    {
-        public override CssPatch Patch(BrowserInfo browser, CssDeclaration declaration) => new CssPatch(
-            name    : browser.Prefix + declaration.Name, 
-            value   : declaration.Value
-        );
-    }
-
-    public sealed class PrefixNameAndValuePatcher : CssPatcher
-    {
-        public override CssPatch Patch(BrowserInfo browser, CssDeclaration declaration) => new CssPatch(
-            name  : browser.Prefix + declaration.Name, 
-            value : PatchFactory.PatchValue(declaration.Value, browser)
-        );
     }
 }

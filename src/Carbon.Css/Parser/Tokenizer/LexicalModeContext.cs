@@ -24,7 +24,7 @@ namespace Carbon.Css.Parser
 
         public void Leave(LexicalMode mode, CssTokenizer tokenizer = null)
         {
-            if (current != mode) throw new UnexpectedModeChange(current, mode, (tokenizer == null) ? 0 : tokenizer.Current.Position);
+            if (current != mode) throw new UnexpectedModeChange(current, mode, tokenizer?.Current.Position ?? 0);
 
             modes.Pop();
 

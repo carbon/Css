@@ -5,7 +5,7 @@ namespace Carbon.Css
 {
     using Parser;
 
-    public class TokenList : Collection<CssToken>
+    public sealed class TokenList : Collection<CssToken>
     {
         public string RawText
         {

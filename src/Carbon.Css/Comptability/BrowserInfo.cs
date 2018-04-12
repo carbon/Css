@@ -2,7 +2,7 @@
 
 namespace Carbon.Css
 {
-    public class BrowserInfo
+    public readonly struct BrowserInfo
     {
         public BrowserInfo(BrowserType type, float version)
         {
@@ -65,11 +65,11 @@ namespace Carbon.Css
         {
             switch (type)
             {
-                case BrowserType.Chrome   : return BrowserPrefix.Webkit;
-                case BrowserType.Firefox  : return BrowserPrefix.Moz;
-                case BrowserType.IE       : return BrowserPrefix.MS;
-                case BrowserType.Opera    : return BrowserPrefix.Opera;
-                case BrowserType.Safari   : return BrowserPrefix.Webkit;
+                case BrowserType.Chrome  : return BrowserPrefix.Webkit;
+                case BrowserType.Firefox : return BrowserPrefix.Moz;
+                case BrowserType.IE      : return BrowserPrefix.MS;
+                case BrowserType.Opera   : return BrowserPrefix.Opera;
+                case BrowserType.Safari  : return BrowserPrefix.Webkit;
 
                 default: throw new Exception("Unexpected browser: " + type);
             }
@@ -81,7 +81,7 @@ namespace Carbon.Css
         }
     }
 
-    public class BrowserPrefix : IEquatable<BrowserPrefix>
+    public readonly struct BrowserPrefix : IEquatable<BrowserPrefix>
     {
         public static readonly BrowserPrefix Moz    = new BrowserPrefix(BrowserPrefixKind.Moz,    "-moz-");
         public static readonly BrowserPrefix MS     = new BrowserPrefix(BrowserPrefixKind.Ms,     "-ms-");
@@ -102,11 +102,9 @@ namespace Carbon.Css
 
         #region Equality
 
-        public bool Equals(BrowserPrefix prefix)
-            => prefix.Kind == Kind;
-        
-        public override int GetHashCode()
-            => (int)Kind;
+        public bool Equals(BrowserPrefix other) => Kind == other.Kind;
+
+        public override int GetHashCode() => (int)Kind;
 
         #endregion
     }

@@ -16,11 +16,11 @@
 			Position = position;
 		}
 
-		public TokenKind Kind { get; }
+        public readonly TokenKind Kind;
 
-		public int Position { get; }
+        public readonly int Position;
 
-        public string Text { get; }
+        public readonly string Text;
 
         public override string ToString() => $"{Kind}: '{Text}'";
 
@@ -33,8 +33,7 @@
 		public bool IsEqualityOperator => Kind == TokenKind.Equals || Kind == TokenKind.NotEquals;
 
 		public bool IsLogicalOperator => Kind == TokenKind.And || Kind == TokenKind.Or;
-
-
+        
 		#endregion
 	}
 

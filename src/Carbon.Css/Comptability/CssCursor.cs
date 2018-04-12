@@ -4,7 +4,7 @@ namespace Carbon.Css
 {
     // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
 
-    public class CssCursor
+    public static class CssCursor
     {
         private static Dictionary<string, CssCompatibility> table = new Dictionary<string, CssCompatibility> {
             ["auto"] = CssCompatibility.All,

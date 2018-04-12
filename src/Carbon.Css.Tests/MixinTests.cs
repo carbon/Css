@@ -263,7 +263,7 @@ h6 {
 
 			Assert.Equal(2, args.Count);
 			Assert.Equal("50px, 20px", args.ToString());
-			Assert.Equal(include.Name, "round");
+			Assert.Equal("round", include.Name);
 
 			Assert.Equal("50px", args[0].ToString());
 			Assert.Equal("20px", args[1].ToString());

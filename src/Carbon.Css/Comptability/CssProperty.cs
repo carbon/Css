@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Carbon.Css
 {
-    public sealed class CssProperty
+    public sealed class CssProperty : IEquatable<CssProperty>
     {
         private readonly CssCompatibility compatibility;
 
@@ -36,14 +36,16 @@ namespace Carbon.Css
 
         public CssCompatibility Compatibility => compatibility ?? CssCompatibility.Default;
 
-        public bool NeedsExpansion(CssDeclaration declaration, BrowserInfo[] browsers)
+        public bool NeedsExpansion(CssDeclaration declaration, in BrowserInfo[] browsers)
         {
             if (browsers == null || browsers.Length == 0) return false;
 
             if (!Compatibility.HasPatches) return false;
 
-            foreach (var browser in browsers)
+            for (int i = 0; i < browsers.Length; i++)
             {
+                ref BrowserInfo browser = ref browsers[i];
+          
                 if (Compatibility.HasPatch(declaration, browser)) return true;
             }
 
@@ -54,15 +56,12 @@ namespace Carbon.Css
 
         public override bool Equals(object obj)
         {
-            if (obj is string)
-                return (string)obj == this.Name;
+            if (obj is string text) return Name == text;
 
-            var other = obj as CssProperty;
-
-            if (other == null) return false;
-
-            return other.Name == this.Name;
+            return obj is CssProperty other && Equals(other);
         }
+
+        public bool Equals(CssProperty other) => Name == other.Name;
 
         public override string ToString() => Name;
 

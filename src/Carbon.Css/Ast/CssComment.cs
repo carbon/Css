@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-	public class CssComment : CssNode
+	public sealed class CssComment : CssNode
 	{
 		public CssComment(string text)
 			: base(NodeKind.Comment)

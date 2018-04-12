@@ -307,7 +307,14 @@ namespace Carbon.Css
             {
                 if (i != 0)
                 {
-                    writer.Write(list.Seperator == ValueSeperator.Space ? " " : ", ");
+                    if (list.Seperator == ValueSeperator.Space)
+                    {
+                        writer.Write(' ');
+                    }
+                    else
+                    {
+                        writer.Write(", ");
+                    }
                 }
 
                 WriteValue(value);
@@ -411,7 +418,7 @@ namespace Carbon.Css
                 case StyleRule styleRule        : WriteStyleRule(styleRule, level);        break;
                 case FontFaceRule fontFaceRule  : WriteFontFaceRule(fontFaceRule, level);  break;
                 case KeyframesRule keyFrameRule : WriteKeyframesRule(keyFrameRule, level); break;
-                case UnknownRule atRule              : WriteAtRule(atRule, level);              break;
+                case UnknownRule atRule         : WriteAtRule(atRule, level);              break;
 
                 default: throw new Exception("Unhandled rule:" + rule.GetType().Name);
             }
@@ -419,7 +426,8 @@ namespace Carbon.Css
 
         public void WriteAtRule(UnknownRule rule, int level)
         {
-            writer.Write("@" + rule.Name);
+            writer.Write('@');
+            writer.Write(rule.Name);
 
             if (rule.SelectorText != null)
             {
@@ -441,7 +449,7 @@ namespace Carbon.Css
             WriteBlock(rule, level);
         }
 
-        public void WriteSelector(CssSelector selector)
+        public void WriteSelector(in CssSelector selector)
         {
             if (selector.Count == 1)
             {
@@ -773,7 +781,7 @@ namespace Carbon.Css
             return childScope;
         }
 
-        public CssScope GetScope(List<CssParameter> paramaters, CssValue args)
+        public CssScope GetScope(IReadOnlyList<CssParameter> paramaters, CssValue args)
         {
             var list = new List<CssValue>();
 

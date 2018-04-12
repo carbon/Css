@@ -28,20 +28,20 @@ namespace Carbon.Css.Parser
         }
     }
 
-    public class UnexpectedModeChange : SyntaxException
+    public sealed class UnexpectedModeChange : SyntaxException
     {
         // "Current mode is:" + current + ". Leaving " + mode + "."
 
         private int position;
 
         public UnexpectedModeChange(LexicalMode currentMode, LexicalMode leavingMode, int position)
-            : base($"Unexpected mode change. Expected {currentMode}. Was {leavingMode}.")
+            : base($"Unexpected mode change. Expected '{currentMode}'. Was {leavingMode}.")
         {
             this.position = position;
         }
     }
 
-    public class UnbalancedBlock : SyntaxException
+    public sealed class UnbalancedBlock : SyntaxException
     {
         // "Current mode is:" + current + ". Leaving " + mode + "."
 
@@ -50,7 +50,7 @@ namespace Carbon.Css.Parser
         { }
     }
 
-    public class UnexpectedTokenException : SyntaxException
+    public sealed class UnexpectedTokenException : SyntaxException
     {
         private readonly CssToken token;
 

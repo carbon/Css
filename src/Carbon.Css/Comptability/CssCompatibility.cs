@@ -5,10 +5,10 @@
         public CursorCompatibility()
             : base() { }
 
-        public override bool HasPatch(CssDeclaration declaration, BrowserInfo browser)
+        public override bool HasPatch(CssDeclaration declaration, in BrowserInfo browser)
             => CssCursor.NeedsPatch(declaration.Value.ToString(), browser);
 
-        public override CssPatch GetPatch(CssDeclaration declaration, BrowserInfo browser)
+        public override CssPatch GetPatch(CssDeclaration declaration, in BrowserInfo browser)
             => new CssPatch(declaration.Name, new CssString(browser.Prefix + declaration.Value.ToString()));
 
         public override bool HasPatches => true;
@@ -33,7 +33,7 @@
 
         public CompatibilityTable Standard { get; }
 
-        public virtual CssPatch GetPatch(CssDeclaration declaration, BrowserInfo browser)
+        public virtual CssPatch GetPatch(CssDeclaration declaration, in BrowserInfo browser)
         {
             if (PatchValues)
             {
@@ -43,12 +43,12 @@
             return PatchFactory.PrefixNameAndValue.Patch(browser, declaration);
         }
 
-        public virtual bool HasPatch(CssDeclaration declaration, BrowserInfo browser)
+        public virtual bool HasPatch(CssDeclaration declaration, in BrowserInfo browser)
         {
             return IsPrefixed(browser);
         }
 
-        public bool IsPrefixed(BrowserInfo browser)
+        public bool IsPrefixed(in BrowserInfo browser)
         {
             switch (browser.Type)
             {
@@ -61,7 +61,7 @@
             return false;
         }
 
-        public bool IsStandard(BrowserInfo browser)
+        public bool IsStandard(in BrowserInfo browser)
         {
             switch (browser.Type)
             {

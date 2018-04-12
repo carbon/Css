@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -7,17 +6,15 @@ namespace Carbon.Css
 {
     public sealed class StyleRule : CssRule
     {
-        private readonly CssSelector selector;
-
         public StyleRule(CssSelector selector)
         {
-            this.selector = selector ?? throw new ArgumentNullException(nameof(selector));
+            Selector = selector;
         }
 
         public StyleRule(string selectorText)
             : this(new CssSelector(selectorText)) { }
 
-        public StyleRule(string selectorText, List<CssNode> children)
+        public StyleRule(string selectorText, IReadOnlyList<CssNode> children)
             : this(new CssSelector(selectorText))
         {
             foreach (var child in children)
@@ -30,11 +27,11 @@ namespace Carbon.Css
 
         public override RuleType Type => RuleType.Style;
 
-        public CssSelector Selector => selector;
+        public CssSelector Selector { get; }
 
         public override CssNode CloneNode()
         {
-            var clone = new StyleRule(selector);
+            var clone = new StyleRule(Selector);
 
             foreach (var child in Children)
             {

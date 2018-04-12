@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Carbon.Css.Resolver
 {
-    internal class Include
+    internal readonly struct Include
     {
         private readonly FileInfo file;
 
@@ -16,9 +16,14 @@ namespace Carbon.Css.Resolver
 
         public void WriteTo(TextWriter writer)
         {
+            string line = null;
+
             using (var reader = file.OpenText())
             {
-                writer.Write(reader.ReadToEnd());
+                while ((line = reader.ReadLine()) != null)
+                {
+                    writer.WriteLine(line);
+                }
             }
         }
     }

@@ -10,13 +10,13 @@
             Safari = safari;
         }
 
-        public readonly float Chrome;
+        public float Chrome { get; }
 
-        public readonly float Firefox;
+        public float Firefox { get; }
 
-        public readonly float IE;
+        public float IE { get; }
 
-        public readonly float Safari;
+        public float Safari { get; }
 
         public bool IsDefined => Chrome > 0 || Firefox > 0 || IE > 0 || Safari > 0;
     }

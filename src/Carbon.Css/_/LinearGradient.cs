@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Carbon.Css
 {
-    internal class LinearGradient
+    internal readonly struct LinearGradient
     {
         private readonly CssValueList args;
 
@@ -22,7 +22,7 @@ namespace Carbon.Css
         {
             foreach (var browser in browsers)
             {
-                var args2 = new CssValueList(ValueSeperator.Comma);
+                var values = new List<CssValue>();
 
                 var i = 0;
                 foreach (var arg in args)
@@ -30,11 +30,11 @@ namespace Carbon.Css
                     // The legacy syntax didn't contain to on the direction
                     if (i == 0 && arg.ToString().StartsWith("to "))
                     {
-                        args2.Add(CssValue.Parse(arg.ToString().Replace("to ", "")));
+                        values.Add(CssValue.Parse(arg.ToString().Replace("to ", "")));
                     }
                     else
                     {
-                        args2.Add(arg);
+                        values.Add(arg);
                     }
 
                     i++;
@@ -42,7 +42,7 @@ namespace Carbon.Css
 
                 var name = browser.Prefix.Text + "linear-gradient";
 
-                yield return new CssFunction(name, args2);
+                yield return new CssFunction(name, new CssValueList(values, ValueSeperator.Comma));
             }
         }
     }

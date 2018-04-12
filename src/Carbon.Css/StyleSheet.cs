@@ -9,7 +9,7 @@ namespace Carbon.Css
     using Helpers;
     using Parser;
 
-    public class StyleSheet : CssRoot, IStylesheet
+    public sealed class StyleSheet : CssRoot, IStylesheet
     {
         public StyleSheet(List<CssNode> children, CssContext context)
             : base(children)
@@ -102,14 +102,7 @@ namespace Carbon.Css
 
         public static StyleSheet FromFile(FileInfo file, CssContext context = null)
         {
-            #region Preconditions
-
-            if (file == null)
-            {
-                throw new ArgumentNullException(nameof(file));
-            }
-
-            #endregion
+            if (file == null) throw new ArgumentNullException(nameof(file));
 
             string text;
 
@@ -167,26 +160,22 @@ namespace Carbon.Css
 
         public string ToString(IEnumerable<KeyValuePair<string, CssValue>> variables)
         {
-            var sb = new StringBuilder();
-
-            using (var sw = new StringWriter(sb))
+            using (var sw = new StringWriter())
             {
                 WriteTo(sw, variables);
-            }
 
-            return sb.ToString();
+                return sw.ToString();
+            }
         }
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
-
-            using (var sw = new StringWriter(sb))
+            using (var sw = new StringWriter())
             {
                 WriteTo(sw);
-            }
 
-            return sb.ToString();
+                return sw.ToString();
+            }
         }
 
         #region Helpers

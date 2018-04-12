@@ -7,7 +7,6 @@ namespace Carbon.Css
         public CssDirective(string name, string value)
             : base(NodeKind.Directive)
         {
-
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Value = value;
         }

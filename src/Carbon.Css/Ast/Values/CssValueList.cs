@@ -4,30 +4,20 @@ using System.Linq;
 
 namespace Carbon.Css
 {
-    // Component Values 
-    // Comma seperated list of a component values
+    // A list of component values 
 
-    public class CssValueList : CssValue, IEnumerable<CssValue>
+    public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
     {
-        private readonly List<CssValue> items;
-        private readonly ValueSeperator seperator;
+        private readonly IList<CssValue> items;
 
-        public CssValueList(ValueSeperator seperator = ValueSeperator.Comma)
-            : this(new List<CssValue>(), seperator) { }
-
-        public CssValueList(IEnumerable<CssValue> values, ValueSeperator seperator = ValueSeperator.Comma)
-            : this(new List<CssValue>(values), seperator) { }
-
-        public CssValueList(List<CssValue> values, ValueSeperator seperator = ValueSeperator.Comma)
+        public CssValueList(IList<CssValue> values, ValueSeperator seperator = ValueSeperator.Comma)
            : base(NodeKind.ValueList)
         {
             this.items = values;
-            this.seperator = seperator;
+            Seperator = seperator;
         }
 
-        public ValueSeperator Seperator => seperator;
-
-        public void Add(CssValue node) => items.Add(node);
+        public ValueSeperator Seperator { get; }
 
         public CssValue this[int index] => items[index];
 
@@ -35,28 +25,26 @@ namespace Carbon.Css
 
         public override CssNode CloneNode()
         {
-            var clonedValues = new List<CssValue>();
+            var clonedValues = new CssValue[items.Count];
 
-            foreach (var item in items)
+            for (int i = 0; i < items.Count; i++)
             {
-                clonedValues.Add((CssValue)item.CloneNode());
+                clonedValues[i] = (CssValue)items[i].CloneNode();
             }
-
-            return new CssValueList(clonedValues, seperator);
+            
+            return new CssValueList(clonedValues, Seperator);
         }
 
         public override string ToString()
         {
-            return string.Join(seperator == ValueSeperator.Space ? " " : ", ", items.Select(t => t.ToString()));
+            return string.Join(Seperator == ValueSeperator.Space ? " " : ", ", items.Select(t => t.ToString()));
         }
 
         #region IEnumerator
 
-        IEnumerator<CssValue> IEnumerable<CssValue>.GetEnumerator()
-            => items.GetEnumerator();
+        IEnumerator<CssValue> IEnumerable<CssValue>.GetEnumerator() => items.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => items.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 
         #endregion
     }

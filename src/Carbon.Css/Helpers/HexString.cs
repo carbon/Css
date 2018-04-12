@@ -7,11 +7,7 @@ namespace Carbon.Css
     {
         internal static string FromBytes(byte[] bytes)
         {
-            #region Preconditions
-
-            if (bytes == null) throw new ArgumentNullException("bytes");
-
-            #endregion
+            if (bytes == null) throw new ArgumentNullException(nameof(bytes));
 
             var sb = new StringBuilder(bytes.Length * 2);
 
@@ -25,13 +21,12 @@ namespace Carbon.Css
 
         internal static byte[] ToBytes(string hexString)
         {
-            #region Preconditions
+            if (hexString == null)
+                throw new ArgumentNullException(nameof(hexString));
 
-            if (hexString == null) throw new ArgumentNullException("hexString");
+            if (hexString.Length % 2 != 0)
+                throw new ArgumentException("Must be divisible by 2");
 
-            if (hexString.Length % 2 != 0) throw new ArgumentException("Must be divisible by 2");
-
-            #endregion
 
             byte[] bytes = new byte[hexString.Length / 2];
 

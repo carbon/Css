@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public class UnaryExpression : CssValue
+    public sealed class UnaryExpression : CssValue
     {
         public UnaryExpression(UnaryOperator op, CssNode operand)
             : base(NodeKind.Expression)

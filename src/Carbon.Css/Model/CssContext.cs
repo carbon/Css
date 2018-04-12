@@ -13,14 +13,21 @@ namespace Carbon.Css
 
         public BrowserInfo[] BrowserSupport => browserSupport;
 
-        internal BrowserInfo GetBrowser(BrowserType type)
+        internal bool TryGetBrowser(BrowserType type, out BrowserInfo browser)
         {
-            foreach (var browser in browserSupport)
+            foreach (var b in browserSupport)
             {
-                if (browser.Type == type) return browser;
+                if (b.Type == type)
+                {
+                    browser = b;
+
+                    return true;
+                }
             }
 
-            return null;
+            browser = default;
+
+            return false;
         }
 
         public CompatibilityTable Compatibility => compatibility;

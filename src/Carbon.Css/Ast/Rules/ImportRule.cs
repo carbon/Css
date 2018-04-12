@@ -6,7 +6,7 @@ namespace Carbon.Css
     {
         public ImportRule(CssUrlValue url)
         {
-            Url = url ?? throw new ArgumentNullException(nameof(url));
+            Url = url;
         }
 
         public override RuleType Type => RuleType.Import;

@@ -40,17 +40,17 @@ namespace Carbon.Css
                 return first;
             }
 
-            var list = new CssValueList(ValueSeperator.Space);
+            var values = new List<CssValue>();
 
-            list.Add(first);
-            list.Add(enumerator.Current);
+            values.Add(first);
+            values.Add(enumerator.Current);
 
             while (enumerator.MoveNext())
             {
-                list.Add(enumerator.Current);
+                values.Add(enumerator.Current);
             }
 
-            return list;
+            return new CssValueList(values, ValueSeperator.Space);
         }
     }
 }
