@@ -1,6 +1,6 @@
 # Carbon.Css
 
-A general purpose CSS parser and auto-prefixer for .NET Standard.
+A general purpose CSS parser, auto-prefixer, and SCSS compilier for .NET Standard.
 
 
 # Usage
@@ -8,7 +8,13 @@ A general purpose CSS parser and auto-prefixer for .NET Standard.
 ```
 var css = StyleSheet.Parse(@"
 //= support Safari 5+
-html { font-size: 14px; }
+$backgroundColor: #000;
+
+html {
+  background: $backgroundColor; 
+  font-size: 14px; 
+}
+
 ");
 
 ```
