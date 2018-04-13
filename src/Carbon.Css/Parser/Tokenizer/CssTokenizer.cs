@@ -142,6 +142,9 @@ namespace Carbon.Css.Parser
                 case '+': return new CssToken(TokenKind.Add, reader.Read(), reader.Position);
                 case '*': return new CssToken(TokenKind.Multiply, reader.Read(), reader.Position);
 
+                case '.' when char.IsDigit(reader.Peek()):
+                    return ReadNumber();
+
                 case '-':
                     if (char.IsDigit(reader.Peek()))
                         return ReadNumber();
