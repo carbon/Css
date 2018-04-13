@@ -1,6 +1,7 @@
 ﻿namespace Carbon.Css.Tests
 {
-	using Xunit;
+    using Carbon.Json;
+    using Xunit;
 
 	public class MediaTests : FixtureBase
 	{
@@ -10,6 +11,60 @@
 			var sheet = StyleSheet.Parse("div { color: rgba(100, 100, 100, 0.5); }");
 
 			Assert.Equal("div { color: rgba(100, 100, 100, 0.5); }", sheet.ToString());
+        }
+
+
+        [Fact]
+        public void MediaMixin1()
+        {
+            var sheet = StyleSheet.Parse(@"
+@mixin hi { 
+  color: red;
+}
+
+@mixin blerg { 
+	a {
+		color: pink;
+
+		&:hover { color: #000; }
+	}
+}
+
+@media (min-width: 700px) { 
+	@include blerg;
+
+	div { 
+		background-color: $bgColor;
+		@include hi;
+	}
+}
+");
+
+            Assert.Equal(2, sheet.Context.Mixins.Count);
+
+
+            Assert.True(sheet.Context.Mixins.ContainsKey("hi"));
+            Assert.True(sheet.Context.Mixins.ContainsKey("blerg"));
+
+            Assert.Equal(1, sheet.Children.Count);
+
+
+            var rule = sheet.Children[0] as MediaRule;
+
+            Assert.NotNull(rule);
+
+            Assert.Equal("(min-width: 700px)", rule.RuleText);
+
+
+            var include = rule.Children[0] as IncludeNode;
+
+            Assert.Equal("blerg", include.Name);
+
+            var divRule = rule.Children[1] as StyleRule;
+
+            // Assert.Equal(NodeKind.Variable, divRule.GetDeclaration("background-color").Value.Kind);
+
+
         }
 
         [Fact]
@@ -41,6 +96,8 @@ $bgColor: orange;
 }
 ");
 
+
+            
 
 			Assert.Equal(@"@media (min-width: 700px) {
   a { color: pink; }

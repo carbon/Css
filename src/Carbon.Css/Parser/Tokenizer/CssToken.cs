@@ -24,6 +24,12 @@
 
         public override string ToString() => $"{Kind}: '{Text}'";
 
+        public void Deconstruct(out TokenKind kind, out string text)
+        {
+            kind = Kind;
+            text = Text;
+        }
+
 		#region Helpers
 
 		public bool IsTrivia => Kind == TokenKind.Whitespace || Kind == TokenKind.Comment;

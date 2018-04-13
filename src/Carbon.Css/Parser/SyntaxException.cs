@@ -35,7 +35,7 @@ namespace Carbon.Css.Parser
         private int position;
 
         public UnexpectedModeChange(LexicalMode currentMode, LexicalMode leavingMode, int position)
-            : base($"Unexpected mode change. Expected '{currentMode}'. Was {leavingMode}.")
+            : base($"Unexpected mode change. Expected '{leavingMode}'. Was {currentMode}.")
         {
             this.position = position;
         }

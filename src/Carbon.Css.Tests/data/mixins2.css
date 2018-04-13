@@ -1,19 +1,4 @@
-﻿// -----------------------------
-// Mixins
-// -----------------------------
-
-
-// Table of Contents
-// -----------------------------
-// Fonts
-// Columns
-// Lists
-// Social Links
-// -----------------------------
-
-
-// Fonts
-
+﻿
 @mixin serif($fontWeight : 300) {
   font-family: 'Merriweather', serif;
   font-weight: $fontWeight;

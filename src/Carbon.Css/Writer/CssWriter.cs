@@ -195,7 +195,6 @@ namespace Carbon.Css
 
         #endregion
 
-
         public void InlineImport(ImportRule importRule, StyleSheet sheet)
         {
             // var relativePath = importRule.Url;
@@ -285,7 +284,7 @@ namespace Carbon.Css
 
         public void WriteValue(CssNode value)
         {
-            if (nodeCount > 50000) throw new Exception("Greater then 50000 nodes written");
+            if (nodeCount > 50000) throw new Exception("Exceded limit of 50,000 nodes");
 
             nodeCount++;
 
