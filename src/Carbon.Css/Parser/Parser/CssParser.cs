@@ -154,7 +154,16 @@ namespace Carbon.Css.Parser
 
         public PageRule ReadPageRule()
         {
-            throw new NotImplementedException();
+
+            var rule = new PageRule();
+
+            switch (Current.Kind)
+            {
+                case TokenKind.BlockStart: ReadBlock(rule); break; // {
+                case TokenKind.Semicolon: tokenizer.Read(); break; // ;
+            }
+
+            return rule;
 
             /*
             @page {
@@ -607,7 +616,7 @@ namespace Carbon.Css.Parser
 
             ReadTrivia();
 
-            while(Current.Kind != TokenKind.BlockEnd)
+            while (Current.Kind != TokenKind.BlockEnd)
             {
                 if (IsEnd) throw new UnbalancedBlock(LexicalMode.Block, blockStart);
 
@@ -680,7 +689,7 @@ namespace Carbon.Css.Parser
         public CssDeclaration ReadDeclarationFromName(TokenList name)
         {
             Read(TokenKind.Colon, LexicalMode.Declaration); // read :
-
+            
             ReadTrivia();                                   // TODO: read as leading trivia
 
             var value = ReadValueList();                    // read value (value or cssvariable)
@@ -711,17 +720,7 @@ namespace Carbon.Css.Parser
 
         public string ReadName()
         {
-            string name;
-
-            // Allow leading : on selector identifiers
-            if (Current.Kind == TokenKind.Colon)
-            {
-                name = Read().Text + Read().Text;
-            }
-            else
-            {
-                name = Read().Text;
-            }
+            string name = Read().Text;
 
             ReadTrivia();
 
@@ -735,7 +734,7 @@ namespace Carbon.Css.Parser
             while (!IsEnd)
             {
                 list.Add(Read());
-
+                
                 if (Current.Kind == TokenKind.Colon
                     || Current.Kind == TokenKind.BlockStart
                     || Current.Kind == TokenKind.BlockEnd
