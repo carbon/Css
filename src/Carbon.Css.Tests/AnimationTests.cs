@@ -1,21 +1,14 @@
-﻿namespace Carbon.Css
-{
-    using Carbon.Css.Tests;
+﻿using Xunit;
 
-    using Xunit;
-
-    public class AnimationTests : FixtureBase
+namespace Carbon.Css.Tests
+{ 
+    public class AnimationTests
     {
         [Fact]
         public void KetframesExpansition1()
         {
             var ss = StyleSheet.Parse(@"
 //= support Safari >= 5
-.block ::-webkit-input-placeholder { color: #cfcece ; font-weight: 400; }
-.block      :-ms-input-placeholder { color: #cfcece ; font-weight: 400; }
-.block          ::-moz-placeholder { color: #cfcece ; font-weight: 400; }
-.block           :-moz-placeholder { color: #cfcece ; font-weight: 400; }
-
 
 @keyframes domainProcessing {
  0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
@@ -24,23 +17,7 @@
 }");
 
 
-            Assert.Equal(
-@".block ::-webkit-input-placeholder {
-  color: #cfcece;
-  font-weight: 400;
-}
-.block :-ms-input-placeholder {
-  color: #cfcece;
-  font-weight: 400;
-}
-.block ::-moz-placeholder {
-  color: #cfcece;
-  font-weight: 400;
-}
-.block :-moz-placeholder {
-  color: #cfcece;
-  font-weight: 400;
-}
+            Assert.Equal(@"
 @-webkit-keyframes domainProcessing {
   0% {
     -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6);
@@ -59,17 +36,15 @@
   0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
   50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
   100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-}", ss.ToString());
-
-
-
+}".Trim(), ss.ToString());
         }
 
         [Fact]
-        public void Test50()
+        public void Test2()
         {
-            var ss = StyleSheet.Parse(
-@"//= support Safari >= 6
+            var ss = StyleSheet.Parse(@"
+//= support Safari >= 6
+
 @keyframes domainProcessing2 {
  0% { border-color: rgba(248, 202, 92, 0.4); }
  20% { border-color: rgba(248, 202, 92, 0.2); }
@@ -81,9 +56,6 @@
  50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
 }");
-
-
-
 
             Assert.Equal(
 @"@-webkit-keyframes domainProcessing2 {
@@ -112,8 +84,10 @@
         public void KeyframesTest3()
         {
             var sheet = StyleSheet.Parse(@"
+
 //= support Firefox 3+
 //= support Safari 5+
+
 @keyframes planet {
   0%   { transform: translate(0, 0px)rotate(0deg); }
   100% { transform: translate(0, 0px)rotate(-360deg); }
@@ -153,6 +127,7 @@
         public void KeyframesTest2()
         {
             var sheet = StyleSheet.Parse(@"
+
 //= support Safari >= 5
 @keyframes flicker {
   0%    { opacity: 1; }
@@ -165,22 +140,24 @@
             Assert.Equal(
 @"@-webkit-keyframes flicker {
   0% { opacity: 1; }
-  30% { opacity: .8; }
+  30% { opacity: 0.8; }
   60% { opacity: 1; }
-  100% { opacity: .6; }
+  100% { opacity: 0.6; }
 }
 @keyframes flicker {
   0% { opacity: 1; }
-  30% { opacity: .8; }
+  30% { opacity: 0.8; }
   60% { opacity: 1; }
-  100% { opacity: .6; }
+  100% { opacity: 0.6; }
 }", sheet.ToString());
         }
 
         [Fact]
         public void KeyframesTest()
         {
-            var sheet = StyleSheet.Parse(@"@keyframes flicker {
+            var sheet = StyleSheet.Parse(@"
+
+@keyframes flicker {
   0%    { opacity: 1; }
   30%   { opacity: .8; }
   60%   { opacity: 1; }
@@ -201,9 +178,9 @@
 
             Assert.Equal(@"@keyframes flicker {
   0% { opacity: 1; }
-  30% { opacity: .8; }
+  30% { opacity: 0.8; }
   60% { opacity: 1; }
-  100% { opacity: .6; }
+  100% { opacity: 0.6; }
 }", sheet.ToString());
         }
     }

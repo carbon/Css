@@ -1,43 +1,42 @@
-﻿namespace Carbon.Css
-{
-	using Carbon.Css.Tests;
-	using Xunit;
-	using System;
-	using System.IO;
-	using System.Linq;
+﻿using System;
 
-	public class SassTests : FixtureBase
-	{
-		[Fact]
-		public void VariableReferencingVariable()
-		{
-			var sheet = StyleSheet.Parse(@"
+using Xunit;
+
+namespace Carbon.Css.Tests
+{
+    public class SassTests : FixtureBase
+    {
+        [Fact]
+        public void VariableReferencingVariable()
+        {
+            var sheet = StyleSheet.Parse(@"
 $red: #f00;
 $borderColor: $red;
 
 div { color: rgba($borderColor, 0.5); }");
 
-			Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", sheet.ToString());
-		}
+            Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", sheet.ToString());
+        }
 
-		[Fact]
-		public void VariableReferencingItselfThrows()
-		{
-			var sheet = StyleSheet.Parse(@"
+        [Fact]
+        public void VariableReferencingItselfThrows()
+        {
+            var sheet = StyleSheet.Parse(@"
 $red: #fff;
 $red: $red;	
 
 div { color: $red; }");
 
-			Assert.Throws<Exception>(() => {
-				sheet.ToString();
-			});
-		}
+            Assert.Throws<Exception>(() =>
+            {
+                sheet.ToString();
+            });
+        }
 
-		[Fact]
-		public void Test78()
-		{
-			var sheet = StyleSheet.Parse(@"
+        [Fact]
+        public void Test78()
+        {
+            var sheet = StyleSheet.Parse(@"
 $red: #f00;
 $borderColor: $red;
 
@@ -45,14 +44,11 @@ div { color: darken($red, 10%); }
 div { color: lighten($red, 0.2); }");
 
 
-			Assert.Equal(@"div { color: #cc0000; }
+            Assert.Equal(@"div { color: #cc0000; }
 div { color: #ff6666; }", sheet.ToString());
-		}
-		
+        }
 
-
-
-		/*
+        /*
 		[Fact]
 		public void LightenTests()
 		{
@@ -64,12 +60,12 @@ div { color: lighten(#ccc, 0.2); }");
 			Assert.Equal(@"div { color: #cdcdcd; }
 div { color: #cbcbcb; }", sheet.ToString());
 		}
-		*/
+        */
 
-		[Fact]
-		public void FuncInMixin()
-		{
-			var sheet = StyleSheet.Parse(@"
+        [Fact]
+        public void FuncInMixin()
+        {
+            var sheet = StyleSheet.Parse(@"
 $red: #f00;
 $borderColor: $red;
 
@@ -85,16 +81,16 @@ div {
 
 ");
 
-			Assert.Equal(@"div {
+            Assert.Equal(@"div {
   color: #cc0000;
   color: #ff6666;
 }", sheet.ToString());
-		}	
+        }
 
-		[Fact]
-		public void FuncNestedMixin()
-		{
-			var sheet = StyleSheet.Parse(@"
+        [Fact]
+        public void FuncNestedMixin()
+        {
+            var sheet = StyleSheet.Parse(@"
 $red: #f00;
 $borderColor: $red;
 
@@ -110,13 +106,10 @@ $borderColor: $red;
 
 div {
   @include hi(#fff);
-}
+}");
 
 
-");
-
-
-			Assert.Equal(@"div {
+            Assert.Equal(@"div {
   color: #cc0000;
   color: #ff6666;
 }
@@ -124,14 +117,14 @@ div div {
   color: #a11721;
   color: #cccccc;
 }", sheet.ToString());
-		}
+        }
 
 
 
-		[Fact]
-		public void Test99()
-		{
-			var ss = StyleSheet.Parse(@"div {
+        [Fact]
+        public void Test99()
+        {
+            var ss = StyleSheet.Parse(@"div {
   .text,
   .placeholderText {
     position: relative;
@@ -149,8 +142,8 @@ div div {
   }
 }");
 
-			
-			Assert.Equal(
+
+            Assert.Equal(
 @"div .text,
 div .placeholderText {
   position: relative;
@@ -166,16 +159,14 @@ div .placeholderText {
   -webkit-font-smoothing: antialiased;
   z-index: 2;
 }", ss.ToString());
-		}
+        }
 
+        [Fact]
+        public void Test53()
+        {
+            var ss = StyleSheet.FromFile(GetTestFile("test53.css"));
 
-
-		[Fact]
-		public void Test53()
-		{
-			var ss = StyleSheet.FromFile(GetTestFile("test53.css"));
-          
-			Assert.Equal(
+            Assert.Equal(
 @".block ::-webkit-input-placeholder {
   color: #cfcece;
   font-weight: 400;
@@ -261,9 +252,9 @@ div .placeholderText {
 .block .description { padding: 5px 250px 20px 225px; }", ss.ToString());
 
 
-		}
+        }
 
-		/*
+        /*
 		[Fact]
 		public void Test1()
 		{
@@ -302,5 +293,5 @@ div .placeholderText {
 }", rules[1].ToString());
 		}
 		*/
-	}
+    }
 }

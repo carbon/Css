@@ -3,15 +3,6 @@ using Xunit;
 
 namespace Carbon.Css.Parser.Tests
 {
-    public static class CssTokenExtensions
-
-    {
-        public static (TokenKind kind, string text) AsTuple(this CssToken token)
-        {
-            return (token.Kind, token.Text);
-        }
-    }
-
     public class TokenizerTests
     {
         [Fact]
@@ -113,14 +104,6 @@ namespace Carbon.Css.Parser.Tests
             Assert.Equal((TokenKind.BlockEnd, "}"), tokens[28].AsTuple());
             Assert.Equal(TokenKind.Whitespace, tokens[29].Kind);
             Assert.Equal((TokenKind.BlockEnd, "}"), tokens[30].AsTuple());
-
-
-
-            /*
-            Assert.Equal((TokenKind.Semicolon, ";"), tokens[11].AsTuple());
-            Assert.Equal((TokenKind.Whitespace), tokens[12].Kind);
-            Assert.Equal((TokenKind.BlockEnd, "}"), tokens[13].AsTuple());
-            */
         }
 
         [Fact]
@@ -157,27 +140,10 @@ namespace Carbon.Css.Parser.Tests
             Assert.Equal((TokenKind.Name, "blerg"),         tokens[16].AsTuple());
 
             Assert.Equal((TokenKind.Semicolon, ";"),        tokens[17].AsTuple());
-
-            /*
-            Assert.Equal((TokenKind.Name, "hi"), tokens[3].AsTuple());
-            Assert.Equal((TokenKind.Whitespace, " "), tokens[4].AsTuple());
-            Assert.Equal((TokenKind.BlockStart, "{"), tokens[5].AsTuple());
-            Assert.Equal((TokenKind.Whitespace), tokens[6].Kind);
-            Assert.Equal((TokenKind.Name, "color"), tokens[7].AsTuple());
-            Assert.Equal((TokenKind.Colon, ":"), tokens[8].AsTuple());
-            Assert.Equal((TokenKind.Whitespace, " "), tokens[9].AsTuple());
-            Assert.Equal((TokenKind.String, "red"), tokens[10].AsTuple());
-            Assert.Equal((TokenKind.Semicolon, ";"), tokens[11].AsTuple());
-            Assert.Equal((TokenKind.Whitespace), tokens[12].Kind);
-            Assert.Equal((TokenKind.BlockEnd, "}"), tokens[13].AsTuple());
-            */
         }
-
-
-
+       
         private static List<CssToken> GetTokens(string text)
         {
-            
             var tokenizer = new CssTokenizer(new SourceReader(text));
 
             var tokens = new List<CssToken>();
@@ -189,7 +155,6 @@ namespace Carbon.Css.Parser.Tests
             while (!tokenizer.IsEnd);
 
             return tokens;
-
         }
 
         [Fact]
@@ -199,12 +164,12 @@ namespace Carbon.Css.Parser.Tests
             
             Assert.Equal(27, tokens.Count);
 
-            Assert.Equal(TokenKind.LeftParenthesis, tokens[1].Kind);
-            Assert.Equal(TokenKind.Number, tokens[2].Kind);
-            Assert.Equal(TokenKind.Unit, tokens[3].Kind);
-            Assert.Equal(TokenKind.Whitespace, tokens[4].Kind);
-            Assert.Equal(TokenKind.Divide, tokens[5].Kind);
-            Assert.Equal(TokenKind.Whitespace, tokens[6].Kind);
+            Assert.Equal((TokenKind.LeftParenthesis, "("),   tokens[1].AsTuple());
+            Assert.Equal((TokenKind.Number,          "100"), tokens[2].AsTuple());
+            Assert.Equal((TokenKind.Unit,            "%"),   tokens[3].AsTuple());
+            Assert.Equal((TokenKind.Whitespace,      " "),   tokens[4].AsTuple());
+            Assert.Equal((TokenKind.Divide,          "/"),   tokens[5].AsTuple());
+            Assert.Equal((TokenKind.Whitespace,      " "),   tokens[6].AsTuple());
 
             /*
 			Assert.Equal(tokens[6].Kind, TokenKind.Number);

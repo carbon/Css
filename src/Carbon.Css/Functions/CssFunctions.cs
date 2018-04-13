@@ -118,7 +118,7 @@ namespace Carbon.Css
 				case NodeKind.Percentage : return ((CssMeasurement)value).Value / 100;
 				case NodeKind.Number     : return ((CssNumber)value).Value;
 
-				default: throw new Exception("Unknown numeric value: " + value);
+				default: throw new Exception("Unknown numeric value: " + value.Kind + ":" +  value);
 			}
 		}
 

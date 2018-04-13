@@ -1,7 +1,7 @@
-﻿namespace Carbon.Css.Tests
-{
-    using Xunit;
+﻿using Xunit;
 
+namespace Carbon.Css.Tests
+{
     public class PlaceholderTests : FixtureBase
     {
         [Fact]
@@ -15,17 +15,16 @@
 }
 ");
 
-
             Assert.Equal(
 @"@media only screen and (max-width: 770px) {
   ::-webkit-input-placeholder {
-    color: rgba(0, 0, 0, .2);
+    color: rgba(0, 0, 0, 0.2);
     -webkit-font-smoothing: antialiased;
   }
   :-ms-input-placeholder { color: red; }
 }", ss.ToString());
-
         }
+
         [Fact]
         public void PlaceholderTests1()
         {
@@ -62,7 +61,6 @@
             var ss = StyleSheet.Parse(@"
 //= support Safari >= 5
 .block ::placeholder { color: #cfcece ; font-weight: 400; }");
-
 
             Assert.Equal(
 @".block ::placeholder {

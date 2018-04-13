@@ -5,23 +5,24 @@ using Xunit;
 
 namespace Carbon.Css.Tests
 {
-	public class VariableTests
-	{
-		[Fact]
-		public void ParseVariables()
-		{
-			var text = @"$color: red;
-			
-			";
+    public class VariableTests
+    {
+        [Fact]
+        public void ParseAssignment()
+        {
+            var text = "$color: red;";
 
-			Assert.Equal(1, StyleSheet.Parse(text).Children.OfType<CssAssignment>().Count());
-		}
+            var assignment = StyleSheet.Parse(text).Children[0] as CssAssignment;
 
-		[Fact]
-		public void VariableTest1()
-		{
-			var sheet = StyleSheet.Parse(
-@"
+            Assert.Equal("color", assignment.Name);
+
+            Assert.Equal("red", assignment.Value.ToString());
+        }
+
+        [Fact]
+        public void VariableTest1()
+        {
+            var sheet = StyleSheet.Parse(@"
 $blue: #dceef7;
 $yellow: #fff5cc;
 
@@ -35,25 +36,24 @@ body {
 
             Assert.Equal("#dceef7", assignments.First(a => a.Name == "blue").Value.ToString());
 
-			Assert.Equal(2, assignments.Count());
+            Assert.Equal(2, assignments.Count());
 
-			Assert.Equal(
+            Assert.Equal(
 @"body {
   background-color: #dceef7;
   color: #fff5cc;
 }", sheet.ToString());
+        }
 
+        [Fact]
+        public void VariableTest3()
+        {
+            var dic = new Dictionary<string, CssValue>
+            {
+                ["monster"] = CssValue.Parse("red")
+            };
 
-		}
-
-		[Fact]
-		public void VariableTest3()
-		{
-            var dic = new Dictionary<string, CssValue>();
-
-            dic["monster"] = CssValue.Parse("red");
-
-			var sheet = StyleSheet.Parse(
+            var sheet = StyleSheet.Parse(
 @"
 $blue: #dceef7;
 $yellow: #fff5cc;
@@ -64,20 +64,21 @@ body {
   monster: $monster;
 }");
 
-			Assert.Equal(
+            Assert.Equal(
 @"body {
   background-color: #dceef7;
   color: #fff5cc;
   monster: red;
 }", sheet.ToString(dic));
-		}
+        }
 
         [Fact]
         public void DefinedTests()
         {
-            var dic = new Dictionary<string, CssValue>();
-
-            dic["monster"] = CssValue.Parse("purple");
+            var dic = new Dictionary<string, CssValue>
+            {
+                ["monster"] = CssValue.Parse("purple")
+            };
 
             // variable-exists
             var sheet = StyleSheet.Parse(
@@ -109,19 +110,17 @@ body {
 }");
 
             Assert.Equal(@"body { background-color: red; }", sheet.ToString(dic));
-
         }
 
-
-
         [Fact]
-		public void VariableTest4()
-		{
-            var dic = new Dictionary<string, CssValue>();
+        public void VariableTest4()
+        {
+            var dic = new Dictionary<string, CssValue>
+            {
+                ["monster"] = CssValue.Parse("purple")
+            };
 
-            dic["monster"] = CssValue.Parse("purple");
-
-			var sheet = StyleSheet.Parse(
+            var sheet = StyleSheet.Parse(
 @"
 $blue: #dceef7;
 $yellow: #fff5cc;
@@ -134,20 +133,20 @@ body {
   padding: $padding $padding-right $padding $padding;
 }");
 
-			Assert.Equal(
+            Assert.Equal(
 @"body {
   background-color: #dceef7;
   color: #fff5cc;
   monster: purple;
   padding: 10px 20px 10px 10px;
 }", sheet.ToString(dic));
-		}
+        }
 
 
-		[Fact]
-		public void VariableTest2()
-		{
-			var styles =
+        [Fact]
+        public void VariableTest2()
+        {
+            var styles =
 @"
 $addYellow: #fff5cc;
 $editBlue: #dceef7;
@@ -158,10 +157,10 @@ body { font-size: 14px; opacity: 0.5; }
 .rotatedBox { box-sizing: border-box; }
 			";
 
-			var sheet = StyleSheet.Parse(styles);
+            var sheet = StyleSheet.Parse(styles);
 
 
-			Assert.Equal(
+            Assert.Equal(
 @"body {
   font-size: 14px;
   opacity: 0.5;
@@ -171,6 +170,6 @@ body { font-size: 14px; opacity: 0.5; }
 .rotatedBox { box-sizing: border-box; }", sheet.ToString());
 
 
-		}
-	}
+        }
+    }
 }

@@ -1,15 +1,36 @@
 ﻿namespace Carbon.Css.Tests
 {
-	using System.IO;
+    using System.IO;
 
-	using Xunit;
+    using Xunit;
 
-	public class VendorTests : FixtureBase
-	{
-		[Fact]
-		public void Nested3()
-		{
-			var ss = StyleSheet.Parse(
+    public class VendorPrefixTests : FixtureBase
+    {
+        [Fact]
+        public void ParseWebkitPrefixedKeyframesRule()
+        {
+            var sheet = StyleSheet.Parse(@"
+@-webkit-keyframes fade {
+	from {opacity: 1;}
+	to {opacity: 0.25;}
+}");
+
+            var atRule = (sheet.Children[0] as UnknownRule);
+
+            Assert.Equal("-webkit-keyframes", atRule.Name);
+            Assert.Equal("fade", atRule.SelectorText);
+
+            Assert.Equal(
+@"@-webkit-keyframes fade {
+  from { opacity: 1; }
+  to { opacity: 0.25; }
+}", sheet.ToString());
+        }
+
+        [Fact]
+        public void Nested3()
+        {
+            var ss = StyleSheet.Parse(
 @"#networkLinks .block .emptyGuts,
 #networkLinks .block .populatedGuts,
 #networkLinks .block .editGuts {
@@ -17,24 +38,23 @@
   z-index: 100;
 }");
 
-			Assert.Equal(
+            Assert.Equal(
 @"#networkLinks .block .emptyGuts,
 #networkLinks .block .populatedGuts,
 #networkLinks .block .editGuts {
   cursor: default;
   z-index: 100;
 }", ss.ToString());
-		}
+        }
 
+        [Fact]
+        public void Nested()
+        {
+            var ss = StyleSheet.Parse(File.ReadAllText(GetTestFile("nested.css").FullName));
 
-		[Fact]
-		public void Nested()
-		{
-			var ss = StyleSheet.Parse(File.ReadAllText(GetTestFile("nested.css").FullName));
+            ss.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1);
 
-			ss.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1);
-
-			Assert.Equal(@"#networkLinks .block .edit:before {
+            Assert.Equal(@"#networkLinks .block .edit:before {
   font-family: 'carbonmade';
   font-size: 12px;
   line-height: 26px;
@@ -101,29 +121,26 @@
 #networkLinks .block .controls { padding: 5px 0 10px 210px; }", ss.ToString());
 
 
-		}
+        }
 
-		[Fact]
-		public void Transform()
-		{
-			var sheet = StyleSheet.Parse(
-@"
+        [Fact]
+        public void Transform()
+        {
+            var sheet = StyleSheet.Parse(@"
 body { 
   transform: rotate(90);
 }
 ");
 
-			sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1, BrowserInfo.Firefox1, BrowserInfo.IE9);
+            sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1, BrowserInfo.Firefox1, BrowserInfo.IE9);
 
-			Assert.Equal(@"body {
+            Assert.Equal(@"body {
   -moz-transform: rotate(90);
   -ms-transform: rotate(90);
   -webkit-transform: rotate(90);
   transform: rotate(90);
 }", sheet.ToString());
 
-		}
-	}
-
-
+        }
+    }
 }
