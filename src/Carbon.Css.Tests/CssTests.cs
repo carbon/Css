@@ -6,10 +6,206 @@ using Xunit;
 
 namespace Carbon.Css.Tests
 {
+    using System.Linq;
+    using Carbon.Css.Helpers;
     using Parser;
+
 
     public class CssTests : FixtureBase
     {
+        [Fact]
+        public void ParsePrintMedia()
+        {
+            var text = @"@media print {
+  *,
+  *::before,
+  *::after {
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+  a:not(.btn) {
+    text-decoration: underline;
+  }
+  abbr[title]::after {
+    content: "" ("" attr(title) "")"";
+  }
+  pre {
+    white-space: pre-wrap !important;
+  }
+  pre,
+  blockquote {
+    border: 1px solid #adb5bd;
+    page-break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+  @page {
+    size: a3;
+  }
+  body {
+    min-width: 992px !important;
+  }
+  .container {
+    min-width: 992px !important;
+  }
+  .navbar {
+    display: none;
+  }
+  .badge {
+    border: 1px solid #000;
+  }
+  .table {
+    border-collapse: collapse !important;
+  }
+  .table td,
+  .table th {
+    background-color: #fff !important;
+  }
+  .table-bordered th,
+  .table-bordered td {
+    border: 1px solid #dee2e6 !important;
+  }
+}";
+
+            var sheet = StyleSheet.Parse(text);
+
+
+            var mediaRule = sheet.Children[0] as MediaRule;
+
+            Assert.Equal(17, mediaRule.Children.Count);
+
+
+        }
+
+        [Fact]
+        public void ChainedColonSelector()
+        {
+            var text = @"
+.card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top,
+.card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom { color: red; }".Trim();
+
+            var sheet = StyleSheet.Parse(text);
+
+
+            Assert.Equal(".card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top, .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom", (sheet.Children[0] as StyleRule).Selector.ToString());
+        }
+
+        [Fact]
+        public void A()
+        {
+            var text = @"
+@media (min-width: 576px) {
+  .card-group {
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+  }
+  .card-group > .card {
+    -ms-flex: 1 0 0%;
+    flex: 1 0 0%;
+    margin-bottom: 0;
+  }
+  .card-group > .card + .card {
+    margin-left: 0;
+    border-left: 0;
+  }
+  .card-group > .card:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .card-group > .card:first-child .card-img-top,
+  .card-group > .card:first-child .card-header {
+    border-top-right-radius: 0;
+  }
+  .card-group > .card:first-child .card-img-bottom,
+  .card-group > .card:first-child .card-footer {
+    border-bottom-right-radius: 0;
+  }
+  .card-group > .card:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .card-group > .card:last-child .card-img-top,
+  .card-group > .card:last-child .card-header {
+    border-top-left-radius: 0;
+  }
+  .card-group > .card:last-child .card-img-bottom,
+  .card-group > .card:last-child .card-footer {
+    border-bottom-left-radius: 0;
+  }
+  .card-group > .card:only-child {
+    border-radius: 0.25rem;
+  }
+  .card-group > .card:only-child .card-img-top,
+  .card-group > .card:only-child .card-header {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+  .card-group > .card:only-child .card-img-bottom,
+  .card-group > .card:only-child .card-footer {
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+  .card-group > .card:not(:first-child):not(:last-child):not(:only-child) {
+    border-radius: 0;
+  }
+  .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top,
+  .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom,
+  .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-header,
+  .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-footer {
+    border-radius: 0;
+  }
+}";
+
+
+            var sheet = StyleSheet.Parse(text);
+
+            var rule = sheet.Children[0] as MediaRule;
+
+            Assert.Equal(14, rule.Children.Count);
+        }
+
+        [Fact]
+        public void QuotedSvgUrl()
+        {
+            var text = @".custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+  background-image: url(""data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"");
+        }";
+
+            var sheet = StyleSheet.Parse(text);
+
+            var rule = sheet.Children[0] as StyleRule;
+
+            Assert.Equal(".custom-checkbox .custom-control-input:checked ~ .custom-control-label::after", rule.Selector.ToString());
+
+
+        }
+
+        [Fact]
+        public void ParseBootstrap()
+        {
+            // https://github.com/carbon/Css/issues/1
+            var text = File.ReadAllText(GetTestFile("bootstrap.css").FullName);
+
+            var sheet = StyleSheet.Parse(text);
+
+            Assert.Equal(1088, sheet.Children.Count);
+        }
+
         [Fact]
         public void ParseProject()
         {
@@ -139,7 +335,7 @@ div { cursor: zoom-out }"
 @"//= support Firefox >= 5
 //= support Safari >= 1
 div { cursor: grab }"
-);           
+);
 
             Assert.Equal(
 @"div {
@@ -156,7 +352,7 @@ div { cursor: grab }"
             var sheet = StyleSheet.Parse(
 @"//= support Firefox >= 5
 //= support Chrome >= 1
-div { transition: width: 5px; }"
+div { transition: width 1s }"
 );
 
             /*
@@ -168,9 +364,9 @@ div { transition: width: 5px; }"
 
             Assert.Equal(
                 expected: @"div {
-  -moz-transition: width: 5px;
-  -webkit-transition: width: 5px;
-  transition: width: 5px;
+  -moz-transition: width 1s;
+  -webkit-transition: width 1s;
+  transition: width 1s;
 }",
                 actual: sheet.ToString()
             );
@@ -254,42 +450,7 @@ div { transition: width: 5px; }"
 
         }
 
-        [Fact]
-        public void CalcTest4()
-        {
-            var tokenizer = new CssTokenizer(new SourceReader("calc(100% / 3 - 2 * 1em - 2 * 1px)"));
-
-            var tokens = new List<CssToken>();
-
-            do
-            {
-                tokens.Add(tokenizer.Read());
-            }
-            while (!tokenizer.IsEnd);
-
-            Assert.Equal(27, tokens.Count);
-
-            Assert.Equal(TokenKind.LeftParenthesis, tokens[1].Kind);
-            Assert.Equal(TokenKind.Number, tokens[2].Kind);
-            Assert.Equal(TokenKind.Unit, tokens[3].Kind);
-            Assert.Equal(TokenKind.Whitespace, tokens[4].Kind);
-            Assert.Equal(TokenKind.Divide, tokens[5].Kind);
-            Assert.Equal(TokenKind.Whitespace, tokens[6].Kind);
-
-            /*
-			Assert.Equal(tokens[6].Kind, TokenKind.Number);
-			Assert.Equal(tokens[7].Kind, TokenKind.Whitespace);
-			Assert.Equal(tokens[8].Kind, TokenKind.Subtract);
-			Assert.Equal(tokens[9].Kind, TokenKind.Add);
-			*/
-
-            var styles = "main { margin: 0.5in; width: calc(100% / 3 - 2 * 1em - 2 * 1px); }";
-
-            Assert.Equal(@"main {
-  margin: 0.5in;
-  width: calc(100% / 3 - 2 * 1em - 2 * 1px);
-}", StyleSheet.Parse(styles).ToString());
-        }
+     
 
 
         [Fact]
@@ -325,6 +486,7 @@ div { transition: width: 5px; }"
             Assert.Equal("body { background-color: rgba(255, 255, 255, 0.5); }", value.ToString());
 
         }
+
 
         [Fact]
         public void ParseEmpty()
@@ -508,7 +670,7 @@ div { transition: width: 5px; }"
         }
 
         [Fact]
-        public void Parse2()
+        public void ParseUnquotedUrl()
         {
             var styles = @"			
 body { font-size: 14px; }
@@ -517,6 +679,8 @@ p { font-color: red; background: url(http://google.com); }
 			";
 
             var parser = new CssParser(styles);
+
+
 
 
             foreach (var rule in parser.ReadRules())
