@@ -17,4 +17,8 @@ html {
 
 ");
 
+var writer = new StringWriter();
+
+css.WriteTo(writer);
+
 ```
