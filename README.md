@@ -1,6 +1,6 @@
 # Carbon.Css
 
-A general purpose CSS parser, auto-prefixer, and SCSS compilier for .NET Standard.
+A general purpose CSS parser, auto-prefixer, and SCSS compiler for .NET Standard.
 
 
 # Usage
