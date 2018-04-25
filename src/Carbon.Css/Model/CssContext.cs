@@ -5,23 +5,32 @@ namespace Carbon.Css
 {
     public class CssContext
     {
-        private CompatibilityTable compatibility = new CompatibilityTable();
+        private CompatibilityTable compatibility = default;
 
         private BrowserInfo[] browserSupport = null;
+        private Dictionary<string, MixinNode> mixins;
 
-        public Dictionary<string, MixinNode> Mixins { get; } = new Dictionary<string, MixinNode>();
+        public Dictionary<string, MixinNode> Mixins
+        {
+            get => mixins ?? (mixins = new Dictionary<string, MixinNode>());
+        }
 
         public BrowserInfo[] BrowserSupport => browserSupport;
 
         internal bool TryGetBrowser(BrowserType type, out BrowserInfo browser)
         {
-            foreach (var b in browserSupport)
+            if (browserSupport != null)
             {
-                if (b.Type == type)
+                for (int i = 0; i < browserSupport.Length; i++)
                 {
-                    browser = b;
+                    ref BrowserInfo b = ref browserSupport[i];
 
-                    return true;
+                    if (b.Type == type)
+                    {
+                        browser = b;
+
+                        return true;
+                    }
                 }
             }
 
@@ -47,10 +56,10 @@ namespace Carbon.Css
             {
                 switch (browser.Type)
                 {
-                    case BrowserType.Chrome  : chrome = browser.Version;    break;
-                    case BrowserType.Firefox : firefox = browser.Version;   break;
-                    case BrowserType.IE      : ie = browser.Version;        break;
-                    case BrowserType.Safari  : safari = browser.Version;    break;
+                    case BrowserType.Chrome  : chrome  = browser.Version; break;
+                    case BrowserType.Firefox : firefox = browser.Version; break;
+                    case BrowserType.IE      : ie      = browser.Version; break;
+                    case BrowserType.Safari  : safari  = browser.Version; break;
                 }
             }
 
