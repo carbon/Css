@@ -4,13 +4,15 @@
     {
         public CharsetRule(string text)
         {
-            this.Text = text;
+            this.Encoding = text;
         }
 
         public override RuleType Type => RuleType.Charset;
         
-        public string Text { get; }
+        public string Encoding { get; }
     }
-
-    // @charset "UTF-8";
 }
+
+// @charset "UTF-8";
+
+// https://www.iana.org/assignments/character-sets/character-sets.xhtml

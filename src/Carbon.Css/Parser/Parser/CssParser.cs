@@ -154,13 +154,12 @@ namespace Carbon.Css.Parser
 
         public PageRule ReadPageRule()
         {
-
             var rule = new PageRule();
 
             switch (Current.Kind)
             {
                 case TokenKind.BlockStart: ReadBlock(rule); break; // {
-                case TokenKind.Semicolon: tokenizer.Read(); break; // ;
+                case TokenKind.Semicolon : tokenizer.Read(); break; // ;
             }
 
             return rule;

@@ -40,7 +40,10 @@ namespace Carbon.Css
 
         public CssValue GetValue(string name, int counter = 0)
         {
-            if (counter > 50) throw new Exception($"recussion detected: {counter}");
+            if (counter > 50)
+            {
+                throw new Exception($"recussion detected: {counter}");
+            }
 
             if (items.TryGetValue(name, out CssValue value))
             {

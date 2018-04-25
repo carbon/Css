@@ -71,7 +71,7 @@
 
 		// Trivia
 		Directive,		// //= *
-		Whitespace,
+		Whitespace,    
 		Comment,
 
 		// Binary Operators ------------------------

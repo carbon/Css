@@ -135,8 +135,7 @@ namespace Carbon.Css
             }
         }
 
-        public bool ToBoolean(object value)
-            => (value is CssBoolean b) ? b.Value : false;
+        public bool ToBoolean(object value) => (value is CssBoolean b) ? b.Value : false;
 
         public CssValue EvalulateExpression(CssValue expression)
         {
@@ -170,12 +169,12 @@ namespace Carbon.Css
 
             switch (expression.Operator)
             {
-                case BinaryOperator.Equals      : return new CssBoolean(leftS == rightS);
-                case BinaryOperator.NotEquals   : return new CssBoolean(leftS != rightS);
-                case BinaryOperator.Gt          : return new CssBoolean(float.Parse(leftS) > float.Parse(rightS));
-                case BinaryOperator.Gte         : return new CssBoolean(float.Parse(leftS) >= float.Parse(rightS));
-                case BinaryOperator.Lt          : return new CssBoolean(float.Parse(leftS) < float.Parse(rightS));
-                case BinaryOperator.Lte         : return new CssBoolean(float.Parse(leftS) <= float.Parse(rightS));
+                case BinaryOperator.Equals    : return new CssBoolean(leftS == rightS);
+                case BinaryOperator.NotEquals : return new CssBoolean(leftS != rightS);
+                case BinaryOperator.Gt        : return new CssBoolean(float.Parse(leftS) > float.Parse(rightS));
+                case BinaryOperator.Gte       : return new CssBoolean(float.Parse(leftS) >= float.Parse(rightS));
+                case BinaryOperator.Lt        : return new CssBoolean(float.Parse(leftS) < float.Parse(rightS));
+                case BinaryOperator.Lte       : return new CssBoolean(float.Parse(leftS) <= float.Parse(rightS));
             }
 
             return new CssBoolean(true);
@@ -202,7 +201,7 @@ namespace Carbon.Css
 
             if (absolutePath[0] == '/')
             {
-                absolutePath = absolutePath.TrimStart(Seperators.ForwardSlash);
+                absolutePath = absolutePath.Substring(1);
             }
 
             // Assume to be scss if there is no extension
@@ -302,7 +301,7 @@ namespace Carbon.Css
         {
             var i = 0;
 
-            foreach (var value in list)
+            foreach (CssValue value in list)
             {
                 if (i != 0)
                 {
@@ -361,7 +360,10 @@ namespace Carbon.Css
                     // Break out comma seperated values
                     foreach (var v in list)
                     {
-                        foreach (var item in GetArgs(v)) yield return item;
+                        foreach (var item in GetArgs(v))
+                        {
+                            yield return item;
+                        }
                     }
 
                     break;
@@ -636,14 +638,16 @@ namespace Carbon.Css
             {
                 var prefixes = BrowserPrefixKind.None;
 
-                foreach (var browser in browserSupport)
+                for (int i = 0; i < browserSupport.Length; i++)
                 {
+                    ref BrowserInfo browser = ref browserSupport[i];
+
                     // Skip the prefix if we've already added it
                     if (prefixes.HasFlag(browser.Prefix.Kind)) continue;
 
                     if (!prop.Compatibility.HasPatch(declaration, browser)) continue;
 
-                    var patch = prop.Compatibility.GetPatch(declaration, browser);
+                    CssPatch patch = prop.Compatibility.GetPatch(declaration, browser);
 
                     Indent(level);
 
@@ -748,7 +752,10 @@ namespace Carbon.Css
         {
             includeCount++;
 
-            if (includeCount > 1000) throw new Exception("Exceded include limit of 1,000");
+            if (includeCount > 1000)
+            {
+                throw new Exception("Exceded include limit of 1,000");
+            }
 
             if (!context.Mixins.TryGetValue(include.Name, out MixinNode mixin))
             {
@@ -782,20 +789,20 @@ namespace Carbon.Css
 
         public CssScope GetScope(IReadOnlyList<CssParameter> paramaters, CssValue args)
         {
-            var list = new List<CssValue>();
+            CssValue[] list = null;
 
             if (args != null)
             {
-                var valueList = args as CssValueList;
-
-                if (valueList == null)
+                if (args is CssValueList valueList)
                 {
-                    list.Add(args); // Single Value
+                    if (valueList.Seperator == ValueSeperator.Comma)
+                    {
+                        list = valueList.OfType<CssValue>().ToArray();
+                    }
                 }
-
-                if (valueList != null && valueList.Seperator == ValueSeperator.Comma)
+                else
                 {
-                    list.AddRange(valueList.OfType<CssValue>());
+                    list = new[] { args }; // Single Value
                 }
             }
 
@@ -803,9 +810,9 @@ namespace Carbon.Css
 
             var i = 0;
 
-            foreach (var p in paramaters)
+            foreach (CssParameter p in paramaters)
             {
-                var val = (list != null && list.Count >= i + 1) ? list[i] : p.DefaultValue;
+                var val = (list != null && list.Length >= i + 1) ? list[i] : p.DefaultValue;
 
                 child.Add(p.Name, val);
 

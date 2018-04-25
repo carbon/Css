@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Carbon.Css.Parser
 {
     public class SourceReader : IDisposable
     {
-        const char EofChar = '\0';
+        private const char EofChar = '\0';
 
         private readonly TextReader textReader;
         private char current;
@@ -28,9 +29,7 @@ namespace Carbon.Css.Parser
         public char Current => current;
 
         public bool IsEof => current == EofChar;
-
-        public bool IsWhiteSpace => char.IsWhiteSpace(current);
-
+        
         public int Position => position;
 
         public char Peek()
@@ -76,19 +75,12 @@ namespace Carbon.Css.Parser
 
             if (marked != -1 && (marked <= this.position))
             {
-                buffer.Append(current);
+                sb.Append(current);
             }
 
             int charCode = textReader.Read(); // -1 if there are no more chars to read (e.g. stream has ended)
 
-            if (charCode > 0)
-            {
-                this.current = (char)charCode;
-            }
-            else
-            {
-                this.current = EofChar;
-            }
+            this.current = (charCode > 0) ? (char)charCode : EofChar;
 
             position++;
 
@@ -97,7 +89,7 @@ namespace Carbon.Css.Parser
 
         #region Mark
 
-        private readonly StringBuffer buffer = new StringBuffer();
+        private readonly StringBuilder sb = new StringBuilder();
 
         private int markStart = -1;
         private int marked = -1;
@@ -122,7 +114,7 @@ namespace Carbon.Css.Parser
         {
             marked = -1;
 
-            return buffer.Extract();
+            return sb.Extract();
         }
 
         #endregion

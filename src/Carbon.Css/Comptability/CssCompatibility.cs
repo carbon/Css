@@ -43,10 +43,7 @@
             return PatchFactory.PrefixNameAndValue.Patch(browser, declaration);
         }
 
-        public virtual bool HasPatch(CssDeclaration declaration, in BrowserInfo browser)
-        {
-            return IsPrefixed(browser);
-        }
+        public virtual bool HasPatch(CssDeclaration declaration, in BrowserInfo browser) => IsPrefixed(browser);
 
         public bool IsPrefixed(in BrowserInfo browser)
         {

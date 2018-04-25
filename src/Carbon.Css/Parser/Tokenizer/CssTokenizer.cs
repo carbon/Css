@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Carbon.Css.Parser
 {
@@ -29,7 +30,7 @@ namespace Carbon.Css.Parser
         // Returns the current token and advances to the next
         public CssToken Read()
         {
-            if (isEnd) throw new Exception("Already ready the last token");
+            if (isEnd) throw new EndOfStreamException("Already ready the last token");
 
             var c = current;
 
@@ -46,7 +47,6 @@ namespace Carbon.Css.Parser
             return current;
         }
 
-
         private readonly Stack<CssToken> stack = new Stack<CssToken>();
 
         private CssToken ReadNext()
@@ -58,14 +58,13 @@ namespace Carbon.Css.Parser
                 return stack.Pop();
             }
 
+            if (char.IsWhiteSpace(reader.Current) || reader.Current == '\uFEFF')
+            {
+                return ReadTrivia();
+            }
+
             switch (reader.Current)
             {
-                case '\t':
-                case '\n':
-                case '\r':
-                case '\uFEFF':
-                case ' ': return ReadWhitespace();
-
                 case '@': return new CssToken(TokenKind.AtSymbol, reader.Read(), reader.Position);
 
                 case '$':
@@ -200,7 +199,7 @@ namespace Carbon.Css.Parser
         {
             reader.Mark();
 
-            while (!reader.IsWhiteSpace &&
+            while (!char.IsWhiteSpace(reader.Current) &&
                 reader.Current != '{' && 
                 reader.Current != '}' && 
                 reader.Current != '(' && 
@@ -223,7 +222,7 @@ namespace Carbon.Css.Parser
         {
             reader.Mark();
 
-            while (!reader.IsWhiteSpace &&
+            while (!char.IsWhiteSpace(reader.Current) &&
                 reader.Current != '{' &&
                 reader.Current != '}' && 
                 reader.Current != '(' && 
@@ -276,7 +275,7 @@ namespace Carbon.Css.Parser
 
         private CssToken MaybeColonOrPseudoClass(CssToken colon)
         {
-            if (reader.IsWhiteSpace)
+            if (char.IsWhiteSpace(reader.Current))
             {
                 mode.Enter(LexicalMode.Value);
 
@@ -285,7 +284,7 @@ namespace Carbon.Css.Parser
 
             reader.Mark();
             
-            while (!reader.IsWhiteSpace &&
+            while (!char.IsWhiteSpace(reader.Current) &&
                 reader.Current != '{' &&
                 reader.Current != '}' &&
                 reader.Current != ')' &&
@@ -315,15 +314,13 @@ namespace Carbon.Css.Parser
 
                 return colon;
             }
-
-
         }
 
         private CssToken ReadValue()
         {
             reader.Mark();
 
-            while (!reader.IsWhiteSpace && 
+            while (!char.IsWhiteSpace(reader.Current) && 
                 reader.Current != '{' &&
                 reader.Current != '}'&& 
                 reader.Current != ')' && 
@@ -367,11 +364,13 @@ namespace Carbon.Css.Parser
             return new CssToken(TokenKind.Number, reader.Unmark(), reader.MarkStart);
         }
 
-        private CssToken ReadWhitespace()
+        private CssToken ReadTrivia()
         {
             reader.Mark();
 
-            while (reader.IsWhiteSpace && !reader.IsEof)
+            // \uFEFF : zero with non-breaking space
+
+            while ((char.IsWhiteSpace(reader.Current) || reader.Current == '\uFEFF') && !reader.IsEof)
             {
                 reader.Next();
             }

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace Carbon.Css
 {
-    public class RewriterCollection : Collection<ICssRewriter>
+    public sealed class RewriterCollection : Collection<ICssRewriter>
     {
         public IEnumerable<CssRule> Rewrite(CssRule rule, int index = 0)
         {
