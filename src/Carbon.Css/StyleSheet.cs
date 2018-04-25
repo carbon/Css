@@ -31,6 +31,8 @@ namespace Carbon.Css
         public static StyleSheet Parse(string text, CssContext context = null) =>
             Parse(new StringReader(text), context);
 
+        private static readonly char[] trimBrowserChars = { ' ', '+' };
+
         public static StyleSheet Parse(TextReader reader, CssContext context = null)
         {
             var sheet = new StyleSheet(context ?? new CssContext());
@@ -64,7 +66,7 @@ namespace Carbon.Css
                                     browsers = new List<BrowserInfo>();
                                 }
 
-                                var browserVersion = float.Parse(parts[parts.Length - 1].Trim(' ', '+'));
+                                var browserVersion = float.Parse(parts[parts.Length - 1].Trim(trimBrowserChars));
 
                                 browsers.Add(new BrowserInfo(browserType, browserVersion));
                             }
