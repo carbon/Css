@@ -2,7 +2,7 @@
 
 namespace Carbon.Css.Tests
 {
-    public class PlaceholderTests : FixtureBase
+    public class PlaceholderTests
     {
         [Fact]
         public void InsideMediaBlock()

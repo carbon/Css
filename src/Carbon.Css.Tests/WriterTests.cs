@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Carbon.Css.Tests
 {
-    public class WriterTests : FixtureBase
+    public class WriterTests
     {
         [Fact]
         public void WriteStyle()

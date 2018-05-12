@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Carbon.Css.Tests
 {
-    public class MediaTests : FixtureBase
+    public class MediaTests
     {
         [Fact]
         public void RgbaTest()

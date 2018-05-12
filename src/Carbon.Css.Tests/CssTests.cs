@@ -6,8 +6,22 @@ namespace Carbon.Css.Tests
 {
     using Parser;
 
-    public class CssTests : FixtureBase
+    public class CssTests
     {
+        [Fact]
+        public void Test1()
+        {
+            var ss = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("test1.css").FullName));
+
+            var writer = new StringWriter();
+
+            ss.WriteTo(writer);
+
+            // throw new System.Exception(ss.ToString());
+
+            // throw new System.Exception(ss.ToString());
+        }
+
         [Fact]
         public void ParsePrintMedia()
         {
@@ -192,7 +206,7 @@ namespace Carbon.Css.Tests
         public void ParseBootstrap()
         {
             // https://github.com/carbon/Css/issues/1
-            var text = File.ReadAllText(GetTestFile("bootstrap.css").FullName);
+            var text = File.ReadAllText(TestHelper.GetTestFile("bootstrap.css").FullName);
 
             var sheet = StyleSheet.Parse(text);
 
@@ -204,18 +218,18 @@ namespace Carbon.Css.Tests
         {
             Assert.Throws<UnbalancedBlock>(() =>
             {
-                StyleSheet.Parse(File.ReadAllText(GetTestFile("project.css").FullName));
+                StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("project.css").FullName));
             });
         }
 
         [Fact]
         public void ParseMixins()
         {
-            var ss = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins.css").FullName));
+            var ss = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins.css").FullName));
 
             Assert.Equal(6, ss.Context.Mixins.Count);
 
-            var fontText = File.ReadAllText(GetTestFile("fonts.css").FullName);
+            var fontText = File.ReadAllText(TestHelper.GetTestFile("fonts.css").FullName);
 
             var ss2 = StyleSheet.Parse(fontText, ss.Context);
         }
@@ -615,7 +629,6 @@ p { font-color: red; background: url(http://google.com); }
             var sheet = StyleSheet.Parse(styles);
 
             var rule = (StyleRule)sheet.Children[0];
-
 
             Assert.Equal("http://google.com", ((CssFunction)rule.GetDeclaration("background").Value).Arguments.ToString());
         }

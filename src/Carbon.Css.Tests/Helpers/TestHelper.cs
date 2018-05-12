@@ -3,9 +3,9 @@ using System.IO;
 
 namespace Carbon.Css.Tests
 {
-    public class FixtureBase
+    public static class TestHelper
     {
-        public FileInfo GetTestFile(string name)
+        public static FileInfo GetTestFile(string name)
         {
             var b = new DirectoryInfo(AppContext.BaseDirectory).Parent.Parent.Parent.FullName;
 

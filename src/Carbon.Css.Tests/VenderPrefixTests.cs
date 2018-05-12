@@ -4,7 +4,7 @@
 
     using Xunit;
 
-    public class VendorPrefixTests : FixtureBase
+    public class VendorPrefixTests
     {
         [Fact]
         public void ParseWebkitPrefixedKeyframesRule()
@@ -50,7 +50,7 @@
         [Fact]
         public void Nested()
         {
-            var ss = StyleSheet.Parse(File.ReadAllText(GetTestFile("nested.css").FullName));
+            var ss = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("nested.css").FullName));
 
             ss.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1);
 

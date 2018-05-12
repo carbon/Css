@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Carbon.Css.Tests
 {
-    public class MixinTests : FixtureBase
+    public class MixinTests
     {
         [Fact]
         public void MixinTest19()
@@ -124,7 +124,7 @@ h6 {
         [Fact]
         public void ParseMixin7()
         {
-            var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
+            var mixins = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins2.css").FullName));
 
             Assert.Equal(13, mixins.Context.Mixins.Count);
 
@@ -162,7 +162,7 @@ h6 {
         [Fact]
         public void ParseMixin3()
         {
-            var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
+            var mixins = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins2.css").FullName));
 
             Assert.Equal(13, mixins.Context.Mixins.Count);
 
@@ -187,7 +187,7 @@ h6 {
         [Fact]
         public void ParseMixin4()
         {
-            var mixins = StyleSheet.Parse(File.ReadAllText(GetTestFile("mixins2.css").FullName));
+            var mixins = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins2.css").FullName));
 
             Assert.Equal(13, mixins.Context.Mixins.Count);
 
