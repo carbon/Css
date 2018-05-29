@@ -14,6 +14,7 @@
         Selector,
         Assignment,
         Variable,
+        InterpolatedString,
 
         // Values
         ValueList,

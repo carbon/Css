@@ -22,47 +22,5 @@
             return block;
         }
     }
-
-    /*
-	public class EachBlock : CssNode
-	{
-		public EachBlock(string variableName, CssValue list)
-			: base(NodeKind.Each)
-		{
-			VariableName = variableName;
-			List = list;
-		}
-
-		public string Variable { get; }
-
-		public CssValue List { get; }
-	}
-
-	public class ForBlock : CssNode
-	{
-		public ForBlock()
-			: base(NodeKind.For)
-		{ }
-
-		public CssValue Variable { get; }
-
-		public CssVariable List { get; }
-	}
-
-	public class WhileBlock : CssNode
-	{
-		public WhileBlock()
-			: base(NodeKind.While)
-		{ }
-	}
-	*/
+	
 }
-
-/*
-@each $current-color in $colors-list {
-    $i: index($colors-list, $current-color);
-    .stuff-#{$i} { 
-        color: $current-color;
-    }
-}
-*/
