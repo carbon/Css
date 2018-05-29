@@ -2,20 +2,21 @@
 {
     public readonly struct CssUnit
     {
-        private static readonly CssUnit CH   = new CssUnit("ch",   NodeKind.Length);
-        private static readonly CssUnit CM   = new CssUnit("cm",   NodeKind.Length);
-        private static readonly CssUnit EM   = new CssUnit("em",   NodeKind.Length);
-        private static readonly CssUnit EX   = new CssUnit("ex",   NodeKind.Length);
-        private static readonly CssUnit PX   = new CssUnit("px",   NodeKind.Length);
-        private static readonly CssUnit REM  = new CssUnit("rem",  NodeKind.Length);
-        private static readonly CssUnit VH   = new CssUnit("vh",   NodeKind.Length);
-        private static readonly CssUnit VW   = new CssUnit("vw",   NodeKind.Length);
-        private static readonly CssUnit VMIN = new CssUnit("vmin", NodeKind.Length);
+        public static readonly CssUnit Number = new CssUnit("",     NodeKind.Number);
+        public static readonly CssUnit CH     = new CssUnit("ch",   NodeKind.Length);
+        public static readonly CssUnit CM     = new CssUnit("cm",   NodeKind.Length);
+        public static readonly CssUnit EM     = new CssUnit("em",   NodeKind.Length);
+        public static readonly CssUnit EX     = new CssUnit("ex",   NodeKind.Length);
+        public static readonly CssUnit PX     = new CssUnit("px",   NodeKind.Length);
+        public static readonly CssUnit REM    = new CssUnit("rem",  NodeKind.Length);
+        public static readonly CssUnit VH     = new CssUnit("vh",   NodeKind.Length);
+        public static readonly CssUnit VW     = new CssUnit("vw",   NodeKind.Length);
+        public static readonly CssUnit VMIN   = new CssUnit("vmin", NodeKind.Length);
 
-        private static readonly CssUnit Percentage = new CssUnit("%", NodeKind.Percentage);
+        public static readonly CssUnit Percentage = new CssUnit("%", NodeKind.Percentage);
 
-        private static readonly CssUnit S = new CssUnit("s", NodeKind.Time);
-        private static readonly CssUnit MS = new CssUnit("ms", NodeKind.Time);
+        public static readonly CssUnit S = new CssUnit("s", NodeKind.Time);
+        public static readonly CssUnit MS = new CssUnit("ms", NodeKind.Time);
 
         internal CssUnit(string name, NodeKind kind)
         {
@@ -32,10 +33,10 @@
             switch (name)
             {
                 // <length>
-                case "ch": return CH;    // width of the "0" (ZERO, U+0030) glyph in the element's font
+                case "ch": return CH;     // width of the "0" (ZERO, U+0030) glyph in the element's font
                 case "cm": return CM;
-                case "em": return EM;    // font size of the element
-                case "ex": return EX;    // x-height of the element's font
+                case "em": return EM;     // font size of the element
+                case "ex": return EX;     // x-height of the element's font
                 case "rem": return REM;   // font size of the root element
                 case "vh": return VH;
                 case "vw": return VW;

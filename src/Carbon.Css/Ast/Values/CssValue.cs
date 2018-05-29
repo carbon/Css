@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Carbon.Css
 {
     using Parser;
 
-    // Single value
     public abstract class CssValue : CssNode
     {
         public CssValue(NodeKind kind)
@@ -14,15 +14,66 @@ namespace Carbon.Css
 
         public static CssValue Parse(string text)
         {
-            using (var reader = new SourceReader(new StringReader(text)))
+            if (text.Length == 0)
             {
-                var tokenizer = new CssTokenizer(reader, LexicalMode.Value);
+                throw new ArgumentException("Must not be empty", nameof(text));
+            }
 
+            if (char.IsDigit(text[0]) && TryParseNumberOrMeasurement(text, out var value))
+            {
+                return value;
+            }
+
+            var reader = new SourceReader(new StringReader(text));
+
+            using (var tokenizer = new CssTokenizer(reader, LexicalMode.Value))
+            { 
                 var parser = new CssParser(tokenizer);
-
+                
                 return parser.ReadValueList();
             }
         }
+
+        // 60px
+        // 6.5em
+
+        private static bool TryParseNumberOrMeasurement(string text, out CssValue value)
+        {
+            int unitIndex = -1;
+
+            char point;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                point = text[i];
+
+                if (point == ' ' || point == ',')
+                {
+                    value = null;
+                    return false;
+                }
+
+                if (char.IsNumber(point) || point == '.')
+                {
+                }
+                else if (unitIndex == -1)
+                {
+                    unitIndex = i;
+                }
+            }
+
+            if (unitIndex > 0)
+            {
+                value = new CssUnitValue(double.Parse(text.Substring(0, unitIndex)), CssUnit.Get(text.Substring(unitIndex)));
+            }
+            else
+            {
+                value = new CssUnitValue(double.Parse(text), CssUnit.Number);
+            }
+
+            return true;
+        }
+    
 
         public static CssValue FromComponents(IEnumerable<CssValue> components)
         {

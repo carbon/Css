@@ -1,68 +1,74 @@
 ﻿namespace Carbon.Css
 {
-	using System;
+    using System;
 
-	public sealed class CssMeasurement : CssValue
+    public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
 	{
-		private readonly float value;
-		private readonly CssUnit unit;
+        public static readonly CssUnitValue Zero = new CssUnitValue(0, CssUnit.Number);
 
-		public CssMeasurement(float value, CssUnit unit)
+		public CssUnitValue(double value, CssUnit unit)
 			: base(unit.Kind)
 		{
-			this.value = value;
-			this.unit	= unit;
+			Value = value;
+		    Unit  = unit;
 		}
 
-		public float Value => value;
+		public double Value { get; }
 
-		public CssUnit Unit => unit;
+		public CssUnit Unit { get; }
 
-		public override string ToString() => value + unit.Name;
+		public override string ToString() => Value + Unit.Name;
 
-		public override CssNode CloneNode() => new CssMeasurement(value, unit);
+		public override CssNode CloneNode() => new CssUnitValue(Value, Unit);
 
 		#region Operators
 
-		public CssValue Multiply(CssValue node)
+        // Subtract
+        // Div
+        // Min
+        // Max
+
+		public CssValue Multiply(CssValue other)
 		{
-			if (node.Kind == NodeKind.Number)
+			if (other.Kind == NodeKind.Percentage)
 			{
-				return new CssMeasurement(this.value * ((CssNumber)node).Value, unit);
-			}
-			else if (node.Kind == NodeKind.Percentage)
-			{
-				return new CssMeasurement(this.value * (((CssNumber)node).Value / 100), unit);
+				return new CssUnitValue(Value * (((CssUnitValue)other).Value / 100), Unit);
             }
-			else if (node is CssMeasurement measurement)
+			else if (other is CssUnitValue measurement)
             {
-                if (node.Kind == this.Kind)
+                if (other.Kind == Kind || other.Kind == NodeKind.Number)
                 {
-                    return new CssMeasurement(this.value * measurement.value, measurement.unit);
+                    return new CssUnitValue(Value * measurement.Value, measurement.Unit);
                 }
             }
 
             throw new Exception("cannot multiply types");
 		}
 
-		public CssValue Add(CssValue node)
+		public CssValue Add(CssValue other)
 		{
-			if (node.Kind == NodeKind.Number)
+			if (other.Kind == NodeKind.Number)
 			{
-				return new CssMeasurement(this.value + ((CssNumber)node).Value, unit);
+				return new CssUnitValue(Value + ((CssUnitValue)other).Value, Unit);
 			}
-			else if (node is CssMeasurement measurement)
+			else if (other is CssUnitValue measurement && measurement.Kind == Kind)
             {
-                if (node.Kind == this.Kind)
-                {
-                    return new CssMeasurement(this.value + measurement.value, measurement.unit);
-                }
+                return new CssUnitValue(Value + measurement.Value, measurement.Unit);   
             }
 
             throw new Exception("cannot add types");
 		}
 
-		#endregion
+        #endregion
+
+        public void Deconstruct(out double value, out CssUnit unit)
+        {
+            (value, unit) = (Value, Unit);
+        }
+
+        public bool Equals(CssUnitValue other) =>
+            this.Unit.Name == other.Unit.Name &&
+            this.Value == other.Value;
 	}
 
 	// CssLength

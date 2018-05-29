@@ -8,7 +8,7 @@ namespace Carbon.Css
 
         public CssUrlValue(string value)
         {
-            Value = value;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         public CssUrlValue(byte[] data, string contentType)
@@ -30,13 +30,24 @@ namespace Carbon.Css
 
         public string GetAbsolutePath(string basePath) /* /styles/ */
         {
-            if (!IsPath) throw new ArgumentException("Has scheme:" + Value.Split(Seperators.Colon)[0]);
+            if (!IsPath)
+            {
+                throw new ArgumentException("Has scheme:" + Value.Split(Seperators.Colon)[0]);
+            }
 
             // Already absolute
-            if (Value.StartsWith("/")) return Value;
+            if (Value.Length > 0 && Value[0] == '/')
+            {
+                return Value;
+            }
 
-            // "http://dev/styles/"
-            var baseUri = new Uri("http://dev/" + basePath.TrimStart(Seperators.ForwardSlash));
+            if (basePath[0] == '/')
+            {
+                basePath = basePath.Substring(1);
+            }
+
+            // http://dev/styles/
+            var baseUri = new Uri("http://dev/" + basePath);
 
             // Absolute path
             return new Uri(baseUri, relativeUri: Value).AbsolutePath;
@@ -44,9 +55,11 @@ namespace Carbon.Css
 
         #endregion
 
+        private static readonly char[] trimChars = { '\'', '\"', '(', ')' };
+
         public static CssUrlValue Parse(string text)
         {
-            var value = text.Replace("url", "").Trim('(', ')').Trim('\'', '\"');
+            var value = text.Replace("url", string.Empty).Trim(trimChars);
 
             return new CssUrlValue(value);
         }

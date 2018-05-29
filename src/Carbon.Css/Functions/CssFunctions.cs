@@ -98,7 +98,10 @@ namespace Carbon.Css
 
         private static bool ToBoolean(CssValue value)
         {
-            if (value.Kind == NodeKind.Boolean) return ((CssBoolean)value).Value;
+            if (value is CssBoolean cssBoolean)
+            {
+                return cssBoolean.Value;
+            }
 
             return value.ToString().ToLower() == "true";
         }
@@ -115,8 +118,8 @@ namespace Carbon.Css
 			switch (value.Kind)
 			{
 				case NodeKind.Angle      : return (float.Parse(text.Replace("deg", "")) % 360) / 360;
-				case NodeKind.Percentage : return ((CssMeasurement)value).Value / 100;
-				case NodeKind.Number     : return ((CssNumber)value).Value;
+				case NodeKind.Percentage : return (float)(((CssUnitValue)value).Value / 100d);
+				case NodeKind.Number     : return (float)((CssUnitValue)value).Value;
 
 				default: throw new Exception("Unknown numeric value: " + value.Kind + ":" +  value);
 			}
