@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Carbon.Css
@@ -10,7 +10,7 @@ namespace Carbon.Css
 
     public readonly struct CssSelector : IEnumerable<string>
     {
-        private readonly IList<string> items;
+        private readonly IReadOnlyList<string> items; // comma seperated
 
         public CssSelector(TokenList tokens)
         {
@@ -44,23 +44,6 @@ namespace Carbon.Css
                 parts.Add(sb.ToString().Trim());
             }
 
-            this.items = parts;
-        }
-
-        public CssSelector(string text)
-        {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-
-            string[] parts = text.Split(Seperators.Comma);
-
-            for (var i = 0; i < parts.Length; i++)
-            {
-                if (parts[i].IndexOf(' ') > -1)
-                {
-                    parts[i] = parts[i].Trim();
-                }
-            }
-            
             this.items = parts;
         }
 
@@ -112,6 +95,41 @@ namespace Carbon.Css
             if (items.Count == 1) return items[0];
 
             return string.Join(", ", items);
+        }
+
+        public void WriteTo(TextWriter writer)
+        {
+            int i = 0;
+
+            foreach (string segment in items)
+            {
+                if (i > 0)
+                {
+                    writer.Write(", ");
+                }
+
+                writer.Write(segment);
+
+                i++;
+            }
+        }
+
+        public static CssSelector Parse(string text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            
+            string[] parts = text.Split(Seperators.Comma);
+
+            for (var i = 0; i < parts.Length; i++)
+            {
+                // Trim trivia
+                if (parts[i].IndexOf(' ') > -1)
+                {
+                    parts[i] = parts[i].Trim();
+                }
+            }
+
+            return new CssSelector(parts);
         }
 
         #region IEnumerator

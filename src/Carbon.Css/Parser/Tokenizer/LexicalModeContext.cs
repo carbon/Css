@@ -4,13 +4,13 @@ namespace Carbon.Css.Parser
 {
     public class LexicalModeContext
     {
-        private readonly Stack<LexicalMode> modes = new Stack<LexicalMode>();
-
-        private LexicalMode current;
+        private readonly Stack<LexicalMode> modes;
 
         public LexicalModeContext(LexicalMode start)
         {
-            this.current = start;
+            modes = new Stack<LexicalMode>();
+
+            this.Current = start;
 
             modes.Push(start);
         }
@@ -19,33 +19,37 @@ namespace Carbon.Css.Parser
         {
             modes.Push(mode);
 
-            current = mode;
+            Current = mode;
         }
 
         public void Leave(LexicalMode mode, CssTokenizer tokenizer = null)
         {
-            if (current != mode) throw new UnexpectedModeChange(current, mode, tokenizer?.Current.Position ?? 0);
+            if (Current != mode)
+            {
+                throw new UnexpectedModeChange(Current, mode, tokenizer?.Current.Position ?? 0);
+            }
 
             modes.Pop();
 
-            current = modes.Peek();
+            Current = modes.Peek();
         }
 
-        public LexicalMode Current => current;
+        public LexicalMode Current { get; private set; }
     }
 
     public enum LexicalMode
     {
-        Unknown     = 0,
-        Rule        = 1,
-        Block       = 2,
-        Value       = 3,
-        Declaration = 4,
-        Selector    = 5,
-        Assignment  = 6,
-        Function    = 7,
-        Symbol      = 10,
-        Unit        = 11,
-        Mixin       = 20
+        Unknown            = 0,
+        Rule               = 1,
+        Block              = 2,
+        Value              = 3,
+        Declaration        = 4,
+        Selector           = 5,
+        Assignment         = 6,
+        Function           = 7,
+        Symbol             = 10,
+        Unit               = 11,
+        InterpolatedString = 13,
+        Mixin              = 20
     }
 }

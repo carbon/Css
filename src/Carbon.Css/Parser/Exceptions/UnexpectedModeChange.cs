@@ -4,7 +4,7 @@
     {
         // "Current mode is:" + current + ". Leaving " + mode + "."
 
-        private int position;
+        private readonly int position;
 
         public UnexpectedModeChange(LexicalMode currentMode, LexicalMode leavingMode, int position)
             : base($"Unexpected mode change. Expected '{leavingMode}'. Was {currentMode}.")

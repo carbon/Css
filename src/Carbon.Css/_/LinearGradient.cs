@@ -20,7 +20,7 @@ namespace Carbon.Css
 
         public IEnumerable<CssFunction> ExpandFor(BrowserInfo[] browsers)
         {
-            foreach (var browser in browsers)
+            foreach (BrowserInfo browser in browsers)
             {
                 var values = new List<CssValue>();
 

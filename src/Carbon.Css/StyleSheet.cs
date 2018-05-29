@@ -57,7 +57,7 @@ namespace Carbon.Css
 
                         if (directive.Name == "support")
                         {
-                            var parts = directive.Value.Split(Seperators.Space); // SpaceArray...
+                            string[] parts = directive.Value.Split(Seperators.Space); // SpaceArray...
 
                             if (Enum.TryParse(parts[0].Trim(), true, out BrowserType browserType))
                             {

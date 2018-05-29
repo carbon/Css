@@ -12,10 +12,10 @@ namespace Carbon.Css
         }
 
         public StyleRule(string selectorText)
-            : this(new CssSelector(selectorText)) { }
+            : this(CssSelector.Parse(selectorText)) { }
 
         public StyleRule(string selectorText, IReadOnlyList<CssNode> children)
-            : this(new CssSelector(selectorText))
+            : this(CssSelector.Parse(selectorText))
         {
             foreach (var child in children)
             {
