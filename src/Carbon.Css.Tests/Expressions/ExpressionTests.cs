@@ -2,7 +2,7 @@
 
 namespace Carbon.Css.Tests
 {
-	public class ExpressionTests
+    public class ExpressionTests
 	{
 		[Fact]
 		public void ExpressionTest7()

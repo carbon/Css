@@ -1,7 +1,7 @@
-﻿namespace Carbon.Css.Tests
-{
-    using Xunit;
+﻿using Xunit;
 
+namespace Carbon.Css.Tests
+{
     public class ScssTests
     {
         [Fact]
