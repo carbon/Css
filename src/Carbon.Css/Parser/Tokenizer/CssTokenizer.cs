@@ -69,6 +69,7 @@ namespace Carbon.Css.Parser
 
                 case '$':
                     mode.Enter(LexicalMode.Symbol);
+
                     return new CssToken(TokenKind.Dollar, reader.Read(), reader.Position);
 
                 case '/':
@@ -101,11 +102,21 @@ namespace Carbon.Css.Parser
 
                     return new CssToken(TokenKind.BlockStart, reader.Read(), reader.Position);
                 case '}':
+
                     LeaveValueMode();
 
-                    mode.Leave(LexicalMode.Block, this);
-                    
-                    return new CssToken(TokenKind.BlockEnd, reader.Read(), reader.Position);
+                    if (mode.Current == LexicalMode.InterpolatedString)
+                    {
+                        mode.Leave(LexicalMode.InterpolatedString);
+
+                        return new CssToken(TokenKind.InterpolatedStringEnd, reader.Read(), reader.Position);
+                    }
+                    else
+                    {
+                        mode.Leave(LexicalMode.Block, this);
+
+                        return new CssToken(TokenKind.BlockEnd, reader.Read(), reader.Position);
+                    }
 
                 case '(': return new CssToken(TokenKind.LeftParenthesis, reader.Read(), reader.Position);
                 case ')': return new CssToken(TokenKind.RightParenthesis, reader.Read(), reader.Position);
@@ -137,6 +148,10 @@ namespace Carbon.Css.Parser
                     if (reader.Peek() == '=') return new CssToken(TokenKind.Lte, reader.Read(2), reader.Position - 1);
                     else return new CssToken(TokenKind.Lt, reader.Read(), reader.Position);
 
+                case '#' when reader.Peek() == '{':
+                    mode.Enter(LexicalMode.InterpolatedString);
+
+                    return new CssToken(TokenKind.InterpolatedStringStart, reader.Read(2), reader.Position - 1);
 
                 case '+': return new CssToken(TokenKind.Add, reader.Read(), reader.Position);
                 case '*': return new CssToken(TokenKind.Multiply, reader.Read(), reader.Position);
@@ -200,15 +215,15 @@ namespace Carbon.Css.Parser
             reader.Mark();
 
             while (!char.IsWhiteSpace(reader.Current) &&
-                reader.Current != '{' && 
-                reader.Current != '}' && 
+                reader.Current != '{' &&
+                reader.Current != '}' &&
                 reader.Current != '(' && 
                 reader.Current != ')' &&
                 reader.Current != ';' && 
                 reader.Current != ':' && 
                 reader.Current != ',')
             {
-                if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Name");
+                if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Symbol");
 
                 reader.Next();
             }
@@ -232,19 +247,14 @@ namespace Carbon.Css.Parser
                 reader.Current != ',')
             {
                 if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Name");
-
-                /*
-                if (reader.Current == ':')
+                
+                if (reader.Current == '#' && reader.Peek() == '{')
                 {
-                    var peek = reader.Peek();
-
-                    if (!(peek >= 'a' && peek <= 'z')) break;
+                    break;
                 }
-                */
-
+                
                 reader.Next();
             }
-
 
             return new CssToken(TokenKind.Name, reader.Unmark(), reader.MarkStart);
         }
@@ -336,8 +346,8 @@ namespace Carbon.Css.Parser
 
             if (PseudoClassNames.Contains(text))
             {
-                LeaveValueMode();
-
+                // LeaveValueMode();
+             
                 return new CssToken(TokenKind.Name, text, reader.MarkStart);
             }
 

@@ -63,14 +63,17 @@
 		Semicolon,		// ;
 		Colon,			// :
 
-		BlockStart,		// {
-		BlockEnd,		// }
+		BlockStart,		    // {
+		BlockEnd,		    // }
 
 		LeftParenthesis,	// (
 		RightParenthesis,	// )
 
-		// Trivia
-		Directive,		// //= *
+        InterpolatedStringStart, // #{
+        InterpolatedStringEnd, // }
+        // Trivia
+
+        Directive,		// //= *
 		Whitespace,    
 		Comment,
 
