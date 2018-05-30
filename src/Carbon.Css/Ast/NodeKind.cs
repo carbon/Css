@@ -15,6 +15,7 @@
         Assignment,
         Variable,
         InterpolatedString,
+        Reference, // &
 
         // Values
         ValueList,
