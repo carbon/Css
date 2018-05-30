@@ -528,7 +528,7 @@ namespace Carbon.Css
                     writer.WriteLine(",");
                 }
 
-                writer.Write(selector[i].ToString());
+                selector[i].WriteTo(writer);
             }
         }
 
@@ -889,15 +889,15 @@ namespace Carbon.Css
 
         public static CssSelector ExpandSelector(StyleRule rule)
         {
-            var ancestors = new Stack<CssSelector>();
+            var ancestors = new List<CssSelector>();
 
-            ancestors.Push(rule.Selector);
+            ancestors.Add(rule.Selector);
 
             StyleRule current = rule;
 
             while ((current = current.Parent as StyleRule) != null)
             {
-                ancestors.Push(current.Selector);
+                ancestors.Add(current.Selector);
 
                 if (ancestors.Count > 6)
                 {
@@ -907,88 +907,126 @@ namespace Carbon.Css
                 }
             }
 
-            var i = 0;
+            ancestors.Reverse();
 
-            var sb = new StringBuilder();
+            int i = 0;
+
+            var result = new List<TokenList>();
 
             // { &.open { } }
 
-            foreach (var selector in ancestors)
+            var span = new TokenList();
+
+            foreach (var ancestor in ancestors)
             {
-                if (selector.Contains("&"))
+                if (ancestor.Contains(TokenKind.Ampersand))
                 {
-                    var x = selector.ToString().Replace("&", sb.ToString());
+                    var prev = span.Clone();
 
-                    sb.Clear();
+                    span.Clear();
 
-                    sb.Append(x);
+                    foreach (var token in ancestor[0])
+                    {
+                        if (token.Kind == TokenKind.Ampersand)
+                        {
+                            for (var ti = 0; ti < prev.Count; ti++)
+                            {
+                                var p = prev[ti];
 
+                                // skip leading trivia on the last ancestor
+                                if (ti + 1 == prev.Count && p.IsTrivia) continue;
+
+                                span.Add(p);
+                            }
+                        }
+                        else
+                        {
+                            span.Add(token);
+                        }
+                    }
+                    
                     i++;
 
                     continue;
                 }
 
-                if (i != 0)
-                {
-                    sb.Append(' ');
-                }
-
                 i++;
 
                 // h1, h2, h3
+               
+                // Only works one level deep?
 
-                if (selector.Count > 1)
+                if (ancestor.Count > 1)
                 {
-                    var parentSelector = sb.ToString();
-
-                    sb.Clear();
+                    var parentSelector = span.Clone();
 
                     var c = GetSelector(ancestors.Skip(i));
 
-                    var q = 0;
-
-                    foreach (var a in selector)
+                    for (int selectorIndex = 0; selectorIndex < ancestor.Count; selectorIndex++)
                     {
-                        if (q != 0) sb.Append(", ");
+                        var s = ancestor[selectorIndex];
 
-                        sb.Append(parentSelector + a);
+                        span = new TokenList();
 
-                        if (c != null)
+                        if (parentSelector.Count > 0)
                         {
-                            sb.Append(' ');
-                            sb.Append(c);
+                            span.AddRange(parentSelector);
+
+                            if (!parentSelector[parentSelector.Count - 1].IsTrivia)
+                            {
+                                span.Add(new CssToken(TokenKind.Whitespace, ' ', 0));
+                            }
                         }
 
-                        q++;
+                        span.AddRange(ancestor[selectorIndex]);
+
+                        if (!s[s.Count - 1].IsTrivia)
+                        {
+                            span.Add(new CssToken(TokenKind.Whitespace, ' ', 0));
+                        }
+
+                        // Remaining selectors
+
+                        span.AddRange(c);
+
+                        result.Add(span);
                     }
+
+                    span = null;
 
                     break;
                 }
                 else
                 {
-                    sb.Append(selector);
+                    foreach (var token in ancestor[0])
+                    {
+                        span.Add(token);
+                    }
                 }
             }
 
-            return CssSelector.Parse(sb.ToString());
+            if (span != null)
+            {
+                result.Add(span);
+            }
+
+            return new CssSelector(result);
         }
 
-        private static string GetSelector(IEnumerable<CssSelector> selectors)
+        private static TokenList GetSelector(IEnumerable<CssSelector> selectors)
         {
-            // TODO: Avoid StringBuilder allocation if there's only a single selector
-
-            // TODO: & support
-            
-            var sb = new StringBuilder();
+            var tokens = new TokenList();
 
             foreach (var selector in selectors)
             {
-                sb.Append(selector);
+                foreach (var list in selector)
+                {
+                    tokens.AddRange(list);
+                }
             }
 
-            return sb.ToString();
+            return tokens;
         }
-
 
         public void Dispose()
         {
@@ -998,3 +1036,4 @@ namespace Carbon.Css
         #endregion
     }
 }
+ 

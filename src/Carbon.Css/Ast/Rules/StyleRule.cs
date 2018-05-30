@@ -43,15 +43,13 @@ namespace Carbon.Css
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
-
-            using (var sw = new StringWriter(sb))
+            using (var sw = new StringWriter())
             {
                 var writer = new CssWriter(sw);
 
                 writer.WriteStyleRule(this, 0);
 
-                return sb.ToString();
+                return sw.ToString();
             }
         }
 

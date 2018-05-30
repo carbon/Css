@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using Carbon.Css.Parser;
 
 namespace Carbon.Css
@@ -19,16 +18,11 @@ namespace Carbon.Css
 
         public TokenList this[int index] => items[index];
 
-        public bool Contains(string text)
+        public bool Contains(TokenKind kind)
         {
-            if (items.Count == 1)
-            {
-                return items[0].Contains(text);
-            }
-
             foreach (var part in items)
             {
-                if (part.Contains(text)) return true;
+                if (part.Contains(kind)) return true;
             }
 
             return false;
@@ -36,25 +30,20 @@ namespace Carbon.Css
 
         public override string ToString()
         {
-            if (items.Count == 1) return items[0].ToString();
+            if (items.Count == 1)
+            {
+                return items[0].ToString();
+            }
 
             return string.Join(", ", items);
         }
 
         public static CssSelector Parse(string text)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            
-            string[] parts = text.Split(Seperators.Comma);
-
-            var list = new TokenList[parts.Length];
-
-            for (var i = 0; i < parts.Length; i++)
+            using (var parser = new CssParser(text))
             {
-                list[i] = new TokenList() { new CssToken(TokenKind.String, parts[i].Trim(), 0) };
+                return parser.ReadSelector();
             }
-
-            return new CssSelector(list);
         }
 
         #region IEnumerator
