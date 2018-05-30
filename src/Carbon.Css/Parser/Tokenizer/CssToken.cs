@@ -62,6 +62,7 @@
 		Comma,			// ,
 		Semicolon,		// ;
 		Colon,			// :
+        Ampersand,      // &
 
 		BlockStart,		    // {
 		BlockEnd,		    // }

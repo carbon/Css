@@ -122,9 +122,10 @@ namespace Carbon.Css.Parser
                 case ')': return new CssToken(TokenKind.RightParenthesis, reader.Read(), reader.Position);
 
                 case '&':
-                    if (reader.Peek() == '&') return new CssToken(TokenKind.And, reader.Read(2), reader.Position - 1);
-
-                    else break;
+                    if (reader.Peek() == '&')
+                        return new CssToken(TokenKind.And, reader.Read(2), reader.Position - 1);
+                    else
+                        return new CssToken(TokenKind.Ampersand, reader.Read(), reader.Position);
 
                 case '|':
                     if (reader.Peek() == '|') return new CssToken(TokenKind.Or, reader.Read(2), reader.Position - 1);
@@ -170,6 +171,7 @@ namespace Carbon.Css.Parser
                 case '\'':
                 case '"':
                     return ReadQuotedString(reader.Current);
+
 
                 case '0':
                 case '1':
@@ -246,7 +248,7 @@ namespace Carbon.Css.Parser
                 reader.Current != ':' &&
                 reader.Current != ',')
             {
-                if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Name");
+                if (reader.IsEof) break;
                 
                 if (reader.Current == '#' && reader.Peek() == '{')
                 {
