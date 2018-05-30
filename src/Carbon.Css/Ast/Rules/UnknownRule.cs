@@ -4,16 +4,16 @@ namespace Carbon.Css
 {
     public sealed class UnknownRule : CssRule
     {
-        public UnknownRule(string name, string selectorText)
+        public UnknownRule(string name, TokenList selector)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            SelectorText = selectorText;
+            Selector = selector;
         }
 
         public override RuleType Type => RuleType.Unknown;
 
         public string Name { get; }
 
-        public string SelectorText { get; }
+        public TokenList Selector { get; }
     }
 }

@@ -8,6 +8,7 @@ namespace Carbon.Css.Parser
     {
         private readonly SourceReader reader;
         private readonly LexicalModeContext mode;
+        private readonly Stack<CssToken> stack = new Stack<CssToken>();
 
         private CssToken current;
         private bool isEnd = false;
@@ -46,8 +47,6 @@ namespace Carbon.Css.Parser
 
             return current;
         }
-
-        private readonly Stack<CssToken> stack = new Stack<CssToken>();
 
         private CssToken ReadNext()
         {

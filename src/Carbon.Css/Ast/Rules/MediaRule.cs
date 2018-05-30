@@ -2,13 +2,13 @@
 {
 	public sealed class MediaRule : CssRule
 	{
-		public MediaRule(string ruleText)
+		public MediaRule(TokenList ruleText)
         { 
-			RuleText = ruleText;
+			Text = ruleText;
 		}
 
         public override RuleType Type => RuleType.Media;
 
-        public string RuleText { get; }
+        public TokenList Text { get; }
 	}
 }

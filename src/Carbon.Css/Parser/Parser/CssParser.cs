@@ -200,7 +200,7 @@ namespace Carbon.Css.Parser
                 span.Add(Read()); // Read the token
             }
 
-            var rule = new KeyframesRule(span.RawText.Trim());
+            var rule = new KeyframesRule(span.ToString());
 
             ReadBlock(rule);
 
@@ -218,7 +218,7 @@ namespace Carbon.Css.Parser
                 span.Add(Read());
             }
 
-            var rule = new MediaRule(span.RawText.Trim());
+            var rule = new MediaRule(span);
 
             ReadBlock(rule);
 

@@ -73,7 +73,6 @@ namespace Carbon.Css
 
             return true;
         }
-    
 
         public static CssValue FromComponents(IEnumerable<CssValue> components)
         {

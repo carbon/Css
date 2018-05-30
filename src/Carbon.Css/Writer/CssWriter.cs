@@ -486,10 +486,10 @@ namespace Carbon.Css
             writer.Write('@');
             writer.Write(rule.Name);
 
-            if (rule.SelectorText != null)
+            if (rule.Selector != null)
             {
                 writer.Write(' ');
-                writer.Write(rule.SelectorText);
+                rule.Selector.WriteTo(writer);
             }
 
             writer.Write(' ');
@@ -535,7 +535,8 @@ namespace Carbon.Css
         public void WriteMediaRule(MediaRule rule, int level)
         {
             writer.Write("@media ");
-            writer.Write(rule.RuleText); // Write rule text
+
+            rule.Text.WriteTo(writer);
             writer.Write(' ');
             WriteBlock(rule, level);
         }
