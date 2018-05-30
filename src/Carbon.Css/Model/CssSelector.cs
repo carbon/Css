@@ -4,7 +4,7 @@ using Carbon.Css.Parser;
 
 namespace Carbon.Css
 {
-    public readonly struct CssSelector : IEnumerable<CssSequence>
+    public class CssSelector : IEnumerable<CssSequence>
     {
         private readonly IReadOnlyList<CssSequence> items; // comma seperated
 
