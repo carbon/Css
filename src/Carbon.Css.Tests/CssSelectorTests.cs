@@ -55,19 +55,21 @@ namespace Carbon.Css.Parser.Tests
         [Fact]
         public void Multiselector()
         {
-            var selector = CssSelector.Parse("h1, h2");
+            var selector = CssSelector.Parse("h1, h2, h3");
 
-            var a = selector[0];
-            var b = selector[1];
+            var h1 = selector[0];
+            var h2 = selector[1];
+            var h3 = selector[2];
 
-            Assert.Equal("h1", a[0].ToString());
-            Assert.Equal("h2", b[0].ToString());
+            Assert.Equal("h1", h1[0].ToString());
+            Assert.Equal("h2", h2[0].ToString());
+            Assert.Equal("h3", h3[0].ToString());
+            
+            Assert.Null(h1[0].Trailing);
+            Assert.Null(h2[0].Trailing);
+            Assert.Null(h3[0].Trailing);
 
-            Assert.Null(a[0].Trailing);
-            Assert.Null(b[0].Trailing);
-
-            // Assert.Equal("h1, h2", selector.ToString());
-
+            Assert.Equal("h1, h2, h3", selector.ToString());
         }
     }
 }
