@@ -403,11 +403,14 @@ namespace Carbon.Css.Parser
 
             reader.Read();                  // read *
 
-            while (reader.Current != '*')
+            while (!reader.IsEof)
             {
-                if (reader.IsEof) throw new SyntaxException("Unexpected EOF reading comment");
+                if (reader.Current == '*' && reader.Peek() == '/')
+                {
+                    break;
+                }
 
-                reader.Next();
+                reader.Next();                
             }
 
             reader.Read(); // read *
