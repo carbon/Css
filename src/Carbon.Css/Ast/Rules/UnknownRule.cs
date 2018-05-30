@@ -7,13 +7,13 @@ namespace Carbon.Css
         public UnknownRule(string name, TokenList selector)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Selector = selector;
+            Text = selector;
         }
 
         public override RuleType Type => RuleType.Unknown;
 
         public string Name { get; }
 
-        public TokenList Selector { get; }
+        public TokenList Text { get; }
     }
 }

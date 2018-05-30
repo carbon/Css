@@ -137,14 +137,14 @@ namespace Carbon.Css.Parser
                 case "while"     : return ReadWhileRule();
             }
 
-            string selectorText = null;
+            TokenList text = null;
 
             if (Current.Kind == TokenKind.Name)
             {
-                selectorText = ReadSpan().ToString();
+                text = ReadSpan();
             }
 
-            var rule = new UnknownRule(atName.Text, selectorText ?? "");
+            var rule = new UnknownRule(atName.Text, text);
 
             switch (Current.Kind)
             {

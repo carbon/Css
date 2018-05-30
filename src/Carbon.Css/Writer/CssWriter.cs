@@ -486,10 +486,10 @@ namespace Carbon.Css
             writer.Write('@');
             writer.Write(rule.Name);
 
-            if (rule.Selector != null)
+            if (rule.Text != null)
             {
                 writer.Write(' ');
-                rule.Selector.WriteTo(writer);
+                rule.Text.WriteTo(writer);
             }
 
             writer.Write(' ');
