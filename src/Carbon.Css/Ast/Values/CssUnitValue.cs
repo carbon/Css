@@ -45,7 +45,25 @@
             throw new Exception("cannot multiply types");
 		}
 
-		public CssValue Add(CssValue other)
+        public CssValue Divide(CssValue other)
+        {
+            if (other.Kind == NodeKind.Percentage)
+            {
+                return new CssUnitValue(Value / (((CssUnitValue)other).Value / 100), Unit);
+            }
+            else if (other is CssUnitValue otherUnit)
+            {
+                if (other.Kind == Kind || other.Kind == NodeKind.Number)
+                {
+                    return new CssUnitValue(Value / otherUnit.Value, otherUnit.Unit);
+                }
+            }
+
+            throw new Exception("cannot divide types");
+        }
+
+
+        public CssValue Add(CssValue other)
 		{
 			if (other.Kind == NodeKind.Number)
 			{
