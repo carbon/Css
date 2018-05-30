@@ -16,7 +16,7 @@ namespace Carbon.Css
 
         internal Trivia Leading { get; set; }
 
-        internal Trivia Trailing { get; set; }
+        public Trivia Trailing { get; set; }
 
         public virtual CssNode CloneNode()
         {
