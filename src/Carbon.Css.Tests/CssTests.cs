@@ -110,7 +110,6 @@ namespace Carbon.Css.Tests
 
             var sheet = StyleSheet.Parse(text);
 
-
             Assert.Equal(".card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top, .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom", (sheet.Children[0] as StyleRule).Selector.ToString());
         }
 
@@ -657,11 +656,7 @@ p { font-color: red; background: url(http://google.com); }
         [Fact]
         public void Parse11()
         {
-            var styles = @":focus { outline:0; }";
-
-            var sheet = StyleSheet.Parse(styles);
-
-            Assert.Equal(":focus { outline: 0; }", sheet.ToString());
+            Assert.Equal(":focus { outline: 0; }", StyleSheet.Parse(@":focus { outline:0; }").ToString());
 
             Assert.Equal(".projects li:first-child { background-color: orange; }", StyleSheet.Parse(@".projects li:first-child { background-color: orange; }").ToString());
 

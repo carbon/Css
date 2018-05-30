@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Xunit;
@@ -7,6 +8,34 @@ namespace Carbon.Css.Tests
 {
     public class VariableTests
     {
+        [Fact]
+        public void VariableReferencingVariable()
+        {
+            var css = StyleSheet.Parse(@"
+$red: #f00;
+$borderColor: $red;
+
+div { color: rgba($borderColor, 0.5); }");
+
+            Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", css.ToString());
+        }
+
+
+        [Fact]
+        public void ReferenceToSelfThrows()
+        {
+            var sheet = StyleSheet.Parse(@"
+$red: #fff;
+$red: $red;	
+
+div { color: $red; }");
+
+            Assert.Throws<Exception>(() =>
+            {
+                sheet.ToString();
+            });
+        }
+
         [Fact]
         public void ParseAssignment()
         {

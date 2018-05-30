@@ -2,6 +2,7 @@
 
 namespace Carbon.Css.Tests
 {
+
     public class ScssTests
     {
         [Fact]

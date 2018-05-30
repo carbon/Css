@@ -13,7 +13,7 @@ namespace Carbon.Css.Parser.Tests
   background-color: red;
 };".Trim());
 
-            Assert.Equal((TokenKind.Name,               "&"),           tokens[0].AsTuple());
+            Assert.Equal((TokenKind.Ampersand,           "&"),           tokens[0].AsTuple());
             Assert.Equal((TokenKind.Name,               ":nth-child"),  tokens[1].AsTuple());
             Assert.Equal((TokenKind.LeftParenthesis,    "("),           tokens[2].AsTuple());
             Assert.Equal((TokenKind.Name,               "odd"),         tokens[3].AsTuple());
@@ -28,9 +28,9 @@ namespace Carbon.Css.Parser.Tests
   background-color: rgba($bg-color, $shade);
 };".Trim());
 
-            Assert.Equal((TokenKind.Name, "&"),           tokens[0].AsTuple());
-            Assert.Equal((TokenKind.Name, ":last-child"), tokens[1].AsTuple());
-            Assert.Equal((TokenKind.Name, ":after"),      tokens[2].AsTuple());
+            Assert.Equal((TokenKind.Ampersand, "&"),           tokens[0].AsTuple());
+            Assert.Equal((TokenKind.Name,      ":last-child"), tokens[1].AsTuple());
+            Assert.Equal((TokenKind.Name,      ":after"),      tokens[2].AsTuple());
 
         }
 
@@ -89,7 +89,7 @@ namespace Carbon.Css.Parser.Tests
             Assert.Equal((TokenKind.String, "pink"), tokens[14].AsTuple());
             Assert.Equal((TokenKind.Semicolon, ";"), tokens[15].AsTuple());
             Assert.Equal(TokenKind.Whitespace, tokens[16].Kind);
-            Assert.Equal((TokenKind.Name, "&"), tokens[17].AsTuple());
+            Assert.Equal((TokenKind.Ampersand, "&"), tokens[17].AsTuple());
             Assert.Equal((TokenKind.Name, ":hover"), tokens[18].AsTuple());
             Assert.Equal((TokenKind.Whitespace, " "), tokens[19].AsTuple());
             Assert.Equal((TokenKind.BlockStart, "{"), tokens[20].AsTuple());

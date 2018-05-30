@@ -7,33 +7,6 @@ namespace Carbon.Css.Tests
     public class SassTests
     {
         [Fact]
-        public void VariableReferencingVariable()
-        {
-            var sheet = StyleSheet.Parse(@"
-$red: #f00;
-$borderColor: $red;
-
-div { color: rgba($borderColor, 0.5); }");
-
-            Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", sheet.ToString());
-        }
-
-        [Fact]
-        public void VariableReferencingItselfThrows()
-        {
-            var sheet = StyleSheet.Parse(@"
-$red: #fff;
-$red: $red;	
-
-div { color: $red; }");
-
-            Assert.Throws<Exception>(() =>
-            {
-                sheet.ToString();
-            });
-        }
-
-        [Fact]
         public void Test78()
         {
             var sheet = StyleSheet.Parse(@"
@@ -166,6 +139,10 @@ div .placeholderText {
         {
             var ss = StyleSheet.FromFile(TestHelper.GetTestFile("test53.css"));
 
+
+           // throw new Exception(ss.ToString());
+
+
             Assert.Equal(
 @".block ::-webkit-input-placeholder {
   color: #cfcece;
@@ -251,8 +228,9 @@ div .placeholderText {
 }
 .block .description { padding: 5px 250px 20px 225px; }", ss.ToString());
 
-
         }
+
+
 
         /*
 		[Fact]
