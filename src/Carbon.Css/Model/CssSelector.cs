@@ -1,79 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
+using Carbon.Css.Parser;
 
 namespace Carbon.Css
 {
-    using Parser;
-
-    public readonly struct CssSelector : IEnumerable<string>
+    public readonly struct CssSelector : IEnumerable<TokenList>
     {
-        private readonly IReadOnlyList<string> items; // comma seperated
+        private readonly IReadOnlyList<TokenList> items; // comma seperated
 
-        public CssSelector(TokenList tokens)
-        {
-            var sb = new StringBuilder();
-
-            var parts = new List<string>();
-
-            foreach (var token in tokens)
-            {
-                if (token.Kind == TokenKind.Comma)
-                {
-                    parts.Add(sb.ToString().Trim());
-
-                    sb.Clear();
-
-                    continue;
-                }
-
-                if (token.IsTrivia)
-                {
-                    sb.Append(' '); // Prettify the trivia
-                }
-                else
-                {
-                    sb.Append(token.Text);
-                }
-            }
-
-            if (sb.Length > 0)
-            {
-                parts.Add(sb.ToString().Trim());
-            }
-
-            this.items = parts;
-        }
-
-        public CssSelector(string[] items)
+        public CssSelector(IReadOnlyList<TokenList> items)
         {
             this.items = items;
-        }
-
-        public CssSelector(CssValue list)
-        {
-            if (list is CssValueList cssList)
-            {
-                var parts = new string[cssList.Count];
-
-                for (var i = 0; i < cssList.Count; i++)
-                {
-                    parts[i] = cssList[i].ToString();
-                }
-
-                this.items = parts;
-            }
-            else
-            {
-                this.items = new[] { list.ToString() };
-            }
-        }
+        }      
 
         public int Count => items.Count;
 
-        public string this[int index] => items[index];
+        public TokenList this[int index] => items[index];
 
         public bool Contains(string text)
         {
@@ -92,26 +36,9 @@ namespace Carbon.Css
 
         public override string ToString()
         {
-            if (items.Count == 1) return items[0];
+            if (items.Count == 1) return items[0].ToString();
 
             return string.Join(", ", items);
-        }
-
-        public void WriteTo(TextWriter writer)
-        {
-            int i = 0;
-
-            foreach (string segment in items)
-            {
-                if (i > 0)
-                {
-                    writer.Write(", ");
-                }
-
-                writer.Write(segment);
-
-                i++;
-            }
         }
 
         public static CssSelector Parse(string text)
@@ -120,21 +47,19 @@ namespace Carbon.Css
             
             string[] parts = text.Split(Seperators.Comma);
 
+            var list = new TokenList[parts.Length];
+
             for (var i = 0; i < parts.Length; i++)
             {
-                // Trim trivia
-                if (parts[i].IndexOf(' ') > -1)
-                {
-                    parts[i] = parts[i].Trim();
-                }
+                list[i] = new TokenList() { new CssToken(TokenKind.String, parts[i].Trim(), 0) };
             }
 
-            return new CssSelector(parts);
+            return new CssSelector(list);
         }
 
         #region IEnumerator
 
-        public IEnumerator<string> GetEnumerator() => items.GetEnumerator();
+        public IEnumerator<TokenList> GetEnumerator() => items.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 

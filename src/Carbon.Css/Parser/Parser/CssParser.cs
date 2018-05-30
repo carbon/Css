@@ -279,7 +279,6 @@ namespace Carbon.Css.Parser
             return rule;
         }
 
-
         // @each $shape in $shapes
         public EachBlock ReadEachRule()
         {
@@ -297,7 +296,6 @@ namespace Carbon.Css.Parser
 
             return rule;
         }
-
 
         // @for $i from 1 through $grid-columns
         public ForBlock ReadForRule()
@@ -535,21 +533,21 @@ namespace Carbon.Css.Parser
 
         public CssSelector ReadSelector()
         {
-            // #id.hello { } 
+            var list = new List<TokenList>();
 
-            var span = new TokenList();
+            list.Add(ReadSpan());
 
-            while (Current.Kind != TokenKind.BlockStart && !IsEnd)
+            // Maybe a multi-selector
+            while (Current.Kind == TokenKind.Comma)
             {
-                var token = tokenizer.Read();
+                Read();
 
-                // Consider multiselectors
-                // if (token.Kind == TokenKind.Comma)
-
-                span.Add(token);
+                list.Add(ReadSpan());
             }
 
-            return new CssSelector(span);
+            // #id.hello { } 
+
+            return new CssSelector(list);
         }
 
         public StyleRule ReadStyleRule()
@@ -718,12 +716,23 @@ namespace Carbon.Css.Parser
                     continue;
                 }
 
-                var statement = ReadSpan();
+                var span = ReadSpan();
+                var spanList = new List<TokenList>();
+
+                spanList.Add(span);
+
+                while (Current.Kind == TokenKind.Comma)
+                {
+                    Read(); // ,
+
+                    spanList.Add(ReadSpan());
+
+                }
 
                 switch (Current.Kind)
                 {
-                    case TokenKind.Colon      : block.Add(ReadDeclarationFromName(statement));        break; // DeclarationName
-                    case TokenKind.BlockStart : block.Add(ReadRuleBlock(new CssSelector(statement))); break;
+                    case TokenKind.Colon      : block.Add(ReadDeclarationFromName(span));           break; // DeclarationName
+                    case TokenKind.BlockStart : block.Add(ReadRuleBlock(new CssSelector(spanList))); break;
                     case TokenKind.BlockEnd   : break;
 
                     // TODO: Figure out where we missed reading the semicolon TEMP
@@ -807,20 +816,15 @@ namespace Carbon.Css.Parser
         {
             var list = new TokenList();
 
-            while (!IsEnd)
+            while (!IsEnd 
+                && Current.Kind != TokenKind.Colon 
+                && Current.Kind != TokenKind.BlockStart
+                && Current.Kind != TokenKind.BlockEnd
+                && Current.Kind != TokenKind.Semicolon
+                && Current.Kind != TokenKind.Comma)
             {
                 list.Add(Read());
-                
-                if (Current.Kind == TokenKind.Colon
-                    || Current.Kind == TokenKind.BlockStart
-                    || Current.Kind == TokenKind.BlockEnd
-                    || Current.Kind == TokenKind.Semicolon)
-                {
-                    break;
-                }
             }
-
-            ReadTrivia(); // Trialing trivia
 
             return list;
         }

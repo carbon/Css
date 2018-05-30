@@ -506,23 +506,29 @@ namespace Carbon.Css
             WriteBlock(rule, level);
         }
 
+        public void WriteSelectorList(CssSelectorList selector)
+        {  
+            for (int i = 0; i < selector.Count; i++)
+            {
+                if (i != 0)
+                {
+                    writer.WriteLine(",");
+                }
+
+                WriteSelector(selector[i]);
+            }
+        }
+
         public void WriteSelector(in CssSelector selector)
         {
-            if (selector.Count == 1)
+            for (int i = 0; i < selector.Count; i++)
             {
-                writer.Write(selector[0]);
-            }
-            else
-            {
-                for (int i = 0; i < selector.Count; i++)
+                if (i != 0)
                 {
-                    if (i != 0)
-                    {
-                        writer.WriteLine(",");
-                    }
-
-                    writer.Write(selector[i]);
+                    writer.WriteLine(",");
                 }
+
+                writer.Write(selector[i].ToString());
             }
         }
 

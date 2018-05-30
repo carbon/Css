@@ -27,6 +27,10 @@ namespace Carbon.Css
             }
         }
 
+        // public int Count => items.Count;
+
+        // public CssToken this[int index] => items[index];
+
         public override string ToString()
         {
             if (Count == 1)
@@ -36,16 +40,33 @@ namespace Carbon.Css
 
             var sb = new StringBuilder();
 
+            int i = 0;
+
             foreach (var token in this)
             {
-                if (token.IsTrivia) continue;
+                if (i != 0 && token.IsTrivia)
+                {
+                    sb.Append(' ');
 
-                if (sb.Length != 0) sb.Append(' ');
+                    continue;
+                }
+                
+                i++;
 
                 sb.Append(token.Text);
             }
 
-            return sb.ToString();
+            return sb.ToString().Trim();
+        }
+
+        public bool Contains(string text)
+        {
+            foreach (var token in this)
+            {
+                if (token.Text.Contains(text)) return true;
+            }
+
+            return false;
         }
     }
 }
