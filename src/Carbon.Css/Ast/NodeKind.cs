@@ -16,6 +16,7 @@
         Variable,
         InterpolatedString,
         Reference, // &
+        Sequence,
 
         // Values
         ValueList,

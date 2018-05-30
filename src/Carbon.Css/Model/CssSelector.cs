@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Carbon.Css.Parser;
 
 namespace Carbon.Css
 {
-    public readonly struct CssSelector : IEnumerable<TokenList>
+    public readonly struct CssSelector : IEnumerable<CssSequence>
     {
-        private readonly IReadOnlyList<TokenList> items; // comma seperated
+        private readonly IReadOnlyList<CssSequence> items; // comma seperated
 
-        public CssSelector(IReadOnlyList<TokenList> items)
+        public CssSelector(IReadOnlyList<CssSequence> items)
         {
             this.items = items;
         }      
 
         public int Count => items.Count;
 
-        public TokenList this[int index] => items[index];
+        public CssSequence this[int index] => items[index];
 
-        public bool Contains(TokenKind kind)
+        public bool Contains(NodeKind kind)
         {
             foreach (var part in items)
             {
@@ -30,11 +29,6 @@ namespace Carbon.Css
 
         public override string ToString()
         {
-            if (items.Count == 1)
-            {
-                return items[0].ToString();
-            }
-
             return string.Join(", ", items);
         }
 
@@ -48,7 +42,7 @@ namespace Carbon.Css
 
         #region IEnumerator
 
-        public IEnumerator<TokenList> GetEnumerator() => items.GetEnumerator();
+        public IEnumerator<CssSequence> GetEnumerator() => items.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 
