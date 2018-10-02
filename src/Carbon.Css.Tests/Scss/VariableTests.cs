@@ -20,7 +20,6 @@ div { color: rgba($borderColor, 0.5); }");
             Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", css.ToString());
         }
 
-
         [Fact]
         public void ReferenceToSelfThrows()
         {
@@ -130,13 +129,15 @@ body {
 
 
 
-            sheet = StyleSheet.Parse(
-    @"
+            sheet = StyleSheet.Parse(@"
+
 @if $bananas == undefined {
     body { 
       background-color: red;
     }
-}");
+}
+
+");
 
             Assert.Equal(@"body { background-color: red; }", sheet.ToString(dic));
         }
@@ -149,8 +150,8 @@ body {
                 ["monster"] = CssValue.Parse("purple")
             };
 
-            var sheet = StyleSheet.Parse(
-@"
+            var sheet = StyleSheet.Parse(@"
+
 $blue: #dceef7;
 $yellow: #fff5cc;
 $padding: 10px;
@@ -160,23 +161,28 @@ body {
   color: $yellow;
   monster: $monster;
   padding: $padding $padding-right $padding $padding;
-}");
+}
 
-            Assert.Equal(
-@"body {
+");
+
+            Assert.Equal(@"
+
+body {
   background-color: #dceef7;
   color: #fff5cc;
   monster: purple;
   padding: 10px 20px 10px 10px;
-}", sheet.ToString(dic));
+}
+
+".Trim(), sheet.ToString(dic));
         }
 
 
         [Fact]
         public void VariableTest2()
         {
-            var styles =
-@"
+            var css = StyleSheet.Parse(@"
+
 $addYellow: #fff5cc;
 $editBlue: #dceef7;
 
@@ -184,19 +190,21 @@ body { font-size: 14px; opacity: 0.5; }
 .editBlock button.save { background: $addYellow; }
 .editBlock.populated button.save { background: $editBlue; }
 .rotatedBox { box-sizing: border-box; }
-			";
 
-            var sheet = StyleSheet.Parse(styles);
+");
 
 
-            Assert.Equal(
-@"body {
+            Assert.Equal(@"
+
+body {
   font-size: 14px;
   opacity: 0.5;
 }
 .editBlock button.save { background: #fff5cc; }
 .editBlock.populated button.save { background: #dceef7; }
-.rotatedBox { box-sizing: border-box; }", sheet.ToString());
+.rotatedBox { box-sizing: border-box; }
+
+".Trim(), css.ToString());
 
 
         }

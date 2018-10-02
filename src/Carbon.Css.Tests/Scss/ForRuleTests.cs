@@ -5,7 +5,6 @@ namespace Carbon.Css.Tests
 {
     public class ForRuleTests
     {
-
         [Fact]
         public void A()
         {
@@ -47,36 +46,41 @@ div { width: 5px; }".Trim(), sheet.ToString());
             var dic = new Dictionary<string, CssValue>
             {
                 ["columnCount"] = CssValue.Parse("5"),
+                ["columnWidth"] = CssUnitValue.Number(100 / 5d),
                 ["gap"] = CssValue.Parse("10px")
             };
 
             var sheet = StyleSheet.Parse(@"
+
 @for $i from 1 through $columnCount { 
-  .col-#{$i} { width: #{$i}px; margin: $gap; }
+  .col-#{$i} { 
+    left: #{$columnWidth * $i}%;
+    margin: $gap * 0.5; 
+  }
 }
+
 ");
-            
 
             Assert.Equal(@"
 .col-1 {
-  width: 1px;
-  margin: 10px;
+  left: 20%;
+  margin: 5px;
 }
 .col-2 {
-  width: 2px;
-  margin: 10px;
+  left: 40%;
+  margin: 5px;
 }
 .col-3 {
-  width: 3px;
-  margin: 10px;
+  left: 60%;
+  margin: 5px;
 }
 .col-4 {
-  width: 4px;
-  margin: 10px;
+  left: 80%;
+  margin: 5px;
 }
 .col-5 {
-  width: 5px;
-  margin: 10px;
+  left: 100%;
+  margin: 5px;
 }
 
 ".Trim(), sheet.ToString(dic));

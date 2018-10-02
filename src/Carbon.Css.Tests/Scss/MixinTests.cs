@@ -11,7 +11,9 @@ namespace Carbon.Css.Tests
         [Fact]
         public void MixinTest19()
         {
-            var ss = StyleSheet.Parse(@"@mixin serif($fontWeight:300) {
+            var ss = StyleSheet.Parse(@"
+
+@mixin serif($fontWeight:300) {
   font-family: 'Merriweather', serif;
   font-weight: $fontWeight;
 }
@@ -21,23 +23,22 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2em;
   text-rendering: optimizeLegibility;
   margin: 0 0 1rem 0;
-}");
+}
 
-            Assert.Equal(
-@"h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+");
+
+            Assert.Equal(@"
+
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', serif;
   font-weight: 300;
   line-height: 1.2em;
   text-rendering: optimizeLegibility;
   margin: 0 0 1rem 0;
-}", ss.ToString());
-        }
+}
 
+".Trim(), ss.ToString());
+        }
 
         [Fact]
         public void MixinTest15()
@@ -57,22 +58,20 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 1rem 0;
 }");
 
-
             for (var i = 0; i < 100; i++)
             {
 
-                Assert.Equal(@"h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+                Assert.Equal(@"
+
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', serif;
   font-weight: 300;
   line-height: 1.2em;
   text-rendering: optimizeLegibility;
   margin: 0 0 1rem 0;
-}", ss.ToString());
+}
+
+".Trim(), ss.ToString());
             }
 
         }
@@ -166,8 +165,9 @@ h6 {
 
             Assert.Equal(13, mixins.Context.Mixins.Count);
 
-            var ss = StyleSheet.Parse(@".happy {
-				@include dl-horizontal;
+            var ss = StyleSheet.Parse(@"
+.happy {
+    @include dl-horizontal;
 				font-size: 15px;
 			} ", mixins.Context);
 
@@ -181,7 +181,7 @@ h6 {
   float: left;
   width: 7.5em;
 }
-.happy dd { padding-left: ( 7.5em + 0.625em; }", ss.ToString());
+.happy dd { padding-left: 8.125em; }", ss.ToString());
         }
 
         [Fact]

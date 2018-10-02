@@ -6,6 +6,30 @@
 
     public class VendorPrefixTests
     {
+
+        [Fact]
+        public void DoubleList5()
+        {
+            var sheet = StyleSheet.Parse(@"
+			//= support Safari >= 5
+			a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
+
+            Assert.Equal(@"a {
+  -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
+  transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
+}", sheet.ToString());
+        }
+
+        [Fact]
+        public void DoubleList6()
+        {
+            var sheet = StyleSheet.Parse(@"
+			//= support Safari >= 9
+			a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
+
+            Assert.Equal(@"a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
+        }
+
         [Fact]
         public void ParseWebkitPrefixedKeyframesRule()
         {
@@ -18,7 +42,7 @@
             var atRule = (sheet.Children[0] as UnknownRule);
 
             Assert.Equal("-webkit-keyframes", atRule.Name);
-            Assert.Equal("fade", atRule.SelectorText);
+            Assert.Equal("fade", atRule.Text.ToString());
 
             Assert.Equal(
 @"@-webkit-keyframes fade {

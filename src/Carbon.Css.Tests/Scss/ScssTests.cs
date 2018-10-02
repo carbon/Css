@@ -2,7 +2,6 @@
 
 namespace Carbon.Css.Tests
 {
-
     public class ScssTests
     {
         [Fact]
@@ -58,58 +57,7 @@ div textarea {
 }", ss.ToString());
         }
 
-        [Fact]
-        public void NestedStyleRewriterTest()
-        {
-            var sheet = StyleSheet.Parse(
-@"nav {
-  display: block;
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  li { display: inline-block; }
-
-  a {
-    display: block;
-    padding: 6px 12px;
-    text-decoration: none;
-  }
-}");
-
-            Assert.Equal(
-@"nav { display: block; }
-nav ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-nav li { display: inline-block; }
-nav a {
-  display: block;
-  padding: 6px 12px;
-  text-decoration: none;
-}", sheet.ToString());
-
-        }
-
-        [Fact]
-        public void DoubleList5()
-        {
-
-            var sheet = StyleSheet.Parse(@"
-			//= support Safari >= 5
-			a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
-
-            Assert.Equal(@"a {
-  -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
-  transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
-}", sheet.ToString());
-
-
-        }
+      
 
         [Fact]
         public void DoubleList()
@@ -216,7 +164,6 @@ a {
     transition: transform 0.2s ease-in-out, opacity 0.4s ease-in-out;
   }
 }");
-
 
             sheet.Context.SetCompatibility(BrowserInfo.Chrome26, BrowserInfo.Safari5);
 

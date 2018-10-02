@@ -52,7 +52,7 @@ namespace Carbon.Css.Tests
 
             Assert.NotNull(rule);
 
-            Assert.Equal("(min-width: 700px)", rule.RuleText);
+            Assert.Equal("(min-width: 700px)", rule.Queries.ToString());
 
 
             var include = rule.Children[0] as IncludeNode;

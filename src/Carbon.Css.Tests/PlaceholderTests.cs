@@ -7,13 +7,14 @@ namespace Carbon.Css.Tests
         [Fact]
         public void InsideMediaBlock()
         {
-
             var ss = StyleSheet.Parse(@"
 @media only screen and (max-width: 770px) {
   ::-webkit-input-placeholder { color: rgba(0,0,0,.2); -webkit-font-smoothing: antialiased; }
   :-ms-input-placeholder { color: red; }
 }
 ");
+
+
 
             Assert.Equal(
 @"@media only screen and (max-width: 770px) {

@@ -4,10 +4,10 @@ using Xunit;
 
 namespace Carbon.Css.Tests
 {
-    public class SassTests
+    public class FunctionTests
     {
         [Fact]
-        public void Test78()
+        public void LightenAndDarken()
         {
             var sheet = StyleSheet.Parse(@"
 $red: #f00;
@@ -21,27 +21,12 @@ div { color: lighten($red, 0.2); }");
 div { color: #ff6666; }", sheet.ToString());
         }
 
-        /*
-		[Fact]
-		public void LightenTests()
-		{
-			var sheet = StyleSheet.Parse(@"
-div { color: darken(#ccc, .5); }
-div { color: lighten(#ccc, 0.2); }");
-
-
-			Assert.Equal(@"div { color: #cdcdcd; }
-div { color: #cbcbcb; }", sheet.ToString());
-		}
-        */
-
         [Fact]
         public void FuncInMixin()
         {
             var sheet = StyleSheet.Parse(@"
 $red: #f00;
 $borderColor: $red;
-
 
 @mixin hi() {
   color: darken($red, 10%);
@@ -139,7 +124,6 @@ div .placeholderText {
         {
             var ss = StyleSheet.FromFile(TestHelper.GetTestFile("test53.css"));
 
-
            // throw new Exception(ss.ToString());
 
 
@@ -229,47 +213,5 @@ div .placeholderText {
 .block .description { padding: 5px 250px 20px 225px; }", ss.ToString());
 
         }
-
-
-
-        /*
-		[Fact]
-		public void Test1()
-		{
-			var sheet = StyleSheet.Parse(
-				@"nav {
-  display: block;
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  li { display: inline-block; }
-
-  a {
-    display: block;
-    padding: 6px 12px;
-    text-decoration: none;
-  }
-}");
-
-
-
-			var rule = (CssRule)sheet.Children[0];
-
-			var rewriter = new CssWriter(new StringWriter(), sheet.Context);
-
-			var rules = rewriter.Rewrite(rule).ToArray();
-
-			Assert.Equal(4, rules.Length);
-			Assert.Equal("nav { display: block; }", rules[0].ToString());
-			Assert.Equal(@"nav ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}", rules[1].ToString());
-		}
-		*/
     }
 }
