@@ -12,7 +12,7 @@
         Or		  = 31,	// ||
         
         // Equality
-        Equals	  = 40,	// ==
+        Eq	  = 40,	// ==
         NotEquals = 41,	// !=      (<>)
         
         // Relational
@@ -25,7 +25,7 @@
         Divide	  = 60, // /
         Multiply  = 61, // *
         Add		  = 62,	// +
-        Subtract  = 62,	// -
-        Mod		  = 63  // %
+        Subtract  = 63,	// -
+        Mod		  = 64  // %
 	}
 }

@@ -1,15 +1,17 @@
-﻿namespace Carbon.Css
+﻿using Carbon.Css.Parser;
+
+namespace Carbon.Css
 {
     public sealed class BinaryExpression : CssValue
     {
         // ||, &&, ==, !=
         // +, -, *, /, %
 
-        public BinaryExpression(CssValue left, BinaryOperator op, CssValue right)
+        public BinaryExpression(CssValue left, CssToken op, CssValue right)
             : base(NodeKind.Expression)
         {
             Left = left;
-            Operator = op;
+            OperatorToken = op;
             Right = right;
         }
 
@@ -17,8 +19,10 @@
 
         public CssValue Right { get; }
 
-        public BinaryOperator Operator { get; }
+        public CssToken OperatorToken { get; }
 
-        public override CssNode CloneNode() => new BinaryExpression(Left, Operator, Right);
+        public BinaryOperator Operator => (BinaryOperator)OperatorToken.Kind;
+
+        public override CssNode CloneNode() => new BinaryExpression(Left, OperatorToken, Right);
     }
 }

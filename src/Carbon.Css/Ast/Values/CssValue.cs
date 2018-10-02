@@ -12,6 +12,8 @@ namespace Carbon.Css
             : base(kind)
         { }
 
+        public static CssUnitValue Number(double value) => new CssUnitValue(value, CssUnitInfo.Number);
+
         public static CssValue Parse(string text)
         {
             if (text.Length == 0)
@@ -64,11 +66,11 @@ namespace Carbon.Css
 
             if (unitIndex > 0)
             {
-                value = new CssUnitValue(double.Parse(text.Substring(0, unitIndex)), CssUnit.Get(text.Substring(unitIndex)));
+                value = new CssUnitValue(double.Parse(text.Substring(0, unitIndex)), text.Substring(unitIndex));
             }
             else
             {
-                value = new CssUnitValue(double.Parse(text), CssUnit.Number);
+                value = CssValue.Number(double.Parse(text));
             }
 
             return true;
@@ -101,6 +103,29 @@ namespace Carbon.Css
             }
 
             return new CssValueList(values, ValueSeperator.Space);
+        }
+
+
+        public static bool AreCompatible(CssValue left, CssValue right, BinaryOperator operation)
+        {
+            switch (operation)
+            {
+                case BinaryOperator.Divide: return false;
+                case BinaryOperator.Add:
+                case BinaryOperator.Subtract:
+                    return left.Kind == right.Kind;
+                case BinaryOperator.Multiply:
+                    return
+                        left.Kind == right.Kind ||
+                        left.Kind == NodeKind.Percentage ||
+                        right.Kind == NodeKind.Percentage ||
+                        left.Kind == NodeKind.Number ||
+                        right.Kind == NodeKind.Number;
+                case BinaryOperator.Mod:
+                    return right.Kind == NodeKind.Number;
+            }
+
+            return true;
         }
     }
 }
