@@ -1,25 +1,45 @@
-﻿namespace Carbon.Css
-{
-    using System;
+﻿using System;
+using Carbon.Css.Helpers;
 
+namespace Carbon.Css
+{
     public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
 	{
-        public static readonly CssUnitValue Zero = new CssUnitValue(0, CssUnit.Number);
+        public static readonly CssUnitValue Zero = new CssUnitValue(0, CssUnitInfo.Number);
+        
+        public CssUnitValue(double value, string unitName)
+            : this(value, CssUnitInfo.Get(unitName))
+        {
+        }
 
-		public CssUnitValue(double value, CssUnit unit)
-			: base(unit.Kind)
-		{
-			Value = value;
-		    Unit  = unit;
-		}
+        public CssUnitValue(double value, CssUnitInfo unit)
+            : base(unit.Kind)
+        {
+            Value = value;
+            Unit = unit;
+        }
 
-		public double Value { get; }
+        public double Value { get; }
 
-		public CssUnit Unit { get; }
+		public CssUnitInfo Unit { get; }
 
 		public override string ToString() => Value + Unit.Name;
 
 		public override CssNode CloneNode() => new CssUnitValue(Value, Unit);
+
+        public static CssUnitValue Parse(ReadOnlySpan<char> text)
+        {
+            double value = text.ReadNumber(out int read);
+            
+            if (read == text.Length)
+            {
+                return Number(value);
+            }
+
+            return new CssUnitValue(value, text.Slice(read).Trim().ToString());
+        }
+
+        
 
 		#region Operators
 
@@ -30,26 +50,27 @@
 
 		public CssValue Multiply(CssValue other)
 		{
-			if (other.Kind == NodeKind.Percentage)
-			{
-				return new CssUnitValue(Value * (((CssUnitValue)other).Value / 100), Unit);
-            }
-			else if (other is CssUnitValue measurement)
+            if (other.Kind == NodeKind.Percentage)
             {
-                if (other.Kind == Kind || other.Kind == NodeKind.Number)
-                {
-                    return new CssUnitValue(Value * measurement.Value, measurement.Unit);
-                }
+                return new CssUnitValue(Value * (((CssUnitValue)other).Value / 100), Unit);
+            }
+            else if (other.Kind == NodeKind.Number)
+            {
+                return new CssUnitValue(Value * (((CssUnitValue)other).Value), Unit);
+            }
+            else if (other is CssUnitValue measurement)
+            {
+                return new CssUnitValue(Value * measurement.Value, measurement.Unit);
             }
 
-            throw new Exception("cannot multiply types");
-		}
+            throw new Exception($"{this.Kind} and {other.Kind} are not compatible | {this} * {other}");
+        }
 
         public CssValue Divide(CssValue other)
         {
-            if (other.Kind == NodeKind.Percentage)
+            if (other.Kind == NodeKind.Percentage || other.Kind == NodeKind.Number)
             {
-                return new CssUnitValue(Value / (((CssUnitValue)other).Value / 100), Unit);
+                return new CssUnitValue(Value / (((CssUnitValue)other).Value), Unit);
             }
             else if (other is CssUnitValue otherUnit)
             {
@@ -59,34 +80,40 @@
                 }
             }
 
-            throw new Exception("cannot divide types");
+            throw new Exception($"{this.Kind} and {other.Kind} are not compatible | | {this} / {other}");
         }
-
 
         public CssValue Add(CssValue other)
 		{
-			if (other.Kind == NodeKind.Number)
-			{
-				return new CssUnitValue(Value + ((CssUnitValue)other).Value, Unit);
-			}
-			else if (other is CssUnitValue measurement && measurement.Kind == Kind)
+			if (other is CssUnitValue measurement && measurement.Kind == Kind)
             {
-                return new CssUnitValue(Value + measurement.Value, measurement.Unit);   
+                return new CssUnitValue(Value + measurement.Value, measurement.Unit); 
             }
 
-            throw new Exception("cannot add types");
+            throw new Exception($"{this.Kind} and {other.Kind} are not compatible | {this} + {other}");
 		}
+
+        public CssValue Subtract(CssValue other)
+        {
+            if (other is CssUnitValue measurement && measurement.Kind == Kind)
+            {
+                return new CssUnitValue(Value - measurement.Value, measurement.Unit);
+            }
+
+            throw new Exception($"{this.Kind} and {other.Kind} are not compatible | {this} - {other}");
+        }
 
         #endregion
 
-        public void Deconstruct(out double value, out CssUnit unit)
+        public void Deconstruct(out double value, out CssUnitInfo unit)
         {
             (value, unit) = (Value, Unit);
         }
 
-        public bool Equals(CssUnitValue other) =>
-            this.Unit.Name == other.Unit.Name &&
-            this.Value == other.Value;
+        public bool Equals(CssUnitValue other)
+        {
+            return (Unit.Name, Value) == (other.Unit.Name, other.Value);
+        }
 	}
 
 	// CssLength
