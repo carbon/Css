@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Carbon.Css
 {
@@ -15,7 +16,14 @@ namespace Carbon.Css
         {
             // Works for resources only up to 32k in size in IE8.
 
-            Value = "data:" + contentType + ";base64," + Convert.ToBase64String(data);
+            var sb = new StringBuilder();
+
+            sb.Append("data:");
+            sb.Append(contentType);
+            sb.Append(";base64,");
+            sb.Append(Convert.ToBase64String(data));
+            
+            Value = sb.ToString();
         }
 
         public string Value { get; }
@@ -23,8 +31,8 @@ namespace Carbon.Css
         public override string ToString() => $"url('{Value}')";
 
         #region Helpers
-
-        public bool IsPath => !Value.Contains(":");
+        
+        public bool IsPath => Value.IndexOf(':') == -1; // ! https://
 
         public bool IsExternal => !IsPath;
 
