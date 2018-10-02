@@ -5,6 +5,31 @@ namespace Carbon.Css.Tests
     public class CssValueTests
     {
         [Fact]
+        public void NumbersAreStoredAtDoublePrecision()
+        {
+            var value = CssValue.Parse("97.916666666666666666666666666667%") as CssUnitValue;
+
+            Assert.Equal(97.916666666666666666666666666667d, value.Value);
+        }
+
+        [Fact]
+        public void ParseValues()
+        {
+            var (value, unit) = CssValue.Parse("14px") as CssUnitValue;
+
+            Assert.Equal(14f, value);
+            Assert.Equal("px", unit.Name);
+        }
+
+        [Fact]
+        public void ParsePx()
+        {
+            var value = CssValue.Parse("14px");
+
+            Assert.Equal("14px", value.ToString());
+        }
+
+        [Fact]
         public void A()
         {
             Assert.Equal("left", CssValue.Parse("left").ToString());
@@ -31,14 +56,7 @@ namespace Carbon.Css.Tests
             Assert.Equal("100px 100px 100px 100px", value.ToString());
         }
 
-        [Fact]
-        public void ParseValues()
-        {
-            var (value, unit) = CssValue.Parse("14px") as CssUnitValue;
-
-            Assert.Equal(14f, value);
-            Assert.Equal("px", unit.Name);
-        }
+      
 
 
         [Fact]
