@@ -5,6 +5,16 @@ namespace Carbon.Css.Parser.Tests
 {
     public class CssSelectorTests
     {
+        [Theory]
+        [InlineData(":nth-child(1)")]
+        [InlineData(":nth-child(-1)")]
+        [InlineData(":nth-child(+1)")]
+        public void NthChildTests(string text)
+        {
+            var selector = CssSelector.Parse(text);
+
+            Assert.Equal(text, selector.ToString());
+        }
 
         [Fact]
         public void ParseSelector()
