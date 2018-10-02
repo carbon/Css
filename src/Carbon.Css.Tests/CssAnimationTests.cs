@@ -1,8 +1,9 @@
 ﻿using Xunit;
 
 namespace Carbon.Css.Tests
-{ 
-    public class AnimationTests
+{
+
+    public class CssAnimationTests
     {
         [Fact]
         public void KetframesExpansition1()
@@ -128,7 +129,6 @@ namespace Carbon.Css.Tests
         {
             var sheet = StyleSheet.Parse(@"
 
-//= support Safari >= 5
 @keyframes flicker {
   0%    { opacity: 1; }
   30%   { opacity: .8; }
@@ -136,20 +136,16 @@ namespace Carbon.Css.Tests
   100%  { opacity: .6; }
 }");
 
+            Assert.Equal(@"
 
-            Assert.Equal(
-@"@-webkit-keyframes flicker {
-  0% { opacity: 1; }
-  30% { opacity: 0.8; }
-  60% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
 @keyframes flicker {
   0% { opacity: 1; }
   30% { opacity: 0.8; }
   60% { opacity: 1; }
   100% { opacity: 0.6; }
-}", sheet.ToString());
+}
+
+".Trim(), sheet.ToString());
         }
 
         [Fact]
