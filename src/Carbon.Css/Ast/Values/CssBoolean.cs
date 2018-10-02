@@ -2,6 +2,9 @@
 {
     public sealed class CssBoolean : CssValue
     {
+        public static readonly CssBoolean True = new CssBoolean(true);
+        public static readonly CssBoolean False = new CssBoolean(false);
+
         public CssBoolean(bool value)
             : base(NodeKind.Boolean)
         {
@@ -13,5 +16,10 @@
         public override CssNode CloneNode() => new CssBoolean(Value);
 
         public override string ToString() => Value.ToString().ToLower();
+
+        internal static CssBoolean Get(bool value)
+        {
+            return value ? True : False;
+        }
     }
 }
