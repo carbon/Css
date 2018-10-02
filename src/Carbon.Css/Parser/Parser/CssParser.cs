@@ -6,6 +6,7 @@ namespace Carbon.Css.Parser
 {
     public sealed partial class CssParser : IDisposable
     {
+        private int depth = 1;
         private readonly CssTokenizer tokenizer;
         private readonly LexicalModeContext context = new LexicalModeContext(LexicalMode.Unknown);
 
@@ -39,19 +40,31 @@ namespace Carbon.Css.Parser
 
         private bool IsEnd => tokenizer.IsEnd;
 
-        public CssToken Read()
+        public CssToken Consume()
         {
-            return tokenizer.Read();
+            return tokenizer.Consume();
         }
 
-        public CssToken Read(TokenKind expect, LexicalMode mode)
+        public bool ConsumeIf(TokenKind kind)
+        {
+            if (tokenizer.Current.Kind == kind)
+            {
+                tokenizer.Consume();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public CssToken Consume(TokenKind expect, LexicalMode mode)
         {
             if (Current.Kind != expect)
             {
                 throw new UnexpectedTokenException(mode, expect, Current);
             }
 
-            return Read();
+            return Consume();
         }
 
         #endregion
@@ -83,15 +96,16 @@ namespace Carbon.Css.Parser
 
         public CssNode ReadDirective()
         {
-            var text = Read().Text;
-
-            // READ: //=
-            var parts = text.Substring(3).TrimStart().Split(Seperators.Space, 2);
+            // skip '//= '
+            var text = Consume().Text.AsSpan(3).TrimStart();
+            
+            int spaceIndex = text.IndexOf(' ');
 
             //= support Safari 5.1
+
             return new CssDirective(
-                name: parts[0].Trim(),
-                value: parts.Length > 1 ? parts[1].Trim() : null
+                name  : spaceIndex > 0 ? text.Slice(0, spaceIndex).Trim().ToString() : text.ToString(),
+                value : spaceIndex > 0 ? text.Slice(spaceIndex + 1).Trim().ToString() : null
             );
         }
 
@@ -116,9 +130,9 @@ namespace Carbon.Css.Parser
             // @import "subs.css";
             // @media print {
 
-            Read(TokenKind.AtSymbol, LexicalMode.Rule); // Read @
+            Consume(TokenKind.AtSymbol, LexicalMode.Rule); // Read @
 
-            var atName = Read();                        // read name
+            var atName = Consume();                        // read name
 
             ReadTrivia();
 
@@ -141,15 +155,15 @@ namespace Carbon.Css.Parser
 
             if (Current.Kind == TokenKind.Name)
             {
-                text = ReadSpan();
+                text = ReadTokenSpan();
             }
 
             var rule = new UnknownRule(atName.Text, text);
 
             switch (Current.Kind)
             {
-                case TokenKind.BlockStart: ReadBlock(rule); break; // {
-                case TokenKind.Semicolon: tokenizer.Read(); break; // ;
+                case TokenKind.BlockStart : ReadBlock(rule); break; // {
+                case TokenKind.Semicolon  : Consume();       break; // ;
             }
 
             return rule;
@@ -159,11 +173,13 @@ namespace Carbon.Css.Parser
         public PageRule ReadPageRule()
         {
             var rule = new PageRule();
+            
+            // TODO: read optional selector
 
             switch (Current.Kind)
             {
-                case TokenKind.BlockStart: ReadBlock(rule); break; // {
-                case TokenKind.Semicolon : tokenizer.Read(); break; // ;
+                case TokenKind.BlockStart: ReadBlock(rule);  break; // {
+                case TokenKind.Semicolon : tokenizer.Consume(); break; // ;
             }
 
             return rule;
@@ -183,7 +199,7 @@ namespace Carbon.Css.Parser
 
             if (Current.Kind == TokenKind.Name)
             {
-                selectorText = ReadSpan().ToString();
+                selectorText = ReadTokenSpan().ToString();
             }
 
             return new CharsetRule(selectorText);
@@ -197,7 +213,7 @@ namespace Carbon.Css.Parser
 
             while (Current.Kind != TokenKind.BlockStart && !IsEnd)
             {
-                span.Add(Read()); // Read the token
+                span.Add(Consume()); // Read the token
             }
 
             var rule = new KeyframesRule(span.ToString());
@@ -215,7 +231,7 @@ namespace Carbon.Css.Parser
 
             while (Current.Kind != TokenKind.BlockStart && !IsEnd)
             {
-                span.Add(Read());
+                span.Add(Consume());
             }
 
             var rule = new MediaRule(span);
@@ -231,7 +247,7 @@ namespace Carbon.Css.Parser
 
             while (Current.Kind != TokenKind.BlockStart && !IsEnd)
             {
-                Read();
+                Consume();
             }
 
             var rule = new FontFaceRule();
@@ -249,10 +265,7 @@ namespace Carbon.Css.Parser
 
             var rule = new ImportRule(CssUrlValue.Parse(value.ToString()));
 
-            if (Current.Kind == TokenKind.Semicolon)
-            {
-                Read();
-            }
+            ConsumeIf(TokenKind.Semicolon); // ? ;
 
             rule.Trailing = ReadTrivia();
 
@@ -334,11 +347,11 @@ namespace Carbon.Css.Parser
 
         public CssInterpolatedString ReadInterpolatedString()
         {
-            Read(); // #{
+            Consume(); // #{
 
             var expression = ReadExpression();
 
-            Read(); // }
+            Consume(); // }
 
             return new CssInterpolatedString(expression) { Trailing = ReadTrivia() };
         }
@@ -358,14 +371,12 @@ namespace Carbon.Css.Parser
             List<CssValue> values = null;
 
             CssValue first = CssValue.FromComponents(ReadComponents());
-
-            while (Current.Kind == TokenKind.Comma)
+            
+            while (ConsumeIf(TokenKind.Comma)) // ? ,
             {
-                Read();         // read ,
+                ReadTrivia(); // ? {trivia}
 
-                ReadTrivia();   // read trivia
-
-                if (values == null)
+                if (values is null)
                 {
                     values = new List<CssValue>();
 
@@ -375,7 +386,7 @@ namespace Carbon.Css.Parser
                 values.Add(CssValue.FromComponents(ReadComponents()));
             }
 
-            if (values == null) return first;
+            if (values is null) return first;
 
             return new CssValueList(values, ValueSeperator.Comma);
         }
@@ -384,17 +395,8 @@ namespace Carbon.Css.Parser
         {
             while (!IsEnd)
             {
-                var component = ReadComponent();
-
-                if (Current.IsBinaryOperator)
-                {
-                    yield return ReadExpressionFrom(component);
-                }
-                else
-                {
-                    yield return component;
-                }
-
+                yield return ReadExpression();
+                
                 if (Current.Kind == TokenKind.BlockStart
                     || Current.Kind == TokenKind.BlockEnd
                     || Current.Kind == TokenKind.Semicolon
@@ -421,7 +423,7 @@ namespace Carbon.Css.Parser
                 case TokenKind.InterpolatedStringStart : return ReadInterpolatedString();
             }
 
-            CssToken value = Read();  // read string|number
+            CssToken value = Consume();  // read string|number
 
             // Function
             // A functional notation is a type of component value that can represent more complex types or invoke special processing.
@@ -449,13 +451,13 @@ namespace Carbon.Css.Parser
 
         public CssFunction ReadFunctionCall(CssToken name)
         {
-            Read();                 // (
+            Consume();              // ! (
 
-            ReadTrivia();           // trivia
+            ReadTrivia();           // ? trivia
 
             var args = ReadValueList();
 
-            Read(TokenKind.RightParenthesis, LexicalMode.Function); // )
+            Consume(TokenKind.RightParenthesis, LexicalMode.Function); // )
 
             if (name.Text == "url")
             {
@@ -471,11 +473,11 @@ namespace Carbon.Css.Parser
 
         public CssValue ReadNumberOrMeasurement()
         {
-            var value = double.Parse(tokenizer.Read().Text);   // read number
+            var value = double.Parse(tokenizer.Consume().Text);   // read number
 
             if (Current.Kind == TokenKind.Unit)
             {
-                var unit = CssUnit.Get(tokenizer.Read().Text);
+                var unit = tokenizer.Consume().Text;
 
                 return new CssUnitValue(value, unit)
                 {
@@ -483,17 +485,18 @@ namespace Carbon.Css.Parser
                 };
             }
 
-            return new CssUnitValue(value, CssUnit.Number)
-            {
-                Trailing = ReadTrivia()
-            };
+            var result = CssUnitValue.Number(value);
+
+            result.Trailing = ReadTrivia();
+            
+            return result;
         }
 
         public CssVariable ReadVariable()
         {
-            Read(TokenKind.Dollar, LexicalMode.Value);              // read $
+            Consume(TokenKind.Dollar, LexicalMode.Value);              // read $
 
-            var symbol = Read(TokenKind.Name, LexicalMode.Value);   // read symbol
+            var symbol = Consume(TokenKind.Name, LexicalMode.Value);   // read symbol
 
             return new CssVariable(symbol)
             {
@@ -507,22 +510,19 @@ namespace Carbon.Css.Parser
 
         public CssAssignment ReadAssignment()
         {
-            Read(TokenKind.Dollar, LexicalMode.Assignment);             // read $
+            Consume(TokenKind.Dollar, LexicalMode.Assignment);            // ! $
 
-            var name = Read(TokenKind.Name, LexicalMode.Assignment);    // read name
+            var name = Consume(TokenKind.Name, LexicalMode.Assignment);   // ! {name}
 
             ReadTrivia();
 
-            Read(TokenKind.Colon, LexicalMode.Assignment);              // read :
+            Consume(TokenKind.Colon, LexicalMode.Assignment);             // ! :
 
-            ReadTrivia();                                               // read trivia
+            ReadTrivia();                                                 // read trivia
 
             var value = ReadValueList();
 
-            if (Current.Kind == TokenKind.Semicolon)
-            {
-                Read(); // read ;
-            }
+            ConsumeIf(TokenKind.Semicolon);                               // ? ;
 
             ReadTrivia();
 
@@ -533,21 +533,28 @@ namespace Carbon.Css.Parser
 
         public CssSelector ReadSelector()
         {
-            var list = new List<TokenList>();
+            List<CssSequence> list = null;
 
-            list.Add(ReadSpan());
+            var span = ReadValueSpan();
 
             // Maybe a multi-selector
-            while (Current.Kind == TokenKind.Comma)
+            while (ConsumeIf(TokenKind.Comma)) // ? ,
             {
-                Read();
+                if (list is null)
+                {
+                    list = new List<CssSequence>();
 
-                list.Add(ReadSpan());
+                    list.Add(span);
+                }
+                
+                ReadTrivia(); // trailing whitespace
+
+                list.Add(ReadValueSpan());
             }
 
             // #id.hello { } 
 
-            return new CssSelector(list);
+            return new CssSelector(list ?? (IReadOnlyList<CssSequence>) new[] { span });
         }
 
         public StyleRule ReadStyleRule()
@@ -555,6 +562,9 @@ namespace Carbon.Css.Parser
             var rule = new StyleRule(ReadSelector());
 
             ReadBlock(rule);
+
+            rule.Depth = depth;
+
 
             return rule;
         }
@@ -570,7 +580,7 @@ namespace Carbon.Css.Parser
 
         public MixinNode ReadMixinBody()
         {
-            var name = Read(); // name or string
+            var name = Consume(); // name or string
 
             ReadTrivia();
 
@@ -589,42 +599,38 @@ namespace Carbon.Css.Parser
         {
             // ($color, $width: 1in)
 
-            Read(); // (
+            Consume(); // ! (
 
             var list = new List<CssParameter>();
 
             while (Current.Kind != TokenKind.RightParenthesis && !IsEnd)
             {
-                Read(TokenKind.Dollar, LexicalMode.Unknown);
+                Consume(TokenKind.Dollar, LexicalMode.Unknown);
 
-                var name = Read();
+                var name = Consume();
 
                 CssValue @default = null;
 
                 ReadTrivia();
 
-                if (Current.Kind == TokenKind.Colon)
+                if (ConsumeIf(TokenKind.Colon)) // ? :
                 {
-                    Read();         // read :
-
-                    ReadTrivia();   // read trivia
+                    ReadTrivia();               // ? {trivia}
 
                     @default = CssValue.FromComponents(ReadComponents());
                 }
 
                 ReadTrivia();
 
-                if (Current.Kind == TokenKind.Comma)
+                if (ConsumeIf(TokenKind.Comma)) // ? ,
                 {
-                    Read(); // read ,
+                    ReadTrivia();
                 }
-
-                ReadTrivia();
 
                 list.Add(new CssParameter(name.Text, @default));
             }
 
-            Read(TokenKind.RightParenthesis, LexicalMode.Unknown); // read )
+            Consume(TokenKind.RightParenthesis, LexicalMode.Unknown); // ! )
 
             ReadTrivia();
 
@@ -645,27 +651,22 @@ namespace Carbon.Css.Parser
 
             ReadTrivia();
 
-            var name = tokenizer.Read(); // Read the name
+            var name = tokenizer.Consume(); // ! {name}
 
             ReadTrivia();
 
             CssValue args = null;
 
-            if (Current.Kind == TokenKind.LeftParenthesis)
+            if (ConsumeIf(TokenKind.LeftParenthesis)) // ? (
             {
-                Read(TokenKind.LeftParenthesis, LexicalMode.Function);
-
                 args = ReadValueList();
 
-                Read(TokenKind.RightParenthesis, LexicalMode.Function);
+                Consume(TokenKind.RightParenthesis, LexicalMode.Function); // ! )
             }
 
             var trivia = ReadTrivia();
 
-            if (Current.Kind == TokenKind.Semicolon)
-            {
-                tokenizer.Read(); // Read ;
-            }
+            ConsumeIf(TokenKind.Semicolon); // ? ;
 
             return new IncludeNode(name.Text, args)
             {
@@ -679,14 +680,18 @@ namespace Carbon.Css.Parser
         {
             var rule = new StyleRule(selector);
 
-            ReadBlock(rule);
+            rule.Depth = depth;
 
+            ReadBlock(rule);
+            
             return rule;
         }
 
         public CssBlock ReadBlock(CssBlock block)
         {
-            var blockStart = Read(TokenKind.BlockStart, LexicalMode.Block); // Read {
+            depth++;
+
+            var blockStart = Consume(TokenKind.BlockStart, LexicalMode.Block); // ! {
 
             ReadTrivia();
 
@@ -696,11 +701,9 @@ namespace Carbon.Css.Parser
 
                 // A list of delarations or blocks
 
-                if (Current.Kind == TokenKind.AtSymbol)
+                if (ConsumeIf(TokenKind.AtSymbol)) // ? @
                 {
-                    Read(); // Read @
-
-                    var name = tokenizer.Read(); // Name
+                    var name = tokenizer.Consume(); // Name
 
                     switch (name.Text)
                     {
@@ -716,77 +719,81 @@ namespace Carbon.Css.Parser
                     continue;
                 }
 
-                var span = ReadSpan();
-                var spanList = new List<TokenList>();
 
-                spanList.Add(span);
+                var span = ReadValueSpan();
 
-                while (Current.Kind == TokenKind.Comma)
+                List<CssSequence> spanList = null;
+                
+                while (ConsumeIf(TokenKind.Comma)) // ? ,
                 {
-                    Read(); // ,
+                    if (spanList is null)
+                    {
+                        spanList = new List<CssSequence>();
 
-                    spanList.Add(ReadSpan());
+                        spanList.Add(span);
+                    }
+                    
+                    ReadTrivia(); // ? {trivia}
 
+                    spanList.Add(ReadValueSpan());
                 }
 
                 switch (Current.Kind)
                 {
-                    case TokenKind.Colon      : block.Add(ReadDeclarationFromName(span));           break; // DeclarationName
-                    case TokenKind.BlockStart : block.Add(ReadRuleBlock(new CssSelector(spanList))); break;
+                    case TokenKind.Colon      : block.Add(ReadDeclarationFromName(span[0].ToString()));  break; // DeclarationName
+                    case TokenKind.BlockStart :
+                        block.Add(ReadRuleBlock(new CssSelector(spanList ?? (IReadOnlyList<CssSequence>) new[] { span })));  break;
                     case TokenKind.BlockEnd   : break;
 
                     // TODO: Figure out where we missed reading the semicolon TEMP
-                    case TokenKind.Semicolon    : tokenizer.Read(); break;
+                    case TokenKind.Semicolon    : tokenizer.Consume(); break;
 
                     default: throw new UnexpectedTokenException(LexicalMode.Block, Current);
                 }
             }
 
-            tokenizer.Read(); // read }
+            tokenizer.Consume(); // read }
 
             block.Trailing = ReadTrivia();
+
+            depth--;
 
             return block;
         }
 
         public CssDeclaration ReadDeclaration()
         {
-            var name = ReadName();                          // read name
+            var name = ReadName();                              // ! {name}
 
-            ReadTrivia();                                   // read trivia
+            ReadTrivia();                                       // ? trivia
 
-            Read(TokenKind.Colon, LexicalMode.Declaration); // read :
+            Consume(TokenKind.Colon, LexicalMode.Declaration);  // ! :
 
-            ReadTrivia();                                   // TODO: read as leading trivia
+            ReadTrivia();                                       // TODO: read as leading trivia
 
-            var value = ReadValueList();                    // read value (value or valuelist)
+            var value = ReadValueList();                        // read value (value or valuelist)
 
-            if (Current.Kind == TokenKind.Semicolon)
-            {
-                tokenizer.Read();                           // read ;
-            }
+            ConsumeIf(TokenKind.Semicolon);                     // ? ;
+
 
             ReadTrivia();
 
             return new CssDeclaration(name, value);
         }
 
-        public CssDeclaration ReadDeclarationFromName(TokenList name)
+        public CssDeclaration ReadDeclarationFromName(string name)
         {
-            Read(TokenKind.Colon, LexicalMode.Declaration); // read :
+            Consume(TokenKind.Colon, LexicalMode.Declaration); // ! :
             
             ReadTrivia();                                   // TODO: read as leading trivia
 
             var value = ReadValueList();                    // read value (value or cssvariable)
-
-            if (Current.Kind == TokenKind.Semicolon)
-            {
-                Read();                                     // read ;
-            }
+            
+            ConsumeIf(TokenKind.Semicolon);                 // ? ;
 
             ReadTrivia();
 
-            return new CssDeclaration(name.ToString(), value);
+            return new CssDeclaration(name, value);
         }
 
         public Trivia ReadTrivia()
@@ -797,7 +804,7 @@ namespace Carbon.Css.Parser
 
             while (Current.IsTrivia && !IsEnd)
             {
-                trivia.Add(Read());
+                trivia.Add(Consume());
             }
 
             return trivia;
@@ -805,14 +812,48 @@ namespace Carbon.Css.Parser
 
         public string ReadName()
         {
-            string name = Read().Text;
+            string name = Consume().Text;
 
             ReadTrivia();
 
             return name;
         }
 
-        public TokenList ReadSpan()
+        public CssSequence ReadValueSpan()
+        {
+            var list = new CssSequence();
+
+            while (!IsEnd
+                && Current.Kind != TokenKind.Colon
+                && Current.Kind != TokenKind.BlockStart
+                && Current.Kind != TokenKind.BlockEnd
+                && Current.Kind != TokenKind.Semicolon
+                && Current.Kind != TokenKind.Comma)
+            {
+                if (Current.Kind == TokenKind.InterpolatedStringStart)
+                {
+                    list.Add(ReadInterpolatedString());
+                }
+                else if (Current.Kind == TokenKind.Ampersand)
+                {
+                    var ambersand = Consume();
+
+                    list.Add(new CssReference(ambersand) { Trailing = ReadTrivia() });
+                }
+                else
+                {
+                    var text = Consume(); 
+
+                    list.Add(new CssString(text) { Trailing = ReadTrivia() });
+                }
+            }
+
+            // throw new Exception(string.Join(Environment.NewLine, list));
+            
+            return list;
+        }
+
+        public TokenList ReadTokenSpan()
         {
             var list = new TokenList();
 
@@ -823,7 +864,7 @@ namespace Carbon.Css.Parser
                 && Current.Kind != TokenKind.Semicolon
                 && Current.Kind != TokenKind.Comma)
             {
-                list.Add(Read());
+                list.Add(Consume());
             }
 
             return list;

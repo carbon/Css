@@ -9,30 +9,30 @@ namespace Carbon.Css.Parser
             // Literal (Number, Measurement, Variable, ...
             var left = ReadComponent();
 
-            // Check if there's a binary operator
-            if (!Current.IsBinaryOperator)
-            {
-                return left;
-            }
-
-            return ReadExpressionFrom(left);
+            return Current.IsBinaryOperator ? ReadExpressionFrom(left) : left;
         }
 
         public CssValue ReadExpressionFrom(CssValue left)
         {
-            var opToken = Read(); // Read operator
+            var operatorToken = Consume(); // Read operator
 
             ReadTrivia();
-
-            var op = (BinaryOperator)((int)opToken.Kind);
 
             // This may be another expression... 
             // TODO: Make recurssive
             var right = ReadComponent();
 
-            return new BinaryExpression(left, op, right);
+            return new BinaryExpression(left, operatorToken, right);
         }
     }
+
+    /*
+    public struct CssOperator
+    {
+        // Leading
+        // ...
+    }
+    */
 }
 
 /*
