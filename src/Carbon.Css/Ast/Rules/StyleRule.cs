@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Carbon.Css
 {
@@ -29,9 +28,11 @@ namespace Carbon.Css
 
         public CssSelector Selector { get; }
 
+        public int Depth { get; set; }
+
         public override CssNode CloneNode()
         {
-            var clone = new StyleRule(Selector);
+            var clone = new StyleRule(Selector) { Depth = Depth };
 
             foreach (var child in Children)
             {
