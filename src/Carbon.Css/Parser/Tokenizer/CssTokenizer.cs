@@ -29,7 +29,7 @@ namespace Carbon.Css.Parser
         public bool IsEnd => isEnd;
 
         // Returns the current token and advances to the next
-        public CssToken Read()
+        public CssToken Consume()
         {
             if (isEnd) throw new EndOfStreamException("Already ready the last token");
 
@@ -76,8 +76,10 @@ namespace Carbon.Css.Parser
 
                     if (peek == '/' || peek == '*')
                         return ReadComment();
-                    else
+                    else if (peek == ' ')
                         return new CssToken(TokenKind.Divide, reader.Read(), reader.Position);
+                    else
+                        return new CssToken(TokenKind.String, reader.Read(), reader.Position);
 
                 case ':':
                     // Pseudo-elements
@@ -153,7 +155,8 @@ namespace Carbon.Css.Parser
 
                     return new CssToken(TokenKind.InterpolatedStringStart, reader.Read(2), reader.Position - 1);
 
-                case '+': return new CssToken(TokenKind.Add, reader.Read(), reader.Position);
+                case '+' when reader.Peek() == ' ':
+                    return new CssToken(TokenKind.Add, reader.Read(), reader.Position);
                 case '*': return new CssToken(TokenKind.Multiply, reader.Read(), reader.Position);
 
                 case '.' when char.IsDigit(reader.Peek()):
@@ -188,10 +191,10 @@ namespace Carbon.Css.Parser
 
             switch (mode.Current)
             {
-                case LexicalMode.Symbol : return ReadSymbol();
-                case LexicalMode.Value  : return ReadValue();
-                case LexicalMode.Unit   : return ReadUnit();
-                default                 : return ReadName();
+                case LexicalMode.Symbol: return ReadSymbol();
+                case LexicalMode.Value: return ReadValue();
+                case LexicalMode.Unit: return ReadUnit();
+                default: return ReadName();
             }
         }
 
@@ -218,10 +221,10 @@ namespace Carbon.Css.Parser
             while (!char.IsWhiteSpace(reader.Current) &&
                 reader.Current != '{' &&
                 reader.Current != '}' &&
-                reader.Current != '(' && 
+                reader.Current != '(' &&
                 reader.Current != ')' &&
-                reader.Current != ';' && 
-                reader.Current != ':' && 
+                reader.Current != ';' &&
+                reader.Current != ':' &&
                 reader.Current != ',')
             {
                 if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Symbol");
@@ -240,20 +243,20 @@ namespace Carbon.Css.Parser
 
             while (!char.IsWhiteSpace(reader.Current) &&
                 reader.Current != '{' &&
-                reader.Current != '}' && 
-                reader.Current != '(' && 
-                reader.Current != ')' && 
-                reader.Current != ';' && 
+                reader.Current != '}' &&
+                reader.Current != '(' &&
+                reader.Current != ')' &&
+                reader.Current != ';' &&
                 reader.Current != ':' &&
                 reader.Current != ',')
             {
                 if (reader.IsEof) break;
-                
+
                 if (reader.Current == '#' && reader.Peek() == '{')
                 {
                     break;
                 }
-                
+
                 reader.Next();
             }
 
@@ -294,7 +297,7 @@ namespace Carbon.Css.Parser
             }
 
             reader.Mark();
-            
+
             while (!char.IsWhiteSpace(reader.Current) &&
                 reader.Current != '{' &&
                 reader.Current != '}' &&
@@ -320,7 +323,7 @@ namespace Carbon.Css.Parser
                 // We'll return this on the next read...
 
                 stack.Push(new CssToken(TokenKind.String, text, reader.MarkStart));
-                
+
                 mode.Enter(LexicalMode.Value);
 
                 return colon;
@@ -331,13 +334,13 @@ namespace Carbon.Css.Parser
         {
             reader.Mark();
 
-            while (!char.IsWhiteSpace(reader.Current) && 
+            while (!char.IsWhiteSpace(reader.Current) &&
                 reader.Current != '{' &&
-                reader.Current != '}'&& 
-                reader.Current != ')' && 
-                reader.Current != '(' && 
-                reader.Current != ';' && 
-                reader.Current != ',' && 
+                reader.Current != '}' &&
+                reader.Current != ')' &&
+                reader.Current != '(' &&
+                reader.Current != ';' &&
+                reader.Current != ',' &&
                 !reader.IsEof)
             {
                 reader.Next();
@@ -348,7 +351,7 @@ namespace Carbon.Css.Parser
             if (PseudoClassNames.Contains(text))
             {
                 // LeaveValueMode();
-             
+
                 return new CssToken(TokenKind.Name, text, reader.MarkStart);
             }
 
@@ -411,7 +414,7 @@ namespace Carbon.Css.Parser
                     break;
                 }
 
-                reader.Next();                
+                reader.Next();
             }
 
             reader.Read(); // read *
@@ -444,3 +447,5 @@ namespace Carbon.Css.Parser
         }
     }
 }
+
+// https://www.w3.org/TR/css-syntax/#typedef-dimension-token
