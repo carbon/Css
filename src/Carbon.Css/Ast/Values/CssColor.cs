@@ -1,8 +1,8 @@
-﻿namespace Carbon.Css
-{
-	using Color;
+﻿using Carbon.Color;
 
-	public sealed class CssColor : CssValue
+namespace Carbon.Css
+{
+    public sealed class CssColor : CssValue
 	{
 		private readonly string value;
 
@@ -12,7 +12,7 @@
 			this.value = value;
 		}
 
-		public CssColor(Rgba value)
+		public CssColor(in Rgba32 value)
 			: base(NodeKind.Color)
 		{
 			this.value = value.ToString();
