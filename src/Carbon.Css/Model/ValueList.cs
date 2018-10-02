@@ -6,10 +6,25 @@ namespace Carbon.Css
 {
     public sealed class CssSequence : CssValue, IEnumerable<CssValue>
     {
-        private readonly List<CssValue> children = new List<CssValue>();
+        private readonly List<CssValue> children;
 
         public CssSequence()
-            : base(NodeKind.Sequence) { }
+            : base(NodeKind.Sequence)
+        {
+            children = new List<CssValue>();
+        }
+
+        public CssSequence(int capacity)
+            : base(NodeKind.Sequence)
+        {
+            children = new List<CssValue>(capacity);
+        }
+
+        public CssSequence(params CssValue[] items)
+            : base(NodeKind.Sequence)
+        {
+            children = new List<CssValue>(items);
+        }
 
         public void Add(CssValue item)
         {
@@ -60,7 +75,6 @@ namespace Carbon.Css
 
             return false;
         }
- 
 
         public IEnumerator<CssValue> GetEnumerator()
         {
