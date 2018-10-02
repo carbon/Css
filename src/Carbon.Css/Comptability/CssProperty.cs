@@ -22,7 +22,7 @@ namespace Carbon.Css
 
             this.compatibility = compatibility;
 
-            if (compatibility == null && module != null)
+            if (compatibility is null && module != null)
             {
                 this.compatibility = module;
             }
@@ -38,7 +38,7 @@ namespace Carbon.Css
 
         public bool NeedsExpansion(CssDeclaration declaration, in BrowserInfo[] browsers)
         {
-            if (browsers == null || browsers.Length == 0) return false;
+            if (browsers is null || browsers.Length == 0) return false;
 
             if (!Compatibility.HasPatches) return false;
 
@@ -277,18 +277,36 @@ namespace Carbon.Css
         public static readonly CssProperty ListStyleType = new CssProperty("list-style-type", CssModule.Core1);
 
         // Margins -----------------------------------------------------------------------------------------------------------
-        public static readonly CssProperty Margin = new CssProperty("margin", CssModule.Core1);
+        public static readonly CssProperty Margin       = new CssProperty("margin", CssModule.Core1);
         public static readonly CssProperty MarginBottom = new CssProperty("margin-bottom", CssModule.Core1);
-        public static readonly CssProperty MarginLeft = new CssProperty("margin-left", CssModule.Core1);
-        public static readonly CssProperty MarginRight = new CssProperty("margin-right", CssModule.Core1);
-        public static readonly CssProperty MarginTop = new CssProperty("margin-top", CssModule.Core1);
+        public static readonly CssProperty MarginLeft   = new CssProperty("margin-left", CssModule.Core1);
+        public static readonly CssProperty MarginRight  = new CssProperty("margin-right", CssModule.Core1);
+        public static readonly CssProperty MarginTop    = new CssProperty("margin-top", CssModule.Core1);
 
         // Marquee -----------------------------------------------------------------------------------------
         public static readonly CssProperty MarqueeDirection = new CssProperty("marquee-direction");
-        public static readonly CssProperty MarqueeLoop = new CssProperty("marquee-loop");
+        public static readonly CssProperty MarqueeLoop      = new CssProperty("marquee-loop");
         public static readonly CssProperty MarqueePlayCount = new CssProperty("marquee-play-count");
-        public static readonly CssProperty MarqueeSpeed = new CssProperty("marquee-speed");
-        public static readonly CssProperty MarqueeStyle = new CssProperty("marquee-style");
+        public static readonly CssProperty MarqueeSpeed     = new CssProperty("marquee-speed");
+        public static readonly CssProperty MarqueeStyle     = new CssProperty("marquee-style");
+
+        // Masking -----------------------------------------------------------------------------------------
+        public static readonly CssProperty Mask             = new CssProperty("mask", CssModule.Masking1);
+        public static readonly CssProperty MaskBorder       = new CssProperty("mask-border", CssModule.Masking1);
+        public static readonly CssProperty MaskBorderMode   = new CssProperty("mask-border-mode", CssModule.Masking1);
+        public static readonly CssProperty MaskBorderOutset = new CssProperty("mask-border-outset", CssModule.Masking1);
+        public static readonly CssProperty MaskBorderRepeat = new CssProperty("mask-border-repeat", CssModule.Masking1);
+        public static readonly CssProperty MaskBorderSlice  = new CssProperty("mask-border-slice", CssModule.Masking1);
+        public static readonly CssProperty MaskBorderSource = new CssProperty("mask-border-source", CssModule.Masking1);
+        public static readonly CssProperty MaskBorderWidth  = new CssProperty("mask-border-width", CssModule.Masking1);
+        public static readonly CssProperty MaskClip         = new CssProperty("mask-clip", CssModule.Masking1);
+        public static readonly CssProperty MaskComposite    = new CssProperty("mask-composite", CssModule.Masking1);
+        public static readonly CssProperty MaskImage        = new CssProperty("mask-image", CssModule.Masking1);
+        public static readonly CssProperty MaskMode         = new CssProperty("mask-mode", CssModule.Masking1);
+        public static readonly CssProperty MaskOrigin       = new CssProperty("mask-origin", CssModule.Masking1);
+        public static readonly CssProperty MaskPosition     = new CssProperty("mask-position", CssModule.Masking1);
+        public static readonly CssProperty MaskRepeat       = new CssProperty("mask-repeat", CssModule.Masking1);
+        public static readonly CssProperty MaskSize         = new CssProperty("mask-size", CssModule.Masking1);
 
         public static readonly CssProperty MaxHeight = new CssProperty("max-height", CssModule.Core2_1);
         public static readonly CssProperty MaxWidth = new CssProperty("max-width", CssModule.Core2_1);
@@ -432,18 +450,18 @@ namespace Carbon.Css
             { "animation-play-state",       AnimationPlayState },
             { "animation-timing-function",  AnimationTimingFunction },
 
-            { "appearance",     Appearance },
-            { "azimuth",    Azimuth },
-            { "backface-visibility", BackfaceVisibility },
-            { "background", Background },
+            { "appearance",            Appearance },
+            { "azimuth",               Azimuth },
+            { "backface-visibility",   BackfaceVisibility },
+            { "background",            Background },
             { "background-attachment", BackgroundAttachment },
-            { "background-clip", BackgroundClip },
-            { "background-color", BackgroundColor },
-            { "background-image", BackgroundImage },
-            { "background-origin", BackgroundOrigin },
-            { "background-position", BackgroundPosition },
-            { "background-repeat", BackgroundRepeat },
-            { "background-size", BackgroundSize },
+            { "background-clip",       BackgroundClip },
+            { "background-color",      BackgroundColor },
+            { "background-image",      BackgroundImage },
+            { "background-origin",     BackgroundOrigin },
+            { "background-position",   BackgroundPosition },
+            { "background-repeat",     BackgroundRepeat },
+            { "background-size",       BackgroundSize },
             { "border", Border },
             { "border-bottom", BorderBottom },
             { "border-bottom-color", BorderBottomColor },
@@ -552,6 +570,22 @@ namespace Carbon.Css
             { "marquee-play-count", MarqueePlayCount },
             { "marquee-speed", MarqueeSpeed },
             { "marquee-style", MarqueeStyle },
+            { "mask", Mask },
+            { "mask-border", MaskBorder },
+            { "mask-border-mode", MaskBorderMode },
+            { "mask-border-outset", MaskBorderOutset },
+            { "mask-border-repeat", MaskBorderRepeat },
+            { "mask-border-slice" , MaskBorderSlice },
+            { "mask-border-source", MaskBorderSource },
+            { "mask-border-width", MaskBorderWidth },
+            { "mask-clip", MaskClip },
+            { "mask-composite", MaskComposite },
+            { "mask-image", MaskImage },
+            { "mask-mode", MaskMode },
+            { "mask-origin", MaskOrigin },
+            { "mask-position", MaskPosition },
+            { "mask-repeat", MaskRepeat },
+            { "mask-size", MaskSize },
             { "max-height", MaxHeight },
             { "max-width", MaxWidth },
             { "min-height", MinHeight },
@@ -636,4 +670,3 @@ namespace Carbon.Css
         };
     }
 }
-
