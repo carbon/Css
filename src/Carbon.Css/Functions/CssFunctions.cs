@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Carbon.Css
 {
-	using Color;
+    using Color;
 
-	public static class CssFunctions
+    public static class CssFunctions
 	{
 		// http://lesscss.org/functions/#color-operations-saturate
 
@@ -25,61 +25,56 @@ namespace Carbon.Css
 		
 		// if($condition, $if-true, $if-false)
 		public static CssValue If(CssValue[] args)
-		    => (ToBoolean(args[0])) ? args[1] : args[2];
+		    => ToBoolean(args[0]) ? args[1] : args[2];
 
         public static CssValue Mix(CssValue[] args)
 		{
-			var color1 = GetColor(args[0]);
-			var color2 = GetColor(args[1]);
-
-			var amount = 0.5f;
-
-			if (args.Length == 3)
-			{
-				amount = GetAmount(args[2]);
-			}
+            Rgba32 color1 = GetColor(args[0]);
+            Rgba32 color2 = GetColor(args[1]);
+            
+            double amount = args.Length == 3 ? GetAmount(args[2]) : 0.5;
 
 			return new CssColor(color1.BlendWith(color2, amount));
 		}
 
 		public static CssValue Saturate(CssValue[] args)
 		{
-			var color = GetColor(args[0]);
+            Rgba32 color = GetColor(args[0]);
 			var amount = GetAmount(args[1]);
 
-			return new CssColor(color.Saturate(amount));
+			return new CssColor(color.Saturate((float)amount));
 		}
 
 		public static CssValue Desaturate(CssValue[] args)
 		{
-			var color	= GetColor(args[0]);
+            Rgba32 color	= GetColor(args[0]);
 			var amount	= GetAmount(args[1]);
 
-			return new CssColor(color.Desaturate(amount));
+			return new CssColor(color.Desaturate((float)amount));
 		}
 
 		public static CssValue Lighten(CssValue[] args)
 		{
-			var color = GetColor(args[0]);
+            Rgba32 color = GetColor(args[0]);
 			var amount = GetAmount(args[1]);
 
-			return new CssColor(color.Lighten(amount));
+			return new CssColor(color.Lighten((float)amount));
 		}
 
 		public static CssValue Darken(CssValue[] args)
 		{
-			var color = GetColor(args[0]);
+            Rgba32 color = GetColor(args[0]);
 			var amount = GetAmount(args[1]);
 
-			return new CssColor(color.Darken(amount));
+			return new CssColor(color.Darken((float)amount));
 		}
 
 		public static CssValue AdjustHue(CssValue[] args)
 		{
-			var color = GetColor(args[0]);
+            Rgba32 color = GetColor(args[0]);
 			var amount = GetAmount(args[1]);
 
-			return new CssColor(color.ToHsla().RotateHue(amount * 360).ToRgb());
+			return new CssColor(color.ToHsla().RotateHue((float)amount * 360).ToRgba());
 		}
 
 		public static CssValue Rgba(CssValue[] args)
@@ -89,7 +84,7 @@ namespace Carbon.Css
 				return new CssFunction("rgba", new CssValueList(args));
 			}
 
-			var color = Color.Rgba.Parse(args[0].ToString());
+			var color = Rgba32.Parse(args[0].ToString());
 			
 			return CssColor.FromRgba(color.R, color.G, color.B, float.Parse(args[1].ToString()));
 		}
@@ -103,23 +98,20 @@ namespace Carbon.Css
                 return cssBoolean.Value;
             }
 
-            return value.ToString().ToLower() == "true";
+            var text = value.ToString();
+
+            return text == "true" || text == "True";
         }
 
-		private static Rgba GetColor(CssValue value)
-		    => Color.Rgba.Parse(value.ToString());
+		private static Rgba32 GetColor(CssValue value) => Rgba32.Parse(value.ToString());
         
-		private static float GetAmount(CssValue value)
+		private static double GetAmount(CssValue value)
 		{
-			// TODO: consider value.kind
-
-			var text = value.ToString();
-
 			switch (value.Kind)
 			{
-				case NodeKind.Angle      : return (float.Parse(text.Replace("deg", "")) % 360) / 360;
-				case NodeKind.Percentage : return (float)(((CssUnitValue)value).Value / 100d);
-				case NodeKind.Number     : return (float)((CssUnitValue)value).Value;
+				case NodeKind.Angle      : return (double.Parse(value.ToString().Replace("deg", string.Empty)) % 360) / 360;
+				case NodeKind.Percentage : return (((CssUnitValue)value).Value / 100d);
+				case NodeKind.Number     : return ((CssUnitValue)value).Value;
 
 				default: throw new Exception("Unknown numeric value: " + value.Kind + ":" +  value);
 			}
