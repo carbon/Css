@@ -61,7 +61,7 @@ namespace Carbon.Css
 
                             if (Enum.TryParse(parts[0].Trim(), true, out BrowserType browserType))
                             {
-                                if (browsers == null)
+                                if (browsers is null)
                                 {
                                     browsers = new List<BrowserInfo>();
                                 }
@@ -89,7 +89,7 @@ namespace Carbon.Css
 
         public void InlineImports()
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (resolver is null) throw new ArgumentNullException(nameof(resolver));
 
             foreach (var rule in Children.OfType<ImportRule>().ToArray())
             {
@@ -104,7 +104,7 @@ namespace Carbon.Css
 
         public static StyleSheet FromFile(FileInfo file, CssContext context = null)
         {
-            if (file == null) throw new ArgumentNullException(nameof(file));
+            if (file is null) throw new ArgumentNullException(nameof(file));
 
             string text;
 
@@ -188,7 +188,7 @@ namespace Carbon.Css
             var absolutePath = rule.Url.GetAbsolutePath(resolver.ScopedPath);
 
             // Assume to be scss if there is no extension
-            if (!absolutePath.Contains('.'))
+            if (absolutePath.IndexOf('.') == -1)
             {
                 absolutePath += ".scss";
             }

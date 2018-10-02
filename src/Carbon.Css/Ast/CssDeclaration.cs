@@ -12,7 +12,7 @@ namespace Carbon.Css
         public CssDeclaration(string name, CssValue value, string priority = null)
             : base(NodeKind.Declaration)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (name is null) throw new ArgumentNullException(nameof(name));
 
             Value = value ?? throw new ArgumentNullException(nameof(value));
             Priority = priority;
