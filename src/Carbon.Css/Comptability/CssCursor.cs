@@ -6,16 +6,27 @@ namespace Carbon.Css
 
     public static class CssCursor
     {
-        private static Dictionary<string, CssCompatibility> table = new Dictionary<string, CssCompatibility> {
+        private static readonly CssCompatibility grabCursor = new CssCompatibility(
+            prefixed: new CompatibilityTable(firefox: 1.5f, safari: 4f),
+            standard: new CompatibilityTable(chrome: 68, firefox: 27, ie: 15, safari: 11)
+        );
+
+        private static readonly CssCompatibility zoomCursor = new CssCompatibility(
+            prefixed: new CompatibilityTable(safari: 3),
+            standard: new CompatibilityTable(chrome: 37, ie: 12, firefox: 24, safari: 9)
+        );
+
+        private static Dictionary<string, CssCompatibility> table = new Dictionary<string, CssCompatibility>
+        {
             ["auto"] = CssCompatibility.All,
             ["alias"] = CssCompatibility.All,
             ["copy"] = CssCompatibility.All,
             ["crosshair"] = CssCompatibility.All,
 
-            ["default"]   = CssCompatibility.All,
-            ["e-resize"]  = CssCompatibility.All,
-            ["grab"]      = new CssCompatibility(prefixed: new CompatibilityTable(firefox: 1.5f, safari: 4f), standard: new CompatibilityTable(firefox: 27)),
-            ["grabbing"]  = new CssCompatibility(prefixed: new CompatibilityTable(firefox: 1.5f, safari: 4f), standard: new CompatibilityTable(firefox: 27)),
+            ["default"] = CssCompatibility.All,
+            ["e-resize"] = CssCompatibility.All,
+            ["grab"] = grabCursor,
+            ["grabbing"] = grabCursor,
 
             ["help"] = CssCompatibility.All,
 
@@ -34,11 +45,10 @@ namespace Carbon.Css
             ["wait"] = CssCompatibility.All,
             ["w-resize"] = CssCompatibility.All,
 
-            ["zoom-in"]     = new CssCompatibility(prefixed: new CompatibilityTable(safari: 3f), standard: new CompatibilityTable(safari: 9, firefox: 24)),
-            ["zoom-out"]    = new CssCompatibility(prefixed: new CompatibilityTable(safari: 3f), standard: new CompatibilityTable(safari: 9, firefox: 24))
+            ["zoom-in"] = zoomCursor,
+            ["zoom-out"] = zoomCursor
         };
-
-
+        
         public static bool NeedsPatch(string value, BrowserInfo browser)
         {
             if (table.TryGetValue(value, out CssCompatibility c))
