@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Carbon.Css
 {
@@ -37,7 +36,7 @@ namespace Carbon.Css
 
         public override string ToString()
         {
-            return string.Join(Seperator == ValueSeperator.Space ? " " : ", ", items.Select(t => t.ToString()));
+            return string.Join(Seperator == ValueSeperator.Space ? " " : ", ", items);
         }
 
         #region IEnumerator
@@ -47,11 +46,5 @@ namespace Carbon.Css
         IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 
         #endregion
-    }
-
-    public enum ValueSeperator
-    {
-        Comma,
-        Space
     }
 }
