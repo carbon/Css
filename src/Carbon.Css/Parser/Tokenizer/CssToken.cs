@@ -34,7 +34,7 @@
 
 		public bool IsTrivia => Kind == TokenKind.Whitespace || Kind == TokenKind.Comment;
 
-		public bool IsBinaryOperator => (int)Kind > 30 && (int)Kind < 60;
+		public bool IsBinaryOperator => (int)Kind > 30 && (int)Kind < 65;
 
 		public bool IsEqualityOperator => Kind == TokenKind.Equals || Kind == TokenKind.NotEquals;
 
@@ -71,7 +71,7 @@
 		RightParenthesis,	// )
 
         InterpolatedStringStart, // #{
-        InterpolatedStringEnd, // }
+        InterpolatedStringEnd,   // }
         // Trivia
 
         Directive,		// //= *
@@ -98,8 +98,8 @@
 		Divide	  = 60, // /
 		Multiply  = 61, // *
 		Add		  = 62,	// +
-		Subtract  = 62,	// -
-		Mod		  = 63  // %
+		Subtract  = 63,	// -
+		Mod		  = 64  // %
 	}
 }
 

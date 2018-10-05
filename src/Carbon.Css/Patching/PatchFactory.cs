@@ -14,11 +14,11 @@ namespace Carbon.Css
         {
             if (value.Kind != NodeKind.ValueList) return value;
 
-            var a = (CssValueList)value;
+            var valueList = (CssValueList)value;
 
             var list = new List<CssValue>();
 
-            foreach (var node in a)
+            foreach (var node in valueList)
             {
                 if (node.Kind == NodeKind.ValueList) // For comma seperated componented lists
                 {
@@ -34,7 +34,7 @@ namespace Carbon.Css
                 }
             }
 
-            return new CssValueList(list, a.Seperator);
+            return new CssValueList(list, valueList.Seperator);
         }
     }
 }

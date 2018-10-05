@@ -45,7 +45,7 @@ namespace Carbon.Css.Parser
         /// <returns></returns>
         public char Read()
         {
-            var c = current;
+            char c = current;
 
             Next();
 
