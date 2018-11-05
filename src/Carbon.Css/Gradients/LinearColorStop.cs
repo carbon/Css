@@ -1,11 +1,12 @@
 ﻿using System;
 using Carbon.Color;
+using Carbon.Css.Helpers;
 
 namespace Carbon.Css.Gradients
 {
-    public readonly struct LinearColorStop
+    public readonly struct ColorStop
     {
-        public LinearColorStop(Rgba32 color, double? position)
+        public ColorStop(Rgba32 color, double? position)
         {
             Color = color;
             Position = position;
@@ -14,45 +15,60 @@ namespace Carbon.Css.Gradients
         public Rgba32 Color { get; }
 
         public double? Position { get; }
-        
-        public static LinearColorStop Parse(ReadOnlySpan<char> text)
+
+        public static ColorStop Parse(ReadOnlySpan<char> text)
+        {
+            return Read(text, out _);
+        }
+
+        public static ColorStop Read(ReadOnlySpan<char> text, out int read)
         {
             if (text.Length == 0)
             {
                 throw new ArgumentException("May not be empty", nameof(text));
             }
+           
+            if (text.TryReadWhitespace(out read))
+            {
+                text = text.Slice(read);
+            }
+
+            Rgba32 color = default;
+   
+            color = text.ReadColor(out int colorRead);
+            text = text.Slice(colorRead);
+
+            read += colorRead;
 
             // #000 
             // rgba(255, 255, 255, 50%) 50%
 
-
-            int read = 0;
-
-            while (read < text.Length && text[read] != ' ')
-            {
-                read++;
-            }
-
-            var color = text.Slice(0, read);
-
             double? angle = null;
 
-            if (read != text.Length)
+            if (text.Length > 0)
             {
-                text = text.Slice(read);
-
-                if (text[0] == ' ')
+                int commaIndex = text.IndexOf(',');
+                
+                if (commaIndex > -1)
                 {
-                    text = text.Slice(1);
+                    text = text.Slice(0, commaIndex);
+
+                    read += commaIndex;
                 }
+                else
+                {
+                    read += text.Length;
+                }
+               
+                text = text.Trim();
 
                 if (text.Length > 0)
                 {
                     angle = double.Parse(text.Slice(0, text.Length - 1).ToString()) / 100d;
                 }
             }
-
-            return new LinearColorStop(Rgba32.Parse(color.ToString()), angle);
+        
+            return new ColorStop(color, angle);
         }
 
         public override string ToString()

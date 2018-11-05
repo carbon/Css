@@ -7,11 +7,11 @@ namespace Carbon.Css.Gradients
 {
     public readonly struct LinearGradient : IGradient
     {
-        public LinearGradient(LinearGradientDirection direction, double? angle, LinearColorStop[] colorStops)
+        public LinearGradient(LinearGradientDirection direction, double? angle, ColorStop[] colorStops)
         {
             Direction = direction;
             Angle = angle;
-            ColorStops = colorStops;
+            Stops = colorStops;
         }
 
         public LinearGradientDirection Direction { get; }
@@ -19,7 +19,7 @@ namespace Carbon.Css.Gradients
         public double? Angle { get; }
 
         // [ <linear-color-stop> [, <linear-color-hint>]? ]# , <linear-color-stop>
-        public LinearColorStop[] ColorStops { get; }
+        public ColorStop[] Stops { get; }
 
         public override string ToString()
         {
@@ -39,7 +39,7 @@ namespace Carbon.Css.Gradients
                 sb.Append(LinearGradientDirectionHelper.Canonicalize(Direction));
             }
 
-            foreach (var stop in ColorStops)
+            foreach (var stop in Stops)
             {
                 sb.Append(", ");
 
@@ -77,7 +77,7 @@ namespace Carbon.Css.Gradients
             double? angle = null;
             LinearGradientDirection direction = default;
 
-            if (char.IsDigit(text[0]))
+            if (char.IsDigit(text[0]) || text[0] == '-')
             {
                 angle = ReadAngle(text, out int read);
 
@@ -88,11 +88,16 @@ namespace Carbon.Css.Gradients
                 text = text.Slice(read);
             }
 
-            var colorStops = new List<LinearColorStop>();
+            var colorStops = new List<ColorStop>();
 
             while (text.Length > 0)
             {
-                if (TryReadWhitespace(text, out int read))
+                if (text[0] == ',')
+                {
+                    text = text.Slice(1);
+                }
+
+                if (text.TryReadWhitespace(out int read))
                 {
                     text = text.Slice(read);
                 }
@@ -102,26 +107,11 @@ namespace Carbon.Css.Gradients
                     text = text.Slice(1);
                 }
 
-                int commaIndex = text.IndexOf(',');
-
-                ReadOnlySpan<char> stopText;
-
-                if (commaIndex > -1)
-                {
-                    stopText = text.Slice(0, commaIndex);
-
-                    text = text.Slice(commaIndex + 1);
-                }
-                else
-                {
-                    // final stop...
-
-                    stopText = text;
-
-                    text = text.Slice(text.Length);
-                }
-
-                colorStops.Add(LinearColorStop.Parse(stopText.Trim()));
+                var colorStop = ColorStop.Read(text, out read);
+                
+                text = text.Slice(read);
+                
+                colorStops.Add(colorStop);
             }
 
             // TODO: Set the default stops 
@@ -131,21 +121,9 @@ namespace Carbon.Css.Gradients
             return new LinearGradient(direction, angle, colorStops.ToArray());
         }
 
-        private static bool TryReadWhitespace(ReadOnlySpan<char> text, out int read)
-        {
-            read = 0;
-
-            while (text.Length < read && text[read] == ' ')
-            {
-                read++;
-            }
-
-            return read > 0;
-        }
-
         private static double ReadAngle(ReadOnlySpan<char> text, out int read)
         {
-            var value = text.ReadNumber(out read);
+            double value = text.ReadNumber(out read);
 
             text = text.Slice(read);
 
@@ -159,6 +137,12 @@ namespace Carbon.Css.Gradients
     }
 }
 
+/*
+<linearGradient id="MyGradient">
+    <stop offset="5%"  stop-color="green"/>
+    <stop offset="95%" stop-color="gold"/>
+</linearGradient>
+*/
 
 // [ [ <angle> | to<side-or-corner>] ,]?
 
