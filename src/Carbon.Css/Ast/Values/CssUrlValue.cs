@@ -40,7 +40,7 @@ namespace Carbon.Css
         {
             if (!IsPath)
             {
-                throw new ArgumentException("Has scheme:" + Value.Split(Seperators.Colon)[0]);
+                throw new ArgumentException("Has scheme:" + Value.Substring(0, Value.IndexOf(':')));
             }
 
             // Already absolute
