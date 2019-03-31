@@ -2,22 +2,22 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <VersionPrefix>0.18.2</VersionPrefix>
+    <VersionPrefix>0.20.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
     
     <!-- Package Properties-->
     <Authors>iamcarbon</Authors>
     <Description>High-performance (S)CSS parser and auto-prefixer.</Description>
-    <Copyright>© 2012-2018 Jason Nelson</Copyright>
+    <Copyright>© 2012-2019 Jason Nelson</Copyright>
     <PackageTags>css;scss;autoprefix</PackageTags>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/carbon/css</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Memory" Version="4.5.1" />
-    <PackageReference Include="Carbon.Color" Version="2.3.1" />
+    <PackageReference Include="System.Memory" Version="4.5.2" />
+    <PackageReference Include="Carbon.Color" Version="2.6.0" />
   </ItemGroup>
 
 </Project>
