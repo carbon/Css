@@ -175,25 +175,28 @@ namespace Carbon.Css
         public static readonly CssProperty CaptionSide = new CssProperty("caption-side");
         public static readonly CssProperty Clear = new CssProperty("clear");
 
-        public static readonly CssProperty Clip = new CssProperty("clip");
+        // Clipping
+        public static readonly CssProperty Clip = new CssProperty("clip", CssModule.Masking_1);
 
         // TODO: Confirm support
         public static readonly CssProperty ClipPath = new CssProperty("clip-path", new CssCompatibility(
             prefixed: new CompatibilityTable(chrome: 24f, safari: 7)   
         ));
 
+        public static readonly CssProperty ClipRule = new CssProperty("clip-rule", CssModule.Masking_1);
+
         public static readonly CssProperty Color = new CssProperty("color", CssModule.Core1);
 
-        public static readonly CssProperty ColumnCount = new CssProperty("column-count", CssModule.Columns3);
-        public static readonly CssProperty ColumnFill = new CssProperty("column-fill", CssModule.Columns3);
-        public static readonly CssProperty ColumnGap = new CssProperty("column-gap", CssModule.Columns3);
-        public static readonly CssProperty ColumnRule = new CssProperty("column-rule", CssModule.Columns3);
-        public static readonly CssProperty ColumnRuleColor = new CssProperty("column-rule-color", CssModule.Columns3);
-        public static readonly CssProperty ColumnRuleStyle = new CssProperty("column-rule-style", CssModule.Columns3);
-        public static readonly CssProperty ColumnRuleWidth = new CssProperty("column-rule-width", CssModule.Columns3);
-        public static readonly CssProperty ColumnSpan = new CssProperty("column-span", CssModule.Columns3);
-        public static readonly CssProperty ColumnWidth = new CssProperty("column-width", CssModule.Columns3);
-        public static readonly CssProperty Columns = new CssProperty("columns", CssModule.Columns3);
+        public static readonly CssProperty ColumnCount      = new CssProperty("column-count",       CssModule.Columns3);
+        public static readonly CssProperty ColumnFill       = new CssProperty("column-fill",        CssModule.Columns3);
+        public static readonly CssProperty ColumnGap        = new CssProperty("column-gap",         CssModule.Columns3);
+        public static readonly CssProperty ColumnRule       = new CssProperty("column-rule",        CssModule.Columns3);
+        public static readonly CssProperty ColumnRuleColor  = new CssProperty("column-rule-color",  CssModule.Columns3);
+        public static readonly CssProperty ColumnRuleStyle  = new CssProperty("column-rule-style",  CssModule.Columns3);
+        public static readonly CssProperty ColumnRuleWidth  = new CssProperty("column-rule-width",  CssModule.Columns3);
+        public static readonly CssProperty ColumnSpan       = new CssProperty("column-span",        CssModule.Columns3);
+        public static readonly CssProperty ColumnWidth      = new CssProperty("column-width",       CssModule.Columns3);
+        public static readonly CssProperty Columns          = new CssProperty("columns",            CssModule.Columns3);
 
         public static readonly CssProperty Content = new CssProperty("content", CssModule.Core2_1);
 
@@ -211,6 +214,10 @@ namespace Carbon.Css
            prefixed: new CompatibilityTable(chrome: 18, firefox: 3.6f, ie: 13, safari: 6),
            standard: new CompatibilityTable(firefox: 35, safari: 9.1f)
        ));
+
+        // SVG (Fill)
+        public static readonly CssProperty Fill        = new CssProperty("fill");
+        public static readonly CssProperty FillOpacity = new CssProperty("fill-opacity");
 
         // Fit ---------------------------------------------------------------------------------------
         public static readonly CssProperty Fit = new CssProperty("fit");
@@ -291,22 +298,22 @@ namespace Carbon.Css
         public static readonly CssProperty MarqueeStyle     = new CssProperty("marquee-style");
 
         // Masking -----------------------------------------------------------------------------------------
-        public static readonly CssProperty Mask             = new CssProperty("mask", CssModule.Masking1);
-        public static readonly CssProperty MaskBorder       = new CssProperty("mask-border", CssModule.Masking1);
-        public static readonly CssProperty MaskBorderMode   = new CssProperty("mask-border-mode", CssModule.Masking1);
-        public static readonly CssProperty MaskBorderOutset = new CssProperty("mask-border-outset", CssModule.Masking1);
-        public static readonly CssProperty MaskBorderRepeat = new CssProperty("mask-border-repeat", CssModule.Masking1);
-        public static readonly CssProperty MaskBorderSlice  = new CssProperty("mask-border-slice", CssModule.Masking1);
-        public static readonly CssProperty MaskBorderSource = new CssProperty("mask-border-source", CssModule.Masking1);
-        public static readonly CssProperty MaskBorderWidth  = new CssProperty("mask-border-width", CssModule.Masking1);
-        public static readonly CssProperty MaskClip         = new CssProperty("mask-clip", CssModule.Masking1);
-        public static readonly CssProperty MaskComposite    = new CssProperty("mask-composite", CssModule.Masking1);
-        public static readonly CssProperty MaskImage        = new CssProperty("mask-image", CssModule.Masking1);
-        public static readonly CssProperty MaskMode         = new CssProperty("mask-mode", CssModule.Masking1);
-        public static readonly CssProperty MaskOrigin       = new CssProperty("mask-origin", CssModule.Masking1);
-        public static readonly CssProperty MaskPosition     = new CssProperty("mask-position", CssModule.Masking1);
-        public static readonly CssProperty MaskRepeat       = new CssProperty("mask-repeat", CssModule.Masking1);
-        public static readonly CssProperty MaskSize         = new CssProperty("mask-size", CssModule.Masking1);
+        public static readonly CssProperty Mask             = new CssProperty("mask",               CssModule.Masking_1);
+        public static readonly CssProperty MaskBorder       = new CssProperty("mask-border",        CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderMode   = new CssProperty("mask-border-mode",   CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderOutset = new CssProperty("mask-border-outset", CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderRepeat = new CssProperty("mask-border-repeat", CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderSlice  = new CssProperty("mask-border-slice",  CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderSource = new CssProperty("mask-border-source", CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderWidth  = new CssProperty("mask-border-width",  CssModule.Masking_1);
+        public static readonly CssProperty MaskClip         = new CssProperty("mask-clip",          CssModule.Masking_1);
+        public static readonly CssProperty MaskComposite    = new CssProperty("mask-composite",     CssModule.Masking_1);
+        public static readonly CssProperty MaskImage        = new CssProperty("mask-image",         CssModule.Masking_1);
+        public static readonly CssProperty MaskMode         = new CssProperty("mask-mode",          CssModule.Masking_1);
+        public static readonly CssProperty MaskOrigin       = new CssProperty("mask-origin",        CssModule.Masking_1);
+        public static readonly CssProperty MaskPosition     = new CssProperty("mask-position",      CssModule.Masking_1);
+        public static readonly CssProperty MaskRepeat       = new CssProperty("mask-repeat",        CssModule.Masking_1);
+        public static readonly CssProperty MaskSize         = new CssProperty("mask-size",          CssModule.Masking_1);
 
         public static readonly CssProperty MaxHeight = new CssProperty("max-height", CssModule.Core2_1);
         public static readonly CssProperty MaxWidth = new CssProperty("max-width", CssModule.Core2_1);
@@ -377,22 +384,31 @@ namespace Carbon.Css
 
         public static readonly CssProperty TableLayout = new CssProperty("table-layout", CssModule.Core2_1);
 
+        // Stroke (SVG)
+        public static readonly CssProperty Stroke           = new CssProperty("stroke");
+        public static readonly CssProperty StrokeDashArray  = new CssProperty("stroke-dasharray");
+        public static readonly CssProperty StrokeDashOffset = new CssProperty("stroke-dashoffset");
+        public static readonly CssProperty StrokeLinecap    = new CssProperty("stroke-linecap");
+        public static readonly CssProperty StrokeLinejoin   = new CssProperty("stroke-linejoin");
+        public static readonly CssProperty StrokeOpacity    = new CssProperty("stroke-opacity");
+        public static readonly CssProperty StrokeWidth      = new CssProperty("stroke-width");
+
         // Text ------------------------------------------------------------------------
-        public static readonly CssProperty TextAlign = new CssProperty("text-align", CssModule.Core1);
-        public static readonly CssProperty TextAlignLast = new CssProperty("text-align-last");
-        public static readonly CssProperty TextDecoration = new CssProperty("text-decoration", CssModule.Core1);
-        public static readonly CssProperty TextDecorationColor = new CssProperty("text-decoration-color");
-        public static readonly CssProperty TextDecorationLine = new CssProperty("text-decoration-line");
-        public static readonly CssProperty TextDecorationSkip = new CssProperty("text-decoration-skip");
-        public static readonly CssProperty TextDecorationStyle = new CssProperty("text-decoration-style");
-        public static readonly CssProperty TextEmphasis = new CssProperty("text-emphasis");
-        public static readonly CssProperty TextEmphasisColor = new CssProperty("text-emphasis-color");
+        public static readonly CssProperty TextAlign            = new CssProperty("text-align", CssModule.Core1);
+        public static readonly CssProperty TextAlignLast        = new CssProperty("text-align-last");
+        public static readonly CssProperty TextDecoration       = new CssProperty("text-decoration", CssModule.Core1);
+        public static readonly CssProperty TextDecorationColor  = new CssProperty("text-decoration-color");
+        public static readonly CssProperty TextDecorationLine   = new CssProperty("text-decoration-line");
+        public static readonly CssProperty TextDecorationSkip   = new CssProperty("text-decoration-skip");
+        public static readonly CssProperty TextDecorationStyle  = new CssProperty("text-decoration-style");
+        public static readonly CssProperty TextEmphasis         = new CssProperty("text-emphasis");
+        public static readonly CssProperty TextEmphasisColor    = new CssProperty("text-emphasis-color");
         public static readonly CssProperty TextEmphasisPosition = new CssProperty("text-emphasis-position");
-        public static readonly CssProperty TextEmphasisStyle = new CssProperty("text-emphasis-style");
-        public static readonly CssProperty TextHeight = new CssProperty("text-height");
-        public static readonly CssProperty TextIndent = new CssProperty("text-indent", CssModule.Core1);
-        public static readonly CssProperty TextJustify = new CssProperty("text-justify");
-        public static readonly CssProperty TextOutline = new CssProperty("text-outline");
+        public static readonly CssProperty TextEmphasisStyle    = new CssProperty("text-emphasis-style");
+        public static readonly CssProperty TextHeight           = new CssProperty("text-height");
+        public static readonly CssProperty TextIndent           = new CssProperty("text-indent", CssModule.Core1);
+        public static readonly CssProperty TextJustify          = new CssProperty("text-justify");
+        public static readonly CssProperty TextOutline          = new CssProperty("text-outline");
 
         public static readonly CssProperty TextShadow = new CssProperty("text-shadow", new CssCompatibility(
             standard: new CompatibilityTable(chrome: 2, firefox: 3.5f, ie: 10, safari: 4)
@@ -401,7 +417,7 @@ namespace Carbon.Css
         public static readonly CssProperty TextSpaceCollapse = new CssProperty("text-space-collapse");
         public static readonly CssProperty TextTransform = new CssProperty("text-transform", CssModule.Core1);
         public static readonly CssProperty TextUnderlinePosition = new CssProperty("text-underline-position");
-        public static readonly CssProperty TextWrap = new CssProperty("text-wrap");
+        public static readonly CssProperty TextWrap         = new CssProperty("text-wrap");
 
         public static readonly CssProperty Top = new CssProperty("top", CssModule.Core1);
 
@@ -437,7 +453,7 @@ namespace Carbon.Css
         public static readonly CssProperty WordSpacing = new CssProperty("word-spacing", CssModule.Core1);
         public static readonly CssProperty WordWrap = new CssProperty("word-wrap", CssModule.Text3);
 
-        public static readonly CssProperty ZIndex = new CssProperty("z-index", CssModule.Core1);
+        public static readonly CssProperty ZIndex = new CssProperty("z-index", CssModule.Core1);            
 
         public static readonly IDictionary<string, CssProperty> Map = new Dictionary<string, CssProperty> {
 			// Animations
@@ -450,51 +466,56 @@ namespace Carbon.Css
             { "animation-play-state",       AnimationPlayState },
             { "animation-timing-function",  AnimationTimingFunction },
 
-            { "appearance",            Appearance },
-            { "azimuth",               Azimuth },
-            { "backface-visibility",   BackfaceVisibility },
-            { "background",            Background },
-            { "background-attachment", BackgroundAttachment },
-            { "background-clip",       BackgroundClip },
-            { "background-color",      BackgroundColor },
-            { "background-image",      BackgroundImage },
-            { "background-origin",     BackgroundOrigin },
-            { "background-position",   BackgroundPosition },
-            { "background-repeat",     BackgroundRepeat },
-            { "background-size",       BackgroundSize },
-            { "border", Border },
-            { "border-bottom", BorderBottom },
-            { "border-bottom-color", BorderBottomColor },
-            { "border-bottom-left-radius", BorderBottomLeftRadius },
+            { "appearance",                 Appearance },
+            { "azimuth",                    Azimuth },
+            { "backface-visibility",        BackfaceVisibility },
+
+            // Backgrounds
+            { "background",                 Background },
+            { "background-attachment",      BackgroundAttachment },
+            { "background-clip",            BackgroundClip },
+            { "background-color",           BackgroundColor },
+            { "background-image",           BackgroundImage },
+            { "background-origin",          BackgroundOrigin },
+            { "background-position",        BackgroundPosition },
+            { "background-repeat",          BackgroundRepeat },
+            { "background-size",            BackgroundSize },
+
+            // Borders
+            { "border",                     Border },
+            { "border-bottom",              BorderBottom },
+            { "border-bottom-color",        BorderBottomColor },
+            { "border-bottom-left-radius",  BorderBottomLeftRadius },
             { "border-bottom-right-radius", BorderBottomRightRadius },
-            { "border-bottom-style", BorderBottomStyle },
-            { "border-bottom-width", BorderBottomWidth },
-            { "border-collapse", BorderCollapse },
-            { "border-color", BorderColor },
-            { "border-image", BorderImage },
-            { "border-image-outset", BorderImageOutset },
-            { "border-image-repeat", BorderImageRepeat },
-            { "border-image-slice", BorderImageSlice },
-            { "border-image-source", BorderImageSource },
-            { "border-image-width", BorderImageWidth },
-            { "border-left", BorderLeft },
-            { "border-left-color", BorderLeftColor },
-            { "border-left-style", BorderLeftStyle },
-            { "border-left-width", BorderLeftWidth },
-            { "border-radius", BorderRadius },
-            { "border-right", BorderRight },
-            { "border-right-color", BorderRightColor },
-            { "border-right-style", BorderRightStyle },
-            { "border-right-width", BorderRightWidth },
-            { "border-spacing", BorderSpacing },
-            { "border-style", BorderStyle },
-            { "border-top", BorderTop },
-            { "border-top-color", BorderTopColor },
-            { "border-top-left-radius", BorderTopLeftRadius },
-            { "border-top-right-radius", BorderTopRightRadius },
-            { "border-top-style", BorderTopStyle },
-            { "border-top-width", BorderTopWidth },
-            { "border-width", BorderWidth },
+            { "border-bottom-style",        BorderBottomStyle },
+            { "border-bottom-width",        BorderBottomWidth },
+            { "border-collapse",            BorderCollapse },
+            { "border-color",               BorderColor },
+            { "border-image",               BorderImage },
+            { "border-image-outset",        BorderImageOutset },
+            { "border-image-repeat",        BorderImageRepeat },
+            { "border-image-slice",         BorderImageSlice },
+            { "border-image-source",        BorderImageSource },
+            { "border-image-width",         BorderImageWidth },
+            { "border-left",                BorderLeft },
+            { "border-left-color",          BorderLeftColor },
+            { "border-left-style",          BorderLeftStyle },
+            { "border-left-width",          BorderLeftWidth },
+            { "border-radius",              BorderRadius },
+            { "border-right",               BorderRight },
+            { "border-right-color",         BorderRightColor },
+            { "border-right-style",         BorderRightStyle },
+            { "border-right-width",         BorderRightWidth },
+            { "border-spacing",             BorderSpacing },
+            { "border-style",               BorderStyle },
+            { "border-top",                 BorderTop },
+            { "border-top-color",           BorderTopColor },
+            { "border-top-left-radius",     BorderTopLeftRadius },
+            { "border-top-right-radius",    BorderTopRightRadius },
+            { "border-top-style",           BorderTopStyle },
+            { "border-top-width",           BorderTopWidth },
+            { "border-width",               BorderWidth },
+
             { "bottom", Bottom },
             { "box-decoration-break", BoxDecorationBreak },
             { "box-shadow", BoxShadow },
@@ -503,19 +524,26 @@ namespace Carbon.Css
             { "break-before", BreakBefore },
             { "break-inside", BreakInside },
             { "caption-side", CaptionSide },
-            { "clear", Clear },
-            { "clip", Clip },
-            { "clip-path", ClipPath },
-            { "color", Color },
-            { "column-count", ColumnCount },
-            { "column-fill", ColumnFill },
-            { "column-gap", ColumnGap },
-            { "column-rule", ColumnRule },
-            { "column-rule-color", ColumnRuleColor },
-            { "column-rule-style", ColumnRuleStyle },
-            { "column-rule-width", ColumnRuleWidth },
-            { "column-span", ColumnSpan },
-            { "column-width", ColumnWidth },
+            { "clear",        Clear },
+
+            // Clipping
+            { "clip",         Clip },
+            { "clip-path",    ClipPath },
+            { "clip-rule",    ClipRule },
+
+            { "color",        Color },
+
+            // Column
+            { "column-count",       ColumnCount },
+            { "column-fill",        ColumnFill },
+            { "column-gap",         ColumnGap },
+            { "column-rule",        ColumnRule },
+            { "column-rule-color",  ColumnRuleColor },
+            { "column-rule-style",  ColumnRuleStyle },
+            { "column-rule-width",  ColumnRuleWidth },
+            { "column-span",        ColumnSpan },
+            { "column-width",       ColumnWidth },
+
             { "columns", Columns },
             { "content", Content },
             { "counter-increment", CounterIncrement },
@@ -524,6 +552,8 @@ namespace Carbon.Css
             { "direction", Direction },
             { "display", Display },
             { "empty-cells", EmptyCells },
+            { "fill", Fill },
+            { "fill-opacity", FillOpacity },
             { "filter", Filter },
             { "fit", Fit },
             { "fit-position", FitPosition },
@@ -534,24 +564,27 @@ namespace Carbon.Css
             { "flex-pack", FlexPack },
             { "float", Float },
             { "float-offset", FloatOffset },
-            { "font", Font },
-            { "font-family", FontFamily },
-            { "font-size", FontSize },
+
+            // Font
+            { "font",             Font },
+            { "font-family",      FontFamily },
+            { "font-size",        FontSize },
             { "font-size-adjust", FontSizeAdjust },
-            { "font-stretch", FontStretch },
-            { "font-style", FontStyle },
-            { "font-variant", FontVariant },
-            { "font-weight", FontWeight },
+            { "font-stretch",     FontStretch },
+            { "font-style",       FontStyle },
+            { "font-variant",     FontVariant },
+            { "font-weight",      FontWeight },
+
             { "grid-columns", GridColumns },
             { "grid-rows", GridRows },
             { "height", Height },
-            { "hyphenate-after", HyphenateAfter },
-            { "hyphenate-before", HyphenateBefore },
-            { "hyphenate-character", HyphenateCharacter },
-            { "hyphenate-lines", HyphenateLines },
-            { "hyphenate-resource", HyphenateResource },
-            { "hyphens", Hyphens },
-            { "inline-box-align", InlineBoxAlign },
+            { "hyphenate-after",        HyphenateAfter },
+            { "hyphenate-before",       HyphenateBefore },
+            { "hyphenate-character",    HyphenateCharacter },
+            { "hyphenate-lines",        HyphenateLines },
+            { "hyphenate-resource",     HyphenateResource },
+            { "hyphens",                Hyphens },
+            { "inline-box-align",       InlineBoxAlign },
             { "left", Left },
             { "letter-spacing", LetterSpacing },
             { "line-break", LineBreak },
@@ -570,22 +603,25 @@ namespace Carbon.Css
             { "marquee-play-count", MarqueePlayCount },
             { "marquee-speed", MarqueeSpeed },
             { "marquee-style", MarqueeStyle },
-            { "mask", Mask },
-            { "mask-border", MaskBorder },
-            { "mask-border-mode", MaskBorderMode },
+
+            // Masking
+            { "mask",               Mask },
+            { "mask-border",        MaskBorder },
+            { "mask-border-mode",   MaskBorderMode },
             { "mask-border-outset", MaskBorderOutset },
             { "mask-border-repeat", MaskBorderRepeat },
             { "mask-border-slice" , MaskBorderSlice },
             { "mask-border-source", MaskBorderSource },
-            { "mask-border-width", MaskBorderWidth },
-            { "mask-clip", MaskClip },
-            { "mask-composite", MaskComposite },
-            { "mask-image", MaskImage },
-            { "mask-mode", MaskMode },
-            { "mask-origin", MaskOrigin },
-            { "mask-position", MaskPosition },
-            { "mask-repeat", MaskRepeat },
-            { "mask-size", MaskSize },
+            { "mask-border-width",  MaskBorderWidth },
+            { "mask-clip",          MaskClip },
+            { "mask-composite",     MaskComposite },
+            { "mask-image",         MaskImage },
+            { "mask-mode",          MaskMode },
+            { "mask-origin",        MaskOrigin },
+            { "mask-position",      MaskPosition },
+            { "mask-repeat",        MaskRepeat },
+            { "mask-size",          MaskSize },
+
             { "max-height", MaxHeight },
             { "max-width", MaxWidth },
             { "min-height", MinHeight },
@@ -593,15 +629,20 @@ namespace Carbon.Css
             { "opacity", Opacity },
             { "orphans", Orphans },
             { "outline", Outline },
-            { "outline-color", OutlineColor },
+
+            // Outline
+            { "outline-color",  OutlineColor },
             { "outline-offset", OutlineOffset },
-            { "outline-style", OutlineStyle },
-            { "outline-width", OutlineWidth },
-            { "overflow", Overflow },
+            { "outline-style",  OutlineStyle },
+            { "outline-width",  OutlineWidth },
+
+            // Overflow
+            { "overflow",       Overflow },
             { "overflow-style", OverflowStyle },
-            { "overflow-wrap", OverflowWrap },
-            { "overflow-x", OverflowX },
-            { "overflow-y", OverflowY },
+            { "overflow-wrap",  OverflowWrap },
+            { "overflow-x",     OverflowX },
+            { "overflow-y",     OverflowY },
+
             { "padding", Padding },
             { "padding-bottom", PaddingBottom },
             { "padding-left", PaddingLeft },
@@ -611,10 +652,13 @@ namespace Carbon.Css
             { "page-break-after", PageBreakAfter },
             { "page-break-before", PageBreakBefore },
             { "page-break-inside", PageBreakInside },
-            { "perspective", Perspective },
-            { "perspective-origin", PerspectiveOrigin },
+
+            // Perspective
+            { "perspective",          Perspective },
+            { "perspective-origin",   PerspectiveOrigin },
             { "perspective-origin-x", PerspectiveOriginX },
             { "perspective-origin-y", PerspectiveOriginY },
+
             { "position", Position },
             { "quotes", Quotes },
             { "resize", Resize },
@@ -625,15 +669,28 @@ namespace Carbon.Css
             { "ruby-span", RubySpan },
             { "size", Size },
             { "speak", Speak },
+
+            // Strokes
+            { "stroke",             Stroke },
+            { "stroke-dasharray",   StrokeDashArray },
+            { "stroke-dashoffset",  StrokeDashOffset },
+            { "stroke-linecap",     StrokeLinecap },
+            { "stroke-linejoin",    StrokeLinejoin },
+            { "stroke-opacity",     StrokeOpacity },
+            { "stroke-width",       StrokeWidth },
+
             { "table-layout", TableLayout },
             { "text-align", TextAlign },
-            { "text-align-last", TextAlignLast },
-            { "text-decoration", TextDecoration },
-            { "text-decoration-color", TextDecorationColor },
-            { "text-decoration-line", TextDecorationLine },
-            { "text-decoration-skip", TextDecorationSkip },
-            { "text-decoration-style", TextDecorationStyle },
-            { "text-emphasis", TextEmphasis },
+            { "text-align-last",        TextAlignLast },
+
+            // Text decoration
+            { "text-decoration",        TextDecoration },
+            { "text-decoration-color",  TextDecorationColor },
+            { "text-decoration-line",   TextDecorationLine },
+            { "text-decoration-skip",   TextDecorationSkip },
+            { "text-decoration-style",  TextDecorationStyle },
+
+            { "text-emphasis",          TextEmphasis },
             { "text-emphasis-color", TextEmphasisColor },
             { "text-emphasis-position", TextEmphasisPosition },
             { "text-emphasis-style", TextEmphasisStyle },
@@ -647,13 +704,16 @@ namespace Carbon.Css
             { "text-underline-position", TextUnderlinePosition },
             { "text-wrap", TextWrap },
             { "top", Top },
-            { "transform", Transform },
-            { "transform-origin", TransformOrigin },
-            { "transform-style", TransformStyle },
-            { "transition", Transition },
-            { "transition-delay", TransitionDelay },
+
+            // Transform
+            { "transform",           Transform },
+            { "transform-origin",    TransformOrigin },
+            { "transform-style",     TransformStyle },
+            { "transition",          Transition },
+            { "transition-delay",    TransitionDelay },
             { "transition-duration", TransitionDuration },
             { "transition-property", TransitionProperty },
+
             { "transition-timing-function", TransitionTimingFunction },
             { "unicode-bidi", UnicodeBidi },
             { "unicode-range", UnicodeRange },
