@@ -4,7 +4,7 @@ namespace Carbon.Css
 {
     public sealed class CssColor : CssValue
 	{
-		private readonly string value;
+        private readonly object value; // Rgba32 | string
 
 		public CssColor(string value)
 			: base(NodeKind.Color)
@@ -12,13 +12,19 @@ namespace Carbon.Css
 			this.value = value;
 		}
 
-		public CssColor(in Rgba32 value)
+		public CssColor(Rgba32 value)
 			: base(NodeKind.Color)
 		{
-			this.value = value.ToString();
+            this.value = value;
 		}
 
-		public override string ToString() => value;
+        private CssColor(object value)
+            : base(NodeKind.Color)
+        {
+            this.value = value;
+        }
+
+		public override string ToString() => value.ToString();
 
 		public static CssColor FromRgba(byte r, byte g, byte b, float a)
 		{
