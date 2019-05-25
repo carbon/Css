@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <VersionPrefix>0.23.1</VersionPrefix>
+    <VersionPrefix>0.24.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <NullableContextOptions>enable</NullableContextOptions>
@@ -11,6 +11,7 @@
     <Authors>iamcarbon</Authors>
     <Description>High-performance (S)CSS parser and auto-prefixer.</Description>
     <Copyright>© 2012-2019 Jason Nelson</Copyright>
+    <PackageId>Carbon.Css</PackageId>
     <PackageTags>css;scss;autoprefix</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/carbon/css</RepositoryUrl>
