@@ -8,7 +8,6 @@ namespace Carbon.Css.Parser
     {
         private int depth = 1;
         private readonly CssTokenizer tokenizer;
-        private readonly LexicalModeContext context = new LexicalModeContext(LexicalMode.Unknown);
 
         public CssParser(TextReader textReader)
             : this(new CssTokenizer(new SourceReader(textReader)))
@@ -151,7 +150,7 @@ namespace Carbon.Css.Parser
                 case "while"     : return ReadWhileRule();
             }
 
-            TokenList text = null;
+            TokenList? text = null;
 
             if (Current.Kind == TokenKind.Name)
             {
@@ -195,14 +194,14 @@ namespace Carbon.Css.Parser
         {
             // @charset "UTF-8";
 
-            string selectorText = null;
+            string? selectorText = null;
 
             if (Current.Kind == TokenKind.Name)
             {
                 selectorText = ReadTokenSpan().ToString();
             }
 
-            return new CharsetRule(selectorText);
+            return new CharsetRule(selectorText!);
         }
 
         public KeyframesRule ReadKeyframesRule()
@@ -368,7 +367,7 @@ namespace Carbon.Css.Parser
             // : $oranges
             // : url(file.css);
 
-            List<CssValue> values = null;
+            List<CssValue>? values = null;
 
             CssValue first = CssValue.FromComponents(ReadComponents());
             
@@ -378,9 +377,9 @@ namespace Carbon.Css.Parser
 
                 if (values is null)
                 {
-                    values = new List<CssValue>();
-
-                    values.Add(first);
+                    values = new List<CssValue> {
+                        first
+                    };
                 }
 
                 values.Add(CssValue.FromComponents(ReadComponents()));
@@ -533,7 +532,7 @@ namespace Carbon.Css.Parser
 
         public CssSelector ReadSelector()
         {
-            List<CssSequence> list = null;
+            List<CssSequence>? list = null;
 
             var span = ReadValueSpan();
 
@@ -542,9 +541,9 @@ namespace Carbon.Css.Parser
             {
                 if (list is null)
                 {
-                    list = new List<CssSequence>();
-
-                    list.Add(span);
+                    list = new List<CssSequence> {
+                        span
+                    };
                 }
                 
                 ReadTrivia(); // trailing whitespace
@@ -609,7 +608,7 @@ namespace Carbon.Css.Parser
 
                 var name = Consume();
 
-                CssValue @default = null;
+                CssValue? @default = null;
 
                 ReadTrivia();
 
@@ -655,7 +654,7 @@ namespace Carbon.Css.Parser
 
             ReadTrivia();
 
-            CssValue args = null;
+            CssValue? args = null;
 
             if (ConsumeIf(TokenKind.LeftParenthesis)) // ? (
             {
@@ -664,7 +663,7 @@ namespace Carbon.Css.Parser
                 Consume(TokenKind.RightParenthesis, LexicalMode.Function); // ! )
             }
 
-            var trivia = ReadTrivia();
+            _ = ReadTrivia();
 
             ConsumeIf(TokenKind.Semicolon); // ? ;
 
@@ -678,9 +677,10 @@ namespace Carbon.Css.Parser
 
         public CssRule ReadRuleBlock(in CssSelector selector)
         {
-            var rule = new StyleRule(selector);
-
-            rule.Depth = depth;
+            var rule = new StyleRule(selector)
+            {
+                Depth = depth
+            };
 
             ReadBlock(rule);
             
@@ -722,7 +722,7 @@ namespace Carbon.Css.Parser
 
                 var span = ReadValueSpan();
 
-                List<CssSequence> spanList = null;
+                List<CssSequence>? spanList = null;
                 
                 while (ConsumeIf(TokenKind.Comma)) // ? ,
                 {
@@ -796,9 +796,12 @@ namespace Carbon.Css.Parser
             return new CssDeclaration(name, value);
         }
 
-        public Trivia ReadTrivia()
+        public Trivia? ReadTrivia()
         {
-            if (IsEnd || !Current.IsTrivia) return null;
+            if (IsEnd || !Current.IsTrivia)
+            {
+                return null;
+            }
 
             var trivia = new Trivia();
 
