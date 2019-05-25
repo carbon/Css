@@ -7,25 +7,31 @@ namespace Carbon.Css
 {
     using Parser;
 
-    public class CssWriter : IDisposable
+    public sealed class CssWriter : IDisposable
     {
         private readonly TextWriter writer;
         private readonly CssContext context;
-        private readonly ICssResolver resolver;
-        private int includeCount = 0;
-        private int importCount = 0;
-        private int nodeCount = 0;
+        private readonly ICssResolver? resolver;
+        private int includeCount;
+        private int importCount;
+        private int nodeCount;
+        private bool skipMath;
 
-        private BrowserInfo[] browserSupport;
+        private BrowserInfo[]? browserSupport;
 
         private CssScope scope;
 
-        public CssWriter(TextWriter writer, CssContext context = null, CssScope scope = null, ICssResolver resolver = null)
+        public CssWriter(TextWriter writer, CssContext? context = null, CssScope? scope = null, ICssResolver? resolver = null)
         {
-            this.writer = writer ?? throw new ArgumentNullException(nameof(writer));
+            this.writer = writer;
             this.context = context ?? new CssContext();
             this.resolver = resolver;
             this.scope = scope ?? new CssScope();
+
+            includeCount = 0;
+            importCount = 0;
+            nodeCount = 0;
+            skipMath = false;
 
             this.browserSupport = this.context.BrowserSupport;
         }
@@ -139,7 +145,7 @@ namespace Carbon.Css
                 a++;
             }
 
-            scope = scope.Parent;
+            scope = scope.Parent!;
         }
 
         private void WriteBlockBody(CssBlock block, int level = 0)
@@ -179,49 +185,70 @@ namespace Carbon.Css
             {
                 case NodeKind.Variable   : return scope.GetValue(((CssVariable)expression).Symbol);
                 case NodeKind.Expression : return EvalBinaryExpression((BinaryExpression)expression);
-                case NodeKind.Function   : return EvalFunction((CssFunction)expression);
+                case NodeKind.Function   :
+
+                    var function = (CssFunction)expression;
+
+                    if (IsCssFunction(function.Name))
+                    {
+                        return function;
+                    }
+                    
+                    return EvalFunction(function);
                 default                  : return expression;
             }
         }
 
+        private static bool IsCssFunction(string name)
+        {
+            switch (name)
+            {
+                case "attr":
+                case "calc":
+                case "cubic-bezier":
+                case "var":
+                    return true;
+            }
+
+            return false;
+        }
     
         public CssValue EvalBinaryExpression(BinaryExpression expression)
         {
-            var left = EvalulateExpression(expression.Left);
-            var right = EvalulateExpression(expression.Right);
+            var lhs = EvalulateExpression(expression.Left);
+            var rhs = EvalulateExpression(expression.Right);
 
-            if (skipMath || !CssValue.AreCompatible(left, right, expression.Operator))
+            if (skipMath || !CssValue.AreCompatible(lhs, rhs, expression.Operator))
             {
-                return new CssValueList(new CssValue[] { left, new CssString(expression.OperatorToken), right }, ValueSeperator.Space);
+                return new CssValueList(new CssValue[] { lhs, new CssString(expression.OperatorToken), rhs }, ValueSeperator.Space);
             }
             
             switch (expression.Operator)
             {
-                case BinaryOperator.Divide   : return ((CssUnitValue)left).Divide(right);
-                case BinaryOperator.Multiply : return ((CssUnitValue)left).Multiply(right);
-                case BinaryOperator.Add      : return ((CssUnitValue)left).Add(right);
-                case BinaryOperator.Subtract : return ((CssUnitValue)left).Subtract(right);
+                case BinaryOperator.Divide   : return ((CssUnitValue)lhs).Divide(rhs);
+                case BinaryOperator.Multiply : return ((CssUnitValue)lhs).Multiply(rhs);
+                case BinaryOperator.Add      : return ((CssUnitValue)lhs).Add(rhs);
+                case BinaryOperator.Subtract : return ((CssUnitValue)lhs).Subtract(rhs);
             }
 
-            var leftS = left.ToString();
-            var rightS = right.ToString();
+            var leftS = lhs.ToString();
+            var rightS = rhs.ToString();
 
-            if (left.Kind == NodeKind.Undefined)
+            if (lhs.Kind == NodeKind.Undefined)
             {
                 leftS = "undefined";
             }
             
-            switch (expression.Operator)
+            return expression.Operator switch
             {
-                case BinaryOperator.Eq        : return CssBoolean.Get(leftS == rightS);
-                case BinaryOperator.NotEquals : return CssBoolean.Get(leftS != rightS);
-                case BinaryOperator.Gt        : return CssBoolean.Get(double.Parse(leftS) >  double.Parse(rightS));
-                case BinaryOperator.Gte       : return CssBoolean.Get(double.Parse(leftS) >= double.Parse(rightS));
-                case BinaryOperator.Lt        : return CssBoolean.Get(double.Parse(leftS) <  double.Parse(rightS));
-                case BinaryOperator.Lte       : return CssBoolean.Get(double.Parse(leftS) <= double.Parse(rightS));
-            }
-
-            return new CssBoolean(true);
+                BinaryOperator.Eq        => CssBoolean.Get(leftS == rightS),
+                BinaryOperator.NotEquals => CssBoolean.Get(leftS != rightS),
+                BinaryOperator.Gt        => CssBoolean.Get(double.Parse(leftS) >  double.Parse(rightS)),
+                BinaryOperator.Gte       => CssBoolean.Get(double.Parse(leftS) >= double.Parse(rightS)),
+                BinaryOperator.Lt        => CssBoolean.Get(double.Parse(leftS) <  double.Parse(rightS)),
+                BinaryOperator.Lte       => CssBoolean.Get(double.Parse(leftS) <= double.Parse(rightS)),
+                _                        => new CssBoolean(true)
+            };
         }
 
         public CssValue EvalFunction(CssFunction function)
@@ -240,6 +267,11 @@ namespace Carbon.Css
 
         public void InlineImport(ImportRule importRule, StyleSheet sheet)
         {
+            if (resolver is null)
+            {
+                throw new Exception("resolver is null");
+            }
+
             // var relativePath = importRule.Url;
             var absolutePath = importRule.Url.GetAbsolutePath(resolver.ScopedPath);
 
@@ -376,7 +408,7 @@ namespace Carbon.Css
             }
         }
 
-        private void WriteTrivia(Trivia trivia)
+        private void WriteTrivia(Trivia? trivia)
         {
             if (trivia is null) return;
 
@@ -385,8 +417,6 @@ namespace Carbon.Css
                 writer.Write(token.Text);
             }
         }
-
-        private bool skipMath = false;
 
         public void WriteFunction(CssFunction function)
         {
@@ -459,7 +489,13 @@ namespace Carbon.Css
         {
             var value = scope.GetValue(variable.Symbol);
 
+            bool sm = skipMath;
+
+            skipMath = false;
+
             WriteValue(value);
+
+            skipMath = sm;
         }
 
         public void WriteInterpolatedString(CssInterpolatedString node)
@@ -589,6 +625,8 @@ namespace Carbon.Css
 
             var value = reference.Value;
 
+            if (value is null) return;
+
             for (var i = 0; i < value.Count; i++)
             {
                 var item = value[i];
@@ -669,7 +707,6 @@ namespace Carbon.Css
 
         public void WriteBlock(CssBlock block, int depth)
         {
-            var prevScope = scope;
 
             writer.Write('{'); // Block start
 
@@ -750,8 +787,6 @@ namespace Carbon.Css
             }
 
             writer.Write('}'); // Block end
-
-            prevScope = scope;
         }
 
         public void WriteDeclaration(CssDeclaration declaration, int level)
@@ -895,7 +930,7 @@ namespace Carbon.Css
                 throw new Exception($"Mixin '{include.Name}' not registered");
             }
 
-            var index = rule.Children.IndexOf(include);
+            // var index = rule.Children.IndexOf(include);
 
             var childScope = GetScope(mixin.Parameters, include.Args);
 
@@ -920,9 +955,9 @@ namespace Carbon.Css
             return childScope;
         }
 
-        public CssScope GetScope(IReadOnlyList<CssParameter> paramaters, CssValue args)
+        public CssScope GetScope(IReadOnlyList<CssParameter> paramaters, CssValue? args)
         {
-            CssValue[] list = null;
+            CssValue[]? list = null;
 
             if (args != null)
             {
@@ -966,7 +1001,7 @@ namespace Carbon.Css
                 rule.Selector
             };
 
-            StyleRule current = rule;
+            StyleRule? current = rule;
 
             while ((current = current.Parent as StyleRule) != null)
             {
@@ -986,7 +1021,7 @@ namespace Carbon.Css
 
             // { &.open { } }
 
-            var span = new CssSequence();
+            CssSequence? span = new CssSequence();
 
             for (int i = 0; i < ancestors.Count; i++)
             {
