@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Carbon.Css.Parser
 {
-    public class SourceReader : IDisposable
+    public sealed class SourceReader : IDisposable
     {
         private const char EofChar = '\0';
 
@@ -12,18 +12,20 @@ namespace Carbon.Css.Parser
         private char current;
         private int position;
 
-        public SourceReader(string text)
-        {
-            this.textReader = new StringReader(text);
+        private readonly StringBuilder sb;
 
-            current = '.';
-        }
+        private int markStart;
+        private int marked;
 
         public SourceReader(TextReader textReader)
         {
             this.textReader = textReader;
 
+            position = 0;
             current = '.';
+            sb = new StringBuilder();
+            markStart = -1;
+            marked = -1;
         }
 
         public char Current => current;
@@ -89,11 +91,6 @@ namespace Carbon.Css.Parser
 
         #region Mark
 
-        private readonly StringBuilder sb = new StringBuilder();
-
-        private int markStart = -1;
-        private int marked = -1;
-
         public int MarkStart => markStart;
 
         public int Mark(bool appendCurrent = true)
@@ -121,15 +118,9 @@ namespace Carbon.Css.Parser
 
         #region IDisposable
 
-        private bool isDisposed = false;
-
         public void Dispose()
         {
-            if (isDisposed) return;
-
             textReader.Dispose();
-
-            isDisposed = true;
         }
 
         #endregion
