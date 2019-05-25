@@ -1,19 +1,17 @@
-﻿using System;
-
-namespace Carbon.Css
+﻿namespace Carbon.Css
 {
     public sealed class CssDirective : CssNode
     {
-        public CssDirective(string name, string value)
+        public CssDirective(string name, string? value)
             : base(NodeKind.Directive)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
             Value = value;
         }
 
         public string Name { get; }
 
-        public string Value { get; }
+        public string? Value { get; }
     }
 }
 

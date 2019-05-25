@@ -5,7 +5,7 @@ namespace Carbon.Css
 {
     public sealed class CssProperty : IEquatable<CssProperty>
     {
-        private readonly CssCompatibility compatibility;
+        private readonly CssCompatibility? compatibility;
 
         public CssProperty(string name)
             : this(name, null, null)
@@ -15,9 +15,9 @@ namespace Carbon.Css
             : this(name, null, compatibility)
         { }
 
-        public CssProperty(string name, CssModule module = null, CssCompatibility compatibility = null)
+        public CssProperty(string name, CssModule? module = null, CssCompatibility? compatibility = null)
         {
-            Name   = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
             Module = module;
 
             this.compatibility = compatibility;
@@ -32,11 +32,11 @@ namespace Carbon.Css
 
         public string Name { get; }
 
-        public CssModule Module { get; }
+        public CssModule? Module { get; }
 
         public CssCompatibility Compatibility => compatibility ?? CssCompatibility.Default;
 
-        public bool NeedsExpansion(CssDeclaration declaration, in BrowserInfo[] browsers)
+        public bool NeedsExpansion(CssDeclaration declaration, in BrowserInfo[]? browsers)
         {
             if (browsers is null || browsers.Length == 0) return false;
 
@@ -224,24 +224,24 @@ namespace Carbon.Css
         public static readonly CssProperty FitPosition = new CssProperty("fit-position");
 
         // Flex ---------------------------------------------------------------------------------------
-        public static readonly CssProperty FlexAlign = new CssProperty("flex-align");
-        public static readonly CssProperty FlexFlow = new CssProperty("flex-flow");
+        public static readonly CssProperty FlexAlign    = new CssProperty("flex-align");
+        public static readonly CssProperty FlexFlow     = new CssProperty("flex-flow");
         public static readonly CssProperty FlexLinePack = new CssProperty("flex-line-pack");
-        public static readonly CssProperty FlexOrder = new CssProperty("flex-order");
-        public static readonly CssProperty FlexPack = new CssProperty("flex-pack");
+        public static readonly CssProperty FlexOrder    = new CssProperty("flex-order");
+        public static readonly CssProperty FlexPack     = new CssProperty("flex-pack");
 
-        public static readonly CssProperty Float = new CssProperty("float", CssModule.Core1);
-        public static readonly CssProperty FloatOffset = new CssProperty("float-offset");
+        public static readonly CssProperty Float        = new CssProperty("float", CssModule.Core1);
+        public static readonly CssProperty FloatOffset  = new CssProperty("float-offset");
 
         // Fonts -------------------------------------------------------------------------------------------
-        public static readonly CssProperty Font = new CssProperty("font", CssModule.Core1);
-        public static readonly CssProperty FontFamily = new CssProperty("font-family", CssModule.Core1);
-        public static readonly CssProperty FontSize = new CssProperty("font-size", CssModule.Core1);
-        public static readonly CssProperty FontSizeAdjust = new CssProperty("font-size-adjust");
-        public static readonly CssProperty FontStretch = new CssProperty("font-stretch", CssModule.Fonts3);
-        public static readonly CssProperty FontStyle = new CssProperty("font-style", CssModule.Core1);
-        public static readonly CssProperty FontVariant = new CssProperty("font-variant", CssModule.Core1);
-        public static readonly CssProperty FontWeight = new CssProperty("font-weight", CssModule.Core1);
+        public static readonly CssProperty Font             = new CssProperty("font",           CssModule.Core1);
+        public static readonly CssProperty FontFamily       = new CssProperty("font-family",    CssModule.Core1);
+        public static readonly CssProperty FontSize         = new CssProperty("font-size",      CssModule.Core1);
+        public static readonly CssProperty FontSizeAdjust   = new CssProperty("font-size-adjust");
+        public static readonly CssProperty FontStretch      = new CssProperty("font-stretch",   CssModule.Fonts3);
+        public static readonly CssProperty FontStyle        = new CssProperty("font-style",     CssModule.Core1);
+        public static readonly CssProperty FontVariant      = new CssProperty("font-variant",   CssModule.Core1);
+        public static readonly CssProperty FontWeight       = new CssProperty("font-weight",    CssModule.Core1);
 
         // Grids ---------------------------------------------------------------------------------------
         public static readonly CssCompatibility GridComptability = new CssCompatibility(

@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace Carbon.Css
+﻿namespace Carbon.Css
 {
     public sealed class KeyframesRule : CssRule
     {
         public KeyframesRule(string name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
         }
 
         public override RuleType Type => RuleType.Keyframes;

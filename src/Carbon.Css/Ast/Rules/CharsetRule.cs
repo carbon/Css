@@ -9,7 +9,7 @@
 
         public override RuleType Type => RuleType.Charset;
         
-        public string Encoding { get; }
+        public string? Encoding { get; }
     }
 }
 

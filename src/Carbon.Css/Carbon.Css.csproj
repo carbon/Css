@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <VersionPrefix>0.20.0</VersionPrefix>
+    <VersionPrefix>0.23.1</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>7.3</LangVersion>
-    
+    <LangVersion>8.0</LangVersion>
+    <NullableContextOptions>enable</NullableContextOptions>
+
     <!-- Package Properties-->
     <Authors>iamcarbon</Authors>
     <Description>High-performance (S)CSS parser and auto-prefixer.</Description>
@@ -16,8 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Memory" Version="4.5.2" />
-    <PackageReference Include="Carbon.Color" Version="2.6.0" />
+    <PackageReference Include="System.Memory" Version="4.5.3" />
+    <PackageReference Include="Carbon.Color" Version="2.7.0" />
   </ItemGroup>
 
 </Project>

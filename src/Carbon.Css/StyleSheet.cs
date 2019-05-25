@@ -11,35 +11,33 @@ namespace Carbon.Css
 
     public sealed class StyleSheet : CssRoot, IStylesheet
     {
-        public StyleSheet(List<CssNode> children, CssContext context)
+        public StyleSheet(List<CssNode> children, CssContext? context)
             : base(children)
         {
             Context = context;
         }
 
-        public StyleSheet(CssContext context)
+        public StyleSheet(CssContext? context)
             : base()
         {
             Context = context;
         }
 
-        public CssContext Context { get; }
+        public CssContext? Context { get; }
 
-        public static StyleSheet Parse(Stream stream, CssContext context = null) =>
+        public static StyleSheet Parse(Stream stream, CssContext? context = null) =>
             Parse(new StreamReader(stream), context);
 
-        public static StyleSheet Parse(string text, CssContext context = null) =>
+        public static StyleSheet Parse(string text, CssContext? context = null) =>
             Parse(new StringReader(text), context);
 
         private static readonly char[] trimBrowserChars = { ' ', '+' };
 
-        public static StyleSheet Parse(TextReader reader, CssContext context = null)
+        public static StyleSheet Parse(TextReader reader, CssContext? context = null)
         {
             var sheet = new StyleSheet(context ?? new CssContext());
 
-            var rules = new List<CssRule>();
-
-            IList<BrowserInfo> browsers = null;
+            IList<BrowserInfo>? browsers = null;
 
             using (var parser = new CssParser(reader))
             {
@@ -49,13 +47,13 @@ namespace Carbon.Css
                     {
                         var mixin = (MixinNode)node;
 
-                        sheet.Context.Mixins.Add(mixin.Name, mixin);
+                        sheet.Context!.Mixins.Add(mixin.Name, mixin);
                     }
                     else if (node.Kind == NodeKind.Directive)
                     {
                         var directive = (CssDirective)node;
 
-                        if (directive.Name == "support")
+                        if (directive.Name == "support" && directive.Value != null)
                         {
                             string[] parts = directive.Value.Split(Seperators.Space); // SpaceArray...
 
@@ -80,7 +78,7 @@ namespace Carbon.Css
 
                 if (browsers != null)
                 {
-                    sheet.Context.SetCompatibility(browsers.ToArray());
+                    sheet.Context!.SetCompatibility(browsers.ToArray());
                 }
             }
 
@@ -89,7 +87,10 @@ namespace Carbon.Css
 
         public void InlineImports()
         {
-            if (resolver is null) throw new ArgumentNullException(nameof(resolver));
+            if (resolver is null)
+            {
+                throw new ArgumentNullException(nameof(resolver));
+            }
 
             foreach (var rule in Children.OfType<ImportRule>().ToArray())
             {
@@ -102,16 +103,9 @@ namespace Carbon.Css
             }
         }
 
-        public static StyleSheet FromFile(FileInfo file, CssContext context = null)
+        public static StyleSheet FromFile(FileInfo file, CssContext? context = null)
         {
-            if (file is null) throw new ArgumentNullException(nameof(file));
-
-            string text;
-
-            using (var reader = file.OpenText())
-            {
-                text = reader.ReadToEnd();
-            }
+            string text = File.ReadAllText(file.FullName);
 
             try
             {
@@ -132,7 +126,7 @@ namespace Carbon.Css
             WriteTo(writer);
         }
 
-        private ICssResolver resolver;
+        private ICssResolver? resolver;
 
         public void SetResolver(ICssResolver resolver)
         {
@@ -162,28 +156,35 @@ namespace Carbon.Css
 
         public string ToString(IEnumerable<KeyValuePair<string, CssValue>> variables)
         {
-            using (var sw = new StringWriter())
-            {
-                WriteTo(sw, variables);
+            var sb = StringBuilderCache.Aquire();
 
-                return sw.ToString();
-            }
+            using var sw = new StringWriter(sb);
+
+            WriteTo(sw, variables);
+
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
 
         public override string ToString()
         {
-            using (var sw = new StringWriter())
-            {
-                WriteTo(sw);
+            var sb = StringBuilderCache.Aquire();
 
-                return sw.ToString();
-            }
+            using var sw = new StringWriter(sb);
+
+            WriteTo(sw);
+
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
 
         #region Helpers
 
         private void ImportInline(ImportRule rule)
         {
+            if (resolver is null)
+            {
+                throw new ArgumentNullException(nameof(resolver));
+            }
+
             // var relativePath = importRule.Url;
             var absolutePath = rule.Url.GetAbsolutePath(resolver.ScopedPath);
 
@@ -220,7 +221,7 @@ namespace Carbon.Css
 
                         AddChild(new CssComment($" --- Syntax error reading '{absolutePath}' : {ex.Message} --- "));
 
-                        var sb = new StringBuilder();
+                        var sb = StringBuilderCache.Aquire();
 
                         if (ex.Lines != null)
                         {
@@ -238,7 +239,7 @@ namespace Carbon.Css
                             }
                         }
 
-                        AddChild(new CssComment(sb.ToString()));
+                        AddChild(new CssComment(StringBuilderCache.ExtractAndRelease(sb)));
 
                         return;
                     }

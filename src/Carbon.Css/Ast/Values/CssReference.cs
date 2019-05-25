@@ -25,6 +25,6 @@
 
         public string Name { get; }
 
-        public CssSequence Value { get; set; }
+        public CssSequence? Value { get; set; }
     }
 }

@@ -9,14 +9,14 @@ namespace Carbon.Css.Resolver
 
         public Include(FileInfo file)
         {
-            this.file = file ?? throw new ArgumentNullException(nameof(file));
+            this.file = file;
         }
 
         public DateTime Modified => file.LastWriteTime;
 
         public void WriteTo(TextWriter writer)
         {
-            string line = null;
+            string line;
 
             using (var reader = file.OpenText())
             {

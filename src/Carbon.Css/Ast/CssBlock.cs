@@ -23,7 +23,7 @@ namespace Carbon.Css
 
         public bool HasChildren => children.Count > 0;
 
-        public CssDeclaration GetDeclaration(string name)
+        public CssDeclaration? GetDeclaration(string name)
         {
             foreach (var child in children)
             {

@@ -23,7 +23,7 @@ namespace Carbon.Css
 
             if (char.IsDigit(text[0]) && TryParseNumberOrMeasurement(text, out var value))
             {
-                return value;
+                return value!;
             }
 
             var reader = new SourceReader(new StringReader(text));
@@ -39,7 +39,7 @@ namespace Carbon.Css
         // 60px
         // 6.5em
 
-        private static bool TryParseNumberOrMeasurement(string text, out CssValue value)
+        private static bool TryParseNumberOrMeasurement(string text, out CssValue? value)
         {
             int unitIndex = -1;
 

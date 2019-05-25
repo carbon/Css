@@ -12,15 +12,15 @@ namespace Carbon.Css
             this.items = items;
         }
 
-        public CssScope(CssScope parent = null)
+        public CssScope(CssScope? parent = null)
         {
             Parent = parent;
             this.items = new Dictionary<string, CssValue>();
         }
 
-        public object This { get; set; }
+        public object? This { get; set; }
 
-        public CssScope Parent { get; }
+        public CssScope? Parent { get; }
 
         public CssValue this[string name]
         {

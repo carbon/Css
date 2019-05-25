@@ -1,26 +1,28 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Carbon.Css
 {
     public abstract class CssNode
     {
-        public CssNode(NodeKind kind, CssNode parent = null)
+        public CssNode(NodeKind kind, CssNode? parent = null)
         {
             Kind   = kind;
             Parent = parent;
         }
 
+        [IgnoreDataMember]
         public NodeKind Kind { get; }
 
-        public CssNode Parent { get; set; }
+        [IgnoreDataMember]
+        public CssNode? Parent { get; set; }
 
-        internal Trivia Leading { get; set; }
+        [IgnoreDataMember]
+        internal Trivia? Leading { get; set; }
 
-        public Trivia Trailing { get; set; }
+        [IgnoreDataMember]
+        public Trivia? Trailing { get; set; }
 
-        public virtual CssNode CloneNode()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual CssNode CloneNode() => throw new NotImplementedException();
     }
 }

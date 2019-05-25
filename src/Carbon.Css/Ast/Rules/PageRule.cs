@@ -4,11 +4,11 @@
     {
         public override RuleType Type => RuleType.Page;
 
-        public PageRule(CssSelector selector = null)
+        public PageRule(CssSelector? selector = null)
         {
             Selector = selector;
         }
 
-        public CssSelector Selector { get; }
+        public CssSelector? Selector { get; }
     }
 }

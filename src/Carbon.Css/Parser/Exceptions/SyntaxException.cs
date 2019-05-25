@@ -20,7 +20,7 @@ namespace Carbon.Css.Parser
 
         public SourceLocation Location { get; set; }
 
-        public IList<LineInfo> Lines { get; set; }
+        public IList<LineInfo>? Lines { get; set; }
 
         public static SyntaxException UnexpectedEOF(string context)
         {
