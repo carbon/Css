@@ -21,7 +21,6 @@ namespace Carbon.Css.Gradients
         BottomRight = 8
     }
 
-
     public static class LinearGradientDirectionHelper
     {
         public static bool TryParse(ReadOnlySpan<char> text, out LinearGradientDirection result, out int read)
@@ -103,26 +102,20 @@ namespace Carbon.Css.Gradients
             }
 
             return true;
-
         }
-        public static string Canonicalize(LinearGradientDirection value)
+
+        public static string Canonicalize(LinearGradientDirection value) => value switch
         {
-
-            switch (value)
-            {
-                case Bottom         : return "bottom";
-                case BottomLeft     : return "bottom left";
-                case BottomRight    : return "bottom right";
-                case Left           : return "left";
-                case Right          : return "right";
-                case Top            : return "top";
-                case TopLeft        : return "top left";
-                case TopRight       : return "top right";
-            }
-            
-            throw new Exception("Unexpected direction:" + value.ToString());
-
-        }
+            Bottom      => "bottom",
+            BottomLeft  => "bottom left",
+            BottomRight => "bottom right",
+            Left        => "left",
+            Right       => "right",
+            Top         => "top",
+            TopLeft     => "top left",
+            TopRight    => "top right",
+            _           => throw new Exception("Unexpected direction:" + value.ToString())
+        };
     }
 
     // (top | bottom) (left | right)

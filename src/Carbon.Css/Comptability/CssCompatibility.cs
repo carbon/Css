@@ -33,28 +33,26 @@
 
         public bool IsPrefixed(in BrowserInfo browser)
         {
-            switch (browser.Type)
+            return browser.Type switch
             {
-                case BrowserType.Chrome  : return Prefixed.Chrome > 0f && !IsStandard(browser);
-                case BrowserType.Firefox : return Prefixed.Firefox > 0f && !IsStandard(browser);
-                case BrowserType.IE      : return Prefixed.IE > 0f && !IsStandard(browser);
-                case BrowserType.Safari  : return Prefixed.Safari > 0f && !IsStandard(browser);
-            }
-
-            return false;
+                BrowserType.Chrome  => Prefixed.Chrome > 0f && !IsStandard(browser),
+                BrowserType.Firefox => Prefixed.Firefox > 0f && !IsStandard(browser),
+                BrowserType.IE      => Prefixed.IE > 0f && !IsStandard(browser),
+                BrowserType.Safari  => Prefixed.Safari > 0f && !IsStandard(browser),
+                _                   => false
+            };
         }
 
         public bool IsStandard(in BrowserInfo browser)
         {
-            switch (browser.Type)
+            return browser.Type switch
             {
-                case BrowserType.Chrome  : return Standard.Safari != 0 && Standard.Chrome <= browser.Version;
-                case BrowserType.Firefox : return Standard.Firefox != 0 && Standard.Firefox <= browser.Version;
-                case BrowserType.IE      : return Standard.IE != 0 && Standard.IE <= browser.Version;
-                case BrowserType.Safari  : return Standard.Safari != 0 && Standard.Safari <= browser.Version;
-            }
-
-            return false;
+                BrowserType.Chrome  => Standard.Safari != 0 && Standard.Chrome <= browser.Version,
+                BrowserType.Firefox => Standard.Firefox != 0 && Standard.Firefox <= browser.Version,
+                BrowserType.IE      => Standard.IE != 0 && Standard.IE <= browser.Version,
+                BrowserType.Safari  => Standard.Safari != 0 && Standard.Safari <= browser.Version,
+                _                   => false
+            };
         }
         
         public virtual bool HasPatches => Prefixed.IsDefined;
