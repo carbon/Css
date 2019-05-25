@@ -4,22 +4,28 @@ using System.IO;
 
 namespace Carbon.Css.Parser
 {
-    public class CssTokenizer : IDisposable
+    public sealed class CssTokenizer : IDisposable
     {
-        private readonly SourceReader reader;
-        private readonly LexicalModeContext mode;
-        private readonly Stack<CssToken> stack = new Stack<CssToken>();
+        private readonly Stack<CssToken> stack;
 
         private CssToken current;
-        private bool isEnd = false;
+        private bool isEnd;
+
+        // Don't make these RO
+        private LexicalModeContext mode;
+        private readonly SourceReader reader;
 
         public CssTokenizer(SourceReader reader, LexicalMode mode = LexicalMode.Selector)
         {
-            this.reader = reader ?? throw new ArgumentNullException(nameof(reader));
+            this.reader = reader;
 
             this.reader.Next(); // Start the reader
 
             this.mode = new LexicalModeContext(mode);
+
+            this.stack = new Stack<CssToken>(3);
+            current = default;
+            isEnd = false;
 
             this.Next(); // Load the first token
         }
@@ -114,7 +120,7 @@ namespace Carbon.Css.Parser
                     }
                     else
                     {
-                        mode.Leave(LexicalMode.Block, this);
+                        mode.Leave(LexicalMode.Block, this.Current.Position);
 
                         return new CssToken(TokenKind.BlockEnd, reader.Read(), reader.Position);
                     }
@@ -189,13 +195,13 @@ namespace Carbon.Css.Parser
 
             }
 
-            switch (mode.Current)
+            return mode.Current switch
             {
-                case LexicalMode.Symbol: return ReadSymbol();
-                case LexicalMode.Value: return ReadValue();
-                case LexicalMode.Unit: return ReadUnit();
-                default: return ReadName();
-            }
+                LexicalMode.Symbol => ReadSymbol(),
+                LexicalMode.Value  => ReadValue(),
+                LexicalMode.Unit   => ReadUnit(),
+                _                  => ReadName()
+            };
         }
 
         private CssToken ReadUnit()
@@ -267,7 +273,7 @@ namespace Carbon.Css.Parser
         {
             if (mode.Current == LexicalMode.Value)
             {
-                mode.Leave(LexicalMode.Value, this);
+                mode.Leave(LexicalMode.Value, this.Current.Position);
             }
         }
 
