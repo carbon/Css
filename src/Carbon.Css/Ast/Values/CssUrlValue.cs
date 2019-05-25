@@ -9,21 +9,21 @@ namespace Carbon.Css
 
         public CssUrlValue(string value)
         {
-            Value = value ?? throw new ArgumentNullException(nameof(value));
+            Value = value;
         }
 
         public CssUrlValue(byte[] data, string contentType)
         {
             // Works for resources only up to 32k in size in IE8.
 
-            var sb = new StringBuilder();
+            var sb = StringBuilderCache.Aquire();
 
             sb.Append("data:");
             sb.Append(contentType);
             sb.Append(";base64,");
             sb.Append(Convert.ToBase64String(data));
-            
-            Value = sb.ToString();
+
+            Value = StringBuilderCache.ExtractAndRelease(sb);
         }
 
         public string Value { get; }
@@ -36,7 +36,7 @@ namespace Carbon.Css
 
         public bool IsExternal => !IsPath;
 
-        public string GetAbsolutePath(string basePath) /* /styles/ */
+        public readonly string GetAbsolutePath(string basePath) /* /styles/ */
         {
             if (!IsPath)
             {

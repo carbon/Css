@@ -9,14 +9,14 @@ namespace Carbon.Css
     {
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            var sb = StringBuilderCache.Aquire();
 
             foreach (var token in this)
             {
                 sb.Append(token.ToString());
             }
 
-            return sb.ToString();
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
     }
 }

@@ -1,20 +1,18 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace Carbon.Css
 {
     public sealed class CssDeclaration : CssNode
     {
-        public CssDeclaration(string name, string value, string priority = null)
+        public CssDeclaration(string name, string value, string? priority = null)
             : this(name, CssValue.Parse(value), priority)
         { }
 
-        public CssDeclaration(string name, CssValue value, string priority = null)
+        public CssDeclaration(string name, CssValue value, string? priority = null)
             : base(NodeKind.Declaration)
         {
-            if (name is null) throw new ArgumentNullException(nameof(name));
 
-            Value = value ?? throw new ArgumentNullException(nameof(value));
+            Value = value;
             Priority = priority;
             Info = CssProperty.Get(name);
         }
@@ -26,7 +24,7 @@ namespace Carbon.Css
             Value = value;
         }
 
-        public CssDeclaration(CssProperty property, CssValue value, string priority)
+        public CssDeclaration(CssProperty property, CssValue value, string? priority)
             : base(NodeKind.Declaration)
         {
             Info = property;
@@ -40,7 +38,7 @@ namespace Carbon.Css
 
         public CssProperty Info { get; }
 
-        public string Priority { get; }
+        public string? Priority { get; }
 
         public override CssNode CloneNode() => new CssDeclaration(Info, (CssValue)Value.CloneNode(), Priority);
 
@@ -48,7 +46,9 @@ namespace Carbon.Css
         {
             // color: red !important
 
-            var sb = new StringBuilder(Info.Name);
+            var sb = StringBuilderCache.Aquire();
+
+            sb.Append(Info.Name);
 
             sb.Append(": ");
             sb.Append(Value.ToString());
@@ -58,7 +58,7 @@ namespace Carbon.Css
                 sb.Append(" !").Append(Priority);
             }
 
-            return sb.ToString();
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
     }
 }

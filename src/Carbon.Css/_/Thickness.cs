@@ -91,13 +91,13 @@ namespace Carbon.Css
                 return Top.ToString();
             }
 
-            var sb = new StringBuilder()
+            var sb = StringBuilderCache.Aquire()
                 .Append(Top?.ToString() ?? "0").Append(' ')
                 .Append(Left?.ToString() ?? "0").Append(' ')
                 .Append(Bottom?.ToString() ?? "0").Append(' ')
                 .Append(Right?.ToString() ?? "0");
 
-            return sb.ToString();
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
     }
 }

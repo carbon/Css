@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Carbon.Css
 {
@@ -44,14 +45,15 @@ namespace Carbon.Css
 
         public override string ToString()
         {
-            using (var sw = new StringWriter())
-            {
-                var writer = new CssWriter(sw);
+            var sb = StringBuilderCache.Aquire();
 
-                writer.WriteStyleRule(this, 0);
+            using var sw = new StringWriter(sb);
 
-                return sw.ToString();
-            }
+            var writer = new CssWriter(sw);
+
+            writer.WriteStyleRule(this, 0);
+
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
 
         public void WriteTo(TextWriter writer)
