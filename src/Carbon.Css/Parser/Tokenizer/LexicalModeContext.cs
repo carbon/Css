@@ -2,13 +2,13 @@
 
 namespace Carbon.Css.Parser
 {
-    public class LexicalModeContext
+    public struct LexicalModeContext
     {
         private readonly Stack<LexicalMode> modes;
 
         public LexicalModeContext(LexicalMode start)
         {
-            modes = new Stack<LexicalMode>();
+            modes = new Stack<LexicalMode>(3);
 
             this.Current = start;
 
@@ -22,11 +22,11 @@ namespace Carbon.Css.Parser
             Current = mode;
         }
 
-        public void Leave(LexicalMode mode, CssTokenizer tokenizer = null)
+        public void Leave(LexicalMode mode, int position = 0)
         {
             if (Current != mode)
             {
-                throw new UnexpectedModeChange(Current, mode, tokenizer?.Current.Position ?? 0);
+                throw new UnexpectedModeChange(Current, mode, position);
             }
 
             modes.Pop();
