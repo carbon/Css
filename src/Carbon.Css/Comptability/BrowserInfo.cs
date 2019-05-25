@@ -54,31 +54,25 @@ namespace Carbon.Css
         public static readonly BrowserInfo Opera9  = Opera(9);
         public static readonly BrowserInfo Opera15 = Opera(15); // Based on Chromium
 
-        public static readonly BrowserInfo Safari1 = Safari(1);
-        public static readonly BrowserInfo Safari3 = Safari(3);
-        public static readonly BrowserInfo Safari4 = Safari(4);
-        public static readonly BrowserInfo Safari5 = Safari(5);
-        public static readonly BrowserInfo Safari6 = Safari(6);
-        public static readonly BrowserInfo Safari7 = Safari(7);
+        public static readonly BrowserInfo Safari1  = Safari(1);
+        public static readonly BrowserInfo Safari3  = Safari(3);
+        public static readonly BrowserInfo Safari4  = Safari(4);
+        public static readonly BrowserInfo Safari5  = Safari(5);
+        public static readonly BrowserInfo Safari6  = Safari(6);
+        public static readonly BrowserInfo Safari7  = Safari(7);
+        public static readonly BrowserInfo Safari10 = Safari(10);
 
-        public static BrowserPrefix GetPrefix(BrowserType type)
+        public static BrowserPrefix GetPrefix(BrowserType type) => type switch
         {
-            switch (type)
-            {
-                case BrowserType.Chrome  : return BrowserPrefix.Webkit;
-                case BrowserType.Firefox : return BrowserPrefix.Moz;
-                case BrowserType.IE      : return BrowserPrefix.MS;
-                case BrowserType.Opera   : return BrowserPrefix.Opera;
-                case BrowserType.Safari  : return BrowserPrefix.Webkit;
-
-                default: throw new Exception("Unexpected browser: " + type);
-            }
-        }
-
-        public override string ToString()
-        {
-            return Type + "/" + Version;
-        }
+            BrowserType.Chrome  => BrowserPrefix.Webkit,
+            BrowserType.Firefox => BrowserPrefix.Moz,
+            BrowserType.IE      => BrowserPrefix.MS,
+            BrowserType.Opera   => BrowserPrefix.Opera,
+            BrowserType.Safari  => BrowserPrefix.Webkit,
+            _                   => throw new Exception("Unexpected browser: " + type)
+        };
+        
+        public override string ToString() => Type + "/" + Version;
     }
 
     public readonly struct BrowserPrefix : IEquatable<BrowserPrefix>
