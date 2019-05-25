@@ -23,7 +23,7 @@ namespace Carbon.Css.Gradients
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            var sb = StringBuilderCache.Aquire();
 
             sb.Append("linear-gradient(");
 
@@ -54,7 +54,7 @@ namespace Carbon.Css.Gradients
 
             sb.Append(')');
 
-            return sb.ToString();
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
 
         public static LinearGradient Parse(string text)

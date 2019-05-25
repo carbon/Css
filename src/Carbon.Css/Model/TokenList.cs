@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
+using System.Text;
 
 namespace Carbon.Css
 {
@@ -9,12 +10,13 @@ namespace Carbon.Css
     {
         public override string ToString()
         {
-            using (var writer = new StringWriter())
-            {
-                WriteTo(writer);
+            var sb = StringBuilderCache.Aquire();
 
-                return writer.ToString();
-            }
+            using var writer = new StringWriter(sb);
+
+            WriteTo(writer);
+
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
 
         public void WriteTo(TextWriter writer)
