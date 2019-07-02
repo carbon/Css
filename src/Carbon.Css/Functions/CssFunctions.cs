@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Carbon.Css
 {
@@ -20,12 +21,18 @@ namespace Carbon.Css
             ["if"]			= If
         };
 
-		public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
+        // red(color)
+        // green(color)
+        // blue(blue)
+        // hsl
+        // hsla
+        // hue
+
+        public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
 		    => dic.TryGetValue(name, out func);
 		
 		// if($condition, $if-true, $if-false)
-		public static CssValue If(CssValue[] args)
-		    => ToBoolean(args[0]) ? args[1] : args[2];
+		public static CssValue If(CssValue[] args) => ToBoolean(args[0]) ? args[1] : args[2];
 
         public static CssValue Mix(CssValue[] args)
 		{
@@ -34,7 +41,7 @@ namespace Carbon.Css
             
             double amount = args.Length == 3 ? GetAmount(args[2]) : 0.5;
 
-			return new CssColor(color1.BlendWith(color2, amount));
+			return new CssColor(color1.BlendWith(color2, (float)amount));
 		}
 
 		public static CssValue Saturate(CssValue[] args)
@@ -74,7 +81,7 @@ namespace Carbon.Css
             Rgba32 color = GetColor(args[0]);
 			var amount = GetAmount(args[1]);
 
-			return new CssColor(color.ToHsla().RotateHue((float)amount * 360).ToRgba());
+			return new CssColor(color.ToHsla().RotateHue((float)amount * 360).ToRgba32());
 		}
 
 		public static CssValue Rgba(CssValue[] args)
@@ -104,19 +111,25 @@ namespace Carbon.Css
         }
 
 		private static Rgba32 GetColor(CssValue value) => Rgba32.Parse(value.ToString());
-        
-		private static double GetAmount(CssValue value)
+
+        private static double ParseDouble(string text)
+        {
+            if (text[text.Length - 1] == 'd')
+            {
+                text = text.Replace("deg", string.Empty);
+            }
+
+            return double.Parse(text, CultureInfo.InvariantCulture);
+        }
+
+		private static double GetAmount(CssValue value) => value.Kind switch
 		{
-			switch (value.Kind)
-			{
-				case NodeKind.Angle      : return (double.Parse(value.ToString().Replace("deg", string.Empty)) % 360) / 360;
-				case NodeKind.Percentage : return (((CssUnitValue)value).Value / 100d);
-				case NodeKind.Number     : return ((CssUnitValue)value).Value;
-
-				default: throw new Exception("Unknown numeric value: " + value.Kind + ":" +  value);
-			}
-		}
-
+			NodeKind.Angle      => (ParseDouble(value.ToString()) % 360) / 360,
+			NodeKind.Percentage => (((CssUnitValue)value).Value / 100d),
+			NodeKind.Number     => ((CssUnitValue)value).Value,
+			_                   => throw new Exception("Unknown numeric value: " + value.Kind + ":" +  value)
+		};
+		
 		#endregion
 	}
 }

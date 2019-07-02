@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Carbon.Color;
 using Carbon.Css.Helpers;
 
@@ -33,9 +34,7 @@ namespace Carbon.Css.Gradients
                 text = text.Slice(read);
             }
 
-            Rgba32 color = default;
-   
-            color = text.ReadColor(out int colorRead);
+            Rgba32 color = text.ReadColor(out int colorRead);
             text = text.Slice(colorRead);
 
             read += colorRead;
@@ -64,7 +63,7 @@ namespace Carbon.Css.Gradients
 
                 if (text.Length > 0)
                 {
-                    angle = double.Parse(text.Slice(0, text.Length - 1).ToString()) / 100d;
+                    angle = double.Parse(text.Slice(0, text.Length - 1).ToString(), CultureInfo.InvariantCulture) / 100d;
                 }
             }
         
@@ -73,7 +72,7 @@ namespace Carbon.Css.Gradients
 
         public override string ToString()
         {
-            return Color.ToHex6() + " " + Position.Value.ToString("0%");
+            return Color.ToHex6() + " " + Position?.ToString("0%");
         }
     }
 }

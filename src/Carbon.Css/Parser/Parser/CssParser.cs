@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Carbon.Css.Parser
@@ -472,7 +473,7 @@ namespace Carbon.Css.Parser
 
         public CssValue ReadNumberOrMeasurement()
         {
-            var value = double.Parse(tokenizer.Consume().Text);   // read number
+            double value = double.Parse(tokenizer.Consume().Text, CultureInfo.InvariantCulture);   // read number
 
             if (Current.Kind == TokenKind.Unit)
             {

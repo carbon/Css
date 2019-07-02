@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Carbon.Css.Helpers;
 
 namespace Carbon.Css
@@ -23,7 +24,7 @@ namespace Carbon.Css
 
 		public CssUnitInfo Unit { get; }
 
-		public override string ToString() => Value + Unit.Name;
+		public override string ToString() => Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
 
 		public override CssNode CloneNode() => new CssUnitValue(Value, Unit);
 
@@ -38,8 +39,6 @@ namespace Carbon.Css
 
             return new CssUnitValue(value, text.Slice(read).Trim().ToString());
         }
-
-        
 
 		#region Operators
 

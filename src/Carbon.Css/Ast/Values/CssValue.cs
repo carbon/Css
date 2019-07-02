@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Carbon.Css
@@ -66,11 +67,11 @@ namespace Carbon.Css
 
             if (unitIndex > 0)
             {
-                value = new CssUnitValue(double.Parse(text.Substring(0, unitIndex)), text.Substring(unitIndex));
+                value = new CssUnitValue(double.Parse(text.Substring(0, unitIndex), CultureInfo.InvariantCulture), text.Substring(unitIndex));
             }
             else
             {
-                value = CssValue.Number(double.Parse(text));
+                value = CssValue.Number(double.Parse(text, CultureInfo.InvariantCulture));
             }
 
             return true;
@@ -104,7 +105,6 @@ namespace Carbon.Css
 
             return new CssValueList(values, ValueSeperator.Space);
         }
-
 
         public static bool AreCompatible(CssValue left, CssValue right, BinaryOperator operation)
         {

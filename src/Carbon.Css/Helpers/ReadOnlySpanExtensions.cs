@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Carbon.Color;
 
 namespace Carbon.Css.Helpers
@@ -58,7 +59,7 @@ namespace Carbon.Css.Helpers
                 read++;
             }
 
-            return double.Parse(text.Slice(0, read).ToString());
+            return double.Parse(text.Slice(0, read).ToString(), CultureInfo.InvariantCulture);
         }
 
         public static bool TryReadWhitespace(this ReadOnlySpan<char> text, out int read)

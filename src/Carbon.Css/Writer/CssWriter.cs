@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -45,7 +46,7 @@ namespace Carbon.Css
                 throw new Exception("Exceded importCount of 200");
             }
 
-            var i = 0;
+            int i = 0;
 
             foreach (var node in sheet.Children)
             {
@@ -231,8 +232,8 @@ namespace Carbon.Css
                 case BinaryOperator.Subtract : return ((CssUnitValue)lhs).Subtract(rhs);
             }
 
-            var leftS = lhs.ToString();
-            var rightS = rhs.ToString();
+            string leftS = lhs.ToString();
+            string rightS = rhs.ToString();
 
             if (lhs.Kind == NodeKind.Undefined)
             {
@@ -243,10 +244,10 @@ namespace Carbon.Css
             {
                 BinaryOperator.Eq        => CssBoolean.Get(leftS == rightS),
                 BinaryOperator.NotEquals => CssBoolean.Get(leftS != rightS),
-                BinaryOperator.Gt        => CssBoolean.Get(double.Parse(leftS) >  double.Parse(rightS)),
-                BinaryOperator.Gte       => CssBoolean.Get(double.Parse(leftS) >= double.Parse(rightS)),
-                BinaryOperator.Lt        => CssBoolean.Get(double.Parse(leftS) <  double.Parse(rightS)),
-                BinaryOperator.Lte       => CssBoolean.Get(double.Parse(leftS) <= double.Parse(rightS)),
+                BinaryOperator.Gt        => CssBoolean.Get(double.Parse(leftS, CultureInfo.InvariantCulture) >  double.Parse(rightS, CultureInfo.InvariantCulture)),
+                BinaryOperator.Gte       => CssBoolean.Get(double.Parse(leftS, CultureInfo.InvariantCulture) >= double.Parse(rightS, CultureInfo.InvariantCulture)),
+                BinaryOperator.Lt        => CssBoolean.Get(double.Parse(leftS, CultureInfo.InvariantCulture) <  double.Parse(rightS, CultureInfo.InvariantCulture)),
+                BinaryOperator.Lte       => CssBoolean.Get(double.Parse(leftS, CultureInfo.InvariantCulture) <= double.Parse(rightS, CultureInfo.InvariantCulture)),
                 _                        => new CssBoolean(true)
             };
         }
@@ -338,14 +339,13 @@ namespace Carbon.Css
             {
                 // Copy the file line by line...
 
-                using (var reader = new StreamReader(stream))
-                {
-                    string line;
+                using var reader = new StreamReader(stream);
 
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        writer.WriteLine(line);
-                    }
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    writer.WriteLine(line);
                 }
             }
         }
@@ -982,7 +982,7 @@ namespace Carbon.Css
             {
                 var val = (list != null && list.Length >= i + 1) ? list[i] : p.DefaultValue;
 
-                child.Add(p.Name, val);
+                child.Add(p.Name, val!);
 
                 i++;
             }
