@@ -4,14 +4,14 @@ namespace Carbon.Css.Gradients
 {
     using static LinearGradientDirection;
 
-    public enum LinearGradientDirection 
+    public enum LinearGradientDirection  : byte
     {
-        None = 0,
+        None       = 0,
 
-        Top     = 1, // to top      | 0deg
-        Bottom  = 2, // to bottom   | 180deg
-        Left    = 3, // to left     | 270deg
-        Right   = 4, // to right    | 90deg
+        Top        = 1, // to top      | 0deg
+        Bottom     = 2, // to bottom   | 180deg
+        Left       = 3, // to left     | 270deg
+        Right      = 4, // to right    | 90deg
 
         // Specify the corner the line goes toward
         // The angle is calculated on the aspect ratio of the containing box
