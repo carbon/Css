@@ -36,11 +36,11 @@ namespace Carbon.Css.Parser.Tests
             Assert.Equal(" ", b.Trailing[0].Text);
 
 
-            Assert.Equal(1, sheet.Children.Count);
+            Assert.Single(sheet.Children);
             Assert.Equal(RuleType.Style, style.Type);
             Assert.Equal("div > h1", style.Selector.ToString());
 
-            Assert.Equal(1, style.Children.Count);
+            Assert.Single(style.Children);
 
             var x = (CssDeclaration)style[0];
 

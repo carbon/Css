@@ -7,7 +7,6 @@ namespace Carbon.Css.Tests
         [Fact]
         public void A()
         {
-
             var css = StyleSheet.Parse(@"div { 
                 width: calc(100vw - 380px - var(--cover-block-padding) * 2) 
             }");

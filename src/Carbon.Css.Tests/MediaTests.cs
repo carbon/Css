@@ -13,7 +13,6 @@ namespace Carbon.Css.Tests
             Assert.Equal("div { color: rgba(100, 100, 100, 0.5); }", sheet.ToString());
         }
 
-
         [Fact]
         public void MediaMixin1()
         {
@@ -46,7 +45,7 @@ namespace Carbon.Css.Tests
             Assert.True(sheet.Context.Mixins.ContainsKey("hi"));
             Assert.True(sheet.Context.Mixins.ContainsKey("blerg"));
 
-            Assert.Equal(1, sheet.Children.Count);
+            Assert.Single(sheet.Children);
 
             var rule = sheet.Children[0] as MediaRule;
 

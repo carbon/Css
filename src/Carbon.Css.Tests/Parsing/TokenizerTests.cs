@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Xunit;
 
 namespace Carbon.Css.Parser.Tests
@@ -144,7 +145,7 @@ namespace Carbon.Css.Parser.Tests
        
         private static List<CssToken> GetTokens(string text)
         {
-            var tokenizer = new CssTokenizer(new SourceReader(text));
+            var tokenizer = new CssTokenizer(new SourceReader(new StringReader(text)));
 
             var tokens = new List<CssToken>();
 

@@ -18,7 +18,6 @@ namespace Carbon.Css.Gradients.Tests
             Assert.Equal(new Rgba32(194, 234, 9), gradient.Stops[1].Color);
 
             Assert.Equal(4, gradient.Stops.Length);
-
         }
 
         [Fact]
@@ -151,8 +150,6 @@ namespace Carbon.Css.Gradients.Tests
             Assert.Null(stop.Position);
         }
 
-
-
         [Fact]
         public void ParseColorStopList()
         {
@@ -204,7 +201,5 @@ namespace Carbon.Css.Gradients.Tests
             Assert.Equal(new Rgba32(153, 116, 186), stop.Color);
             Assert.Equal(0, stop.Position);
         }
-
-
     }
 }

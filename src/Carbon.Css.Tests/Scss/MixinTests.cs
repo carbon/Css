@@ -102,7 +102,7 @@ h1, h2, h3, h4, h5, h6 {
   @include dl-horizontal(3.75em, 0.625em);
 }
 ");
-            Assert.Equal(1, ss.Context.Mixins.Count);
+            Assert.Single(ss.Context.Mixins);
 
             Assert.Equal("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
             Assert.Equal(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
@@ -233,7 +233,7 @@ h1, h2, h3, h4, h5, h6 {
 
             var ss = StyleSheet.Parse(text);
 
-            Assert.Equal(1, ss.Context.Mixins.Count);
+            Assert.Single(ss.Context.Mixins);
 
             Assert.Equal(@"main {
   margin-left: 50px;
@@ -271,7 +271,7 @@ h1, h2, h3, h4, h5, h6 {
 
             Assert.Equal(ValueSeperator.Comma, args.Seperator);
 
-            Assert.Equal(1, ss.Context.Mixins.Count);
+            Assert.Single(ss.Context.Mixins);
 
             Assert.Equal(@"main {
   border-radius: 50px;

@@ -27,7 +27,7 @@ namespace Carbon.Css.Tests
   }
 }");
 
-            Assert.Equal(1, ss.Children.Count);
+            Assert.Single(ss.Children);
 
             var node = (StyleRule)((StyleRule)ss.Children[0]).Children[0];
             var parent = (StyleRule)node.Parent;

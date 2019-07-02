@@ -30,7 +30,7 @@
     width: $dlSpacing;
   }
   dd {
-    padding-left: ($dlSpacing + $dlGap);
+    padding-left: $dlSpacing + $dlGap;
   }
 }
 
