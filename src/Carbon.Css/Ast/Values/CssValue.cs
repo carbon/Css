@@ -29,12 +29,10 @@ namespace Carbon.Css
 
             var reader = new SourceReader(new StringReader(text));
 
-            using (var tokenizer = new CssTokenizer(reader, LexicalMode.Value))
-            { 
-                var parser = new CssParser(tokenizer);
-                
-                return parser.ReadValueList();
-            }
+            using var tokenizer = new CssTokenizer(reader, LexicalMode.Value);
+            var parser = new CssParser(tokenizer);
+
+            return parser.ReadValueList();
         }
 
         // 60px
@@ -93,10 +91,11 @@ namespace Carbon.Css
                 return first;
             }
 
-            var values = new List<CssValue>();
-
-            values.Add(first);
-            values.Add(enumerator.Current);
+            var values = new List<CssValue>
+            {
+                first,
+                enumerator.Current
+            };
 
             while (enumerator.MoveNext())
             {

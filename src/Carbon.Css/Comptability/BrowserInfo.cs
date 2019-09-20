@@ -14,7 +14,7 @@ namespace Carbon.Css
 
         public float Version { get; }
 
-        public BrowserPrefix Prefix => GetPrefix(Type);
+        public readonly BrowserPrefix Prefix => GetPrefix(Type);
 
         public static BrowserInfo Chrome(float version)  => new BrowserInfo(BrowserType.Chrome, version);
         public static BrowserInfo Firefox(float version) => new BrowserInfo(BrowserType.Firefox, version);

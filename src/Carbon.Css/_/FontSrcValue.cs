@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace Carbon.Css
+﻿namespace Carbon.Css
 {
     internal readonly struct FontSrcValue
     {
         public FontSrcValue(string url, string format)
         {
-            Url    = url ?? throw new ArgumentNullException(nameof(url));
+            Url = url;
             Format = format;
         }
 

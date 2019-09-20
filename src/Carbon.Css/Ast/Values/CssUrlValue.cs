@@ -32,9 +32,9 @@ namespace Carbon.Css
 
         #region Helpers
         
-        public bool IsPath => Value.IndexOf(':') == -1; // ! https://
+        public readonly bool IsPath => Value.IndexOf(':') == -1; // ! https://
 
-        public bool IsExternal => !IsPath;
+        public readonly bool IsExternal => !IsPath;
 
         public readonly string GetAbsolutePath(string basePath) /* /styles/ */
         {

@@ -111,13 +111,12 @@ namespace Carbon.Css.Parser
 
         public CssNode ReadRule()
         {
-            switch (Current.Kind)
+            return Current.Kind switch
             {
-                case TokenKind.Name     : return ReadStyleRule();
-                case TokenKind.AtSymbol : return ReadAtRule();
-
-                default: throw new UnexpectedTokenException(LexicalMode.Rule, Current);
-            }
+                TokenKind.Name     => ReadStyleRule(),
+                TokenKind.AtSymbol => ReadAtRule(),
+                _                  => throw new UnexpectedTokenException(LexicalMode.Rule, Current),
+            };
         }
 
         #region At Rules
@@ -727,12 +726,7 @@ namespace Carbon.Css.Parser
                 
                 while (ConsumeIf(TokenKind.Comma)) // ? ,
                 {
-                    if (spanList is null)
-                    {
-                        spanList = new List<CssSequence>();
-
-                        spanList.Add(span);
-                    }
+                    spanList ??= new List<CssSequence> { span };
                     
                     ReadTrivia(); // ? {trivia}
 
