@@ -127,7 +127,9 @@ namespace Carbon.Css.Gradients
 
             text = text.Slice(read);
 
-            if (text.StartsWith("deg".AsSpan()))
+            if (text[0] == 'd' &&
+                text[1] == 'e' && 
+                text[2] == 'g')
             {
                 read += 3;
             }
