@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <VersionPrefix>0.25.0</VersionPrefix>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <VersionPrefix>0.26.0</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.1</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
-    <NullableContextOptions>enable</NullableContextOptions>
+    <Nullable>enable</Nullable>
 
     <!-- Package Properties-->
     <Authors>iamcarbon</Authors>
@@ -17,9 +17,12 @@
     <RepositoryUrl>https://github.com/carbon/css</RepositoryUrl>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Memory" Version="4.5.3" />
-    <PackageReference Include="Carbon.Color" Version="2.8.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Carbon.Color" Version="2.10.0" />
   </ItemGroup>
 
 </Project>
