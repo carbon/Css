@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+
 using Carbon.Color;
 using Carbon.Css.Helpers;
 
@@ -63,7 +64,11 @@ namespace Carbon.Css.Gradients
 
                 if (text.Length > 0)
                 {
+#if NETSTANDARD2_0
                     angle = double.Parse(text.Slice(0, text.Length - 1).ToString(), CultureInfo.InvariantCulture) / 100d;
+#else
+                    angle = double.Parse(text.Slice(0, text.Length - 1), provider: CultureInfo.InvariantCulture) / 100d;
+#endif
                 }
             }
         
