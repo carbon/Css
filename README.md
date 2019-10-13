@@ -8,11 +8,11 @@ A general purpose CSS parser, auto-prefixer, and SCSS compiler for .NET Standard
 ```
 var css = StyleSheet.Parse(@"
 //= support Safari 5+
-$backgroundColor: #000;
+$backgroundColor:blue;
 
 html {
-  background: $backgroundColor; 
-  font-size: 14px; 
+  background: $backgroundColor="blue"; 
+  font-size: 40px; 
 }
 
 ");
