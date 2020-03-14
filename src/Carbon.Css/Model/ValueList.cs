@@ -54,9 +54,9 @@ namespace Carbon.Css
         
         public void WriteTo(TextWriter writer)
         {
-            for (var i = 0; i < children.Count; i++)
+            for (int i = 0; i < children.Count; i++)
             {
-                var item = children[i];
+                CssValue item = children[i];
                 
                 writer.Write(item.ToString());
 
@@ -78,14 +78,8 @@ namespace Carbon.Css
             return false;
         }
 
-        public IEnumerator<CssValue> GetEnumerator()
-        {
-            return children.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return children.GetEnumerator();
-        }
+        public IEnumerator<CssValue> GetEnumerator() => children.GetEnumerator();
+      
+        IEnumerator IEnumerable.GetEnumerator() => children.GetEnumerator();
     }
 }

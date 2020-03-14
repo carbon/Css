@@ -18,12 +18,11 @@ namespace Carbon.Css.Resolver
         {
             string line;
 
-            using (var reader = file.OpenText())
+            using var reader = file.OpenText();
+
+            while ((line = reader.ReadLine()) != null)
             {
-                while ((line = reader.ReadLine()) != null)
-                {
-                    writer.WriteLine(line);
-                }
+                writer.WriteLine(line);
             }
         }
     }

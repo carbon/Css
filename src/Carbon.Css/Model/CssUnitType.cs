@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css
 {
-    public enum CssUnitType : byte
+    public enum CssUnitType
     {
         None = 0, // Number | Percentage
 

@@ -414,17 +414,17 @@ namespace Carbon.Css
             standard: new CompatibilityTable(chrome: 2, firefox: 3.5f, ie: 10, safari: 4)
         ));
 
-        public static readonly CssProperty TextSpaceCollapse = new CssProperty("text-space-collapse");
-        public static readonly CssProperty TextTransform = new CssProperty("text-transform", CssModule.Core1);
+        public static readonly CssProperty TextSpaceCollapse     = new CssProperty("text-space-collapse");
+        public static readonly CssProperty TextTransform         = new CssProperty("text-transform", CssModule.Core1);
         public static readonly CssProperty TextUnderlinePosition = new CssProperty("text-underline-position");
-        public static readonly CssProperty TextWrap         = new CssProperty("text-wrap");
+        public static readonly CssProperty TextWrap              = new CssProperty("text-wrap");
 
         public static readonly CssProperty Top = new CssProperty("top", CssModule.Core1);
 
         // Transforms (Level 3) -------------------------------------------------------------------------------------------------------------------
-        public static readonly CssProperty Transform = new CssProperty("transform", CssModule.Transforms3);
-        public static readonly CssProperty TransformOrigin = new CssProperty("transform-origin", CssModule.Transforms3);
-        public static readonly CssProperty TransformStyle = new CssProperty("transform-style", CssModule.Transforms3);
+        public static readonly CssProperty Transform        = new CssProperty("transform", CssModule.Transforms3);
+        public static readonly CssProperty TransformOrigin  = new CssProperty("transform-origin", CssModule.Transforms3);
+        public static readonly CssProperty TransformStyle   = new CssProperty("transform-style", CssModule.Transforms3);
 
         // - Transitions (Level 3 ) ---------------------------------------------------------------------------------------------------------------
 

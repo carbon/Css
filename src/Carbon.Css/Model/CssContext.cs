@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Carbon.Css
 {
-    public class CssContext
+    public sealed class CssContext
     {
         private CompatibilityTable compatibility = default;
 

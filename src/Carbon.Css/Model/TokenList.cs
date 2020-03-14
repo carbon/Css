@@ -30,9 +30,9 @@ namespace Carbon.Css
                 return;
             }
 
-            for (var i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
-                var token = this[i];
+                CssToken token = this[i];
 
                 if (token.IsTrivia)
                 {

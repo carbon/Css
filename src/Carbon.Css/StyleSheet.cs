@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 
+using Carbon.Css.Helpers;
+using Carbon.Css.Parser;
+
 namespace Carbon.Css
 {
-    using Helpers;
-    using Parser;
-
     public sealed class StyleSheet : CssRoot, IStylesheet
     {
         public StyleSheet(List<CssNode> children, CssContext? context)
@@ -64,7 +65,7 @@ namespace Carbon.Css
                                     browsers = new List<BrowserInfo>();
                                 }
 
-                                var browserVersion = float.Parse(parts[parts.Length - 1].Trim(trimBrowserChars));
+                                float browserVersion = float.Parse(parts[parts.Length - 1].Trim(trimBrowserChars), CultureInfo.InvariantCulture);
 
                                 browsers.Add(new BrowserInfo(browserType, browserVersion));
                             }
@@ -198,7 +199,7 @@ namespace Carbon.Css
 
             if (stream != null)
             {
-                if (absolutePath.EndsWith(".scss"))
+                if (absolutePath.EndsWith(".scss", StringComparison.Ordinal))
                 {
                     AddChild(new CssComment($"imported: '{absolutePath}"));
 

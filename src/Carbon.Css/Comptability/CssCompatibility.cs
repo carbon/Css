@@ -31,32 +31,24 @@
 
         public virtual bool HasPatch(CssDeclaration declaration, in BrowserInfo browser) => IsPrefixed(browser);
 
-        public bool IsPrefixed(in BrowserInfo browser)
+        public bool IsPrefixed(in BrowserInfo browser) => browser.Type switch
         {
-            return browser.Type switch
-            {
-                BrowserType.Chrome  => Prefixed.Chrome > 0f && !IsStandard(browser),
-                BrowserType.Firefox => Prefixed.Firefox > 0f && !IsStandard(browser),
-                BrowserType.IE      => Prefixed.IE > 0f && !IsStandard(browser),
-                BrowserType.Safari  => Prefixed.Safari > 0f && !IsStandard(browser),
-                _                   => false
-            };
-        }
-
-        public bool IsStandard(in BrowserInfo browser)
+            BrowserType.Chrome  => Prefixed.Chrome > 0f  && !IsStandard(browser),
+            BrowserType.Firefox => Prefixed.Firefox > 0f && !IsStandard(browser),
+            BrowserType.IE      => Prefixed.IE > 0f      && !IsStandard(browser),
+            BrowserType.Safari  => Prefixed.Safari > 0f  && !IsStandard(browser),
+            _                   => false
+        };
+        
+        public bool IsStandard(in BrowserInfo browser) => browser.Type switch
         {
-            return browser.Type switch
-            {
-                BrowserType.Chrome  => Standard.Safari != 0 && Standard.Chrome <= browser.Version,
-                BrowserType.Firefox => Standard.Firefox != 0 && Standard.Firefox <= browser.Version,
-                BrowserType.IE      => Standard.IE != 0 && Standard.IE <= browser.Version,
-                BrowserType.Safari  => Standard.Safari != 0 && Standard.Safari <= browser.Version,
-                _                   => false
-            };
-        }
+            BrowserType.Chrome  => Standard.Safari != 0 && Standard.Chrome <= browser.Version,
+            BrowserType.Firefox => Standard.Firefox != 0 && Standard.Firefox <= browser.Version,
+            BrowserType.IE      => Standard.IE != 0 && Standard.IE <= browser.Version,
+            BrowserType.Safari  => Standard.Safari != 0 && Standard.Safari <= browser.Version,
+            _                   => false
+        };
         
         public virtual bool HasPatches => Prefixed.IsDefined;
-
-        // Rewrite
     }
 }

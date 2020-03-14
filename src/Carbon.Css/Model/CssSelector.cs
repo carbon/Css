@@ -34,10 +34,9 @@ namespace Carbon.Css
 
         public static CssSelector Parse(string text)
         {
-            using (var parser = new CssParser(text))
-            {
-                return parser.ReadSelector();
-            }
+            using var parser = new CssParser(text);
+
+            return parser.ReadSelector();
         }
 
         #region IEnumerator

@@ -106,7 +106,6 @@ namespace Carbon.Css
     [Flags]
     public enum BrowserPrefixKind
     {
-        None = 0,
         Moz = 1,
         Ms = 2,
         O = 4,

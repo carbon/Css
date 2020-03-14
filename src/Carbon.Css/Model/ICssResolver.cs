@@ -4,7 +4,7 @@ namespace Carbon.Css
 {
     public interface ICssResolver
     {
-        string ScopedPath { get; } // BasePath???
+        string ScopedPath { get; } // subpath ? 
 
         Stream Open(string absolutePath);
 

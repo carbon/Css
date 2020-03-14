@@ -583,9 +583,9 @@ namespace Carbon.Css.Parser
 
             ReadTrivia();
 
-            IReadOnlyList<CssParameter> parameters = (Current.Kind == TokenKind.LeftParenthesis)
-                ? ReadParameterList()
-                : (IReadOnlyList<CssParameter>)Array.Empty<CssParameter>();
+            CssParameter[] parameters = (Current.Kind == TokenKind.LeftParenthesis)
+                ? ReadParameterList().ToArray()
+                : Array.Empty<CssParameter>();
             
             var mixin = new MixinNode(name.Text, parameters);
 
@@ -697,7 +697,7 @@ namespace Carbon.Css.Parser
 
             while (Current.Kind != TokenKind.BlockEnd)
             {
-                if (IsEnd) throw new UnbalancedBlock(LexicalMode.Block, blockStart);
+                if (IsEnd) throw new UnbalancedBlock(blockStart);
 
                 // A list of delarations or blocks
 
@@ -707,8 +707,15 @@ namespace Carbon.Css.Parser
 
                     switch (name.Text)
                     {
-                        case "include" : block.Add(ReadInclude()); continue;
+                        case "include" :
+                            block.Flags |= CssBlockFlags.HasIncludes;
+                            block.Add(ReadInclude()); continue;
                         case "if"      : block.Add(ReadIfRule());  continue;
+                        case "page"    : block.Add(ReadPageRule()); continue;
+                        case "media"   : 
+                            block.Flags |= CssBlockFlags.HasChildMedia;
+                            block.Add(ReadMediaRule()); continue;
+                        default        : throw new Exception("Unexpected rule reading block:" + name.Text);
                     }
                 }
 
@@ -735,10 +742,14 @@ namespace Carbon.Css.Parser
 
                 switch (Current.Kind)
                 {
-                    case TokenKind.Colon      : block.Add(ReadDeclarationFromName(span[0].ToString()));  break; // DeclarationName
-                    case TokenKind.BlockStart :
-                        block.Add(ReadRuleBlock(new CssSelector(spanList ?? (IReadOnlyList<CssSequence>) new[] { span })));  break;
-                    case TokenKind.BlockEnd   : break;
+                    case TokenKind.Colon: 
+                        block.Add(ReadDeclarationFromName(span[0].ToString()));  break; // DeclarationName
+                    case TokenKind.BlockStart:
+                        block.Flags |= CssBlockFlags.HasChildBlocks;
+                        block.Add(ReadRuleBlock(new CssSelector(spanList ?? (IReadOnlyList<CssSequence>) new[] { span }))); 
+                        break;
+                    case TokenKind.BlockEnd: 
+                        break;
 
                     // TODO: Figure out where we missed reading the semicolon TEMP
                     case TokenKind.Semicolon    : tokenizer.Consume(); break;

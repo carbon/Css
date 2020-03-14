@@ -256,12 +256,12 @@ namespace Carbon.Css
         {
             if (CssFunctions.TryGet(function.Name, out var func))
             {
-                var args = GetArgs(function.Arguments).ToArray();
+                CssValue[] args = GetArgs(function.Arguments).ToArray();
 
                 return func(args);
             }
 
-            throw new Exception($"function named '{function.Name}' not registered");
+            throw new Exception($"ƒ {function.Name} not found");
         }
 
         #endregion
@@ -270,7 +270,7 @@ namespace Carbon.Css
         {
             if (resolver is null)
             {
-                throw new Exception("resolver is null");
+                throw new ArgumentNullException(nameof(resolver));
             }
 
             // var relativePath = importRule.Url;
@@ -294,12 +294,12 @@ namespace Carbon.Css
 
             if (stream is null)
             { 
-                writer.WriteLine("/* NOT FOUND */");
+                writer.WriteLine("/* not found */");
 
                 return;
             }
 
-            if (absolutePath.EndsWith(".scss"))
+            if (absolutePath.EndsWith(".scss", StringComparison.Ordinal))
             {
                 try
                 {
@@ -381,7 +381,7 @@ namespace Carbon.Css
 
         public void WriteValueList(CssValueList list)
         {
-            var i = 0;
+            int i = 0;
 
             foreach (CssValue value in list)
             {
@@ -424,7 +424,7 @@ namespace Carbon.Css
 
             if (CssFunctions.TryGet(function.Name, out var func))
             {
-                var args = GetArgs(function.Arguments).ToArray();
+                CssValue[] args = GetArgs(function.Arguments).ToArray();
 
                 writer.Write(func(args));
 
@@ -511,19 +511,26 @@ namespace Carbon.Css
 
         public void WriteRule(CssRule rule, int depth = 0)
         {
-            var i = 0;
-
-            foreach (var r in Rewrite(rule))
+            if (rule.IsComplex && rule is StyleRule styleRule)
             {
-                if (i != 0) writer.WriteLine();
+                int i = 0;
 
-                _WriteRule(r, depth);
+                foreach (var r in Rewrite(styleRule))
+                {
+                    if (i != 0) writer.WriteLine();
 
-                i++;
+                    WriteRuleInternal(r, depth);
+
+                    i++;
+                }
+            }
+            else
+            {
+                WriteRuleInternal(rule, depth);
             }
         }
 
-        public void _WriteRule(CssRule rule, int depth = 0)
+        private void WriteRuleInternal(CssRule rule, int depth = 0)
         {
             Indent(depth);
 
@@ -801,11 +808,11 @@ namespace Carbon.Css
 
         public void WritePatchedDeclaration(CssDeclaration declaration, int level)
         {
-            var prop = declaration.Info;
+            CssProperty prop = declaration.Info;
 
             if (browserSupport != null && prop.Compatibility.HasPatches)
             {
-                var prefixes = BrowserPrefixKind.None;
+                BrowserPrefixKind prefixes = default;
 
                 for (int i = 0; i < browserSupport.Length; i++)
                 {
@@ -831,7 +838,7 @@ namespace Carbon.Css
                 }
             }
 
-            // Finally, write the standards declaration
+            // Finally, write the standard declaration
 
             WriteDeclaration(declaration, level);
         }
@@ -851,28 +858,32 @@ namespace Carbon.Css
 
         #region Sass
 
-        public IEnumerable<CssRule> Rewrite(CssRule rule)
+        public IEnumerable<CssRule> Rewrite(StyleRule rule)
         {
-            var styleRule = rule as StyleRule;
-
-            if (styleRule is null || rule.All(r => r.Kind == NodeKind.Declaration))
+            if (rule.IsSimple)
             {
                 yield return rule;
 
                 yield break;
             }
 
-            // Figure out how to eliminate this clone
-
-            var clone = (StyleRule)rule.CloneNode();
-
-            // Expand includes
-            foreach (var includeNode in clone.Children.OfType<IncludeNode>().ToArray())
+            if (rule.Flags.HasFlag(CssBlockFlags.HasChildMedia))
             {
-                scope = ExpandInclude(includeNode, clone);
-
-                clone.Children.Remove(includeNode);
+                throw new Exception("Nested @media rules are not supported yet");
             }
+
+            var clone = (StyleRule)rule.CloneNode(); // TODO: Eliminate
+
+            if (rule.Flags.HasFlag(CssBlockFlags.HasIncludes)) // Expand the includes
+            {
+                foreach (var includeNode in clone.Children.OfType<IncludeNode>().ToArray())
+                {
+                    scope = ExpandInclude(includeNode, clone);
+
+                    clone.Children.Remove(includeNode);
+                }
+            }
+
 
             var root = new List<CssRule> {
                 clone
@@ -886,55 +897,79 @@ namespace Carbon.Css
                 }
             }
 
-            foreach (var r in root)
+            foreach (CssRule r in root)
             {
-                if (r.HasChildren) yield return r;
+                if (r.HasChildren)
+                {
+                    yield return r;
+                }
+
             }
         }
 
-        public IEnumerable<CssRule> ExpandStyleRule(StyleRule rule, CssRule parent)
+        private IEnumerable<CssRule> ExpandStyleRule(StyleRule rule, CssRule parent)
         {
             var newRule = new StyleRule(ExpandSelector(rule));
 
-            foreach (var childNode in rule.Children.ToArray())
+            bool hasNestedRules = false;
+
+            for (var i = 0; i < rule.Children.Count; i++)
             {
-                if (childNode is StyleRule childRule)
+                if (rule.Children[i] is StyleRule)
                 {
-                    foreach (var r in ExpandStyleRule(childRule, rule))
-                    {
-                        yield return r;
-                    }
-                }
-                else
-                {
-                    newRule.Add(childNode);
+                    hasNestedRules = true;
+                    
+                    break;
                 }
             }
 
+            if (hasNestedRules)
+            {
+                foreach (CssNode childNode in rule.Children.ToArray())
+                {
+                    if (childNode is StyleRule childRule)
+                    {
+                        foreach (var r in ExpandStyleRule(childRule, rule))
+                        {
+                            yield return r;
+                        }
+                    }
+                    else
+                    {
+                        newRule.Add(childNode);
+                    }
+                }
+            }
+            else
+            {
+                newRule.AddRange(rule.Children);
+            }
+           
             parent.Remove(rule); // Remove from parent node after it's been processed
 
-            if (newRule.HasChildren) yield return newRule;
+            if (newRule.HasChildren)
+            {
+                yield return newRule;
+            }
         }
 
         public CssScope ExpandInclude(IncludeNode include, CssBlock rule)
         {
             includeCount++;
 
-            if (includeCount > 1000)
+            if (includeCount > 1_000)
             {
                 throw new Exception("Exceded include limit of 1,000");
             }
 
             if (!context.Mixins.TryGetValue(include.Name, out MixinNode mixin))
             {
-                throw new Exception($"Mixin '{include.Name}' not registered");
+                throw new Exception($"mixin '{include.Name}' not found");
             }
 
-            // var index = rule.Children.IndexOf(include);
+            CssScope childScope = GetScope(mixin.Parameters, include.Args);
 
-            var childScope = GetScope(mixin.Parameters, include.Args);
-
-            var i = 0;
+            int i = 0;
 
             foreach (var node in mixin.Children.ToArray())
             {
@@ -955,7 +990,7 @@ namespace Carbon.Css
             return childScope;
         }
 
-        public CssScope GetScope(IReadOnlyList<CssParameter> paramaters, CssValue? args)
+        public CssScope GetScope(CssParameter[] paramaters, CssValue? args)
         {
             CssValue[]? list = null;
 
@@ -974,17 +1009,15 @@ namespace Carbon.Css
                 }
             }
 
-            var child = scope.GetChildScope();
+            CssScope child = scope.GetChildScope();
 
-            var i = 0;
-
-            foreach (CssParameter p in paramaters)
+            for (int i = 0; i < paramaters.Length; i++)
             {
-                var val = (list != null && list.Length >= i + 1) ? list[i] : p.DefaultValue;
+                ref CssParameter p = ref paramaters[i];
+
+                CssValue? val = (list != null && list.Length >= i + 1) ? list[i] : p.DefaultValue;
 
                 child.Add(p.Name, val!);
-
-                i++;
             }
 
             return child;
@@ -1111,7 +1144,6 @@ namespace Carbon.Css
 
             return new CssSelector(result);
         }
-
 
         private static CssSequence SetReference(CssSequence current, CssSequence parent)
         {

@@ -35,6 +35,8 @@ namespace Carbon.Css
         {
             var clone = new StyleRule(Selector) { Depth = Depth };
 
+            clone.Flags = Flags;
+
             foreach (var child in Children)
             {
                 clone.Add(child.CloneNode());

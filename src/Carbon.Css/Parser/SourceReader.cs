@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Carbon.Css.Parser
 {
-    public sealed class SourceReader : IDisposable
+    internal sealed class SourceReader : IDisposable
     {
         private const char EofChar = '\0';
 

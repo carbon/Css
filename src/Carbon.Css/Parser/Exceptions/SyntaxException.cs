@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using Carbon.Css.Helpers;
 
 namespace Carbon.Css.Parser
 {
-    using Helpers;
-
     public class SyntaxException : Exception
     {
-        private readonly int position = 0;
-
         public SyntaxException(string message, int position = 0)
             : base(message)
         {
 
-            this.position = position;
+            Position = position;
         }
 
-        public int Position => position;
+        public int Position { get; }
 
         public SourceLocation Location { get; set; }
 

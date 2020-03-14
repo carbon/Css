@@ -4,7 +4,7 @@
     {
         // "Current mode is:" + current + ". Leaving " + mode + "."
 
-        public UnbalancedBlock(LexicalMode currentMode, CssToken startToken)
+        public UnbalancedBlock(CssToken startToken)
             : base("The block is unclosed, '}' expected", startToken.Position)
         { }
     }

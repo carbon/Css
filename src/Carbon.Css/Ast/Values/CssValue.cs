@@ -30,6 +30,7 @@ namespace Carbon.Css
             var reader = new SourceReader(new StringReader(text));
 
             using var tokenizer = new CssTokenizer(reader, LexicalMode.Value);
+
             var parser = new CssParser(tokenizer);
 
             return parser.ReadValueList();

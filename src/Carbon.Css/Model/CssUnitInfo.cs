@@ -119,8 +119,6 @@ namespace Carbon.Css
 
         public CssUnitFlags Flags { get; }
         
-        // PERF notes: A dictionary lookup is ~1.67x faster than a large switch statement
-
         public static CssUnitInfo Get(string name)
         {
             if (items.TryGetValue(name, out var unit))
@@ -132,7 +130,7 @@ namespace Carbon.Css
         }
 
         public bool Equals(CssUnitInfo other) => ReferenceEquals(this, other) || Name == other.Name;
-    }
-
-   
+    }   
 }
+
+// PERF notes: A dictionary lookup is ~1.67x faster than a large switch statement

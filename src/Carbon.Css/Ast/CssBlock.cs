@@ -11,6 +11,7 @@ namespace Carbon.Css
             : base(kind)
         {
             this.children = new List<CssNode>();
+           
         }
 
         public CssBlock(NodeKind kind, List<CssNode> children)
@@ -20,6 +21,12 @@ namespace Carbon.Css
         }
 
         public List<CssNode> Children => children;
+
+        public CssBlockFlags Flags { get; set; }
+
+        internal bool IsSimple => Flags == default;
+
+        internal bool IsComplex => Flags != default;
 
         public bool HasChildren => children.Count > 0;
 
@@ -62,6 +69,16 @@ namespace Carbon.Css
             children.Add(node);
         }
 
+        public void AddRange(List<CssNode> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                node.Parent = this;
+            }
+
+            children.AddRange(nodes);
+        }
+
         public bool Remove(CssNode item) => children.Remove(item);
 
         IEnumerator<CssNode> IEnumerable<CssNode>.GetEnumerator() => children.GetEnumerator();
@@ -70,6 +87,8 @@ namespace Carbon.Css
 
         #endregion
     }
+
+
 }
 
 // A block starts with a left curly brace ({) and ends with the matching right curly brace (}).

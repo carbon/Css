@@ -4,7 +4,7 @@ namespace Carbon.Css.Gradients
 {
     using static LinearGradientDirection;
 
-    public enum LinearGradientDirection  : byte
+    public enum LinearGradientDirection
     {
         None       = 0,
 

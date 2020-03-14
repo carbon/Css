@@ -72,9 +72,10 @@
         #region Masking
 
         // https://www.w3.org/TR/css-masking-1/
-        public static readonly CssModule Masking1 = new CssModule(CssModuleType.Masking, 1,
-            prefixed: new CompatibilityTable(chrome: 4, safari: 4),
-            standard: new CompatibilityTable(firefox: 53, ie: 18)
+        // https://caniuse.com/#feat=css-masks
+        public static readonly CssModule Masking_1 = new CssModule(CssModuleType.Masking, 1,
+            prefixed : new CompatibilityTable(chrome: 4, safari: 4),
+            standard : new CompatibilityTable(firefox: 53, ie: 18)
         );
 
         #endregion

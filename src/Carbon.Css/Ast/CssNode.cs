@@ -23,6 +23,9 @@ namespace Carbon.Css
         [IgnoreDataMember]
         public Trivia? Trailing { get; set; }
 
-        public virtual CssNode CloneNode() => throw new NotImplementedException();
+        public virtual CssNode CloneNode()
+        {
+            throw new NotImplementedException(this.GetType().Name + " does not implement Clone");
+        }
     }
 }

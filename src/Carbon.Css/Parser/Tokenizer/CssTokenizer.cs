@@ -15,7 +15,11 @@ namespace Carbon.Css.Parser
         private LexicalModeContext mode;
         private readonly SourceReader reader;
 
-        public CssTokenizer(SourceReader reader, LexicalMode mode = LexicalMode.Selector)
+        // Exposed for testing
+        public CssTokenizer(string text)
+            : this(new SourceReader(new StringReader(text))) { }
+
+        internal CssTokenizer(SourceReader reader, LexicalMode mode = LexicalMode.Selector)
         {
             this.reader = reader;
 
