@@ -1,1 +1,1 @@
-dotnet pack ./src/Carbon.Css -o ./../../release/Carbon.Css/
+dotnet pack ./src/Carbon.Css -c Release -o ./release/Carbon.Css/
