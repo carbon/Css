@@ -105,7 +105,7 @@ h1, h2, h3, h4, h5, h6 {
             Assert.Single(ss.Context.Mixins);
 
             Assert.Equal("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
-            Assert.Equal(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
+            Assert.Equal(2, ss.Context.Mixins["dl-horizontal"].Parameters.Length);
 
             Assert.Equal(@".left .awards dl dt,
 .left .exhibitions dl dt {

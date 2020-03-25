@@ -14,11 +14,11 @@ namespace Carbon.Css.Parser.Tests
   background-color: red;
 };".Trim());
 
-            Assert.Equal((TokenKind.Ampersand,           "&"),           tokens[0].AsTuple());
-            Assert.Equal((TokenKind.Name,               ":nth-child"),  tokens[1].AsTuple());
-            Assert.Equal((TokenKind.LeftParenthesis,    "("),           tokens[2].AsTuple());
-            Assert.Equal((TokenKind.Name,               "odd"),         tokens[3].AsTuple());
-            Assert.Equal((TokenKind.RightParenthesis,   ")"),           tokens[4].AsTuple());
+            Assert.Equal((TokenKind.Ampersand,        "&"),           tokens[0].AsTuple());
+            Assert.Equal((TokenKind.Name,             ":nth-child"),  tokens[1].AsTuple());
+            Assert.Equal((TokenKind.LeftParenthesis,  "("),           tokens[2].AsTuple());
+            Assert.Equal((TokenKind.Name,             "odd"),         tokens[3].AsTuple());
+            Assert.Equal((TokenKind.RightParenthesis, ")"),           tokens[4].AsTuple());
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace Carbon.Css.Parser.Tests
        
         private static List<CssToken> GetTokens(string text)
         {
-            var tokenizer = new CssTokenizer(new SourceReader(new StringReader(text)));
+            using var tokenizer = new CssTokenizer(text);
 
             var tokens = new List<CssToken>();
 
