@@ -3,6 +3,8 @@ using System.Text;
 
 namespace Carbon.Css
 {
+    using System;
+
     using Parser;
 
     public sealed class Trivia : Collection<CssToken>
@@ -19,4 +21,5 @@ namespace Carbon.Css
             return StringBuilderCache.ExtractAndRelease(sb);
         }
     }
+
 }

@@ -14,9 +14,9 @@ namespace Carbon.Css.Gradients
             Position = position;
         }
 
-        public Rgba32 Color { get; }
+        public readonly Rgba32 Color { get; }
 
-        public double? Position { get; }
+        public readonly double? Position { get; }
 
         public static ColorStop Parse(ReadOnlySpan<char> text)
         {
@@ -75,9 +75,9 @@ namespace Carbon.Css.Gradients
             return new ColorStop(color, angle);
         }
 
-        public override string ToString()
+        public readonly override string ToString()
         {
-            return Color.ToHex6() + " " + Position?.ToString("0%");
+            return Color.ToHex6() + " " + Position?.ToString("0%", CultureInfo.InvariantCulture);
         }
     }
 }

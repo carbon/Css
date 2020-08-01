@@ -66,7 +66,7 @@ namespace Carbon.Css
 
             if (unitIndex > 0)
             {
-                value = new CssUnitValue(double.Parse(text.Substring(0, unitIndex), CultureInfo.InvariantCulture), text.Substring(unitIndex));
+                value = new CssUnitValue(ParseDouble(text.AsSpan(0, unitIndex)), CssUnitNames.Get(text.AsSpan(unitIndex)));
             }
             else
             {
@@ -75,6 +75,16 @@ namespace Carbon.Css
 
             return true;
         }
+
+        private static double ParseDouble(ReadOnlySpan<char> text)
+        {
+#if NETSTANDARD2_0
+            return double.Parse(text.ToString(), CultureInfo.InvariantCulture);
+#else
+            return double.Parse(text, provider: CultureInfo.InvariantCulture);
+#endif
+        }
+
 
         public static CssValue FromComponents(IEnumerable<CssValue> components)
         {

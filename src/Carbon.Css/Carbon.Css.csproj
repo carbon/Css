@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <VersionPrefix>0.29.0</VersionPrefix>
+    <VersionPrefix>0.33.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
@@ -15,14 +15,11 @@
     <PackageTags>css;scss;autoprefix</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/carbon/css</RepositoryUrl>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Memory" Version="4.5.3" />
-  </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Carbon.Color" Version="2.12.0" />
+    <PackageReference Include="Carbon.Color" Version="2.18.0" />
   </ItemGroup>
 
 </Project>

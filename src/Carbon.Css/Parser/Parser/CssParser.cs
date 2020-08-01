@@ -367,6 +367,7 @@ namespace Carbon.Css.Parser
             // : $oranges
             // : url(file.css);
 
+
             List<CssValue>? values = null;
 
             CssValue first = CssValue.FromComponents(ReadComponents());
@@ -458,7 +459,7 @@ namespace Carbon.Css.Parser
 
             Consume(TokenKind.RightParenthesis, LexicalMode.Function); // )
 
-            if (name.Text == "url")
+            if (name.Text.Equals("url", StringComparison.Ordinal))
             {
                 return new CssUrl(name, args) {
                     Trailing = ReadTrivia()

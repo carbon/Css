@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 namespace Carbon.Css
@@ -16,21 +17,33 @@ namespace Carbon.Css
         {
             // Works for resources only up to 32k in size in IE8.
 
-            var sb = StringBuilderCache.Aquire();
+            var sb = new StringBuilder();
 
             sb.Append("data:");
             sb.Append(contentType);
             sb.Append(";base64,");
             sb.Append(Convert.ToBase64String(data));
 
-            Value = StringBuilderCache.ExtractAndRelease(sb);
+            Value = sb.ToString();
         }
 
-        public string Value { get; }
+        public readonly string Value { get; }
 
-        public override string ToString() => $"url('{Value}')";
+        public void WriteTo(TextWriter writer)
+        {
+            writer.Write("url('");
+            writer.Write(Value);
+            writer.Write("')");
+        }
 
-        #region Helpers
+        public readonly override string ToString()
+        {
+            var sb = new StringWriter();
+
+            WriteTo(sb);
+
+            return sb.ToString();
+        }
         
         public readonly bool IsPath => Value.IndexOf(':') == -1; // ! https://
 
@@ -60,8 +73,6 @@ namespace Carbon.Css
             // Absolute path
             return new Uri(baseUri, relativeUri: Value).AbsolutePath;
         }
-
-        #endregion
 
         private static readonly char[] trimChars = { '\'', '\"', '(', ')' };
 

@@ -111,7 +111,11 @@ namespace Carbon.Css.Parser
         {
             marked = -1;
 
-            return sb.Extract();
+            var value = sb.ToString();
+
+            sb.Clear();
+
+            return value;
         }
 
         #endregion

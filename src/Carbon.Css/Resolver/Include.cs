@@ -16,7 +16,7 @@ namespace Carbon.Css.Resolver
 
         public void WriteTo(TextWriter writer)
         {
-            string line;
+            string? line;
 
             using var reader = file.OpenText();
 

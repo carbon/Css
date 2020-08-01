@@ -8,8 +8,8 @@
             DefaultValue = defaultValue;
         }
 
-        public string Name { get; }
+        public readonly string Name { get; }
 
-        public CssValue? DefaultValue { get; }
+        public readonly CssValue? DefaultValue { get; }
     }
 }

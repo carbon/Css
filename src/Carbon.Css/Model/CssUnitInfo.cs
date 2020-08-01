@@ -121,6 +121,19 @@ namespace Carbon.Css
         
         public static CssUnitInfo Get(string name)
         {
+            if (ReferenceEquals(CssUnitNames.Px, name))
+            {
+                return Px;
+            }
+            else if (ReferenceEquals(CssUnitNames.Em, name))
+            {
+                return Em;
+            }
+            else if (ReferenceEquals(CssUnitNames.Percent, name))
+            {
+                return Percentage;
+            }
+
             if (items.TryGetValue(name, out var unit))
             {
                 return unit;
@@ -129,7 +142,15 @@ namespace Carbon.Css
             return new CssUnitInfo(name, NodeKind.Unknown);
         }
 
-        public bool Equals(CssUnitInfo other) => ReferenceEquals(this, other) || Name == other.Name;
+        public bool Equals(CssUnitInfo other)
+        {
+            return ReferenceEquals(this, other) || Name.Equals(other.Name, StringComparison.Ordinal);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }   
 }
 

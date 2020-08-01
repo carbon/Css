@@ -1,4 +1,6 @@
-﻿namespace Carbon.Css
+﻿using System.IO;
+
+namespace Carbon.Css
 {
     public sealed class ImportRule : CssRule
     {
@@ -11,7 +13,23 @@
 
         public CssUrlValue Url { get; }
 
-        public override string ToString() => $"@import {Url};";
+        public void WriteTo(TextWriter writer)
+        {
+            writer.Write("@import ");
+
+            Url.WriteTo(writer);
+
+            writer.Write(';');
+        }
+
+        public override string ToString()
+        {
+            using var writer = new StringWriter();
+
+            WriteTo(writer);
+
+            return writer.ToString();
+        }
     }
 }
 

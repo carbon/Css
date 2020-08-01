@@ -8,8 +8,8 @@
             Value = value;
         }
 
-        public string Name { get; }
+        public readonly string Name { get; }
 
-        public CssValue Value { get; }
+        public readonly CssValue Value { get; }
     }
 }

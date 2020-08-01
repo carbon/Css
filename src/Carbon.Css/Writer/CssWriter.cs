@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace Carbon.Css
 {
+    using System.Threading.Tasks;
     using Parser;
 
     public sealed class CssWriter : IDisposable
@@ -38,6 +39,68 @@ namespace Carbon.Css
         }
 
         public void WriteRoot(StyleSheet sheet)
+        {
+            importCount++;
+
+            if (importCount > 200)
+            {
+                throw new Exception("Exceded importCount of 200");
+            }
+
+            int i = 0;
+
+            foreach (var node in sheet.Children)
+            {
+                if (node.Kind == NodeKind.If)
+                {
+                    EvaluateIf((IfBlock)node, i: i);
+                }
+                else if (node.Kind == NodeKind.For)
+                {
+                    EvaluateFor((ForBlock)node);
+                }
+                else if (node.Kind == NodeKind.Comment)
+                {
+                    if (i != 0) writer.WriteLine();
+
+                    i++;
+
+                    WriteComment((CssComment)node);
+                }
+                else if (node.Kind == NodeKind.Assignment)
+                {
+                    var variable = (CssAssignment)node;
+
+                    scope[variable.Name] = variable.Value;
+                }
+                else if (node is CssRule rule)
+                {
+                    if (i != 0) writer.WriteLine();
+
+                    i++;
+
+                    if (rule.Type == RuleType.Import)
+                    {
+                        var importRule = (ImportRule)rule;
+
+                        if (!importRule.Url.IsPath || resolver is null)
+                        {
+                            WriteImportRule(importRule);
+                        }
+                        else
+                        {
+                            InlineImport(importRule, sheet);
+                        }
+                    }
+                    else
+                    {
+                        WriteRule(rule);
+                    }
+                }
+            }
+        }
+
+        public async Task WriteRootAsync(StyleSheet sheet)
         {
             importCount++;
 
@@ -431,7 +494,7 @@ namespace Carbon.Css
                 return;
             }
 
-            if (function.Name == "calc")
+            if (function.Name.Equals("calc", StringComparison.Ordinal))
             {
                 skipMath = true;
             }
@@ -505,8 +568,7 @@ namespace Carbon.Css
 
         public void WriteImportRule(ImportRule rule)
         {
-            // TODO: normalize value
-            writer.Write(rule.ToString());
+            rule.WriteTo(writer);
         }
 
         public void WriteRule(CssRule rule, int depth = 0)

@@ -54,7 +54,7 @@ namespace Carbon.Css
                     {
                         var directive = (CssDirective)node;
 
-                        if (directive.Name == "support" && directive.Value != null)
+                        if (directive.Name.Equals("support", StringComparison.Ordinal) && directive.Value != null)
                         {
                             string[] parts = directive.Value.Split(Seperators.Space); // SpaceArray...
 
@@ -62,7 +62,7 @@ namespace Carbon.Css
                             {
                                 if (browsers is null)
                                 {
-                                    browsers = new List<BrowserInfo>();
+                                    browsers = new List<BrowserInfo>(2);
                                 }
 
                                 float browserVersion = float.Parse(parts[parts.Length - 1].Trim(trimBrowserChars), CultureInfo.InvariantCulture);
@@ -157,24 +157,20 @@ namespace Carbon.Css
 
         public string ToString(IEnumerable<KeyValuePair<string, CssValue>> variables)
         {
-            var sb = StringBuilderCache.Aquire();
+            using var writer = new StringWriter();
 
-            using var sw = new StringWriter(sb);
+            WriteTo(writer, variables);
 
-            WriteTo(sw, variables);
-
-            return StringBuilderCache.ExtractAndRelease(sb);
+            return writer.ToString();
         }
 
         public override string ToString()
         {
-            var sb = StringBuilderCache.Aquire();
+            using var writer = new StringWriter();
 
-            using var sw = new StringWriter(sb);
+            WriteTo(writer);
 
-            WriteTo(sw);
-
-            return StringBuilderCache.ExtractAndRelease(sb);
+            return writer.ToString();
         }
 
         #region Helpers

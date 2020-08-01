@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Carbon.Css.Helpers;
 
@@ -14,14 +15,14 @@ namespace Carbon.Css.Gradients
             Stops = colorStops;
         }
 
-        public LinearGradientDirection Direction { get; }
+        public readonly LinearGradientDirection Direction { get; }
 
-        public double? Angle { get; }
+        public readonly double? Angle { get; }
 
         // [ <linear-color-stop> [, <linear-color-hint>]? ]# , <linear-color-stop>
-        public ColorStop[] Stops { get; }
+        public readonly ColorStop[] Stops { get; }
 
-        public override string ToString()
+        public readonly override string ToString()
         {
             var sb = StringBuilderCache.Aquire();
 
@@ -39,8 +40,10 @@ namespace Carbon.Css.Gradients
                 sb.Append(LinearGradientDirectionHelper.Canonicalize(Direction));
             }
 
-            foreach (var stop in Stops)
+            for (int i = 0; i < Stops.Length; i++)
             {
+                ref ColorStop stop = ref Stops[i];
+
                 sb.Append(", ");
 
                 sb.Append(stop.Color.ToString());
@@ -48,7 +51,7 @@ namespace Carbon.Css.Gradients
                 if (stop.Position is double position)
                 {
                     sb.Append(' ');
-                    sb.Append(position.ToString("0.##%"));
+                    sb.Append(position.ToString("0.##%", CultureInfo.InvariantCulture));
                 }
             }
 

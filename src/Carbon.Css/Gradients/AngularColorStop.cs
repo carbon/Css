@@ -11,10 +11,10 @@ namespace Carbon.Css.Gradients
             Angle = angle;
         }
 
-        public Rgba32 Color { get; }
+        public readonly Rgba32 Color { get; }
 
-        public double Position { get; }
+        public readonly double Position { get; }
 
-        public double Angle { get; }
+        public readonly double Angle { get; }
     }
 }

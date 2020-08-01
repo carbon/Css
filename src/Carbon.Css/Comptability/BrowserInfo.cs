@@ -88,19 +88,15 @@ namespace Carbon.Css
             Text = text;
         }
 
-        public BrowserPrefixKind Kind { get; }
+        public readonly BrowserPrefixKind Kind { get; }
 
-        public string Text { get; }
+        public readonly string Text { get; }
        
         public static implicit operator string(BrowserPrefix prefix) => prefix.Text;
 
-        #region Equality
+        public readonly bool Equals(BrowserPrefix other) => Kind == other.Kind;
 
-        public bool Equals(BrowserPrefix other) => Kind == other.Kind;
-
-        public override int GetHashCode() => (int)Kind;
-
-        #endregion
+        public readonly override int GetHashCode() => (int)Kind;
     }
 
     [Flags]

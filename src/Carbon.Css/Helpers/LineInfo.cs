@@ -8,8 +8,8 @@
             Text = text;
         }
 
-        public int Number { get; }
+        public readonly int Number { get; }
 
-        public string Text { get; }
+        public readonly string Text { get; }
     }
 }

@@ -22,9 +22,9 @@
 
         public readonly string Text;
 
-        public override string ToString() => $"{Kind}: '{Text}'";
+        public readonly override string ToString() => $"{Kind}: '{Text}'";
 
-        public void Deconstruct(out TokenKind kind, out string text)
+        public readonly void Deconstruct(out TokenKind kind, out string text)
         {
             kind = Kind;
             text = Text;
@@ -32,13 +32,13 @@
 
 		#region Helpers
 
-		public bool IsTrivia => Kind == TokenKind.Whitespace || Kind == TokenKind.Comment;
+		public readonly bool IsTrivia => Kind == TokenKind.Whitespace || Kind == TokenKind.Comment;
 
-		public bool IsBinaryOperator => (int)Kind > 30 && (int)Kind < 65;
+		public readonly bool IsBinaryOperator => (int)Kind > 30 && (int)Kind < 65;
 
-		public bool IsEqualityOperator => Kind == TokenKind.Equals || Kind == TokenKind.NotEquals;
+		public readonly bool IsEqualityOperator => Kind == TokenKind.Equals || Kind == TokenKind.NotEquals;
 
-		public bool IsLogicalOperator => Kind == TokenKind.And || Kind == TokenKind.Or;
+		public readonly bool IsLogicalOperator => Kind == TokenKind.And || Kind == TokenKind.Or;
         
 		#endregion
 	}

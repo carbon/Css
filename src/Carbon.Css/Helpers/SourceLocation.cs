@@ -18,6 +18,6 @@
         // 1 based
         public int Column { get; }
 
-        public override string ToString() => $"({Line},{Column})";
+        public readonly override string ToString() => $"({Line},{Column})";
     }
 }
