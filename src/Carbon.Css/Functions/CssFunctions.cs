@@ -10,12 +10,13 @@ namespace Carbon.Css
 	{
 		// http://lesscss.org/functions/#color-operations-saturate
 
-		private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new Dictionary<string, Func<CssValue[], CssValue>>(9) {
+		private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new Dictionary<string, Func<CssValue[], CssValue>>(10) {
 			["darken"]		= Darken,
 			["lighten"]		= Lighten,
 			["saturate"]	= Saturate,
 			["desaturate"]	= Desaturate,
 			["adjust-hue"]	= AdjustHue,
+			["unquote"]     = Unquote,
 			["mix"]			= Mix,
 			["rgba"]		= Rgba,
             ["if"]			= If
@@ -34,7 +35,15 @@ namespace Carbon.Css
 		// if($condition, $if-true, $if-false)
 		public static CssValue If(CssValue[] args) => ToBoolean(args[0]) ? args[1] : args[2];
 
-        public static CssValue Mix(CssValue[] args)
+
+		public static CssValue Unquote(CssValue[] args)
+		{
+			var value = args[0].ToString();
+
+			return new CssString(value.ToString().Trim('"'));
+		}
+
+		public static CssValue Mix(CssValue[] args)
 		{
             Rgba32 color1 = GetColor(args[0]);
             Rgba32 color2 = GetColor(args[1]);
@@ -107,16 +116,16 @@ namespace Carbon.Css
 
             var text = value.ToString();
 
-            return text == "true" || text == "True";
+			return text.Equals("true", StringComparison.OrdinalIgnoreCase);
         }
 
 		private static Rgba32 GetColor(CssValue value) => Rgba32.Parse(value.ToString());
 
         private static double ParseDouble(string text)
         {
-            if (text[text.Length - 1] == 'd')
+            if (text[text.Length - 1] == 'g' && text[text.Length - 2] == 'e' && text[text.Length - 3] == 'g')
             {
-                text = text.Replace("deg", string.Empty);
+				text = text.Substring(0, text.Length - 3);
             }
 
             return double.Parse(text, CultureInfo.InvariantCulture);
