@@ -26,11 +26,15 @@ namespace Carbon.Css
 
         public CssContext? Context { get; }
 
-        public static StyleSheet Parse(Stream stream, CssContext? context = null) =>
-            Parse(new StreamReader(stream), context);
+        public static StyleSheet Parse(Stream stream, CssContext? context = null)
+        {
+            return Parse(new StreamReader(stream), context);
+        }
 
-        public static StyleSheet Parse(string text, CssContext? context = null) =>
-            Parse(new StringReader(text), context);
+        public static StyleSheet Parse(string text, CssContext? context = null)
+        {
+            return Parse(new StringReader(text), context);
+        }
 
         private static readonly char[] trimBrowserChars = { ' ', '+' };
 
@@ -56,7 +60,7 @@ namespace Carbon.Css
 
                         if (directive.Name.Equals("support", StringComparison.Ordinal) && directive.Value != null)
                         {
-                            string[] parts = directive.Value.Split(Seperators.Space); // SpaceArray...
+                            string[] parts = directive.Value.Split(Seperators.Space);
 
                             if (Enum.TryParse(parts[0].Trim(), true, out BrowserType browserType))
                             {
@@ -177,10 +181,7 @@ namespace Carbon.Css
 
         private void ImportInline(ImportRule rule)
         {
-            if (resolver is null)
-            {
-                throw new ArgumentNullException(nameof(resolver));
-            }
+            if (resolver is null) throw new ArgumentNullException(nameof(resolver));
 
             // var relativePath = importRule.Url;
             var absolutePath = rule.Url.GetAbsolutePath(resolver.ScopedPath);
@@ -244,7 +245,6 @@ namespace Carbon.Css
                 else
                 {
                     throw new Exception(".css include not supported");
-                    //  writer.Write(text);
                 }
             }
             else
