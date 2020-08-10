@@ -4,7 +4,7 @@
     <AssemblyName>Carbon.Css</AssemblyName>
     <VersionPrefix>0.33.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
     <!-- Package Properties-->

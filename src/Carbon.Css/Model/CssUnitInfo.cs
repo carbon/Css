@@ -8,52 +8,52 @@ namespace Carbon.Css
         public static readonly CssUnitInfo Number = new CssUnitInfo(string.Empty, NodeKind.Number);
 
         // <length> (Relative) | em, ex, cm, ch, rem, vh, vw, vmin, vmax	                                  | relative to
-        public static readonly CssUnitInfo Em   = new CssUnitInfo(CssUnitNames.Em,   NodeKind.Length, CssUnitFlags.Relative); // | font size of the element
-        public static readonly CssUnitInfo Ex   = new CssUnitInfo("ex",              NodeKind.Length, CssUnitFlags.Relative); // | x-height of the element’s font
-        public static readonly CssUnitInfo Cap  = new CssUnitInfo("cap",             NodeKind.Length, CssUnitFlags.Relative); // | cap height (the nominal height of capital letters) of the element’s font
-        public static readonly CssUnitInfo Ch   = new CssUnitInfo("ch",              NodeKind.Length, CssUnitFlags.Relative); // | average character advance of a narrow glyph in the element’s font, as represented by the “0” (ZERO, U+0030) glyph
-        public static readonly CssUnitInfo Ic   = new CssUnitInfo("ic",              NodeKind.Length, CssUnitFlags.Relative); // | average character advance of a fullwidth glyph in the element’s font, as represented by the “水” (CJK water ideograph, U+6C34) glyph
-        public static readonly CssUnitInfo Rem  = new CssUnitInfo(CssUnitNames.Rem,  NodeKind.Length, CssUnitFlags.Relative); // | font size of the root element
-        public static readonly CssUnitInfo Lh   = new CssUnitInfo("lh",              NodeKind.Length, CssUnitFlags.Relative); // | line height of the element
-        public static readonly CssUnitInfo Rlh  = new CssUnitInfo("rlh",             NodeKind.Length, CssUnitFlags.Relative); // | line height of the root element
-        public static readonly CssUnitInfo Vw   = new CssUnitInfo("vw",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s width
-        public static readonly CssUnitInfo Vh   = new CssUnitInfo("vh",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s height
-        public static readonly CssUnitInfo Vi   = new CssUnitInfo("vi",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s size in the root element’s inline axis
-        public static readonly CssUnitInfo Vb   = new CssUnitInfo("vb",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s size in the root element’s block axis
-        public static readonly CssUnitInfo Vmin = new CssUnitInfo(CssUnitNames.Vmin, NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s smaller dimension
-        public static readonly CssUnitInfo Vmax = new CssUnitInfo(CssUnitNames.Vmax, NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s larger dimension
+        public static readonly CssUnitInfo Em   = new (CssUnitNames.Em,   NodeKind.Length, CssUnitFlags.Relative); // | font size of the element
+        public static readonly CssUnitInfo Ex   = new ("ex",              NodeKind.Length, CssUnitFlags.Relative); // | x-height of the element’s font
+        public static readonly CssUnitInfo Cap  = new ("cap",             NodeKind.Length, CssUnitFlags.Relative); // | cap height (the nominal height of capital letters) of the element’s font
+        public static readonly CssUnitInfo Ch   = new ("ch",              NodeKind.Length, CssUnitFlags.Relative); // | average character advance of a narrow glyph in the element’s font, as represented by the “0” (ZERO, U+0030) glyph
+        public static readonly CssUnitInfo Ic   = new ("ic",              NodeKind.Length, CssUnitFlags.Relative); // | average character advance of a fullwidth glyph in the element’s font, as represented by the “水” (CJK water ideograph, U+6C34) glyph
+        public static readonly CssUnitInfo Rem  = new (CssUnitNames.Rem,  NodeKind.Length, CssUnitFlags.Relative); // | font size of the root element
+        public static readonly CssUnitInfo Lh   = new ("lh",              NodeKind.Length, CssUnitFlags.Relative); // | line height of the element
+        public static readonly CssUnitInfo Rlh  = new ("rlh",             NodeKind.Length, CssUnitFlags.Relative); // | line height of the root element
+        public static readonly CssUnitInfo Vw   = new ("vw",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s width
+        public static readonly CssUnitInfo Vh   = new ("vh",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s height
+        public static readonly CssUnitInfo Vi   = new ("vi",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s size in the root element’s inline axis
+        public static readonly CssUnitInfo Vb   = new ("vb",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s size in the root element’s block axis
+        public static readonly CssUnitInfo Vmin = new (CssUnitNames.Vmin, NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s smaller dimension
+        public static readonly CssUnitInfo Vmax = new (CssUnitNames.Vmax, NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s larger dimension
 
         // <length> | px, mm, cm, in, pt, pc
-        public static readonly CssUnitInfo Cm = new CssUnitInfo("cm",            NodeKind.Length); // centimeters	            1cm = 96px/2.54
-        public static readonly CssUnitInfo Mm = new CssUnitInfo("mm",            NodeKind.Length); // millimeters	            1mm = 1/10th of 1cm
-        public static readonly CssUnitInfo Q  = new CssUnitInfo("q",             NodeKind.Length); // quarter-millimeters	    1Q = 1/40th of 1cm
-        public static readonly CssUnitInfo In = new CssUnitInfo("in",            NodeKind.Length); // inches	                1in = 2.54cm = 96px
-        public static readonly CssUnitInfo Pc = new CssUnitInfo("pc",            NodeKind.Length); // picas	                1pc = 1/6th of 1in
-        public static readonly CssUnitInfo Pt = new CssUnitInfo("pt",            NodeKind.Length); // points	                1pt = 1/72th of 1in
-        public static readonly CssUnitInfo Px = new CssUnitInfo(CssUnitNames.Px, NodeKind.Length); // pixels	                1px = 1/96th of 1in
+        public static readonly CssUnitInfo Cm   = new ("cm",            NodeKind.Length); // centimeters	        1cm = 96px/2.54
+        public static readonly CssUnitInfo Mm   = new ("mm",            NodeKind.Length); // millimeters	        1mm = 1/10th of 1cm
+        public static readonly CssUnitInfo Q    = new ("q",             NodeKind.Length); // quarter-millimeters	1Q = 1/40th of 1cm
+        public static readonly CssUnitInfo In   = new ("in",            NodeKind.Length); // inches	                1in = 2.54cm = 96px
+        public static readonly CssUnitInfo Pc   = new ("pc",            NodeKind.Length); // picas	                1pc = 1/6th of 1in
+        public static readonly CssUnitInfo Pt   = new ("pt",            NodeKind.Length); // points	                1pt = 1/72th of 1in
+        public static readonly CssUnitInfo Px   = new (CssUnitNames.Px, NodeKind.Length); // pixels	                1px = 1/96th of 1in
 
         // <percentages> | %
-        public static readonly CssUnitInfo Percentage = new CssUnitInfo("%", NodeKind.Percentage);
+        public static readonly CssUnitInfo Percentage = new ("%", NodeKind.Percentage);
 
         // <angle> deg, grad, rad, turn
-        public static readonly CssUnitInfo Deg  = new CssUnitInfo(CssUnitNames.Deg,  NodeKind.Angle);
-        public static readonly CssUnitInfo Grad = new CssUnitInfo("grad",            NodeKind.Angle);
-        public static readonly CssUnitInfo Rad  = new CssUnitInfo("rad",             NodeKind.Angle);
-        public static readonly CssUnitInfo Turn = new CssUnitInfo("turn",            NodeKind.Angle);
+        public static readonly CssUnitInfo Deg  = new (CssUnitNames.Deg,  NodeKind.Angle);
+        public static readonly CssUnitInfo Grad = new ("grad",            NodeKind.Angle);
+        public static readonly CssUnitInfo Rad  = new ("rad",             NodeKind.Angle);
+        public static readonly CssUnitInfo Turn = new ("turn",            NodeKind.Angle);
 
         // <time> | s, ms
-        public static readonly CssUnitInfo S    = new CssUnitInfo(CssUnitNames.S,  NodeKind.Time);
-        public static readonly CssUnitInfo Ms   = new CssUnitInfo(CssUnitNames.Ms, NodeKind.Time);
+        public static readonly CssUnitInfo S    = new (CssUnitNames.S,  NodeKind.Time);
+        public static readonly CssUnitInfo Ms   = new (CssUnitNames.Ms, NodeKind.Time);
 
         // <frequency> | Hz, kHz
-        public static readonly CssUnitInfo Hz   = new CssUnitInfo("Hz",  NodeKind.Frequency);
-        public static readonly CssUnitInfo Khz  = new CssUnitInfo("khz", NodeKind.Frequency);
+        public static readonly CssUnitInfo Hz   = new ("Hz",  NodeKind.Frequency);
+        public static readonly CssUnitInfo Khz  = new ("khz", NodeKind.Frequency);
 
         // <resolution> | dpi, dpcm, dppx, x
-        public static readonly CssUnitInfo Dpi   = new CssUnitInfo("dpi",          NodeKind.Resolution);
-        public static readonly CssUnitInfo Dpcm  = new CssUnitInfo("dpcm",         NodeKind.Resolution);
-        public static readonly CssUnitInfo Dppx  = new CssUnitInfo("dppx",         NodeKind.Resolution);
-        public static readonly CssUnitInfo X     = new CssUnitInfo(CssUnitNames.X, NodeKind.Resolution);
+        public static readonly CssUnitInfo Dpi  = new ("dpi",          NodeKind.Resolution);
+        public static readonly CssUnitInfo Dpcm = new ("dpcm",         NodeKind.Resolution);
+        public static readonly CssUnitInfo Dppx = new ("dppx",         NodeKind.Resolution);
+        public static readonly CssUnitInfo X    = new (CssUnitNames.X, NodeKind.Resolution);
 
 
         public static readonly Dictionary<string, CssUnitInfo> items = new Dictionary<string, CssUnitInfo> {

@@ -76,388 +76,389 @@ namespace Carbon.Css
         }
 
         // Animations (Level 3) -----------------------------------------------------------------------------------------------------------
-        public static readonly CssProperty Animation                = new CssProperty("animation", CssModule.Animations3);
-        public static readonly CssProperty AnimationDelay           = new CssProperty("animation-delay", CssModule.Animations3);
-        public static readonly CssProperty AnimationDirection       = new CssProperty("animation-direction", CssModule.Animations3);
-        public static readonly CssProperty AnimationDuration        = new CssProperty("animation-duration", CssModule.Animations3);
-        public static readonly CssProperty AnimationIterationCount  = new CssProperty("animation-iteration-count", CssModule.Animations3);
-        public static readonly CssProperty AnimationName            = new CssProperty("animation-name", CssModule.Animations3);
-        public static readonly CssProperty AnimationPlayState       = new CssProperty("animation-play-state", CssModule.Animations3);
-        public static readonly CssProperty AnimationTimingFunction  = new CssProperty("animation-timing-function", CssModule.Animations3);
+        public static readonly CssProperty Animation                = new ("animation",                 CssModule.Animations3);
+        public static readonly CssProperty AnimationDelay           = new ("animation-delay",           CssModule.Animations3);
+        public static readonly CssProperty AnimationDirection       = new ("animation-direction",       CssModule.Animations3);
+        public static readonly CssProperty AnimationDuration        = new ("animation-duration",        CssModule.Animations3);
+        public static readonly CssProperty AnimationIterationCount  = new ("animation-iteration-count", CssModule.Animations3);
+        public static readonly CssProperty AnimationName            = new ("animation-name",            CssModule.Animations3);
+        public static readonly CssProperty AnimationPlayState       = new ("animation-play-state",      CssModule.Animations3);
+        public static readonly CssProperty AnimationTimingFunction  = new ("animation-timing-function", CssModule.Animations3);
 
-        public static readonly CssProperty Appearance = new CssProperty("appearance", new CssCompatibility(
+        public static readonly CssProperty Appearance = new ("appearance", new CssCompatibility(
             prefixed: new CompatibilityTable(chrome: 1, firefox: 1, safari: 3)
         ));
 
-        public static readonly CssProperty Azimuth = new CssProperty("azimuth", CssModule.Core2_1);
+        public static readonly CssProperty Azimuth = new ("azimuth", CssModule.Core2_1);
 
-        public static readonly CssProperty BackfaceVisibility = new CssProperty("backface-visibility", CssModule.Transforms3);
+        public static readonly CssProperty BackfaceVisibility = new ("backface-visibility", CssModule.Transforms3);
 
         // Backgrounds
-        public static readonly CssProperty Background = new CssProperty("background", CssModule.Core1);
-        public static readonly CssProperty BackgroundAttachment = new CssProperty("background-attachment", CssModule.Core1);
+        public static readonly CssProperty Background           = new ("background", CssModule.Core1);
+        public static readonly CssProperty BackgroundAttachment = new ("background-attachment", CssModule.Core1);
 
-        public static readonly CssProperty BackgroundClip = new CssProperty("background-clip", CssModule.BackgroundsAndBorders3, new CssCompatibility(
-            prefixed: new CompatibilityTable(chrome: 4, firefox: 4, safari: 4),
-            standard: new CompatibilityTable(firefox: 4, chrome: 15, ie: 9, safari: 7)
+        public static readonly CssProperty BackgroundClip = new ("background-clip", CssModule.BackgroundsAndBorders3, new CssCompatibility(
+            prefixed: new CompatibilityTable(chrome : 4,  firefox: 4, safari: 4),
+            standard: new CompatibilityTable(chrome : 15, firefox: 4, ie: 9, safari: 7)
         ));
 
-        public static readonly CssProperty BackgroundColor = new CssProperty("background-color", CssModule.Core1);
-        public static readonly CssProperty BackgroundImage = new CssProperty("background-image", CssModule.Core1);
+        public static readonly CssProperty BackgroundColor = new ("background-color", CssModule.Core1);
+        public static readonly CssProperty BackgroundImage = new ("background-image", CssModule.Core1);
 
-        public static readonly CssProperty BackgroundOrigin = new CssProperty("background-origin", CssModule.BackgroundsAndBorders3, new CssCompatibility(
+        public static readonly CssProperty BackgroundOrigin = new ("background-origin", CssModule.BackgroundsAndBorders3, new CssCompatibility(
             standard: new CompatibilityTable(chrome: 1, firefox: 4, ie: 9, safari: 3)
         ));
 
-        public static readonly CssProperty BackgroundPosition = new CssProperty("background-position", CssModule.Core1);
-        public static readonly CssProperty BackgroundRepeat = new CssProperty("background-repeat", CssModule.Core1);
-        public static readonly CssProperty BackgroundSize = new CssProperty("background-size", CssModule.BackgroundsAndBorders3);
+        public static readonly CssProperty BackgroundPosition = new ("background-position", CssModule.Core1);
+        public static readonly CssProperty BackgroundRepeat   = new ("background-repeat", CssModule.Core1);
+        public static readonly CssProperty BackgroundSize     = new ("background-size", CssModule.BackgroundsAndBorders3);
 
         // Borders -------------------------------------------------------------------------------------------------------
-        public static readonly CssCompatibility BorderImageCompatibility = new CssCompatibility(
+        public static readonly CssCompatibility BorderImageCompatibility = new (
             prefixed: new CompatibilityTable(chrome: 7, firefox: 3.5f, safari: 3),
             standard: new CompatibilityTable(chrome: 16, firefox: 15, ie: 11, safari: 6.1f)
         );
 
-        public static readonly CssProperty Border                  = new CssProperty("border", CssModule.Core1);
-        public static readonly CssProperty BorderBottom            = new CssProperty("border-bottom", CssModule.Core1);
-        public static readonly CssProperty BorderBottomColor       = new CssProperty("border-bottom-color", CssModule.Core1);
-        public static readonly CssProperty BorderBottomLeftRadius  = new CssProperty("border-bottom-left-radius");
-        public static readonly CssProperty BorderBottomRightRadius = new CssProperty("border-bottom-right-radius");
-        public static readonly CssProperty BorderBottomStyle       = new CssProperty("border-bottom-style");
-        public static readonly CssProperty BorderBottomWidth       = new CssProperty("border-bottom-width");
-        public static readonly CssProperty BorderCollapse          = new CssProperty("border-collapse");
-        public static readonly CssProperty BorderColor             = new CssProperty("border-color", CssModule.Core1);
-        public static readonly CssProperty BorderImage             = new CssProperty("border-image", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageOutset       = new CssProperty("border-image-outset", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageRepeat       = new CssProperty("border-image-repeat", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageSlice        = new CssProperty("border-image-slice", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageSource       = new CssProperty("border-image-source", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageWidth        = new CssProperty("border-image-width", BorderImageCompatibility);
+        public static readonly CssProperty Border                  = new ("border", CssModule.Core1);
+        public static readonly CssProperty BorderBottom            = new ("border-bottom", CssModule.Core1);
+        public static readonly CssProperty BorderBottomColor       = new ("border-bottom-color", CssModule.Core1);
+        public static readonly CssProperty BorderBottomLeftRadius  = new ("border-bottom-left-radius");
+        public static readonly CssProperty BorderBottomRightRadius = new ("border-bottom-right-radius");
+        public static readonly CssProperty BorderBottomStyle       = new ("border-bottom-style");
+        public static readonly CssProperty BorderBottomWidth       = new ("border-bottom-width");
+        public static readonly CssProperty BorderCollapse          = new ("border-collapse");
+        public static readonly CssProperty BorderColor             = new ("border-color", CssModule.Core1);
+        public static readonly CssProperty BorderImage             = new ("border-image", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageOutset       = new ("border-image-outset", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageRepeat       = new ("border-image-repeat", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageSlice        = new ("border-image-slice", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageSource       = new ("border-image-source", BorderImageCompatibility);
+        public static readonly CssProperty BorderImageWidth        = new ("border-image-width", BorderImageCompatibility);
 
-        public static readonly CssProperty BorderLeft = new CssProperty("border-left", CssModule.Core1);
-        public static readonly CssProperty BorderLeftColor = new CssProperty("border-left-color");
-        public static readonly CssProperty BorderLeftStyle = new CssProperty("border-left-style");
-        public static readonly CssProperty BorderLeftWidth = new CssProperty("border-left-width");
-        public static readonly CssProperty BorderRadius = new CssProperty("border-radius", CssModule.BackgroundsAndBorders3);
-        public static readonly CssProperty BorderRight = new CssProperty("border-right", CssModule.Core1);
-        public static readonly CssProperty BorderRightColor = new CssProperty("border-right-color");
-        public static readonly CssProperty BorderRightStyle = new CssProperty("border-right-style");
-        public static readonly CssProperty BorderRightWidth = new CssProperty("border-right-width");
-        public static readonly CssProperty BorderSpacing = new CssProperty("border-spacing");
-        public static readonly CssProperty BorderStyle = new CssProperty("border-style", CssModule.Core1);
-        public static readonly CssProperty BorderTop = new CssProperty("border-top", CssModule.Core1);
-        public static readonly CssProperty BorderTopColor = new CssProperty("border-top-color");
-        public static readonly CssProperty BorderTopLeftRadius = new CssProperty("border-top-left-radius");
-        public static readonly CssProperty BorderTopRightRadius = new CssProperty("border-top-right-radius");
-        public static readonly CssProperty BorderTopStyle = new CssProperty("border-top-style");
-        public static readonly CssProperty BorderTopWidth = new CssProperty("border-top-width", CssModule.Core1);
-        public static readonly CssProperty BorderWidth = new CssProperty("border-width", CssModule.Core1);
+        public static readonly CssProperty BorderLeft              = new ("border-left", CssModule.Core1);
+        public static readonly CssProperty BorderLeftColor         = new ("border-left-color");
+        public static readonly CssProperty BorderLeftStyle         = new ("border-left-style");
+        public static readonly CssProperty BorderLeftWidth         = new ("border-left-width");
+        public static readonly CssProperty BorderRadius            = new ("border-radius", CssModule.BackgroundsAndBorders3);
+        public static readonly CssProperty BorderRight             = new ("border-right", CssModule.Core1);
+        public static readonly CssProperty BorderRightColor        = new ("border-right-color");
+        public static readonly CssProperty BorderRightStyle        = new ("border-right-style");
+        public static readonly CssProperty BorderRightWidth        = new ("border-right-width");
+        public static readonly CssProperty BorderSpacing           = new ("border-spacing");
+        public static readonly CssProperty BorderStyle             = new ("border-style", CssModule.Core1);
+        public static readonly CssProperty BorderTop               = new ("border-top", CssModule.Core1);
+        public static readonly CssProperty BorderTopColor          = new ("border-top-color");
+        public static readonly CssProperty BorderTopLeftRadius     = new ("border-top-left-radius");
+        public static readonly CssProperty BorderTopRightRadius    = new ("border-top-right-radius");
+        public static readonly CssProperty BorderTopStyle          = new ("border-top-style");
+        public static readonly CssProperty BorderTopWidth          = new ("border-top-width", CssModule.Core1);
+        public static readonly CssProperty BorderWidth             = new ("border-width", CssModule.Core1);
 
-        public static readonly CssProperty Bottom = new CssProperty("bottom", CssModule.Core1);
-        public static readonly CssProperty BoxDecorationBreak = new CssProperty("box-decoration-break");
+        public static readonly CssProperty Bottom             = new ("bottom", CssModule.Core1);
 
-        public static readonly CssProperty BoxShadow = new CssProperty("box-shadow", CssModule.UI(3), new CssCompatibility(
+        public static readonly CssProperty BoxDecorationBreak = new ("box-decoration-break");
+
+        public static readonly CssProperty BoxShadow = new ("box-shadow", CssModule.UI(3), new CssCompatibility(
             prefixed: new CompatibilityTable(chrome: 1, firefox: 3.5f, safari: 3.1f),
             standard: new CompatibilityTable(chrome: 10, firefox: 4, ie: 9, safari: 5.1f)
         ));
 
-        public static readonly CssProperty BoxSizing = new CssProperty("box-sizing", CssModule.UI(3), new CssCompatibility(
+        public static readonly CssProperty BoxSizing = new ("box-sizing", CssModule.UI(3), new CssCompatibility(
             prefixed: new CompatibilityTable(chrome: 1, firefox: 1, ie: 8, safari: 3),
             standard: new CompatibilityTable(chrome: 10, firefox: 29, ie: 9, safari: 5.1f)
         ));
 
         // Breaks
-        public static readonly CssProperty BreakAfter = new CssProperty("break-after");
-        public static readonly CssProperty BreakBefore = new CssProperty("break-before");
-        public static readonly CssProperty BreakInside = new CssProperty("break-inside");
+        public static readonly CssProperty BreakAfter  = new ("break-after");
+        public static readonly CssProperty BreakBefore = new ("break-before");
+        public static readonly CssProperty BreakInside = new ("break-inside");
 
-        public static readonly CssProperty CaptionSide = new CssProperty("caption-side");
-        public static readonly CssProperty Clear = new CssProperty("clear");
+        public static readonly CssProperty CaptionSide = new ("caption-side");
+        public static readonly CssProperty Clear = new ("clear");
 
         // Clipping
-        public static readonly CssProperty Clip = new CssProperty("clip", CssModule.Masking_1);
+        public static readonly CssProperty Clip = new ("clip", CssModule.Masking_1);
 
         // TODO: Confirm support
-        public static readonly CssProperty ClipPath = new CssProperty("clip-path", new CssCompatibility(
+        public static readonly CssProperty ClipPath = new ("clip-path", new CssCompatibility(
             prefixed: new CompatibilityTable(chrome: 24f, safari: 7)   
         ));
 
-        public static readonly CssProperty ClipRule = new CssProperty("clip-rule", CssModule.Masking_1);
+        public static readonly CssProperty ClipRule = new ("clip-rule", CssModule.Masking_1);
 
-        public static readonly CssProperty Color = new CssProperty("color", CssModule.Core1);
+        public static readonly CssProperty Color = new ("color", CssModule.Core1);
 
-        public static readonly CssProperty ColumnCount      = new CssProperty("column-count",       CssModule.Columns3);
-        public static readonly CssProperty ColumnFill       = new CssProperty("column-fill",        CssModule.Columns3);
-        public static readonly CssProperty ColumnGap        = new CssProperty("column-gap",         CssModule.Columns3);
-        public static readonly CssProperty ColumnRule       = new CssProperty("column-rule",        CssModule.Columns3);
-        public static readonly CssProperty ColumnRuleColor  = new CssProperty("column-rule-color",  CssModule.Columns3);
-        public static readonly CssProperty ColumnRuleStyle  = new CssProperty("column-rule-style",  CssModule.Columns3);
-        public static readonly CssProperty ColumnRuleWidth  = new CssProperty("column-rule-width",  CssModule.Columns3);
-        public static readonly CssProperty ColumnSpan       = new CssProperty("column-span",        CssModule.Columns3);
-        public static readonly CssProperty ColumnWidth      = new CssProperty("column-width",       CssModule.Columns3);
-        public static readonly CssProperty Columns          = new CssProperty("columns",            CssModule.Columns3);
+        public static readonly CssProperty ColumnCount      = new ("column-count",       CssModule.Columns3);
+        public static readonly CssProperty ColumnFill       = new ("column-fill",        CssModule.Columns3);
+        public static readonly CssProperty ColumnGap        = new ("column-gap",         CssModule.Columns3);
+        public static readonly CssProperty ColumnRule       = new ("column-rule",        CssModule.Columns3);
+        public static readonly CssProperty ColumnRuleColor  = new ("column-rule-color",  CssModule.Columns3);
+        public static readonly CssProperty ColumnRuleStyle  = new ("column-rule-style",  CssModule.Columns3);
+        public static readonly CssProperty ColumnRuleWidth  = new ("column-rule-width",  CssModule.Columns3);
+        public static readonly CssProperty ColumnSpan       = new ("column-span",        CssModule.Columns3);
+        public static readonly CssProperty ColumnWidth      = new ("column-width",       CssModule.Columns3);
+        public static readonly CssProperty Columns          = new ("columns",            CssModule.Columns3);
 
-        public static readonly CssProperty Content = new CssProperty("content", CssModule.Core2_1);
+        public static readonly CssProperty Content = new ("content", CssModule.Core2_1);
 
         // Counters ---------------------------------------------------------------------------------------
-        public static readonly CssProperty CounterIncrement = new CssProperty("counter-increment");
-        public static readonly CssProperty CounterReset = new CssProperty("counter-reset");
+        public static readonly CssProperty CounterIncrement = new ("counter-increment");
+        public static readonly CssProperty CounterReset     = new ("counter-reset");
 
-        public static readonly CssProperty Cursor = new CssProperty("cursor", new CursorCompatibility());
-        public static readonly CssProperty Direction = new CssProperty("direction");
-        public static readonly CssProperty Display = new CssProperty("display", CssModule.Core1);
+        public static readonly CssProperty Cursor    = new ("cursor", new CursorCompatibility());
+        public static readonly CssProperty Direction = new ("direction");
+        public static readonly CssProperty Display   = new ("display", CssModule.Core1);
 
-        public static readonly CssProperty EmptyCells = new CssProperty("empty-cells");
+        public static readonly CssProperty EmptyCells = new ("empty-cells");
 
-        public static readonly CssProperty Filter = new CssProperty("filter", new CssCompatibility(
+        public static readonly CssProperty Filter = new ("filter", new CssCompatibility(
            prefixed: new CompatibilityTable(chrome: 18, firefox: 3.6f, ie: 13, safari: 6),
            standard: new CompatibilityTable(firefox: 35, safari: 9.1f)
        ));
 
         // SVG (Fill)
-        public static readonly CssProperty Fill        = new CssProperty("fill");
-        public static readonly CssProperty FillOpacity = new CssProperty("fill-opacity");
+        public static readonly CssProperty Fill        = new ("fill");
+        public static readonly CssProperty FillOpacity = new ("fill-opacity");
 
         // Fit ---------------------------------------------------------------------------------------
-        public static readonly CssProperty Fit = new CssProperty("fit");
-        public static readonly CssProperty FitPosition = new CssProperty("fit-position");
+        public static readonly CssProperty Fit         = new ("fit");
+        public static readonly CssProperty FitPosition = new ("fit-position");
 
         // Flex ---------------------------------------------------------------------------------------
-        public static readonly CssProperty FlexAlign    = new CssProperty("flex-align");
-        public static readonly CssProperty FlexFlow     = new CssProperty("flex-flow");
-        public static readonly CssProperty FlexLinePack = new CssProperty("flex-line-pack");
-        public static readonly CssProperty FlexOrder    = new CssProperty("flex-order");
-        public static readonly CssProperty FlexPack     = new CssProperty("flex-pack");
+        public static readonly CssProperty FlexAlign    = new ("flex-align");
+        public static readonly CssProperty FlexFlow     = new ("flex-flow");
+        public static readonly CssProperty FlexLinePack = new ("flex-line-pack");
+        public static readonly CssProperty FlexOrder    = new ("flex-order");
+        public static readonly CssProperty FlexPack     = new ("flex-pack");
 
-        public static readonly CssProperty Float        = new CssProperty("float", CssModule.Core1);
-        public static readonly CssProperty FloatOffset  = new CssProperty("float-offset");
+        public static readonly CssProperty Float        = new ("float", CssModule.Core1);
+        public static readonly CssProperty FloatOffset  = new ("float-offset");
 
         // Fonts -------------------------------------------------------------------------------------------
-        public static readonly CssProperty Font             = new CssProperty("font",           CssModule.Core1);
-        public static readonly CssProperty FontFamily       = new CssProperty("font-family",    CssModule.Core1);
-        public static readonly CssProperty FontSize         = new CssProperty("font-size",      CssModule.Core1);
-        public static readonly CssProperty FontSizeAdjust   = new CssProperty("font-size-adjust");
-        public static readonly CssProperty FontStretch      = new CssProperty("font-stretch",   CssModule.Fonts3);
-        public static readonly CssProperty FontStyle        = new CssProperty("font-style",     CssModule.Core1);
-        public static readonly CssProperty FontVariant      = new CssProperty("font-variant",   CssModule.Core1);
-        public static readonly CssProperty FontWeight       = new CssProperty("font-weight",    CssModule.Core1);
+        public static readonly CssProperty Font             = new ("font",           CssModule.Core1);
+        public static readonly CssProperty FontFamily       = new ("font-family",    CssModule.Core1);
+        public static readonly CssProperty FontSize         = new ("font-size",      CssModule.Core1);
+        public static readonly CssProperty FontSizeAdjust   = new ("font-size-adjust");
+        public static readonly CssProperty FontStretch      = new ("font-stretch",   CssModule.Fonts3);
+        public static readonly CssProperty FontStyle        = new ("font-style",     CssModule.Core1);
+        public static readonly CssProperty FontVariant      = new ("font-variant",   CssModule.Core1);
+        public static readonly CssProperty FontWeight       = new ("font-weight",    CssModule.Core1);
 
         // Grids ---------------------------------------------------------------------------------------
         public static readonly CssCompatibility GridComptability = new CssCompatibility(
             prefixed: new CompatibilityTable(ie: 10)
         );
 
-        public static readonly CssProperty GridColumns = new CssProperty("grid-columns", GridComptability);
-        public static readonly CssProperty GridRows = new CssProperty("grid-rows", GridComptability);
+        public static readonly CssProperty GridColumns = new ("grid-columns", GridComptability);
+        public static readonly CssProperty GridRows    = new ("grid-rows", GridComptability);
 
-        public static readonly CssProperty Height = new CssProperty("height", CssModule.Core1);
+        public static readonly CssProperty Height = new ("height", CssModule.Core1);
 
         // Hyphens -------------------------------------------------------------------------------------
-        public static readonly CssProperty HyphenateAfter = new CssProperty("hyphenate-after");
-        public static readonly CssProperty HyphenateBefore = new CssProperty("hyphenate-before");
-        public static readonly CssProperty HyphenateCharacter = new CssProperty("hyphenate-character", CssModule.Text3);
-        public static readonly CssProperty HyphenateLines = new CssProperty("hyphenate-lines");
-        public static readonly CssProperty HyphenateResource = new CssProperty("hyphenate-resource");
+        public static readonly CssProperty HyphenateAfter     = new ("hyphenate-after");
+        public static readonly CssProperty HyphenateBefore    = new ("hyphenate-before");
+        public static readonly CssProperty HyphenateCharacter = new ("hyphenate-character", CssModule.Text3);
+        public static readonly CssProperty HyphenateLines     = new ("hyphenate-lines");
+        public static readonly CssProperty HyphenateResource  = new ("hyphenate-resource");
 
-        public static readonly CssProperty Hyphens = new CssProperty("hyphens", new CssModule(CssModuleType.Text, 3), new CssCompatibility(
+        public static readonly CssProperty Hyphens = new ("hyphens", new CssModule(CssModuleType.Text, 3), new CssCompatibility(
             prefixed: new CompatibilityTable(chrome: 15, firefox: 6, ie: 10, safari: 5.1f),
             standard: new CompatibilityTable(firefox: 43)
         ));
 
         // https://developer.mozilla.org/en-US/docs/Web/CSS/hyphens
 
-        public static readonly CssProperty InlineBoxAlign = new CssProperty("inline-box-align");
+        public static readonly CssProperty InlineBoxAlign = new ("inline-box-align");
 
 
-        public static readonly CssProperty Left = new CssProperty("left", CssModule.Core1);
-        public static readonly CssProperty LetterSpacing = new CssProperty("letter-spacing");
+        public static readonly CssProperty Left = new ("left", CssModule.Core1);
+        public static readonly CssProperty LetterSpacing = new ("letter-spacing");
 
         // Lines
-        public static readonly CssProperty LineBreak = new CssProperty("line-break");
-        public static readonly CssProperty LineHeight = new CssProperty("line-height", CssModule.Core1);
+        public static readonly CssProperty LineBreak = new ("line-break");
+        public static readonly CssProperty LineHeight = new ("line-height", CssModule.Core1);
 
         // List Styles -------------------------------------------------------------------------------------------------------
-        public static readonly CssProperty ListStyle = new CssProperty("list-style", CssModule.Core1);
-        public static readonly CssProperty ListStyleImage = new CssProperty("list-style-image", CssModule.Core1);
-        public static readonly CssProperty ListStylePosition = new CssProperty("list-style-position", CssModule.Core1);
-        public static readonly CssProperty ListStyleType = new CssProperty("list-style-type", CssModule.Core1);
+        public static readonly CssProperty ListStyle         = new ("list-style", CssModule.Core1);
+        public static readonly CssProperty ListStyleImage    = new ("list-style-image", CssModule.Core1);
+        public static readonly CssProperty ListStylePosition = new ("list-style-position", CssModule.Core1);
+        public static readonly CssProperty ListStyleType     = new ("list-style-type", CssModule.Core1);
 
         // Margins -----------------------------------------------------------------------------------------------------------
-        public static readonly CssProperty Margin       = new CssProperty("margin", CssModule.Core1);
-        public static readonly CssProperty MarginBottom = new CssProperty("margin-bottom", CssModule.Core1);
-        public static readonly CssProperty MarginLeft   = new CssProperty("margin-left", CssModule.Core1);
-        public static readonly CssProperty MarginRight  = new CssProperty("margin-right", CssModule.Core1);
-        public static readonly CssProperty MarginTop    = new CssProperty("margin-top", CssModule.Core1);
+        public static readonly CssProperty Margin       = new ("margin", CssModule.Core1);
+        public static readonly CssProperty MarginBottom = new ("margin-bottom", CssModule.Core1);
+        public static readonly CssProperty MarginLeft   = new ("margin-left", CssModule.Core1);
+        public static readonly CssProperty MarginRight  = new ("margin-right", CssModule.Core1);
+        public static readonly CssProperty MarginTop    = new ("margin-top", CssModule.Core1);
 
         // Marquee -----------------------------------------------------------------------------------------
-        public static readonly CssProperty MarqueeDirection = new CssProperty("marquee-direction");
-        public static readonly CssProperty MarqueeLoop      = new CssProperty("marquee-loop");
-        public static readonly CssProperty MarqueePlayCount = new CssProperty("marquee-play-count");
-        public static readonly CssProperty MarqueeSpeed     = new CssProperty("marquee-speed");
-        public static readonly CssProperty MarqueeStyle     = new CssProperty("marquee-style");
+        public static readonly CssProperty MarqueeDirection = new ("marquee-direction");
+        public static readonly CssProperty MarqueeLoop      = new ("marquee-loop");
+        public static readonly CssProperty MarqueePlayCount = new ("marquee-play-count");
+        public static readonly CssProperty MarqueeSpeed     = new ("marquee-speed");
+        public static readonly CssProperty MarqueeStyle     = new ("marquee-style");
 
         // Masking -----------------------------------------------------------------------------------------
-        public static readonly CssProperty Mask             = new CssProperty("mask",               CssModule.Masking_1);
-        public static readonly CssProperty MaskBorder       = new CssProperty("mask-border",        CssModule.Masking_1);
-        public static readonly CssProperty MaskBorderMode   = new CssProperty("mask-border-mode",   CssModule.Masking_1);
-        public static readonly CssProperty MaskBorderOutset = new CssProperty("mask-border-outset", CssModule.Masking_1);
-        public static readonly CssProperty MaskBorderRepeat = new CssProperty("mask-border-repeat", CssModule.Masking_1);
-        public static readonly CssProperty MaskBorderSlice  = new CssProperty("mask-border-slice",  CssModule.Masking_1);
-        public static readonly CssProperty MaskBorderSource = new CssProperty("mask-border-source", CssModule.Masking_1);
-        public static readonly CssProperty MaskBorderWidth  = new CssProperty("mask-border-width",  CssModule.Masking_1);
-        public static readonly CssProperty MaskClip         = new CssProperty("mask-clip",          CssModule.Masking_1);
-        public static readonly CssProperty MaskComposite    = new CssProperty("mask-composite",     CssModule.Masking_1);
-        public static readonly CssProperty MaskImage        = new CssProperty("mask-image",         CssModule.Masking_1);
-        public static readonly CssProperty MaskMode         = new CssProperty("mask-mode",          CssModule.Masking_1);
-        public static readonly CssProperty MaskOrigin       = new CssProperty("mask-origin",        CssModule.Masking_1);
-        public static readonly CssProperty MaskPosition     = new CssProperty("mask-position",      CssModule.Masking_1);
-        public static readonly CssProperty MaskRepeat       = new CssProperty("mask-repeat",        CssModule.Masking_1);
-        public static readonly CssProperty MaskSize         = new CssProperty("mask-size",          CssModule.Masking_1);
+        public static readonly CssProperty Mask             = new ("mask",               CssModule.Masking_1);
+        public static readonly CssProperty MaskBorder       = new ("mask-border",        CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderMode   = new ("mask-border-mode",   CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderOutset = new ("mask-border-outset", CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderRepeat = new ("mask-border-repeat", CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderSlice  = new ("mask-border-slice",  CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderSource = new ("mask-border-source", CssModule.Masking_1);
+        public static readonly CssProperty MaskBorderWidth  = new ("mask-border-width",  CssModule.Masking_1);
+        public static readonly CssProperty MaskClip         = new ("mask-clip",          CssModule.Masking_1);
+        public static readonly CssProperty MaskComposite    = new ("mask-composite",     CssModule.Masking_1);
+        public static readonly CssProperty MaskImage        = new ("mask-image",         CssModule.Masking_1);
+        public static readonly CssProperty MaskMode         = new ("mask-mode",          CssModule.Masking_1);
+        public static readonly CssProperty MaskOrigin       = new ("mask-origin",        CssModule.Masking_1);
+        public static readonly CssProperty MaskPosition     = new ("mask-position",      CssModule.Masking_1);
+        public static readonly CssProperty MaskRepeat       = new ("mask-repeat",        CssModule.Masking_1);
+        public static readonly CssProperty MaskSize         = new ("mask-size",          CssModule.Masking_1);
 
-        public static readonly CssProperty MaxHeight = new CssProperty("max-height", CssModule.Core2_1);
-        public static readonly CssProperty MaxWidth = new CssProperty("max-width", CssModule.Core2_1);
+        public static readonly CssProperty MaxHeight  = new ("max-height", CssModule.Core2_1);
+        public static readonly CssProperty MaxWidth   = new ("max-width", CssModule.Core2_1);
 
-        public static readonly CssProperty MinHeight = new CssProperty("min-height", CssModule.Core2_1);
-        public static readonly CssProperty MinWidth = new CssProperty("min-width", CssModule.Core2_1);
+        public static readonly CssProperty MinHeight  = new ("min-height", CssModule.Core2_1);
+        public static readonly CssProperty MinWidth   = new ("min-width", CssModule.Core2_1);
 
         // <= IE8 filter: alpha(opacity=xx)
         // IE8 introduced -ms-filter, which is synonymous with filter. Both are gone in IE10
-        public static readonly CssProperty Opacity = new CssProperty("opacity", CssModule.Color3);
+        public static readonly CssProperty Opacity = new ("opacity", CssModule.Color3);
 
-        public static readonly CssProperty Orphans = new CssProperty("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility(
+        public static readonly CssProperty Orphans = new ("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility(
             standard: new CompatibilityTable(ie: 8)
         ));
 
         // Outlines -------------------------------------------------------------------------------
-        public static readonly CssProperty Outline = new CssProperty("outline", CssModule.Core2_1);
-        public static readonly CssProperty OutlineColor = new CssProperty("outline-color", CssModule.Core2_1);
-        public static readonly CssProperty OutlineOffset = new CssProperty("outline-offset", CssModule.Core2_1);
-        public static readonly CssProperty OutlineStyle = new CssProperty("outline-style", CssModule.Core2_1);
-        public static readonly CssProperty OutlineWidth = new CssProperty("outline-width", CssModule.Core2_1);
+        public static readonly CssProperty Outline       = new ("outline",        CssModule.Core2_1);
+        public static readonly CssProperty OutlineColor  = new ("outline-color",  CssModule.Core2_1);
+        public static readonly CssProperty OutlineOffset = new ("outline-offset", CssModule.Core2_1);
+        public static readonly CssProperty OutlineStyle  = new ("outline-style",  CssModule.Core2_1);
+        public static readonly CssProperty OutlineWidth  = new ("outline-width",  CssModule.Core2_1);
 
         // Overflow -------------------------------------------------------------------------------
-        public static readonly CssProperty Overflow = new CssProperty("overflow", CssModule.Core2_1);
-        public static readonly CssProperty OverflowStyle = new CssProperty("overflow-style");
-        public static readonly CssProperty OverflowWrap = new CssProperty("overflow-wrap");
-        public static readonly CssProperty OverflowX = new CssProperty("overflow-x", CssModule.Core2_1);
-        public static readonly CssProperty OverflowY = new CssProperty("overflow-y", CssModule.Core2_1);
+        public static readonly CssProperty Overflow      = new ("overflow", CssModule.Core2_1);
+        public static readonly CssProperty OverflowStyle = new ("overflow-style");
+        public static readonly CssProperty OverflowWrap  = new ("overflow-wrap");
+        public static readonly CssProperty OverflowX     = new ("overflow-x", CssModule.Core2_1);
+        public static readonly CssProperty OverflowY     = new ("overflow-y", CssModule.Core2_1);
 
         // Padding -----------------------------------------------------------------------------------------------
-        public static readonly CssProperty Padding = new CssProperty("padding", CssModule.Core1);
-        public static readonly CssProperty PaddingBottom = new CssProperty("padding-bottom", CssModule.Core1);
-        public static readonly CssProperty PaddingLeft = new CssProperty("padding-left", CssModule.Core1);
-        public static readonly CssProperty PaddingRight = new CssProperty("padding-right", CssModule.Core1);
-        public static readonly CssProperty PaddingTop = new CssProperty("padding-top", CssModule.Core1);
+        public static readonly CssProperty Padding       = new ("padding",        CssModule.Core1);
+        public static readonly CssProperty PaddingBottom = new ("padding-bottom", CssModule.Core1);
+        public static readonly CssProperty PaddingLeft   = new ("padding-left",   CssModule.Core1);
+        public static readonly CssProperty PaddingRight  = new ("padding-right",  CssModule.Core1);
+        public static readonly CssProperty PaddingTop    = new ("padding-top",    CssModule.Core1);
 
-        public static readonly CssProperty Page = new CssProperty("page");
+        public static readonly CssProperty Page = new ("page");
 
         // Page Breaks -------------------------------------------------------------------------------
-        public static readonly CssProperty PageBreakAfter = new CssProperty("page-break-after");
-        public static readonly CssProperty PageBreakBefore = new CssProperty("page-break-before");
-        public static readonly CssProperty PageBreakInside = new CssProperty("page-break-inside");
+        public static readonly CssProperty PageBreakAfter  = new ("page-break-after");
+        public static readonly CssProperty PageBreakBefore = new ("page-break-before");
+        public static readonly CssProperty PageBreakInside = new ("page-break-inside");
 
         // Perspective
-        public static readonly CssProperty Perspective = new CssProperty("perspective", CssModule.Transforms3);
-        public static readonly CssProperty PerspectiveOrigin = new CssProperty("perspective-origin", CssModule.Transforms3);
-        public static readonly CssProperty PerspectiveOriginX = new CssProperty("perspective-origin-x", CssModule.Transforms3);
-        public static readonly CssProperty PerspectiveOriginY = new CssProperty("perspective-origin-y", CssModule.Transforms3);
+        public static readonly CssProperty Perspective        = new ("perspective", CssModule.Transforms3);
+        public static readonly CssProperty PerspectiveOrigin  = new ("perspective-origin", CssModule.Transforms3);
+        public static readonly CssProperty PerspectiveOriginX = new ("perspective-origin-x", CssModule.Transforms3);
+        public static readonly CssProperty PerspectiveOriginY = new ("perspective-origin-y", CssModule.Transforms3);
 
-        public static readonly CssProperty Position = new CssProperty("position", CssModule.Core1);
+        public static readonly CssProperty Position = new ("position", CssModule.Core1);
 
       
-        public static readonly CssProperty Quotes = new CssProperty("quotes");
-        public static readonly CssProperty Resize = new CssProperty("resize");
-        public static readonly CssProperty Right = new CssProperty("right", CssModule.Core1);
+        public static readonly CssProperty Quotes = new ("quotes");
+        public static readonly CssProperty Resize = new ("resize");
+        public static readonly CssProperty Right = new ("right", CssModule.Core1);
 
         // Ruby (Level 3) ------------------------------------------------------------------------------------
 
         public static readonly CssModule RubyLevel3 = new CssModule(CssModuleType.Ruby, 3);
 
-        public static readonly CssProperty RubyAlign = new CssProperty("ruby-align", RubyLevel3);
-        public static readonly CssProperty RubyOverhang = new CssProperty("ruby-overhang", RubyLevel3);
-        public static readonly CssProperty RubyPosition = new CssProperty("ruby-position", RubyLevel3);
-        public static readonly CssProperty RubySpan = new CssProperty("ruby-span", RubyLevel3);
+        public static readonly CssProperty RubyAlign    = new ("ruby-align", RubyLevel3);
+        public static readonly CssProperty RubyOverhang = new ("ruby-overhang", RubyLevel3);
+        public static readonly CssProperty RubyPosition = new ("ruby-position", RubyLevel3);
+        public static readonly CssProperty RubySpan     = new ("ruby-span", RubyLevel3);
 
-        public static readonly CssProperty Size = new CssProperty("size");
-        public static readonly CssProperty Speak = new CssProperty("speak");
+        public static readonly CssProperty Size = new ("size");
+        public static readonly CssProperty Speak = new ("speak");
 
-        public static readonly CssProperty TableLayout = new CssProperty("table-layout", CssModule.Core2_1);
+        public static readonly CssProperty TableLayout = new ("table-layout", CssModule.Core2_1);
 
-        // Stroke (SVG)
-        public static readonly CssProperty Stroke           = new CssProperty("stroke");
-        public static readonly CssProperty StrokeDashArray  = new CssProperty("stroke-dasharray");
-        public static readonly CssProperty StrokeDashOffset = new CssProperty("stroke-dashoffset");
-        public static readonly CssProperty StrokeLinecap    = new CssProperty("stroke-linecap");
-        public static readonly CssProperty StrokeLinejoin   = new CssProperty("stroke-linejoin");
-        public static readonly CssProperty StrokeOpacity    = new CssProperty("stroke-opacity");
-        public static readonly CssProperty StrokeWidth      = new CssProperty("stroke-width");
+        // Stroke (SVG) ------------------------------------------------------------------------
+        public static readonly CssProperty Stroke               = new ("stroke");
+        public static readonly CssProperty StrokeDashArray      = new ("stroke-dasharray");
+        public static readonly CssProperty StrokeDashOffset     = new ("stroke-dashoffset");
+        public static readonly CssProperty StrokeLinecap        = new ("stroke-linecap");
+        public static readonly CssProperty StrokeLinejoin       = new ("stroke-linejoin");
+        public static readonly CssProperty StrokeOpacity        = new ("stroke-opacity");
+        public static readonly CssProperty StrokeWidth          = new ("stroke-width");
 
         // Text ------------------------------------------------------------------------
-        public static readonly CssProperty TextAlign            = new CssProperty("text-align", CssModule.Core1);
-        public static readonly CssProperty TextAlignLast        = new CssProperty("text-align-last");
-        public static readonly CssProperty TextDecoration       = new CssProperty("text-decoration", CssModule.Core1);
-        public static readonly CssProperty TextDecorationColor  = new CssProperty("text-decoration-color");
-        public static readonly CssProperty TextDecorationLine   = new CssProperty("text-decoration-line");
-        public static readonly CssProperty TextDecorationSkip   = new CssProperty("text-decoration-skip");
-        public static readonly CssProperty TextDecorationStyle  = new CssProperty("text-decoration-style");
-        public static readonly CssProperty TextEmphasis         = new CssProperty("text-emphasis");
-        public static readonly CssProperty TextEmphasisColor    = new CssProperty("text-emphasis-color");
-        public static readonly CssProperty TextEmphasisPosition = new CssProperty("text-emphasis-position");
-        public static readonly CssProperty TextEmphasisStyle    = new CssProperty("text-emphasis-style");
-        public static readonly CssProperty TextHeight           = new CssProperty("text-height");
-        public static readonly CssProperty TextIndent           = new CssProperty("text-indent", CssModule.Core1);
-        public static readonly CssProperty TextJustify          = new CssProperty("text-justify");
-        public static readonly CssProperty TextOutline          = new CssProperty("text-outline");
+        public static readonly CssProperty TextAlign            = new ("text-align", CssModule.Core1);
+        public static readonly CssProperty TextAlignLast        = new ("text-align-last");
+        public static readonly CssProperty TextDecoration       = new ("text-decoration", CssModule.Core1);
+        public static readonly CssProperty TextDecorationColor  = new ("text-decoration-color");
+        public static readonly CssProperty TextDecorationLine   = new ("text-decoration-line");
+        public static readonly CssProperty TextDecorationSkip   = new ("text-decoration-skip");
+        public static readonly CssProperty TextDecorationStyle  = new ("text-decoration-style");
+        public static readonly CssProperty TextEmphasis         = new ("text-emphasis");
+        public static readonly CssProperty TextEmphasisColor    = new ("text-emphasis-color");
+        public static readonly CssProperty TextEmphasisPosition = new ("text-emphasis-position");
+        public static readonly CssProperty TextEmphasisStyle    = new ("text-emphasis-style");
+        public static readonly CssProperty TextHeight           = new ("text-height");
+        public static readonly CssProperty TextIndent           = new ("text-indent", CssModule.Core1);
+        public static readonly CssProperty TextJustify          = new ("text-justify");
+        public static readonly CssProperty TextOutline          = new ("text-outline");
 
-        public static readonly CssProperty TextShadow = new CssProperty("text-shadow", new CssCompatibility(
+        public static readonly CssProperty TextShadow           = new ("text-shadow", new CssCompatibility(
             standard: new CompatibilityTable(chrome: 2, firefox: 3.5f, ie: 10, safari: 4)
         ));
 
-        public static readonly CssProperty TextSpaceCollapse     = new CssProperty("text-space-collapse");
-        public static readonly CssProperty TextTransform         = new CssProperty("text-transform", CssModule.Core1);
-        public static readonly CssProperty TextUnderlinePosition = new CssProperty("text-underline-position");
-        public static readonly CssProperty TextWrap              = new CssProperty("text-wrap");
+        public static readonly CssProperty TextSpaceCollapse     = new ("text-space-collapse");
+        public static readonly CssProperty TextTransform         = new ("text-transform", CssModule.Core1);
+        public static readonly CssProperty TextUnderlinePosition = new ("text-underline-position");
+        public static readonly CssProperty TextWrap              = new ("text-wrap");
 
-        public static readonly CssProperty Top = new CssProperty("top", CssModule.Core1);
+        public static readonly CssProperty Top = new ("top", CssModule.Core1);
 
         // Transforms (Level 3) -------------------------------------------------------------------------------------------------------------------
-        public static readonly CssProperty Transform        = new CssProperty("transform", CssModule.Transforms3);
-        public static readonly CssProperty TransformOrigin  = new CssProperty("transform-origin", CssModule.Transforms3);
-        public static readonly CssProperty TransformStyle   = new CssProperty("transform-style", CssModule.Transforms3);
+        public static readonly CssProperty Transform        = new ("transform", CssModule.Transforms3);
+        public static readonly CssProperty TransformOrigin  = new ("transform-origin", CssModule.Transforms3);
+        public static readonly CssProperty TransformStyle   = new ("transform-style", CssModule.Transforms3);
 
         // - Transitions (Level 3 ) ---------------------------------------------------------------------------------------------------------------
 
-        public static readonly CssProperty Transition = new CssProperty("transition", CssModule.Transitions3);
-        public static readonly CssProperty TransitionDelay = new CssProperty("transition-delay", CssModule.Transitions3);
-        public static readonly CssProperty TransitionDuration = new CssProperty("transition-duration", CssModule.Transitions3);
-        public static readonly CssProperty TransitionProperty = new CssProperty("transition-property", CssModule.Transitions3);
-        public static readonly CssProperty TransitionTimingFunction = new CssProperty("transition-timing-function", CssModule.Transitions3);
+        public static readonly CssProperty Transition               = new ("transition", CssModule.Transitions3);
+        public static readonly CssProperty TransitionDelay          = new ("transition-delay", CssModule.Transitions3);
+        public static readonly CssProperty TransitionDuration       = new ("transition-duration", CssModule.Transitions3);
+        public static readonly CssProperty TransitionProperty       = new ("transition-property", CssModule.Transitions3);
+        public static readonly CssProperty TransitionTimingFunction = new ("transition-timing-function", CssModule.Transitions3);
 
         // - Unicode -------------------------------------------------------------------------
-        public static readonly CssProperty UnicodeBidi = new CssProperty("unicode-bidi");
-        public static readonly CssProperty UnicodeRange = new CssProperty("unicode-range");
+        public static readonly CssProperty UnicodeBidi  = new ("unicode-bidi");
+        public static readonly CssProperty UnicodeRange = new ("unicode-range");
 
-        public static readonly CssProperty UserSelect = new CssProperty("user-select", new CssCompatibility(
+        public static readonly CssProperty UserSelect = new ("user-select", new CssCompatibility(
             prefixed: new CompatibilityTable(chrome: 1, firefox: 1, ie: 10, safari: 3)
         ));
 
-        public static readonly CssProperty VerticalAlign = new CssProperty("vertical-align", CssModule.Core1);
-        public static readonly CssProperty Visibility = new CssProperty("visibility", CssModule.Core1);
-        public static readonly CssProperty WhiteSpace = new CssProperty("white-space");
-        public static readonly CssProperty Widows = new CssProperty("widows", CssModule.Core2_1);
-        public static readonly CssProperty Width = new CssProperty("width", CssModule.Core1);
+        public static readonly CssProperty VerticalAlign = new ("vertical-align", CssModule.Core1);
+        public static readonly CssProperty Visibility    = new ("visibility", CssModule.Core1);
+        public static readonly CssProperty WhiteSpace    = new ("white-space");
+        public static readonly CssProperty Widows        = new ("widows", CssModule.Core2_1);
+        public static readonly CssProperty Width         = new ("width", CssModule.Core1);
 
         // Words
-        public static readonly CssProperty WordBreak = new CssProperty("word-break", CssModule.Text3);
-        public static readonly CssProperty WordSpacing = new CssProperty("word-spacing", CssModule.Core1);
-        public static readonly CssProperty WordWrap = new CssProperty("word-wrap", CssModule.Text3);
+        public static readonly CssProperty WordBreak     = new ("word-break", CssModule.Text3);
+        public static readonly CssProperty WordSpacing   = new ("word-spacing", CssModule.Core1);
+        public static readonly CssProperty WordWrap      = new ("word-wrap", CssModule.Text3);
 
-        public static readonly CssProperty ZIndex = new CssProperty("z-index", CssModule.Core1);            
+        public static readonly CssProperty ZIndex        = new ("z-index", CssModule.Core1);            
 
         public static readonly IDictionary<string, CssProperty> Map = new Dictionary<string, CssProperty> {
-			// Animations
-			{ "animation",                  Animation },
+            // Animations
+            { "animation",                  Animation },
             { "animation-delay",            AnimationDelay },
             { "animation-direction",        AnimationDirection },
             { "animation-duration",         AnimationDuration },
@@ -643,11 +644,11 @@ namespace Carbon.Css
             { "overflow-x",     OverflowX },
             { "overflow-y",     OverflowY },
 
-            { "padding", Padding },
+            { "padding",        Padding },
             { "padding-bottom", PaddingBottom },
-            { "padding-left", PaddingLeft },
-            { "padding-right", PaddingRight },
-            { "padding-top", PaddingTop },
+            { "padding-left",   PaddingLeft },
+            { "padding-right",  PaddingRight },
+            { "padding-top",    PaddingTop },
             { "page", Page },
             { "page-break-after", PageBreakAfter },
             { "page-break-before", PageBreakBefore },
