@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Carbon.Css
 {
@@ -25,7 +24,7 @@ namespace Carbon.Css
                 {
                     list.Add(PatchValue(node, browser));
                 }
-                else if (node.Kind == NodeKind.String && ((CssString)node).Text.Equals("transform", StringComparison.Ordinal))
+                else if (node.Kind == NodeKind.String && ((CssString)node).Text is "transform")
                 {
                     list.Add(new CssString(browser.Prefix.Text + "transform"));
                 }

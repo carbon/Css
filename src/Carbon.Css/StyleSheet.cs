@@ -58,7 +58,7 @@ namespace Carbon.Css
                     {
                         var directive = (CssDirective)node;
 
-                        if (directive.Name.Equals("support", StringComparison.Ordinal) && directive.Value != null)
+                        if (directive.Name is "support" && directive.Value != null)
                         {
                             string[] parts = directive.Value.Split(Seperators.Space);
 

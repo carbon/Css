@@ -82,18 +82,17 @@ namespace Carbon.Css.Parser
                     return new CssToken(TokenKind.Dollar, reader.Read(), reader.Position);
 
                 case '/':
-                    var peek = reader.Peek();
 
-                    if (peek == '/' || peek == '*')
-                        return ReadComment();
-                    else if (peek == ' ')
-                        return new CssToken(TokenKind.Divide, reader.Read(), reader.Position);
-                    else
-                        return new CssToken(TokenKind.String, reader.Read(), reader.Position);
+                    return reader.Peek() switch {
+                        '/' or '*' => ReadComment(),
+                        ' '        => new CssToken(TokenKind.Divide, reader.Read(), reader.Position),
+                        _          => new CssToken(TokenKind.String, reader.Read(), reader.Position)
+                    };
+                  
 
                 case ':':
                     // Pseudo-elements
-                    if (reader.Peek() == ':' || reader.Peek() == '-')
+                    if (reader.Peek() is ':' or '-')
                     {
                         return ReadValue();
                     }

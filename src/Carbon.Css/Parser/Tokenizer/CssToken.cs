@@ -32,13 +32,13 @@
 
 		#region Helpers
 
-		public readonly bool IsTrivia => Kind == TokenKind.Whitespace || Kind == TokenKind.Comment;
+		public readonly bool IsTrivia => Kind is TokenKind.Whitespace or TokenKind.Comment;
 
 		public readonly bool IsBinaryOperator => (int)Kind > 30 && (int)Kind < 65;
 
-		public readonly bool IsEqualityOperator => Kind == TokenKind.Equals || Kind == TokenKind.NotEquals;
+		public readonly bool IsEqualityOperator => Kind is TokenKind.Equals or TokenKind.NotEquals;
 
-		public readonly bool IsLogicalOperator => Kind == TokenKind.And || Kind == TokenKind.Or;
+		public readonly bool IsLogicalOperator => Kind is TokenKind.And or TokenKind.Or;
         
 		#endregion
 	}

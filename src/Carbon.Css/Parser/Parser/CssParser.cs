@@ -397,11 +397,12 @@ namespace Carbon.Css.Parser
             {
                 yield return ReadExpression();
                 
-                if (Current.Kind == TokenKind.BlockStart
-                    || Current.Kind == TokenKind.BlockEnd
-                    || Current.Kind == TokenKind.Semicolon
-                    || Current.Kind == TokenKind.Comma
-                    || Current.Kind == TokenKind.RightParenthesis)
+                if (Current.Kind 
+                    is TokenKind.BlockStart
+                    or TokenKind.BlockEnd
+                    or TokenKind.Semicolon
+                    or TokenKind.Comma
+                    or TokenKind.RightParenthesis)
                 {
                     break;
                 }
@@ -459,7 +460,7 @@ namespace Carbon.Css.Parser
 
             Consume(TokenKind.RightParenthesis, LexicalMode.Function); // )
 
-            if (name.Text.Equals("url", StringComparison.Ordinal))
+            if (name.Text is "url")
             {
                 return new CssUrl(name, args) {
                     Trailing = ReadTrivia()

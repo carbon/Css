@@ -67,7 +67,7 @@ namespace Carbon.Css
 
         public CssValue Divide(CssValue other)
         {
-            if (other.Kind == NodeKind.Percentage || other.Kind == NodeKind.Number)
+            if (other.Kind is NodeKind.Percentage or NodeKind.Number)
             {
                 return new CssUnitValue(Value / (((CssUnitValue)other).Value), Unit);
             }

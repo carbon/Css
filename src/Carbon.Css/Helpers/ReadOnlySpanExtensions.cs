@@ -33,7 +33,7 @@ namespace Carbon.Css.Helpers
                 {
                     isFunction = true;
                 }
-                else if (current == ' ' || current == ',')
+                else if (current is ' ' or ',')
                 {
                     break;
                 }
