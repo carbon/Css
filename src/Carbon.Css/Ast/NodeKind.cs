@@ -1,5 +1,8 @@
-﻿namespace Carbon.Css
+﻿using System.Text.Json.Serialization;
+
+namespace Carbon.Css
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum NodeKind
     {
         Unknown = 0,

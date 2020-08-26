@@ -1,5 +1,8 @@
-﻿namespace Carbon.Css
+﻿using System.Text.Json.Serialization;
+
+namespace Carbon.Css
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum CssUnitType
     {
         None = 0, // Number | Percentage

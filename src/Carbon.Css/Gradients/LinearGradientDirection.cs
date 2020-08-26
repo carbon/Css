@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Carbon.Css.Gradients
 {
     using static LinearGradientDirection;
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum LinearGradientDirection
     {
         None       = 0,

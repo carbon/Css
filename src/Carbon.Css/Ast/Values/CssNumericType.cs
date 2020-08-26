@@ -1,6 +1,9 @@
-﻿namespace Carbon.Css.Ast.Values
+﻿using System.Text.Json.Serialization;
+
+namespace Carbon.Css.Ast.Values
 {
-    public enum CssNumericType : byte
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum CssNumericType
     {
         Length = 1,
         Angle = 2,
