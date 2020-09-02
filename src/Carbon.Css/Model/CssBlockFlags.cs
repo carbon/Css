@@ -1,5 +1,8 @@
-﻿namespace Carbon.Css
+﻿using System;
+
+namespace Carbon.Css
 {
+    [Flags]
     public enum CssBlockFlags
     {
         HasIncludes = 1 << 0,
