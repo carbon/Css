@@ -49,7 +49,7 @@ namespace Carbon.Css
             {
                 point = text[i];
 
-                if (point == ' ' || point == ',')
+                if (point is ' ' or ',')
                 {
                     value = null;
                     return false;

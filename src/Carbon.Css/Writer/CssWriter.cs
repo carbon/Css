@@ -241,7 +241,7 @@ namespace Carbon.Css
             }
         }
 
-        public bool ToBoolean(object value) => (value is CssBoolean b) ? b.Value : false;
+        public bool ToBoolean(object value) => value is CssBoolean b && b.Value;
 
         public CssValue EvalulateExpression(CssValue expression)
         {
@@ -494,7 +494,7 @@ namespace Carbon.Css
                 return;
             }
 
-            if (function.Name.Equals("calc", StringComparison.Ordinal))
+            if (function.Name is "calc")
             {
                 skipMath = true;
             }
@@ -662,7 +662,7 @@ namespace Carbon.Css
 
                     bool isLast = (childIndex + 1) == selector.Count;
                     
-                    if ((item.Kind == NodeKind.Sequence || item.Trailing != null) && !isLast)
+                    if ((item.Kind == NodeKind.Sequence || item.Trailing is not null) && !isLast)
                     {
                         writer.Write(' ');
                     }
@@ -703,7 +703,7 @@ namespace Carbon.Css
                 WriteValue(item);
                 
                 // Skip trailing trivia
-                if ((item.Kind == NodeKind.Sequence || item.Trailing != null) && (i + 1) != value.Count)
+                if ((item.Kind == NodeKind.Sequence || item.Trailing is not null) && (i + 1) != value.Count)
                 {
                     writer.Write(' ');
                 }
