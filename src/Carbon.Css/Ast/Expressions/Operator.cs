@@ -12,7 +12,7 @@
         Or		  = 31,	// ||
         
         // Equality
-        Eq	  = 40,	// ==
+        Eq	      = 40,	// ==
         NotEquals = 41,	// !=      (<>)
         
         // Relational

@@ -2,8 +2,8 @@
 {
     public sealed class CssBoolean : CssValue
     {
-        public static readonly CssBoolean True = new CssBoolean(true);
-        public static readonly CssBoolean False = new CssBoolean(false);
+        public static readonly CssBoolean True  = new (true);
+        public static readonly CssBoolean False = new (false);
 
         public CssBoolean(bool value)
             : base(NodeKind.Boolean)

@@ -8,11 +8,11 @@
             Format = format;
         }
 
-        public string Url { get; }
+        public readonly string Url { get; }
 
-        public string Format { get; }
+        public readonly string Format { get; }
 
-        public override string ToString() => $"url('{Url}') format('{Format}')";
+        public readonly override string ToString() => $"url('{Url}') format('{Format}')";
     }
 }
 
