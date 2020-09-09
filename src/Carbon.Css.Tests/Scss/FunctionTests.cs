@@ -17,8 +17,8 @@ div { color: darken($red, 10%); }
 div { color: lighten($red, 0.2); }");
 
 
-            Assert.Equal(@"div { color: #cc0000; }
-div { color: #ff6666; }", sheet.ToString());
+            Assert.Equal(@"div { color: #c00; }
+div { color: #f66; }", sheet.ToString());
         }
 
         [Fact]
@@ -40,8 +40,8 @@ div {
 ");
 
             Assert.Equal(@"div {
-  color: #cc0000;
-  color: #ff6666;
+  color: #c00;
+  color: #f66;
 }", sheet.ToString());
         }
 
@@ -68,16 +68,14 @@ div {
 
 
             Assert.Equal(@"div {
-  color: #cc0000;
-  color: #ff6666;
+  color: #c00;
+  color: #f66;
 }
 div div {
   color: #a11721;
-  color: #cccccc;
+  color: #ccc;
 }", sheet.ToString());
         }
-
-
 
         [Fact]
         public void Test99()
@@ -123,9 +121,6 @@ div .placeholderText {
         public void Test53()
         {
             var ss = StyleSheet.FromFile(TestHelper.GetTestFile("test53.css"));
-
-           // throw new Exception(ss.ToString());
-
 
             Assert.Equal(
 @".block ::-webkit-input-placeholder {
