@@ -6,12 +6,75 @@ namespace Carbon.Css.Tests
     public class MediaTests
     {
         [Fact]
-        public void RgbaTest()
+        public void Basic()
         {
-            var sheet = StyleSheet.Parse("div { color: rgba(100, 100, 100, 0.5); }");
+            var sheet = StyleSheet.Parse(@"
 
-            Assert.Equal("div { color: rgba(100, 100, 100, 0.5); }", sheet.ToString());
+@media (min-width: 700px) { 
+	div { 
+		width: 100px;
+	}
+}
+");
+            Assert.Single(sheet.Children);
+
+            var mediaRule = (MediaRule)sheet.Children[0];
+
+
+            Assert.Equal("(min-width: 700px)", mediaRule.Queries.ToString());
+
+
+            var rule = (StyleRule)mediaRule.Children[0];
+
+            Assert.Equal("100px", rule.GetDeclaration("width").Value.ToString());
         }
+
+
+        [Fact]
+        public void Nested()
+        {
+            var sheet = StyleSheet.Parse(@"
+
+@media (min-width: 700px) { 
+	div { 
+		width: 100px;
+             
+        span { width: 50px; }
+	}
+}
+");
+            Assert.Single(sheet.Children);
+
+
+            Assert.Equal(@"@media (min-width: 700px) {
+  div { width: 100px; }
+  div span { width: 50px; }
+}", sheet.ToString());
+
+        }
+
+        // [Fact]
+        public void Nested_2()
+        {
+            var sheet = StyleSheet.Parse(@"
+
+	div { 
+        @media (min-width: 700px) { 
+            span { width: 50px; }
+        }
+	}
+
+");
+            Assert.Single(sheet.Children);
+
+
+            Assert.Equal(@"@media (min-width: 700px) {
+  div { width: 100px; }
+  div span { width: 50px; }
+}", sheet.ToString());
+
+        }
+
 
         [Fact]
         public void MediaMixin1()

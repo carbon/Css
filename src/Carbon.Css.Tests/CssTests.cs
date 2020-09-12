@@ -1,13 +1,32 @@
 ﻿using System.IO;
+using System.Text;
 
 using Xunit;
 
+using Carbon.Css.Parser;
+
 namespace Carbon.Css.Tests
 {
-    using Parser;
-
     public class CssTests
     {
+        [Fact]
+        public void EnsureFlushBehavior()
+        {
+            var output = new MemoryStream();
+
+            var sheet = StyleSheet.Parse("body { color: red; }", new CssContext());
+
+            // StreamWriter.Dispose() closes the underlying stream. DO NOT DISPOSE
+
+            var writer = new StreamWriter(output, Encoding.UTF8);
+
+            sheet.WriteTo(writer);
+
+            writer.Flush();
+
+            Assert.Equal(23, output.Length);
+        }
+
         [Fact]
         public void Test1()
         {
@@ -46,41 +65,44 @@ namespace Carbon.Css.Tests
     border: 1px solid #adb5bd;
     page-break-inside: avoid;
   }
+
   thead {
     display: table-header-group;
   }
+
   tr,
   img {
     page-break-inside: avoid;
   }
+
   p,
   h2,
   h3 {
     orphans: 3;
     widows: 3;
   }
+
   h2,
   h3 {
     page-break-after: avoid;
   }
+
   @page {
     size: a3;
   }
+
   body {
     min-width: 992px !important;
   }
+
   .container {
     min-width: 992px !important;
   }
-  .navbar {
-    display: none;
-  }
+
   .badge {
     border: 1px solid #000;
   }
-  .table {
-    border-collapse: collapse !important;
-  }
+
   .table td,
   .table th {
     background-color: #fff !important;
@@ -93,11 +115,9 @@ namespace Carbon.Css.Tests
 
             var sheet = StyleSheet.Parse(text);
 
-
             var mediaRule = sheet.Children[0] as MediaRule;
 
-            Assert.Equal(17, mediaRule.Children.Count);
-
+            Assert.Equal(16, mediaRule.Children.Count);
 
         }
 
@@ -207,9 +227,11 @@ namespace Carbon.Css.Tests
             // https://github.com/carbon/Css/issues/1
             var text = File.ReadAllText(TestHelper.GetTestFile("bootstrap.css").FullName);
 
+
             var sheet = StyleSheet.Parse(text);
 
             Assert.Equal(1088, sheet.Children.Count);
+
         }
 
         [Fact]
@@ -230,15 +252,7 @@ namespace Carbon.Css.Tests
 
             var fontText = File.ReadAllText(TestHelper.GetTestFile("fonts.css").FullName);
 
-            var ss2 = StyleSheet.Parse(fontText, ss.Context);
-        }
-
-        [Fact]
-        public void ParseValues()
-        {
-            var value = CssValue.Parse("14px");
-
-            Assert.Equal("14px", value.ToString());
+            _ = StyleSheet.Parse(fontText, ss.Context);
         }
 
         [Fact]
@@ -300,23 +314,6 @@ namespace Carbon.Css.Tests
             Assert.Equal(LexicalMode.Selector, mode.Current);
         }
 
-        [Fact]
-        public void ParseSelector()
-        {
-            var sheet = StyleSheet.Parse("div > h1 { width: 100px; }");
-
-            var style = sheet.Children[0] as StyleRule;
-
-            Assert.Equal(1, sheet.Children.Count);
-            Assert.Equal(RuleType.Style, style.Type);
-            Assert.Equal("div > h1", style.Selector.ToString());
-            Assert.Equal(1, style.Children.Count);
-
-            var x = (CssDeclaration)style[0];
-            Assert.Equal("width", x.Name.ToString());
-            Assert.Equal("100px", x.Value.ToString());
-            Assert.Equal("div > h1 { width: 100px; }", sheet.ToString());
-        }
 
         [Fact]
         public void ZoomOut()
@@ -394,7 +391,7 @@ div { transition: width 1s }"
 
             var rule = sheet.Children[0] as ImportRule;
 
-            Assert.Equal(1, sheet.Children.Count);
+            Assert.Single(sheet.Children);
             Assert.Equal(RuleType.Import, rule.Type);
             Assert.Equal("@import url('core.css');", rule.ToString());
             Assert.Equal("url('core.css')", rule.Url.ToString());
@@ -409,7 +406,7 @@ div { transition: width 1s }"
 
             var style = sheet.Children[0] as StyleRule;
 
-            Assert.Equal(1, sheet.Children.Count);
+            Assert.Single(sheet.Children);
             Assert.Equal(RuleType.Style, style.Type);
             Assert.Equal("#monster", style.Selector.ToString());
             Assert.Equal(2, style.Children.Count);
@@ -443,6 +440,26 @@ div { transition: width 1s }"
 }", StyleSheet.Parse(styles).ToString());
 
         }
+
+
+        [Fact]
+        public void GitIssue2()
+        {
+            var styles = @"
+
+.someClass { font-size: 1.2em; }
+.someClass { font-size: 1.2rem; }
+
+".Trim();
+
+            Assert.Equal(@"
+.someClass { font-size: 1.2em; }
+.someClass { font-size: 1.2rem; }
+".Trim(), StyleSheet.Parse(styles).ToString());
+
+        }
+
+
 
 
         [Fact]
@@ -578,42 +595,6 @@ div { transition: width 1s }"
     src: url('../fonts/ColfaxWebRegularSub.eot?#iefix') format('embedded-opentype'),
          url('../fonts/ColfaxWebRegularSub.woff') format('woff');
     font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Colfax-Regular-Italic';
-    src: url('../fonts/ColfaxWebRegularItalicSub.eot');
-    src: url('../fonts/ColfaxWebRegularItalicSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebRegularItalicSub.woff') format('woff');
-    font-weight: 300;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Colfax-Medium';
-    src: url('../fonts/ColfaxWebMediumSub.eot');
-    src: url('../fonts/ColfaxWebMediumSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebMediumSub.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Colfax-Bold-Italic';
-    src: url('../fonts/ColfaxWebBoldItalicSub.eot');
-    src: url('../fonts/ColfaxWebBoldItalicSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebBoldItalicSub.woff') format('woff');
-    font-weight: 500;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Colfax-Black';
-    src: url('../fonts/ColfaxWebBlackSub.eot');
-    src: url('../fonts/ColfaxWebBlackSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebBlackSub.woff') format('woff');
-    font-weight: 600;
     font-style: normal;
 }");
         }
