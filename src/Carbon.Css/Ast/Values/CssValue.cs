@@ -121,8 +121,7 @@ namespace Carbon.Css
             switch (operation)
             {
                 case BinaryOperator.Divide: return false;
-                case BinaryOperator.Add:
-                case BinaryOperator.Subtract:
+                case BinaryOperator.Add or BinaryOperator.Subtract:
                     return left.Kind == right.Kind;
                 case BinaryOperator.Multiply:
                     return

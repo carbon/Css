@@ -265,16 +265,7 @@ namespace Carbon.Css
 
         private static bool IsCssFunction(string name)
         {
-            switch (name)
-            {
-                case "attr":
-                case "calc":
-                case "cubic-bezier":
-                case "var":
-                    return true;
-            }
-
-            return false;
+            return name is "attr" or "calc" or "cubic-bezier" or "var";
         }
     
         public CssValue EvalBinaryExpression(BinaryExpression expression)
