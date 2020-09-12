@@ -47,7 +47,7 @@ namespace Carbon.Css.Gradients.Tests
         public void ThrowsOnInvalidInput()
         {
             Assert.Throws<IndexOutOfRangeException>(() => LinearGradient.Parse(",,,,,,"));
-            Assert.Throws<Exception>(() => LinearGradient.Parse("linear-gradientt(#000)"));
+            Assert.Throws<FormatException>(() => LinearGradient.Parse("linear-gradientt(#000)"));
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Carbon.Css.Gradients.Tests
             Assert.Equal("ffa500ff", result.Stops[1].Color.ToHex8());
             Assert.Equal("00ffffff", result.Stops[2].Color.ToHex8());
 
-            Assert.Equal("linear-gradient(135deg, #ffa500, #ffa500 60%, #00ffff)", result.ToString());
+            Assert.Equal("linear-gradient(135deg, #ffa500, #ffa500 60%, #0ff)", result.ToString());
         }
 
         [Fact]
