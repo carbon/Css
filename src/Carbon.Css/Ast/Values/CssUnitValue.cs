@@ -28,6 +28,11 @@ namespace Carbon.Css
 
 		public override CssNode CloneNode() => new CssUnitValue(Value, Unit);
 
+        public new static CssUnitValue Parse(string text)
+        {
+            return Parse(text.AsSpan());
+        }
+        
         public static CssUnitValue Parse(ReadOnlySpan<char> text)
         {
             double value = text.ReadNumber(out int read);
@@ -37,7 +42,7 @@ namespace Carbon.Css
                 return Number(value);
             }
 
-            return new CssUnitValue(value, text.Slice(read).Trim().ToString());
+            return new CssUnitValue(value, CssUnitInfo.Get(text.Slice(read).Trim()));
         }
 
 		#region Operators

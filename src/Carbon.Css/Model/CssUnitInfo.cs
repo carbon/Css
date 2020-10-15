@@ -5,7 +5,7 @@ namespace Carbon.Css
 {
     public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
     {
-        public static readonly CssUnitInfo Number = new CssUnitInfo(string.Empty, NodeKind.Number);
+        public static readonly CssUnitInfo Number = new (string.Empty, NodeKind.Number);
 
         // <length> (Relative) | em, ex, cm, ch, rem, vh, vw, vmin, vmax	                                  | relative to
         public static readonly CssUnitInfo Em   = new (CssUnitNames.Em,   NodeKind.Length, CssUnitFlags.Relative); // | font size of the element
@@ -16,8 +16,8 @@ namespace Carbon.Css
         public static readonly CssUnitInfo Rem  = new (CssUnitNames.Rem,  NodeKind.Length, CssUnitFlags.Relative); // | font size of the root element
         public static readonly CssUnitInfo Lh   = new ("lh",              NodeKind.Length, CssUnitFlags.Relative); // | line height of the element
         public static readonly CssUnitInfo Rlh  = new ("rlh",             NodeKind.Length, CssUnitFlags.Relative); // | line height of the root element
-        public static readonly CssUnitInfo Vw   = new ("vw",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s width
-        public static readonly CssUnitInfo Vh   = new ("vh",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s height
+        public static readonly CssUnitInfo Vw   = new (CssUnitNames.Vw,   NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s width
+        public static readonly CssUnitInfo Vh   = new (CssUnitNames.Vh,   NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s height
         public static readonly CssUnitInfo Vi   = new ("vi",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s size in the root element’s inline axis
         public static readonly CssUnitInfo Vb   = new ("vb",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s size in the root element’s block axis
         public static readonly CssUnitInfo Vmin = new (CssUnitNames.Vmin, NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s smaller dimension
@@ -55,7 +55,6 @@ namespace Carbon.Css
         public static readonly CssUnitInfo Dppx = new ("dppx",         NodeKind.Resolution);
         public static readonly CssUnitInfo X    = new (CssUnitNames.X, NodeKind.Resolution);
 
-
         public static readonly Dictionary<string, CssUnitInfo> items = new Dictionary<string, CssUnitInfo> {
             // <length> : relative
             { CssUnitNames.Em   , Em },
@@ -66,8 +65,8 @@ namespace Carbon.Css
             { CssUnitNames.Rem  , Rem },
             { "lh"              , Lh },
             { "rlh"             , Rlh },
-            { "vw"              , Vw },
-            { "vh"              , Vh },
+            { CssUnitNames.Vw   , Vw },
+            { CssUnitNames.Vh   , Vh },
             { "vi"              , Vi },
             { "vb"              , Vb },
             { CssUnitNames.Vmin , Vmin },
@@ -118,7 +117,32 @@ namespace Carbon.Css
         public NodeKind Kind { get; }
 
         public CssUnitFlags Flags { get; }
-        
+
+        public static CssUnitInfo Get(ReadOnlySpan<char> name)
+        {
+            if (name.Length == 1)
+            {
+                switch (name[0])
+                {
+                    case '%': return Percentage;
+                    case 's': return S;
+                    case 'x': return X;
+                }
+            }
+            else if (name.Length == 2)
+            {
+                switch ((name[0], name[1]))
+                {
+                    case ('p', 'x'): return Px;
+                    case ('e', 'm'): return Em;
+                    case ('v', 'h'): return Vh;
+                    case ('v', 'w'): return Vw;
+                }
+            }
+
+            return Get(name.ToString());
+        }
+
         public static CssUnitInfo Get(string name)
         {
             if (ReferenceEquals(CssUnitNames.Px, name))
@@ -147,10 +171,7 @@ namespace Carbon.Css
             return ReferenceEquals(this, other) || Name.Equals(other.Name, StringComparison.Ordinal);
         }
 
-        public override int GetHashCode()
-        {
-            return Name.GetHashCode();
-        }
+        public override int GetHashCode() => Name.GetHashCode();
     }   
 }
 
