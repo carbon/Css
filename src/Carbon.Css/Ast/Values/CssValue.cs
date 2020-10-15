@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 
+using Carbon.Css.Parser;
+
 namespace Carbon.Css
 {
-    using Parser;
-
     public abstract class CssValue : CssNode
     {
         public CssValue(NodeKind kind)
             : base(kind)
         { }
 
-        public static CssUnitValue Number(double value) => new CssUnitValue(value, CssUnitInfo.Number);
+        public static CssUnitValue Number(double value)
+        {
+            return new CssUnitValue(value, CssUnitInfo.Number);
+        }
 
         public static CssValue Parse(string text)
         {
@@ -22,9 +26,9 @@ namespace Carbon.Css
                 throw new ArgumentException("Must not be empty", nameof(text));
             }
 
-            if (char.IsDigit(text[0]) && TryParseNumberOrMeasurement(text, out var value))
+            if (char.IsDigit(text[0]) && TryParseNumberOrMeasurement(text, out CssUnitValue? value))
             {
-                return value!;
+                return value;
             }
 
             var reader = new SourceReader(new StringReader(text));
@@ -39,7 +43,7 @@ namespace Carbon.Css
         // 60px
         // 6.5em
 
-        private static bool TryParseNumberOrMeasurement(string text, out CssValue? value)
+        private static bool TryParseNumberOrMeasurement(string text, [NotNullWhen(true)] out CssUnitValue? value)
         {
             int unitIndex = -1;
 
@@ -64,14 +68,9 @@ namespace Carbon.Css
                 }
             }
 
-            if (unitIndex > 0)
-            {
-                value = new CssUnitValue(ParseDouble(text.AsSpan(0, unitIndex)), CssUnitNames.Get(text.AsSpan(unitIndex)));
-            }
-            else
-            {
-                value = CssValue.Number(double.Parse(text, CultureInfo.InvariantCulture));
-            }
+            value = (unitIndex > 0)
+                ? new CssUnitValue(ParseDouble(text.AsSpan(0, unitIndex)), CssUnitNames.Get(text.AsSpan(unitIndex)))
+                : new CssUnitValue(double.Parse(text, CultureInfo.InvariantCulture), CssUnitInfo.Number);
 
             return true;
         }
@@ -84,7 +83,6 @@ namespace Carbon.Css
             return double.Parse(text, provider: CultureInfo.InvariantCulture);
 #endif
         }
-
 
         public static CssValue FromComponents(IEnumerable<CssValue> components)
         {
