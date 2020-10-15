@@ -1,9 +1,12 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
+using System.Text.Json.Serialization;
+
+using Carbon.Css.Json;
 
 namespace Carbon.Css
 {
-    public class Thickness // of the margin, border, or padding
+    [JsonConverter(typeof(ThinknessJsonConverter))]
+    public sealed class Thickness // of the margin, border, or padding
     {
         public Thickness(CssUnitValue top, CssUnitValue left, CssUnitValue bottom, CssUnitValue right)
         {
@@ -34,7 +37,7 @@ namespace Carbon.Css
 
             for (int i = 0; i < parts.Length; i++)
             {
-                var part = CssUnitValue.Parse(parts[i].AsSpan());
+                var part = CssUnitValue.Parse(parts[i]);
 
                 if (parts.Length == 1)
                 {
