@@ -63,6 +63,18 @@
 
         #endregion
 
+        #region Flexbox
+
+        // Flexbox (Level 1)
+        public static readonly CssModule Flexbox1 = new CssModule(
+            type     : CssModuleType.Flexbox,
+            level    : 1,
+            prefixed : new CompatibilityTable(chrome: 21),
+            standard : new CompatibilityTable(chrome: 29, firefox: 28, safari: 9)
+        );
+
+        #endregion
+
         #region Fonts
 
         public static readonly CssModule Fonts3 = new CssModule(CssModuleType.Fonts, 3);
@@ -83,6 +95,8 @@
         #region Ruby
 
         public static CssModule Ruby(float level) => new CssModule(CssModuleType.Ruby, level);
+
+        public static readonly CssModule Ruby3 = new CssModule(CssModuleType.Ruby, 3);
 
         #endregion
 
@@ -115,6 +129,7 @@
         // TODO: Limit value patch scope to transition
 
         #endregion
+
 
         public static CssModule UI(float level) => new CssModule(CssModuleType.UI, level);
     }

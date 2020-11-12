@@ -8,6 +8,7 @@
         Core,
         Color,
         Columns,
+        Flexbox,                // https://www.w3.org/TR/css-flexbox-1/
         Fonts,                  // http://dev.w3.org/csswg/css3-fonts/
         Masking,                // http://dev.w3.org/fxtf/masking/
         Ruby,
