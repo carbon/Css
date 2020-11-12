@@ -10,7 +10,7 @@ namespace Carbon.Css
 	{
 		// http://lesscss.org/functions/#color-operations-saturate
 
-		private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new Dictionary<string, Func<CssValue[], CssValue>>(10) {
+		private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new (10) {
 			["darken"]		= Darken,
 			["lighten"]		= Lighten,
 			["saturate"]	= Saturate,
@@ -22,25 +22,29 @@ namespace Carbon.Css
             ["if"]			= If
         };
 
-        // red(color)
-        // green(color)
-        // blue(blue)
-        // hsl
-        // hsla
-        // hue
+		// red(color)
+		// green(color)
+		// blue(blue)
+		// hsl
+		// hsla
+		// hue
 
-        public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
-		    => dic.TryGetValue(name, out func);
-		
+		public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
+		{
+			return dic.TryGetValue(name, out func);
+		}
+
 		// if($condition, $if-true, $if-false)
-		public static CssValue If(CssValue[] args) => ToBoolean(args[0]) ? args[1] : args[2];
-
+		public static CssValue If(CssValue[] args)
+		{
+			return ToBoolean(args[0]) ? args[1] : args[2];
+		}
 
 		public static CssValue Unquote(CssValue[] args)
 		{
-			var value = args[0].ToString();
+			string value = args[0].ToString();
 
-			return new CssString(value.ToString().Trim('"'));
+			return new CssString(value.Trim('"'));
 		}
 
 		public static CssValue Mix(CssValue[] args)
@@ -119,11 +123,16 @@ namespace Carbon.Css
 			return text.Equals("true", StringComparison.OrdinalIgnoreCase);
         }
 
-		private static Rgba32 GetColor(CssValue value) => Rgba32.Parse(value.ToString());
+		private static Rgba32 GetColor(CssValue value)
+		{
+			return Rgba32.Parse(value.ToString());
+		}
 
         private static double ParseDouble(string text)
         {
-            if (text[text.Length - 1] == 'g' && text[text.Length - 2] == 'e' && text[text.Length - 3] == 'g')
+            if (text[text.Length - 1] == 'd' &&
+				text[text.Length - 2] == 'e' && 
+				text[text.Length - 3] == 'g')
             {
 				text = text.Substring(0, text.Length - 3);
             }

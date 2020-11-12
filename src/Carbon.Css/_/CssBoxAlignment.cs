@@ -3,7 +3,7 @@
 namespace Carbon.Css
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum CssBoxAlignment : byte
+    public enum CssBoxAlignment
     {
         Unknown       = 0,
         Start         = 1, // flush left or top     

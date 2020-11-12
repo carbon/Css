@@ -42,21 +42,26 @@ namespace Carbon.Css
 
         public override CssNode CloneNode() => new CssDeclaration(Info, (CssValue)Value.CloneNode(), Priority);
 
-        public override string ToString()
+        public void WriteTo(StringBuilder sb)
         {
-            // color: red !important
-
-            var sb = StringBuilderCache.Aquire();
-
             sb.Append(Info.Name);
 
             sb.Append(": ");
             sb.Append(Value.ToString());
 
-            if (Priority != null)
+            if (Priority is not null)
             {
                 sb.Append(" !").Append(Priority);
             }
+        }
+
+        public override string ToString()
+        {
+            // color: red !important
+
+            var sb = StringBuilderCache.Aquire();
+            
+            WriteTo(sb);
 
             return StringBuilderCache.ExtractAndRelease(sb);
         }

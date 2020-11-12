@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Carbon.Css
 {
@@ -11,16 +12,16 @@ namespace Carbon.Css
             Parent = parent;
         }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public NodeKind Kind { get; }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public CssNode? Parent { get; set; }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         internal Trivia? Leading { get; set; }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public Trivia? Trailing { get; set; }
 
         public virtual CssNode CloneNode()

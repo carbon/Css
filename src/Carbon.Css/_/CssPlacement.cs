@@ -36,7 +36,7 @@ namespace Carbon.Css
 
             if (spaceIndex == -1)
             {
-                var value = CssBoxAlignmentExtensions.Parse(text);
+                CssBoxAlignment value = CssBoxAlignmentExtensions.Parse(text);
 
                 return new CssPlacement(value, value);
             }
@@ -55,7 +55,8 @@ namespace Carbon.Css
 
         public readonly bool Equals(CssPlacement other)
         {
-            return Justify.Equals(other.Justify) && Align.Equals(other.Align);
+            return Justify == other.Justify
+                && Align == other.Align;
         }
 
         public readonly override string ToString()

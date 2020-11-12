@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Carbon.Css
 {
-    public readonly struct CssGap
+    public readonly struct CssGap : IEquatable<CssGap>
     {
         public CssGap(double value)
             : this(new CssUnitValue(value, CssUnitInfo.Px)) { }
@@ -55,6 +55,12 @@ namespace Carbon.Css
             }
 
             return new CssGap(CssUnitValue.Parse(text));
+        }
+
+        public bool Equals(CssGap other)
+        {
+            return X.Equals(other.X)
+                && Y.Equals(other.Y);
         }
     }
 }

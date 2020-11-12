@@ -445,9 +445,7 @@ namespace Carbon.Css.Parser
             // :link
             // :not
 
-            return new CssString(value) {
-                Trailing = ReadTrivia()
-            };
+            return new CssString(value, trailing: ReadTrivia());
         }
 
         public CssFunction ReadFunctionCall(CssToken name)

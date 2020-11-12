@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+
 using Carbon.Css.Helpers;
 
 namespace Carbon.Css.Gradients
 {
     public readonly struct LinearGradient : IGradient
     {
-        public LinearGradient(LinearGradientDirection direction, double? angle, ColorStop[] colorStops)
+        public LinearGradient(
+            LinearGradientDirection direction, 
+            double? angle, 
+            ColorStop[] colorStops)
         {
             Direction = direction;
             Angle = angle;
@@ -28,9 +32,9 @@ namespace Carbon.Css.Gradients
 
             sb.Append("linear-gradient(");
 
-            if (Angle != null)
+            if (Angle.HasValue)
             {
-                sb.Append(Angle.Value);
+                sb.Append(Angle.Value.ToString(CultureInfo.InvariantCulture));
                 sb.Append("deg");
             }
             else if (Direction != default)

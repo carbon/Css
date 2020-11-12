@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Text.Json.Serialization;
 
 using Carbon.Css.Json;
@@ -10,10 +11,10 @@ namespace Carbon.Css
     {
         public Thickness(CssUnitValue top, CssUnitValue left, CssUnitValue bottom, CssUnitValue right)
         {
-            Top = top;
-            Left = left;
-            Bottom = bottom;
-            Right = right;
+            Top = top ?? throw new ArgumentNullException(nameof(top));
+            Left = left ?? throw new ArgumentNullException(nameof(top));
+            Bottom = bottom ?? throw new ArgumentNullException(nameof(top));
+            Right = right ?? throw new ArgumentNullException(nameof(top));
         }
 
         public CssUnitValue Top { get; }
@@ -89,16 +90,23 @@ namespace Carbon.Css
 
         public override string ToString()
         {
-            if (Left == Top && Bottom == Top && Right == Top)
+            if (Left.Equals(Top) && Bottom.Equals(Top) && Right.Equals(Top))
             {
                 return Top.ToString();
             }
 
-            var sb = StringBuilderCache.Aquire()
-                .Append(Top?.ToString() ?? "0").Append(' ')
-                .Append(Left?.ToString() ?? "0").Append(' ')
-                .Append(Bottom?.ToString() ?? "0").Append(' ')
-                .Append(Right?.ToString() ?? "0");
+            var sb = StringBuilderCache.Aquire();
+
+            Top.WriteTo(sb);
+            sb.Append(' ');
+
+            Left.WriteTo(sb);
+            sb.Append(' ');
+
+            Bottom.WriteTo(sb);
+            sb.Append(' ');
+
+            Right.WriteTo(sb);    
 
             return StringBuilderCache.ExtractAndRelease(sb);
         }

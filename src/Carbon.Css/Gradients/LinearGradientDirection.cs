@@ -29,9 +29,14 @@ namespace Carbon.Css.Gradients
         {
             read = 0;
 
-            // NOTE: The legacy prefix did not include too
+            if (text.Length < 3)
+            {
+                result = default;
 
-            if (text.StartsWith("to ".AsSpan()))
+                return false;
+            }
+
+            if (text[0] == 't' && text[1] == 'o'  && text[2] == ' ') // to 
             {
                 read += 3;
 

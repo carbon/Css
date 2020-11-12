@@ -6,17 +6,17 @@ namespace Carbon.Css
 
     public static class CssCursor
     {
-        private static readonly CssCompatibility grabCursor = new CssCompatibility(
+        private static readonly CssCompatibility grabCursor = new (
             prefixed: new CompatibilityTable(firefox: 1.5f, safari: 4f),
             standard: new CompatibilityTable(chrome: 68, firefox: 27, ie: 15, safari: 11)
         );
 
-        private static readonly CssCompatibility zoomCursor = new CssCompatibility(
+        private static readonly CssCompatibility zoomCursor = new (
             prefixed: new CompatibilityTable(safari: 3),
             standard: new CompatibilityTable(chrome: 37, ie: 12, firefox: 24, safari: 9)
         );
 
-        private static Dictionary<string, CssCompatibility> table = new Dictionary<string, CssCompatibility>
+        private static readonly Dictionary<string, CssCompatibility> table = new ()
         {
             ["auto"] = CssCompatibility.All,
             ["alias"] = CssCompatibility.All,

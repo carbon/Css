@@ -15,7 +15,7 @@
 
         public override CssNode CloneNode() => new CssBoolean(Value);
 
-        public override string ToString() => Value ? "true" : " false";
+        public override string ToString() => Value ? "true" : "false";
 
         internal static CssBoolean Get(bool value)
         {

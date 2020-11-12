@@ -14,7 +14,7 @@ namespace Carbon.Css
         public static readonly CssUnitInfo Ch   = new ("ch",              NodeKind.Length, CssUnitFlags.Relative); // | average character advance of a narrow glyph in the element’s font, as represented by the “0” (ZERO, U+0030) glyph
         public static readonly CssUnitInfo Ic   = new ("ic",              NodeKind.Length, CssUnitFlags.Relative); // | average character advance of a fullwidth glyph in the element’s font, as represented by the “水” (CJK water ideograph, U+6C34) glyph
         public static readonly CssUnitInfo Rem  = new (CssUnitNames.Rem,  NodeKind.Length, CssUnitFlags.Relative); // | font size of the root element
-        public static readonly CssUnitInfo Lh   = new ("lh",              NodeKind.Length, CssUnitFlags.Relative); // | line height of the element
+        public static readonly CssUnitInfo Lh   = new (CssUnitNames.Lh,   NodeKind.Length, CssUnitFlags.Relative); // | line height of the element
         public static readonly CssUnitInfo Rlh  = new ("rlh",             NodeKind.Length, CssUnitFlags.Relative); // | line height of the root element
         public static readonly CssUnitInfo Vw   = new (CssUnitNames.Vw,   NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s width
         public static readonly CssUnitInfo Vh   = new (CssUnitNames.Vh,   NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s height
@@ -46,8 +46,8 @@ namespace Carbon.Css
         public static readonly CssUnitInfo Ms   = new (CssUnitNames.Ms, NodeKind.Time);
 
         // <frequency> | Hz, kHz
-        public static readonly CssUnitInfo Hz   = new ("Hz",  NodeKind.Frequency);
-        public static readonly CssUnitInfo Khz  = new ("khz", NodeKind.Frequency);
+        public static readonly CssUnitInfo Hz   = new (CssUnitNames.Hz, NodeKind.Frequency);
+        public static readonly CssUnitInfo Khz  = new ("khz",           NodeKind.Frequency);
 
         // <resolution> | dpi, dpcm, dppx, x
         public static readonly CssUnitInfo Dpi  = new ("dpi",          NodeKind.Resolution);
@@ -55,7 +55,7 @@ namespace Carbon.Css
         public static readonly CssUnitInfo Dppx = new ("dppx",         NodeKind.Resolution);
         public static readonly CssUnitInfo X    = new (CssUnitNames.X, NodeKind.Resolution);
 
-        public static readonly Dictionary<string, CssUnitInfo> items = new Dictionary<string, CssUnitInfo> {
+        public static readonly Dictionary<string, CssUnitInfo> items = new () {
             // <length> : relative
             { CssUnitNames.Em   , Em },
             { "ex"              , Ex },
@@ -63,7 +63,7 @@ namespace Carbon.Css
             { "ch"              , Ch },
             { "ic"              , Ic },
             { CssUnitNames.Rem  , Rem },
-            { "lh"              , Lh },
+            { CssUnitNames.Lh   , Lh },
             { "rlh"             , Rlh },
             { CssUnitNames.Vw   , Vw },
             { CssUnitNames.Vh   , Vh },
@@ -82,7 +82,7 @@ namespace Carbon.Css
             { CssUnitNames.Px   , Px },
             
             // <percentage>
-            { "%" , Percentage },
+            { "%"               , Percentage },
 
             // <angle>
             { CssUnitNames.Deg  , Deg },
@@ -95,8 +95,8 @@ namespace Carbon.Css
             { CssUnitNames.Ms   , Ms },
 
             // <frequency>
-            { "Hz" , Hz },
-            { "kHz", Khz },
+            { CssUnitNames.Hz   , Hz },
+            { "kHz"             , Khz },
 
             // <resolution>
             { "dpi"             , Dpi },
