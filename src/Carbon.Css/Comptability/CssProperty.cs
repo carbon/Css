@@ -225,14 +225,19 @@ namespace Carbon.Css
         public static readonly CssProperty FitPosition = new ("fit-position");
 
         // Flex ---------------------------------------------------------------------------------------
-        public static readonly CssProperty FlexAlign    = new ("flex-align");
-        public static readonly CssProperty FlexFlow     = new ("flex-flow");
-        public static readonly CssProperty FlexLinePack = new ("flex-line-pack");
-        public static readonly CssProperty FlexOrder    = new ("flex-order");
-        public static readonly CssProperty FlexPack     = new ("flex-pack");
+        // https://www.w3.org/TR/css-flexbox-1/
 
-        public static readonly CssProperty Float        = new ("float", CssModule.Core1);
-        public static readonly CssProperty FloatOffset  = new ("float-offset");
+        public static readonly CssProperty Flex          = new ("flex",           CssModule.Flexbox1);
+        public static readonly CssProperty FlexBasis     = new ("flex-basis",     CssModule.Flexbox1);
+        public static readonly CssProperty FlexDirection = new ("flex-direction", CssModule.Flexbox1);
+        public static readonly CssProperty FlexFlow      = new ("flex-flow",      CssModule.Flexbox1);
+        public static readonly CssProperty FlexGrow      = new ("flex-grow",      CssModule.Flexbox1);
+        public static readonly CssProperty FlexShrink    = new ("flex-shrink",    CssModule.Flexbox1);
+        public static readonly CssProperty FlexWrap      = new ("flex-wrap",      CssModule.Flexbox1);
+
+
+        public static readonly CssProperty Float         = new ("float", CssModule.Core1);
+        public static readonly CssProperty FloatOffset   = new ("float-offset");
 
         // Fonts -------------------------------------------------------------------------------------------
         public static readonly CssProperty Font             = new ("font",           CssModule.Core1);
@@ -249,10 +254,19 @@ namespace Carbon.Css
             prefixed: new CompatibilityTable(ie: 10)
         );
 
-        public static readonly CssProperty GridColumns = new ("grid-columns", GridComptability);
-        public static readonly CssProperty GridRows    = new ("grid-rows", GridComptability);
+        public static readonly CssProperty Grid                = new ("grid");
+        public static readonly CssProperty GridAutoColumns     = new ("grid-auto-columns");
+        public static readonly CssProperty GridAutoFlow        = new ("grid-auto-flow");
+        public static readonly CssProperty GridAutoRows        = new ("grid-auto-rows");
+        public static readonly CssProperty GridTemplateAreas   = new ("grid-template-areas");
+        public static readonly CssProperty GridTemplateColumns = new ("grid-template-columns");
+        public static readonly CssProperty GridTemplateRows    = new ("grid-template-rows");
 
-        public static readonly CssProperty Height = new ("height", CssModule.Core1);
+        public static readonly CssProperty GridColumns         = new ("grid-columns", GridComptability);
+        public static readonly CssProperty GridRows            = new ("grid-rows", GridComptability);
+
+        // 
+        public static readonly CssProperty Height              = new ("height", CssModule.Core1);
 
         // Hyphens -------------------------------------------------------------------------------------
         public static readonly CssProperty HyphenateAfter     = new ("hyphenate-after");
@@ -275,8 +289,8 @@ namespace Carbon.Css
         public static readonly CssProperty LetterSpacing = new ("letter-spacing");
 
         // Lines
-        public static readonly CssProperty LineBreak = new ("line-break");
-        public static readonly CssProperty LineHeight = new ("line-height", CssModule.Core1);
+        public static readonly CssProperty LineBreak         = new ("line-break");
+        public static readonly CssProperty LineHeight        = new ("line-height", CssModule.Core1);
 
         // List Styles -------------------------------------------------------------------------------------------------------
         public static readonly CssProperty ListStyle         = new ("list-style", CssModule.Core1);
@@ -285,18 +299,18 @@ namespace Carbon.Css
         public static readonly CssProperty ListStyleType     = new ("list-style-type", CssModule.Core1);
 
         // Margins -----------------------------------------------------------------------------------------------------------
-        public static readonly CssProperty Margin       = new ("margin", CssModule.Core1);
-        public static readonly CssProperty MarginBottom = new ("margin-bottom", CssModule.Core1);
-        public static readonly CssProperty MarginLeft   = new ("margin-left", CssModule.Core1);
-        public static readonly CssProperty MarginRight  = new ("margin-right", CssModule.Core1);
-        public static readonly CssProperty MarginTop    = new ("margin-top", CssModule.Core1);
+        public static readonly CssProperty Margin            = new ("margin", CssModule.Core1);
+        public static readonly CssProperty MarginBottom      = new ("margin-bottom", CssModule.Core1);
+        public static readonly CssProperty MarginLeft        = new ("margin-left", CssModule.Core1);
+        public static readonly CssProperty MarginRight       = new ("margin-right", CssModule.Core1);
+        public static readonly CssProperty MarginTop         = new ("margin-top", CssModule.Core1);
 
         // Marquee -----------------------------------------------------------------------------------------
-        public static readonly CssProperty MarqueeDirection = new ("marquee-direction");
-        public static readonly CssProperty MarqueeLoop      = new ("marquee-loop");
-        public static readonly CssProperty MarqueePlayCount = new ("marquee-play-count");
-        public static readonly CssProperty MarqueeSpeed     = new ("marquee-speed");
-        public static readonly CssProperty MarqueeStyle     = new ("marquee-style");
+        public static readonly CssProperty MarqueeDirection  = new ("marquee-direction");
+        public static readonly CssProperty MarqueeLoop       = new ("marquee-loop");
+        public static readonly CssProperty MarqueePlayCount  = new ("marquee-play-count");
+        public static readonly CssProperty MarqueeSpeed      = new ("marquee-speed");
+        public static readonly CssProperty MarqueeStyle      = new ("marquee-style");
 
         // Masking -----------------------------------------------------------------------------------------
         public static readonly CssProperty Mask             = new ("mask",               CssModule.Masking_1);
@@ -325,6 +339,8 @@ namespace Carbon.Css
         // <= IE8 filter: alpha(opacity=xx)
         // IE8 introduced -ms-filter, which is synonymous with filter. Both are gone in IE10
         public static readonly CssProperty Opacity = new ("opacity", CssModule.Color3);
+
+        public static readonly CssProperty Order   = new ("order");
 
         public static readonly CssProperty Orphans = new ("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility(
             standard: new CompatibilityTable(ie: 8)
@@ -359,8 +375,8 @@ namespace Carbon.Css
         public static readonly CssProperty PageBreakInside = new ("page-break-inside");
 
         // Perspective
-        public static readonly CssProperty Perspective        = new ("perspective", CssModule.Transforms3);
-        public static readonly CssProperty PerspectiveOrigin  = new ("perspective-origin", CssModule.Transforms3);
+        public static readonly CssProperty Perspective        = new ("perspective",          CssModule.Transforms3);
+        public static readonly CssProperty PerspectiveOrigin  = new ("perspective-origin",   CssModule.Transforms3);
         public static readonly CssProperty PerspectiveOriginX = new ("perspective-origin-x", CssModule.Transforms3);
         public static readonly CssProperty PerspectiveOriginY = new ("perspective-origin-y", CssModule.Transforms3);
 
@@ -373,14 +389,12 @@ namespace Carbon.Css
 
         // Ruby (Level 3) ------------------------------------------------------------------------------------
 
-        public static readonly CssModule RubyLevel3 = new CssModule(CssModuleType.Ruby, 3);
+        public static readonly CssProperty RubyAlign    = new ("ruby-align",    CssModule.Ruby3);
+        public static readonly CssProperty RubyOverhang = new ("ruby-overhang", CssModule.Ruby3);
+        public static readonly CssProperty RubyPosition = new ("ruby-position", CssModule.Ruby3);
+        public static readonly CssProperty RubySpan     = new ("ruby-span",     CssModule.Ruby3);
 
-        public static readonly CssProperty RubyAlign    = new ("ruby-align", RubyLevel3);
-        public static readonly CssProperty RubyOverhang = new ("ruby-overhang", RubyLevel3);
-        public static readonly CssProperty RubyPosition = new ("ruby-position", RubyLevel3);
-        public static readonly CssProperty RubySpan     = new ("ruby-span", RubyLevel3);
-
-        public static readonly CssProperty Size = new ("size");
+        public static readonly CssProperty Size  = new ("size");
         public static readonly CssProperty Speak = new ("speak");
 
         public static readonly CssProperty TableLayout = new ("table-layout", CssModule.Core2_1);
@@ -456,66 +470,66 @@ namespace Carbon.Css
 
         public static readonly CssProperty ZIndex        = new ("z-index", CssModule.Core1);            
 
-        public static readonly IDictionary<string, CssProperty> Map = new Dictionary<string, CssProperty> {
+        public static readonly Dictionary<string, CssProperty> Map = new() {
             // Animations
-            { "animation",                  Animation },
-            { "animation-delay",            AnimationDelay },
-            { "animation-direction",        AnimationDirection },
-            { "animation-duration",         AnimationDuration },
-            { "animation-iteration-count",  AnimationIterationCount },
-            { "animation-name",             AnimationName },
-            { "animation-play-state",       AnimationPlayState },
-            { "animation-timing-function",  AnimationTimingFunction },
+            { "animation", Animation },
+            { "animation-delay", AnimationDelay },
+            { "animation-direction", AnimationDirection },
+            { "animation-duration", AnimationDuration },
+            { "animation-iteration-count", AnimationIterationCount },
+            { "animation-name", AnimationName },
+            { "animation-play-state", AnimationPlayState },
+            { "animation-timing-function", AnimationTimingFunction },
 
-            { "appearance",                 Appearance },
-            { "azimuth",                    Azimuth },
-            { "backface-visibility",        BackfaceVisibility },
+            { "appearance", Appearance },
+            { "azimuth", Azimuth },
+            { "backface-visibility", BackfaceVisibility },
 
             // Backgrounds
-            { "background",                 Background },
-            { "background-attachment",      BackgroundAttachment },
-            { "background-clip",            BackgroundClip },
-            { "background-color",           BackgroundColor },
-            { "background-image",           BackgroundImage },
-            { "background-origin",          BackgroundOrigin },
-            { "background-position",        BackgroundPosition },
-            { "background-repeat",          BackgroundRepeat },
-            { "background-size",            BackgroundSize },
+            { "background", Background },
+            { "background-attachment", BackgroundAttachment },
+            { "background-clip", BackgroundClip },
+            { "background-color", BackgroundColor },
+            { "background-image", BackgroundImage },
+            { "background-origin", BackgroundOrigin },
+            { "background-position", BackgroundPosition },
+            { "background-repeat", BackgroundRepeat },
+            { "background-size", BackgroundSize },
 
             // Borders
-            { "border",                     Border },
-            { "border-bottom",              BorderBottom },
-            { "border-bottom-color",        BorderBottomColor },
-            { "border-bottom-left-radius",  BorderBottomLeftRadius },
+            { "border", Border },
+            { "border-bottom", BorderBottom },
+            { "border-bottom-color", BorderBottomColor },
+            { "border-bottom-left-radius", BorderBottomLeftRadius },
             { "border-bottom-right-radius", BorderBottomRightRadius },
-            { "border-bottom-style",        BorderBottomStyle },
-            { "border-bottom-width",        BorderBottomWidth },
-            { "border-collapse",            BorderCollapse },
-            { "border-color",               BorderColor },
-            { "border-image",               BorderImage },
-            { "border-image-outset",        BorderImageOutset },
-            { "border-image-repeat",        BorderImageRepeat },
-            { "border-image-slice",         BorderImageSlice },
-            { "border-image-source",        BorderImageSource },
-            { "border-image-width",         BorderImageWidth },
-            { "border-left",                BorderLeft },
-            { "border-left-color",          BorderLeftColor },
-            { "border-left-style",          BorderLeftStyle },
-            { "border-left-width",          BorderLeftWidth },
-            { "border-radius",              BorderRadius },
-            { "border-right",               BorderRight },
-            { "border-right-color",         BorderRightColor },
-            { "border-right-style",         BorderRightStyle },
-            { "border-right-width",         BorderRightWidth },
-            { "border-spacing",             BorderSpacing },
-            { "border-style",               BorderStyle },
-            { "border-top",                 BorderTop },
-            { "border-top-color",           BorderTopColor },
-            { "border-top-left-radius",     BorderTopLeftRadius },
-            { "border-top-right-radius",    BorderTopRightRadius },
-            { "border-top-style",           BorderTopStyle },
-            { "border-top-width",           BorderTopWidth },
-            { "border-width",               BorderWidth },
+            { "border-bottom-style", BorderBottomStyle },
+            { "border-bottom-width", BorderBottomWidth },
+            { "border-collapse", BorderCollapse },
+            { "border-color", BorderColor },
+            { "border-image", BorderImage },
+            { "border-image-outset", BorderImageOutset },
+            { "border-image-repeat", BorderImageRepeat },
+            { "border-image-slice", BorderImageSlice },
+            { "border-image-source", BorderImageSource },
+            { "border-image-width", BorderImageWidth },
+            { "border-left", BorderLeft },
+            { "border-left-color", BorderLeftColor },
+            { "border-left-style", BorderLeftStyle },
+            { "border-left-width", BorderLeftWidth },
+            { "border-radius", BorderRadius },
+            { "border-right", BorderRight },
+            { "border-right-color", BorderRightColor },
+            { "border-right-style", BorderRightStyle },
+            { "border-right-width", BorderRightWidth },
+            { "border-spacing", BorderSpacing },
+            { "border-style", BorderStyle },
+            { "border-top", BorderTop },
+            { "border-top-color", BorderTopColor },
+            { "border-top-left-radius", BorderTopLeftRadius },
+            { "border-top-right-radius", BorderTopRightRadius },
+            { "border-top-style", BorderTopStyle },
+            { "border-top-width", BorderTopWidth },
+            { "border-width", BorderWidth },
 
             { "bottom", Bottom },
             { "box-decoration-break", BoxDecorationBreak },
@@ -525,25 +539,25 @@ namespace Carbon.Css
             { "break-before", BreakBefore },
             { "break-inside", BreakInside },
             { "caption-side", CaptionSide },
-            { "clear",        Clear },
+            { "clear", Clear },
 
             // Clipping
-            { "clip",         Clip },
-            { "clip-path",    ClipPath },
-            { "clip-rule",    ClipRule },
+            { "clip", Clip },
+            { "clip-path", ClipPath },
+            { "clip-rule", ClipRule },
 
-            { "color",        Color },
+            { "color", Color },
 
             // Column
-            { "column-count",       ColumnCount },
-            { "column-fill",        ColumnFill },
-            { "column-gap",         ColumnGap },
-            { "column-rule",        ColumnRule },
-            { "column-rule-color",  ColumnRuleColor },
-            { "column-rule-style",  ColumnRuleStyle },
-            { "column-rule-width",  ColumnRuleWidth },
-            { "column-span",        ColumnSpan },
-            { "column-width",       ColumnWidth },
+            { "column-count",      ColumnCount },
+            { "column-fill",       ColumnFill },
+            { "column-gap",        ColumnGap },
+            { "column-rule",       ColumnRule },
+            { "column-rule-color", ColumnRuleColor },
+            { "column-rule-style", ColumnRuleStyle },
+            { "column-rule-width", ColumnRuleWidth },
+            { "column-span",       ColumnSpan },
+            { "column-width",      ColumnWidth },
 
             { "columns", Columns },
             { "content", Content },
@@ -558,27 +572,42 @@ namespace Carbon.Css
             { "filter", Filter },
             { "fit", Fit },
             { "fit-position", FitPosition },
-            { "flex-align", FlexAlign },
-            { "flex-flow", FlexFlow },
-            { "flex-line-pack", FlexLinePack },
-            { "flex-order", FlexOrder },
-            { "flex-pack", FlexPack },
-            { "float", Float },
-            { "float-offset", FloatOffset },
+
+            // Flexbox
+            { "flex",                  Flex },
+            { "flex-basis",            FlexBasis },
+            { "flex-direction",        FlexDirection },
+            { "flex-flow",             FlexFlow },
+            { "flex-grow",             FlexGrow },
+            { "flex-shrink",           FlexShrink },
+            { "flex-wrap",             FlexWrap },
+                                       
+            { "float",                 Float },
+            { "float-offset",          FloatOffset },
 
             // Font
-            { "font",             Font },
-            { "font-family",      FontFamily },
-            { "font-size",        FontSize },
-            { "font-size-adjust", FontSizeAdjust },
-            { "font-stretch",     FontStretch },
-            { "font-style",       FontStyle },
-            { "font-variant",     FontVariant },
-            { "font-weight",      FontWeight },
+            { "font",                  Font },
+            { "font-family",           FontFamily },
+            { "font-size",             FontSize },
+            { "font-size-adjust",      FontSizeAdjust },
+            { "font-stretch",          FontStretch },
+            { "font-style",            FontStyle },
+            { "font-variant",          FontVariant },
+            { "font-weight",           FontWeight },
 
-            { "grid-columns", GridColumns },
-            { "grid-rows", GridRows },
-            { "height", Height },
+            // Grids
+            { "grid",                  Grid },
+            { "grid-auto-columns",     GridAutoColumns },
+            { "grid-auto-flow",        GridAutoFlow },
+            { "grid-auto-rows",        GridAutoRows },
+            { "grid-template-areas",   GridTemplateAreas },
+            { "grid-template-columns", GridTemplateColumns },
+            { "grid-template-rows",    GridTemplateRows },
+            { "grid-columns",          GridColumns },
+            { "grid-rows",             GridRows },
+
+            { "height",                 Height },
+
             { "hyphenate-after",        HyphenateAfter },
             { "hyphenate-before",       HyphenateBefore },
             { "hyphenate-character",    HyphenateCharacter },
@@ -628,6 +657,7 @@ namespace Carbon.Css
             { "min-height", MinHeight },
             { "min-width", MinWidth },
             { "opacity", Opacity },
+            { "order", Order },
             { "orphans", Orphans },
             { "outline", Outline },
 
