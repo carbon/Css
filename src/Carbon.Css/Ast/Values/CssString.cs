@@ -1,12 +1,20 @@
-﻿namespace Carbon.Css
-{
-    using Parser;
+﻿using System.IO;
 
+using Carbon.Css.Parser;
+
+namespace Carbon.Css
+{
     public sealed class CssString : CssValue
     {
         public CssString(CssToken token)
             : this(token.Text)
         { }
+
+        internal CssString(CssToken token, Trivia? trailing)
+           : this(token.Text)
+        {
+            this.Trailing = trailing;
+        }
 
         public CssString(string text)
             : base(NodeKind.String)
@@ -17,6 +25,11 @@
         public string Text { get; }
 
         public override CssNode CloneNode() => new CssString(Text);
+
+        internal override void WriteTo(TextWriter writer)
+        {
+            writer.Write(Text);
+        }
 
         public override string ToString() => Text;
     }

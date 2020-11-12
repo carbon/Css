@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+
+using Carbon.Css.Parser;
 
 namespace Carbon.Css
 {
-    using System.Threading.Tasks;
-    using Parser;
-
     public sealed class CssWriter : IDisposable
     {
         private readonly TextWriter writer;
@@ -23,7 +24,11 @@ namespace Carbon.Css
 
         private CssScope scope;
 
-        public CssWriter(TextWriter writer, CssContext? context = null, CssScope? scope = null, ICssResolver? resolver = null)
+        public CssWriter(
+            TextWriter writer, 
+            CssContext? context = null,
+            CssScope? scope = null, 
+            ICssResolver? resolver = null)
         {
             this.writer = writer;
             this.context = context ?? new CssContext();
@@ -75,69 +80,10 @@ namespace Carbon.Css
                 }
                 else if (node is CssRule rule)
                 {
-                    if (i != 0) writer.WriteLine();
-
-                    i++;
-
-                    if (rule.Type == RuleType.Import)
+                    if (i != 0)
                     {
-                        var importRule = (ImportRule)rule;
-
-                        if (!importRule.Url.IsPath || resolver is null)
-                        {
-                            WriteImportRule(importRule);
-                        }
-                        else
-                        {
-                            InlineImport(importRule, sheet);
-                        }
+                        writer.WriteLine();
                     }
-                    else
-                    {
-                        WriteRule(rule);
-                    }
-                }
-            }
-        }
-
-        public async Task WriteRootAsync(StyleSheet sheet)
-        {
-            importCount++;
-
-            if (importCount > 200)
-            {
-                throw new Exception("Exceded importCount of 200");
-            }
-
-            int i = 0;
-
-            foreach (var node in sheet.Children)
-            {
-                if (node.Kind == NodeKind.If)
-                {
-                    EvaluateIf((IfBlock)node, i: i);
-                }
-                else if (node.Kind == NodeKind.For)
-                {
-                    EvaluateFor((ForBlock)node);
-                }
-                else if (node.Kind == NodeKind.Comment)
-                {
-                    if (i != 0) writer.WriteLine();
-
-                    i++;
-
-                    WriteComment((CssComment)node);
-                }
-                else if (node.Kind == NodeKind.Assignment)
-                {
-                    var variable = (CssAssignment)node;
-
-                    scope[variable.Name] = variable.Value;
-                }
-                else if (node is CssRule rule)
-                {
-                    if (i != 0) writer.WriteLine();
 
                     i++;
 
@@ -189,7 +135,7 @@ namespace Carbon.Css
                 throw new Exception("end must be after the start");
             }
 
-            if (end - start > 10000)
+            if (end - start > 10_000)
             {
                 throw new Exception("Must be less than 10,000");
             }
@@ -270,12 +216,18 @@ namespace Carbon.Css
     
         public CssValue EvalBinaryExpression(BinaryExpression expression)
         {
-            var lhs = EvalulateExpression(expression.Left);
-            var rhs = EvalulateExpression(expression.Right);
+            CssValue lhs = EvalulateExpression(expression.Left);
+            CssValue rhs = EvalulateExpression(expression.Right);
 
             if (skipMath || !CssValue.AreCompatible(lhs, rhs, expression.Operator))
             {
-                return new CssValueList(new CssValue[] { lhs, new CssString(expression.OperatorToken), rhs }, ValueSeperator.Space);
+                var values = new CssValue[] { 
+                    lhs, 
+                    new CssString(expression.OperatorToken), 
+                    rhs
+                };
+
+                return new CssValueList(values, ValueSeperator.Space);
             }
             
             switch (expression.Operator)
@@ -285,25 +237,42 @@ namespace Carbon.Css
                 case BinaryOperator.Add      : return ((CssUnitValue)lhs).Add(rhs);
                 case BinaryOperator.Subtract : return ((CssUnitValue)lhs).Subtract(rhs);
             }
-
-            string leftS = lhs.ToString();
-            string rightS = rhs.ToString();
-
-            if (lhs.Kind == NodeKind.Undefined)
-            {
-                leftS = "undefined";
-            }
             
             return expression.Operator switch
             {
-                BinaryOperator.Eq        => CssBoolean.Get(leftS == rightS),
-                BinaryOperator.NotEquals => CssBoolean.Get(leftS != rightS),
-                BinaryOperator.Gt        => CssBoolean.Get(double.Parse(leftS, CultureInfo.InvariantCulture) >  double.Parse(rightS, CultureInfo.InvariantCulture)),
-                BinaryOperator.Gte       => CssBoolean.Get(double.Parse(leftS, CultureInfo.InvariantCulture) >= double.Parse(rightS, CultureInfo.InvariantCulture)),
-                BinaryOperator.Lt        => CssBoolean.Get(double.Parse(leftS, CultureInfo.InvariantCulture) <  double.Parse(rightS, CultureInfo.InvariantCulture)),
-                BinaryOperator.Lte       => CssBoolean.Get(double.Parse(leftS, CultureInfo.InvariantCulture) <= double.Parse(rightS, CultureInfo.InvariantCulture)),
+                BinaryOperator.Eq        => CssBoolean.Get(AreEqual(lhs, rhs)),
+                BinaryOperator.NotEquals => CssBoolean.Get(!AreEqual(lhs, rhs)),
+                BinaryOperator.Gt        => CssBoolean.Get(ToDouble(lhs) >  ToDouble(rhs)),
+                BinaryOperator.Gte       => CssBoolean.Get(ToDouble(lhs) >= ToDouble(rhs)),
+                BinaryOperator.Lt        => CssBoolean.Get(ToDouble(lhs) <  ToDouble(rhs)),
+                BinaryOperator.Lte       => CssBoolean.Get(ToDouble(lhs) <= ToDouble(rhs)),
                 _                        => new CssBoolean(true)
             };
+        }
+
+        private static bool AreEqual(CssValue lhs, CssValue rhs)
+        {
+            if (lhs.Kind == NodeKind.Undefined)
+            {
+                return rhs.Kind == NodeKind.Undefined || rhs is CssString { Text: "undefined" };
+            }
+
+            if (lhs is CssUnitValue lv && rhs is CssUnitValue rv)
+            {
+                return lv.Equals(rv);
+            }
+
+            return string.Equals(lhs.ToString(), rhs.ToString(), StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static double ToDouble(CssValue value)
+        {
+            if (value is CssUnitValue uv && uv.Kind == NodeKind.Number)
+            {
+                return uv.Value;
+            }
+
+            return double.Parse(value.ToString(), CultureInfo.InvariantCulture);
         }
 
         public CssValue EvalFunction(CssFunction function)
@@ -372,7 +341,7 @@ namespace Carbon.Css
                     {
                         foreach (var line in ex.Lines)
                         {
-                            writer.Write(line.Number.ToString().PadLeft(4)); // 1
+                            writer.Write(line.Number.ToString(CultureInfo.InvariantCulture).PadLeft(4)); // 1
                             writer.Write(". ");
 
                             if (line.Number == ex.Location.Line)
@@ -422,15 +391,31 @@ namespace Carbon.Css
 
             switch (value.Kind)
             {
-                case NodeKind.Variable           : WriteVariable((CssVariable)value); break;
-                case NodeKind.ValueList          : WriteValueList((CssValueList)value); break;
-                case NodeKind.Function           : WriteFunction((CssFunction)value); break;
-                case NodeKind.Expression         : WriteValue(EvalulateExpression((CssValue)value)); break;
-                case NodeKind.InterpolatedString : WriteInterpolatedString((CssInterpolatedString)value); break;
-                case NodeKind.Reference          : WriteReference((CssReference)value); break;
-                case NodeKind.Sequence           : WriteSequence((CssSequence)value); break;
-                default                          : writer.Write(value.ToString()); break;
+                case NodeKind.Variable           : WriteVariable((CssVariable)value);                       break;
+                case NodeKind.ValueList          : WriteValueList((CssValueList)value);                     break;
+                case NodeKind.Function           : WriteFunction((CssFunction)value);                       break;
+                case NodeKind.Expression         : WriteValue(EvalulateExpression((CssValue)value));        break;
+                case NodeKind.InterpolatedString : WriteInterpolatedString((CssInterpolatedString)value);   break;
+                case NodeKind.Reference          : WriteReference((CssReference)value);                     break;
+                case NodeKind.Sequence           : WriteSequence((CssSequence)value);                       break;
+                case NodeKind.String             : WriteString((CssString)value);                           break;
+                case NodeKind.Undefined          : writer.Write(value.ToString());                          break;
+                default                          :
+                    // TODO: Improve error handling
+                    WriteUnitValue((CssUnitValue)value);
+
+                    break;
             }
+        }
+
+        public void WriteUnitValue(CssUnitValue value)
+        {
+            value.WriteTo(writer);
+        }
+
+        public void WriteString(CssString value)
+        {
+            writer.Write(value.Text);
         }
 
         public void WriteValueList(CssValueList list)
@@ -493,9 +478,7 @@ namespace Carbon.Css
             writer.Write(function.Name);
 
             writer.Write('(');
-
             WriteValue(function.Arguments);
-
             writer.Write(')');
             
             skipMath = false;
@@ -595,8 +578,8 @@ namespace Carbon.Css
                 case FontFaceRule fontFaceRule  : WriteFontFaceRule(fontFaceRule, depth);  break;
                 case KeyframesRule keyFrameRule : WriteKeyframesRule(keyFrameRule, depth); break;
                 case UnknownRule atRule         : WriteAtRule(atRule, depth);              break;
-
-                default: throw new Exception("Unhandled rule:" + rule.GetType().Name);
+                default                         : 
+                    throw new Exception("Unhandled rule:" + rule.GetType().Name);
             }
         }
 
@@ -605,7 +588,7 @@ namespace Carbon.Css
             writer.Write('@');
             writer.Write(rule.Name);
 
-            if (rule.Text != null)
+            if (rule.Text is not null)
             {
                 writer.Write(' ');
                 rule.Text.WriteTo(writer);
@@ -713,19 +696,19 @@ namespace Carbon.Css
 
         public void WriteFontFaceRule(FontFaceRule rule, int depth)
         {
-            writer.Write("@font-face "); // Write selector
+            writer.Write("@font-face ");
 
             WriteBlock(rule, depth);
         }
 
         public void WriteKeyframesRule(KeyframesRule rule, int depth)
         {
-            if (context.BrowserSupport != null)
+            if (context.BrowserSupport is not null)
             {
                 // -moz-
                 if (context.Compatibility.Firefox > 0 && context.Compatibility.Firefox < 16)
                 {
-                    WriteKeyframesRule(BrowserInfo.Firefox(context.Compatibility.Firefox), rule, depth);
+                    WritePrefixedKeyframesRule(BrowserInfo.Firefox(context.Compatibility.Firefox), rule, depth);
 
                     writer.WriteLine();
                 }
@@ -733,7 +716,7 @@ namespace Carbon.Css
                 // -webkit- 
                 if (context.Compatibility.Safari > 0 && context.Compatibility.Safari < 9)
                 {
-                    WriteKeyframesRule(BrowserInfo.Safari(context.Compatibility.Safari), rule, depth);
+                    WritePrefixedKeyframesRule(BrowserInfo.Safari(context.Compatibility.Safari), rule, depth);
 
                     writer.WriteLine();
                 }
@@ -750,7 +733,7 @@ namespace Carbon.Css
             browserSupport = context.BrowserSupport;
         }
 
-        private void WriteKeyframesRule(BrowserInfo browser, KeyframesRule rule, int depth)
+        private void WritePrefixedKeyframesRule(BrowserInfo browser, KeyframesRule rule, int depth)
         {
             browserSupport = new[] { browser };
 
@@ -767,7 +750,6 @@ namespace Carbon.Css
 
         public void WriteBlock(CssBlock block, int depth)
         {
-
             writer.Write('{'); // Block start
 
             var condenced = false;
@@ -1068,7 +1050,7 @@ namespace Carbon.Css
             {
                 ref CssParameter p = ref paramaters[i];
 
-                CssValue? val = (list != null && list.Length >= i + 1) ? list[i] : p.DefaultValue;
+                CssValue? val = (list is not null && list.Length >= i + 1) ? list[i] : p.DefaultValue;
 
                 child.Add(p.Name, val!);
             }
@@ -1089,7 +1071,7 @@ namespace Carbon.Css
 
             StyleRule? current = rule;
 
-            while ((current = current.Parent as StyleRule) != null)
+            while ((current = current.Parent as StyleRule) is not null)
             {
                 ancestors.Add(current.Selector);
 
@@ -1190,7 +1172,7 @@ namespace Carbon.Css
                 }
             }
 
-            if (span != null)
+            if (span is not null)
             {
                 result.Add(span);
             }

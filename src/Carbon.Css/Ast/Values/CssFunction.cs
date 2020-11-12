@@ -1,4 +1,6 @@
-﻿namespace Carbon.Css
+﻿using System.IO;
+
+namespace Carbon.Css
 {
     public class CssFunction : CssValue
     {
@@ -14,6 +16,14 @@
         public CssValue Arguments { get; }
 
         public override CssNode CloneNode() => new CssFunction(Name, Arguments);
+
+        internal override void WriteTo(TextWriter writer)
+        {
+            writer.Write(Name);
+            writer.Write('(');
+            Arguments.WriteTo(writer);
+            writer.Write(')');
+        }
 
         public override string ToString() => Name + "(" + Arguments.ToString() + ")";
     }

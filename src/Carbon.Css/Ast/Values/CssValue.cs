@@ -134,5 +134,10 @@ namespace Carbon.Css
 
             return true;
         }
+
+        internal virtual void WriteTo(TextWriter writer)
+        {
+            writer.Write(ToString());
+        }
     }
 }

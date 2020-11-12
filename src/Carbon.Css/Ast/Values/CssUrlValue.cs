@@ -78,9 +78,17 @@ namespace Carbon.Css
 
         public static CssUrlValue Parse(string text)
         {
-            var value = text.Replace("url", string.Empty).Trim(trimChars);
+            if (text.StartsWith("url"))
+            {
+                text = text.Substring(3);
+            }
 
-            return new CssUrlValue(value);
+            if (text[0] == '(' || text[0] == '"' || text[0] == '\'')
+            {
+                text = text.Trim(trimChars);
+            }
+
+            return new CssUrlValue(text);
         }
     }
 }

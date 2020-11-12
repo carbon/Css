@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.Text;
+
 using Carbon.Css.Helpers;
 
 namespace Carbon.Css
@@ -24,9 +27,24 @@ namespace Carbon.Css
 
 		public CssUnitInfo Unit { get; }
 
-		public override string ToString() => Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
+        public override string ToString()
+        {
+            return Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
+        }
 
-		public override CssNode CloneNode() => new CssUnitValue(Value, Unit);
+        internal void WriteTo(StringBuilder sb)
+        {
+            sb.Append(Value.ToString(CultureInfo.InvariantCulture));
+            sb.Append(Unit.Name);
+        }
+
+        internal override void WriteTo(TextWriter writer)
+        {
+            writer.Write(Value.ToString(CultureInfo.InvariantCulture));
+            writer.Write(Unit.Name);
+        }
+
+        public override CssNode CloneNode() => new CssUnitValue(Value, Unit);
 
         public new static CssUnitValue Parse(string text)
         {
@@ -114,9 +132,17 @@ namespace Carbon.Css
             (value, unit) = (Value, Unit);
         }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Unit, Value);
+        }
+
         public bool Equals(CssUnitValue other)
         {
-            return (Unit.Name, Value) == (other.Unit.Name, other.Value);
+            if (ReferenceEquals(this, other)) return true;
+
+            return Unit.Equals(other.Unit)
+                && Value == other.Value; 
         }
 	}
 

@@ -4,6 +4,7 @@ namespace Carbon.Css
 {
     public static class CssUnitNames
     {
+        public static readonly string Lh = "lh";
         public static readonly string S = "s";
         public static readonly string Ms = "ms";
         public static readonly string Px = "px";
@@ -16,6 +17,8 @@ namespace Carbon.Css
         public static readonly string Vmin = "vmin";
         public static readonly string Vmax = "vmax";
         public static readonly string X = "x";
+        public static readonly string Vi = "vi";
+        public static readonly string Hz = "Hz";
 
         public static string Get(ReadOnlySpan<char> text)
         {
@@ -38,6 +41,9 @@ namespace Carbon.Css
 
                     case 'e':
                         if (text[1] == 'm') return Em;
+                        break;
+                    case 'H':
+                        if (text[1] == 'z') return Hz;
                         break;
                     case 'm':
                         if (text[1] == 's') return Ms;
@@ -88,12 +94,9 @@ namespace Carbon.Css
                     default:
                         break;
                 }
-               
-
             }
 
             return text.ToString();
         }
     }
-
 }

@@ -52,7 +52,7 @@ namespace Carbon.Css
             return StringBuilderCache.ExtractAndRelease(sb);
         }
         
-        public void WriteTo(TextWriter writer)
+        internal override void WriteTo(TextWriter writer)
         {
             for (int i = 0; i < children.Count; i++)
             {

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Carbon.Css
 {
@@ -32,6 +33,21 @@ namespace Carbon.Css
             }
             
             return new CssValueList(clonedValues, Seperator);
+        }
+
+        internal override void WriteTo(TextWriter writer)
+        {
+            string seperator = Seperator == ValueSeperator.Space ? " " : ", ";
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (i > 0)
+                {
+                    writer.Write(seperator);
+                }
+
+                items[i].WriteTo(writer);
+            }
         }
 
         public override string ToString()

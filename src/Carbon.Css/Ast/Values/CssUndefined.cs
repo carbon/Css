@@ -12,6 +12,6 @@
 
         public override CssNode CloneNode() => new CssUndefined(VariableName);
 
-        public override string ToString() => $"/* {VariableName} undefined */";
+        public override string ToString() => $"/* ${VariableName} undefined */";
     }
 }
