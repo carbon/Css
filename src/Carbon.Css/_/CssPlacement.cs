@@ -59,6 +59,11 @@ namespace Carbon.Css
                 && Align == other.Align;
         }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is CssPlacement other && Equals(other);
+        }
+
         public readonly override string ToString()
         {
             if (Align == Justify)

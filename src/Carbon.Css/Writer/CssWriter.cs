@@ -303,7 +303,7 @@ namespace Carbon.Css
             }
 
             // Assume to be scss if there is no extension
-            if (absolutePath.IndexOf('.') == -1)
+            if (!absolutePath.Contains('.'))
             {
                 absolutePath += ".scss";
             }
@@ -995,7 +995,7 @@ namespace Carbon.Css
                 throw new Exception("Exceded include limit of 1,000");
             }
 
-            if (!context.Mixins.TryGetValue(include.Name, out MixinNode mixin))
+            if (!context.Mixins.TryGetValue(include.Name, out MixinNode? mixin))
             {
                 throw new Exception($"mixin '{include.Name}' not found");
             }

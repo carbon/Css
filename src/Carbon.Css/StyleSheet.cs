@@ -187,7 +187,7 @@ namespace Carbon.Css
             var absolutePath = rule.Url.GetAbsolutePath(resolver.ScopedPath);
 
             // Assume to be scss if there is no extension
-            if (absolutePath.IndexOf('.') == -1)
+            if (!absolutePath.Contains('.'))
             {
                 absolutePath += ".scss";
             }

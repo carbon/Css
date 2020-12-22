@@ -45,7 +45,7 @@ namespace Carbon.Css
             return sb.ToString();
         }
 
-        public readonly bool IsPath => Value.IndexOf(':') == -1; // ! https://
+        public readonly bool IsPath => !Value.Contains(':'); // ! https://
 
         public readonly bool IsExternal => !IsPath;
 

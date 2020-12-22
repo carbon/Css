@@ -116,23 +116,19 @@ namespace Carbon.Css
 
         public static bool AreCompatible(CssValue left, CssValue right, BinaryOperator operation)
         {
-            switch (operation)
+            return operation switch
             {
-                case BinaryOperator.Divide: return false;
-                case BinaryOperator.Add or BinaryOperator.Subtract:
-                    return left.Kind == right.Kind;
-                case BinaryOperator.Multiply:
-                    return
+                BinaryOperator.Divide                        => false,
+                BinaryOperator.Add or BinaryOperator.Subtract => left.Kind == right.Kind,
+                BinaryOperator.Multiply => 
                         left.Kind == right.Kind ||
                         left.Kind == NodeKind.Percentage ||
                         right.Kind == NodeKind.Percentage ||
                         left.Kind == NodeKind.Number ||
-                        right.Kind == NodeKind.Number;
-                case BinaryOperator.Mod:
-                    return right.Kind == NodeKind.Number;
-            }
-
-            return true;
+                        right.Kind == NodeKind.Number,
+                BinaryOperator.Mod => right.Kind == NodeKind.Number,
+                _                  => true
+            };
         }
 
         internal virtual void WriteTo(TextWriter writer)

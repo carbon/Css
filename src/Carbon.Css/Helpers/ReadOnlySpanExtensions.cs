@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
+
 using Carbon.Color;
 
 namespace Carbon.Css.Helpers
 {
+
     internal static class ReadOnlySpanExtensions
     {
         public static Rgba32 ReadColor(this ReadOnlySpan<char> text, out int read)
