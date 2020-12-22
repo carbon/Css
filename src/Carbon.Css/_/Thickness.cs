@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -25,6 +26,27 @@ namespace Carbon.Css
 
         public CssUnitValue Right { get; }
 
+        public static bool TryParse(string value, [NotNullWhen(true)] out Thickness? result)
+        {
+            if (value is null || value.Length == 0)
+            {
+                result = default;
+                return false;
+            }
+
+            try
+            {
+                result = Parse(value);
+
+                return true;
+            }
+            catch
+            {
+                result = default;
+                return false;
+            }
+        }
+
         public static Thickness Parse(string value)
         {
             var top = CssUnitValue.Zero;
@@ -35,6 +57,7 @@ namespace Carbon.Css
             value = value.Trim();
 
             string[] parts = value.Split(Seperators.Space);
+
 
             for (int i = 0; i < parts.Length; i++)
             {
@@ -70,7 +93,7 @@ namespace Carbon.Css
                     {
                         case 0: top = part; break;
                         case 1: left = part; right = part; break;
-                        case 3: bottom = part; break;
+                        case 2: bottom = part; break;
                     }
                 }
                 else
@@ -90,23 +113,34 @@ namespace Carbon.Css
 
         public override string ToString()
         {
-            if (Left.Equals(Top) && Bottom.Equals(Top) && Right.Equals(Top))
+            if (Top.Equals(Bottom) && Left.Equals(Right))
             {
-                return Top.ToString();
+                if (Top.Equals(Left))
+                {
+                    return Top.ToString();
+                }
+                else
+                {
+                    return Top.ToString() + " " + Left.ToString();
+                }
             }
 
+      
             var sb = StringBuilderCache.Aquire();
 
             Top.WriteTo(sb);
-            sb.Append(' ');
 
+            sb.Append(' ');
             Left.WriteTo(sb);
-            sb.Append(' ');
 
+            sb.Append(' ');
             Bottom.WriteTo(sb);
-            sb.Append(' ');
-
-            Right.WriteTo(sb);    
+            
+            if (!ReferenceEquals(Left, Right))
+            {
+                sb.Append(' ');
+                Right.WriteTo(sb);
+            }
 
             return StringBuilderCache.ExtractAndRelease(sb);
         }
