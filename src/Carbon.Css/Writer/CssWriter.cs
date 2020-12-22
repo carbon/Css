@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 using Carbon.Css.Parser;
 
@@ -187,7 +185,7 @@ namespace Carbon.Css
             }
         }
 
-        public bool ToBoolean(object value) => value is CssBoolean b && b.Value;
+        private static bool ToBoolean(object value) => value is CssBoolean { Value: true };
 
         public CssValue EvalulateExpression(CssValue expression)
         {
@@ -262,7 +260,7 @@ namespace Carbon.Css
                 return lv.Equals(rv);
             }
 
-            return string.Equals(lhs.ToString(), rhs.ToString(), StringComparison.OrdinalIgnoreCase);
+            return string.Equals(lhs.ToString()!, rhs.ToString()!, StringComparison.OrdinalIgnoreCase);
         }
 
         private static double ToDouble(CssValue value)
@@ -272,7 +270,7 @@ namespace Carbon.Css
                 return uv.Value;
             }
 
-            return double.Parse(value.ToString(), CultureInfo.InvariantCulture);
+            return double.Parse(value.ToString()!, CultureInfo.InvariantCulture);
         }
 
         public CssValue EvalFunction(CssFunction function)
@@ -293,7 +291,7 @@ namespace Carbon.Css
         {
             if (resolver is null)
             {
-                throw new ArgumentNullException(nameof(resolver));
+                throw new Exception("No resolver registered");
             }
 
             // var relativePath = importRule.Url;
@@ -364,7 +362,7 @@ namespace Carbon.Css
 
                 using var reader = new StreamReader(stream);
 
-                string line;
+                string? line;
 
                 while ((line = reader.ReadLine()) != null)
                 {

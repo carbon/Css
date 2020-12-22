@@ -62,5 +62,12 @@ namespace Carbon.Css
             return X.Equals(other.X)
                 && Y.Equals(other.Y);
         }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is CssGap other && Equals(other);
+        }
+
+        public override int GetHashCode() => HashCode.Combine(X, Y);
     }
 }

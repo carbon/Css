@@ -4,6 +4,8 @@ using System.Globalization;
 
 namespace Carbon.Css
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using Color;
 
     public static class CssFunctions
@@ -29,7 +31,7 @@ namespace Carbon.Css
 		// hsla
 		// hue
 
-		public static bool TryGet(string name, out Func<CssValue[], CssValue> func)
+		public static bool TryGet(string name, [NotNullWhen(true)] out Func<CssValue[], CssValue>? func)
 		{
 			return dic.TryGetValue(name, out func);
 		}
@@ -42,7 +44,7 @@ namespace Carbon.Css
 
 		public static CssValue Unquote(CssValue[] args)
 		{
-			string value = args[0].ToString();
+			string value = args[0].ToString()!;
 
 			return new CssString(value.Trim('"'));
 		}
@@ -104,9 +106,12 @@ namespace Carbon.Css
 				return new CssFunction("rgba", new CssValueList(args));
 			}
 
-			var color = Rgba32.Parse(args[0].ToString());
+			string arg_0 = args[0].ToString()!;
+			string arg_1 = args[1].ToString()!;
+
+			var color = Rgba32.Parse(arg_0);
 			
-			return CssColor.FromRgba(color.R, color.G, color.B, float.Parse(args[1].ToString()));
+			return CssColor.FromRgba(color.R, color.G, color.B, float.Parse(arg_1, CultureInfo.InvariantCulture));
 		}
 
         #region Helpers
@@ -118,36 +123,38 @@ namespace Carbon.Css
                 return cssBoolean.Value;
             }
 
-            var text = value.ToString();
-
-			return text.Equals("true", StringComparison.OrdinalIgnoreCase);
+			return string.Equals(value.ToString()!, "true", StringComparison.OrdinalIgnoreCase);
         }
 
 		private static Rgba32 GetColor(CssValue value)
 		{
-			return Rgba32.Parse(value.ToString());
+			return Rgba32.Parse(value.ToString()!);
 		}
 
-        private static double ParseDouble(string text)
+        private static double ParseDouble(ReadOnlySpan<char> text)
         {
             if (text[text.Length - 1] == 'd' &&
 				text[text.Length - 2] == 'e' && 
 				text[text.Length - 3] == 'g')
             {
-				text = text.Substring(0, text.Length - 3);
+				text = text.Slice(0, text.Length - 3);
             }
 
-            return double.Parse(text, CultureInfo.InvariantCulture);
-        }
+#if NETSTANDARD2_0
+			return double.Parse(text.ToString(), CultureInfo.InvariantCulture);
+#else
+			return double.Parse(text, provider: CultureInfo.InvariantCulture);
+#endif
+		}
 
 		private static double GetAmount(CssValue value) => value.Kind switch
 		{
-			NodeKind.Angle      => (ParseDouble(value.ToString()) % 360) / 360,
+			NodeKind.Angle      => (ParseDouble(value.ToString().AsSpan()) % 360) / 360,
 			NodeKind.Percentage => (((CssUnitValue)value).Value / 100d),
 			NodeKind.Number     => ((CssUnitValue)value).Value,
 			_                   => throw new Exception("Unknown numeric value: " + value.Kind + ":" +  value)
 		};
 		
-		#endregion
+#endregion
 	}
 }

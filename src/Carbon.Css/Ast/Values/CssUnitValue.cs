@@ -137,14 +137,21 @@ namespace Carbon.Css
             return HashCode.Combine(Unit, Value);
         }
 
-        public bool Equals(CssUnitValue other)
+        public bool Equals(CssUnitValue? other)
         {
+            if (other is null) return this is null;
+
             if (ReferenceEquals(this, other)) return true;
 
             return Unit.Equals(other.Unit)
                 && Value == other.Value; 
         }
-	}
+
+        public override bool Equals(object? obj)
+        {
+            return obj is CssUnitValue other && Equals(other);
+        }
+    }
 
 	// CssLength
 	// CssTime

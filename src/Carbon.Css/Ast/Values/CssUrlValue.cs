@@ -44,7 +44,7 @@ namespace Carbon.Css
 
             return sb.ToString();
         }
-        
+
         public readonly bool IsPath => Value.IndexOf(':') == -1; // ! https://
 
         public readonly bool IsExternal => !IsPath;
@@ -67,6 +67,8 @@ namespace Carbon.Css
                 basePath = basePath.Substring(1);
             }
 
+            // TODO: Eliminate this allocation
+
             // http://dev/styles/
             var baseUri = new Uri("http://dev/" + basePath);
 
@@ -76,11 +78,11 @@ namespace Carbon.Css
 
         private static readonly char[] trimChars = { '\'', '\"', '(', ')' };
 
-        public static CssUrlValue Parse(string text)
+        public static CssUrlValue Parse(ReadOnlySpan<char> text)
         {
-            if (text.StartsWith("url"))
+            if (text.Length > 3 && text[0] == 'u' && text[1] == 'r' && text[2] == 'l') // url
             {
-                text = text.Substring(3);
+                text = text.Slice(3);
             }
 
             if (text[0] == '(' || text[0] == '"' || text[0] == '\'')
@@ -88,7 +90,7 @@ namespace Carbon.Css
                 text = text.Trim(trimChars);
             }
 
-            return new CssUrlValue(text);
+            return new CssUrlValue(text.ToString());
         }
     }
 }

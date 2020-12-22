@@ -122,7 +122,7 @@ namespace Carbon.Css
 
                 ex.Lines = TextHelper.GetLinesAround(text, ex.Location.Line, 3).ToList();
 
-                throw ex;
+                throw;
             }
         }
 

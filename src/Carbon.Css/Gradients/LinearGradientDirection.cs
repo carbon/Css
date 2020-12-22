@@ -8,12 +8,12 @@ namespace Carbon.Css.Gradients
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum LinearGradientDirection
     {
-        None       = 0,
-
-        Top        = 1, // to top      | 0deg
-        Bottom     = 2, // to bottom   | 180deg
-        Left       = 3, // to left     | 270deg
-        Right      = 4, // to right    | 90deg
+        None        = 0,
+                    
+        Top         = 1, // to top      | 0deg
+        Bottom      = 2, // to bottom   | 180deg
+        Left        = 3, // to left     | 270deg
+        Right       = 4, // to right    | 90deg
 
         // Specify the corner the line goes toward
         // The angle is calculated on the aspect ratio of the containing box

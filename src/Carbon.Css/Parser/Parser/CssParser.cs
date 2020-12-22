@@ -262,7 +262,7 @@ namespace Carbon.Css.Parser
         {
             var value = ReadValueList();
 
-            var rule = new ImportRule(CssUrlValue.Parse(value.ToString()));
+            var rule = new ImportRule(CssUrlValue.Parse(value.ToString().AsSpan()));
 
             ConsumeIf(TokenKind.Semicolon); // ? ;
 
@@ -743,7 +743,7 @@ namespace Carbon.Css.Parser
                 switch (Current.Kind)
                 {
                     case TokenKind.Colon: 
-                        block.Add(ReadDeclarationFromName(span[0].ToString()));  break; // DeclarationName
+                        block.Add(ReadDeclarationFromName(span[0].ToString()!));  break; // DeclarationName
                     case TokenKind.BlockStart:
                         block.Flags |= CssBlockFlags.HasChildBlocks;
                         block.Add(ReadRuleBlock(new CssSelector(spanList ?? (IReadOnlyList<CssSequence>) new[] { span }))); 

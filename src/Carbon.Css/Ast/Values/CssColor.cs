@@ -29,7 +29,7 @@ namespace Carbon.Css
         public override string ToString()
 		{
 			return c_value.HasValue
-				? c_value.ToString()
+				? c_value.ToString()!
 				: s_value!;
 		}
 
