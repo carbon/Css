@@ -5,17 +5,38 @@ namespace Carbon.Css.Tests
     public class CssValueTests
     {
         [Fact]
-        public void NumbersAreStoredAtDoublePrecision()
+        public void Q()
         {
-            var value = CssValue.Parse("97.916666666666666666666666666667%") as CssUnitValue;
+            var value = CssUnitValue.Parse("97.916666666666666666666666666667%");
 
             Assert.Equal(97.916666666666666666666666666667d, value.Value);
         }
 
         [Fact]
+        public void NumbersAreStoredAtDoublePrecision()
+        {
+            string text = "97.916666666666666666666666666667%";
+
+            var value = CssValue.Parse(text) as CssUnitValue;
+
+            Assert.Equal(97.916666666666666666666666666667d, value.Value);
+            Assert.Equal(97.916666666666666666666666666667d, CssUnitValue.Parse(text).Value);
+
+        }
+
+        [Fact]
         public void ParseValues()
         {
-            var (value, unit) = CssValue.Parse("14px") as CssUnitValue;
+            var (value, unit) = (CssUnitValue)CssValue.Parse("14px");
+
+            Assert.Equal(14f, value);
+            Assert.Equal("px", unit.Name);
+        }
+
+        [Fact]
+        public void ParseValues2()
+        {
+            var (value, unit) = CssUnitValue.Parse("14px");
 
             Assert.Equal(14f, value);
             Assert.Equal("px", unit.Name);
@@ -24,9 +45,8 @@ namespace Carbon.Css.Tests
         [Fact]
         public void ParsePx()
         {
-            var value = CssValue.Parse("14px");
-
-            Assert.Equal("14px", value.ToString());
+            Assert.Equal("14px", CssValue.Parse("14px").ToString());
+            Assert.Equal("14px", CssUnitValue.Parse("14px").ToString());
         }
 
         [Fact]
@@ -38,13 +58,26 @@ namespace Carbon.Css.Tests
         [Fact]
         public void Px()
         {
-            Assert.Equal("50px", CssValue.Parse("50px").ToString());
+            var (value, unit) = CssUnitValue.Parse("12px");
+
+            Assert.Equal(12d, value);
+            Assert.Same(CssUnitInfo.Px, unit);
+        }
+
+        [Fact]
+        public void Em()
+        {
+            var (value, unit) = CssUnitValue.Parse("50em");
+
+            Assert.Equal(50d, value);
+            Assert.Same(CssUnitInfo.Em, unit);
         }
 
         [Fact]
         public void Percent()
         {
             Assert.Equal("50%", CssValue.Parse("50%").ToString());
+            Assert.Equal("50%", CssUnitValue.Parse("50%").ToString());
         }
 
         [Fact]

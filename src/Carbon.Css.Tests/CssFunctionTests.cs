@@ -1,6 +1,5 @@
 ﻿using Xunit;
 
-
 namespace Carbon.Css.Tests
 {
     public class CssFunctionTests
@@ -10,11 +9,9 @@ namespace Carbon.Css.Tests
         {
             var sheet = StyleSheet.Parse(
               @"
-                
                 $t1: ""calc((100% - 600px) / 2)""; 
 
                 div { padding: unquote($t1) }
-            
             ");
 
 
@@ -28,6 +25,5 @@ namespace Carbon.Css.Tests
 
             Assert.Equal("div { background-color: rgba(42, 45, 53, 0.7); }", sheet.ToString());
         }
-
     }
 }
