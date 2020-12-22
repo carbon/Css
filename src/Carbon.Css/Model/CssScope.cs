@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Carbon.Css
 {
@@ -33,7 +34,7 @@ namespace Carbon.Css
             items.Add(name, value);
         }
 
-        public bool TryGetValue(string key, out CssValue value)
+        public bool TryGetValue(string key, [NotNullWhen(true)] out CssValue? value)
         {
             return items.TryGetValue(key, out value);
         }
@@ -45,7 +46,7 @@ namespace Carbon.Css
                 throw new Exception($"recussion detected: {counter}");
             }
 
-            if (items.TryGetValue(name, out CssValue value))
+            if (items.TryGetValue(name, out CssValue? value))
             {
                 if (value.Kind == NodeKind.Variable)
                 {

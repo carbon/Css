@@ -51,7 +51,7 @@ namespace Carbon.Css
         
         public static bool NeedsPatch(string value, BrowserInfo browser)
         {
-            if (table.TryGetValue(value, out CssCompatibility c))
+            if (table.TryGetValue(value, out CssCompatibility? c))
             {
                 if (c.IsPrefixed(browser))
                 {

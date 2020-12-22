@@ -39,7 +39,7 @@ namespace Carbon.Css.Helpers
             using var reader = new StringReader(text);
 
             var i = 1;
-            string line;
+            string? line;
 
             while ((line = reader.ReadLine()) != null)
             {

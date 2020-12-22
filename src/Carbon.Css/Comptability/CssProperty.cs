@@ -54,20 +54,30 @@ namespace Carbon.Css
 
         public override int GetHashCode() => Name.GetHashCode();
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is string text) return Name == text;
+            if (obj is string text)
+            {
+                return Name.Equals(text, StringComparison.Ordinal);
+            }
 
             return obj is CssProperty other && Equals(other);
         }
 
-        public bool Equals(CssProperty other) => Name == other.Name;
+        public bool Equals(CssProperty? other)
+        {
+            if (other is null) return false;
+
+            if (ReferenceEquals(this, other)) return true;
+
+            return Name.Equals(other.Name, StringComparison.Ordinal);
+        }
 
         public override string ToString() => Name;
 
         public static CssProperty Get(string name)
         {
-            if (!Map.TryGetValue(name, out CssProperty propertyInfo))
+            if (!Map.TryGetValue(name, out CssProperty? propertyInfo))
             {
                 propertyInfo = new CssProperty(name);
             }

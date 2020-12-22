@@ -166,9 +166,16 @@ namespace Carbon.Css
             return new CssUnitInfo(name, NodeKind.Unknown);
         }
 
-        public bool Equals(CssUnitInfo other)
+        public bool Equals(CssUnitInfo? other)
         {
+            if (other is null) return this is null;
+
             return ReferenceEquals(this, other) || Name.Equals(other.Name, StringComparison.Ordinal);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is CssUnitInfo other && Equals(other);
         }
 
         public override int GetHashCode() => Name.GetHashCode();
