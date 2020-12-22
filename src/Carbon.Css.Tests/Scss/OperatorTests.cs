@@ -45,7 +45,7 @@ namespace Carbon.Css.Tests
         [Fact]
         public void ParseSubtract()
         {
-            var expression = CssValue.Parse("93.75% - 65px") as BinaryExpression;
+            var expression = (BinaryExpression)CssValue.Parse("93.75% - 65px");
 
             Assert.Equal(new CssUnitValue(93.75, "%"), expression.Left);
             Assert.Equal(new CssUnitValue(65, "px"),   expression.Right);

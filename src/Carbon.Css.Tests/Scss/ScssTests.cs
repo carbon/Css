@@ -10,20 +10,17 @@ namespace Carbon.Css.Tests
             var ss = StyleSheet.Parse(@"div {
   input,
   textarea {
-    display: block;
-    font-size: 22px;
-    line-height: 40px;
-    color: #333;
-    width: 100%;
-    height: 60px;
     padding: 10px 15px;
     margin: 0;
     border: none;
     box-shadow: none;
-    border-radius: 0px;
     border-radius: 2px 2px 0 0;
     -webkit-font-smoothing: antialiased;
-    box-sizing: border-box;
+    frequency: 10Hz;
+    angle: 50deg;
+    resolution: 10x;
+    time: 10s;
+    undefined: $undefined;
   }
 }");
 
@@ -40,20 +37,17 @@ namespace Carbon.Css.Tests
 
             Assert.Equal(@"div input,
 div textarea {
-  display: block;
-  font-size: 22px;
-  line-height: 40px;
-  color: #333;
-  width: 100%;
-  height: 60px;
   padding: 10px 15px;
   margin: 0;
   border: none;
   box-shadow: none;
-  border-radius: 0px;
   border-radius: 2px 2px 0 0;
   -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
+  frequency: 10Hz;
+  angle: 50deg;
+  resolution: 10x;
+  time: 10s;
+  undefined: /* $undefined undefined */;
 }", ss.ToString());
         }
 

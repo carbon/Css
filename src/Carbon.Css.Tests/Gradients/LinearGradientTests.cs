@@ -1,7 +1,8 @@
 ﻿using System;
-using Carbon.Color;
-using Xunit;
 
+using Carbon.Color;
+
+using Xunit;
 
 namespace Carbon.Css.Gradients.Tests
 {
@@ -165,10 +166,10 @@ namespace Carbon.Css.Gradients.Tests
 
             Assert.Equal(8, read);
 
-            Assert.Equal(Rgba32.Parse("#00a"), (Rgba32)stop1.Color);
+            Assert.Equal(Rgba32.Parse("#00a"), stop1.Color);
             Assert.Equal(0.9, stop1.Position);
 
-            Assert.Equal(Rgba32.Parse("#000"), (Rgba32)stop2.Color);
+            Assert.Equal(Rgba32.Parse("#000"), stop2.Color);
 
         }
 
@@ -178,9 +179,8 @@ namespace Carbon.Css.Gradients.Tests
             var text = "rgb(153, 116, 186) 0%, rgb(194, 234, 9) 20%".AsSpan();
 
             ColorStop stop;
-            int read;
 
-            stop = ColorStop.Read(text, out read);
+            stop = ColorStop.Read(text, out int read);
 
             Assert.Equal(21, read);
 

@@ -13,6 +13,23 @@ namespace Carbon.Css.Tests
             Assert.Equal("100px", edge.Bottom.ToString());
             Assert.Equal("200px", edge.Left.ToString());
             Assert.Equal("200px", edge.Right.ToString());
+
+            Assert.Equal("100px 200px", edge.ToString());
+        }
+
+        [Fact]
+        public void TryParse_Sucesss()
+        {
+            Assert.True(Thickness.TryParse("100px 200px", out Thickness edge));
+
+            Assert.Equal("100px 200px", edge.ToString());
+        }
+
+        [Fact]
+        public void TryParse_False()
+        {
+            Assert.False(Thickness.TryParse("a", out _));
+            Assert.False(Thickness.TryParse("", out _));
         }
 
         [Fact]
@@ -36,7 +53,7 @@ namespace Carbon.Css.Tests
             Assert.Equal("10px", a.Bottom.ToString());
             Assert.Equal("20%", a.Right.ToString());
 
-            Assert.Equal("10px 20% 10px 20%", a.ToString());
+            Assert.Equal("10px 20%", a.ToString());
         }
 
         [Fact]
@@ -50,6 +67,38 @@ namespace Carbon.Css.Tests
             Assert.Equal("10px", a.Right.ToString());
 
             Assert.Equal("10px", a.ToString());
+        }
+
+        [Fact]
+        public void E()
+        {
+            var a = Thickness.Parse("10px 10px 10px 10px");
+
+            var _10px = CssUnitValue.Parse("10px");
+
+            Assert.Equal(_10px, a.Top);
+            Assert.Equal(_10px, a.Left);
+            Assert.Equal(_10px, a.Bottom);
+            Assert.Equal(_10px, a.Right);
+
+            Assert.Equal("10px", a.ToString());
+        }
+
+        [Fact]
+        public void ThreeVariables()
+        {
+            // When three values are specified, the first padding applies to the top, the second to the right and left, the third to the bottom.
+
+            var edge = Thickness.Parse("169px 0px 174px");
+
+            Assert.Equal("169px", edge.Top.ToString());
+            Assert.Equal("0px",   edge.Left.ToString());
+            Assert.Equal("174px", edge.Bottom.ToString());
+            Assert.Equal("0px",   edge.Right.ToString());
+
+            Assert.Same(edge.Left, edge.Right);
+
+            Assert.Equal("169px 0px 174px", edge.ToString());
         }
     }
 }
