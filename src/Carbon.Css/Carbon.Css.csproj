@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <VersionPrefix>0.40.0</VersionPrefix>
+    <VersionPrefix>0.42.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
@@ -19,7 +19,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Carbon.Color" Version="2.21.0" />
+    <PackageReference Include="Carbon.Color" Version="2.24.0" />
   </ItemGroup>
 
 </Project>
