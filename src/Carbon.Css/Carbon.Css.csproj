@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <VersionPrefix>0.42.0</VersionPrefix>
+    <VersionPrefix>0.42.1</VersionPrefix>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
@@ -10,7 +10,7 @@
     <!-- Package Properties-->
     <Authors>iamcarbon</Authors>
     <Description>High-performance (S)CSS parser and auto-prefixer.</Description>
-    <Copyright>© 2012-2020 Jason Nelson</Copyright>
+    <Copyright>© 2012-2021 Jason Nelson</Copyright>
     <PackageId>Carbon.Css</PackageId>
     <PackageTags>css;scss;autoprefix</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -19,7 +19,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Carbon.Color" Version="2.24.0" />
+    <PackageReference Include="Carbon.Color" Version="2.25.1" />
   </ItemGroup>
 
 </Project>
