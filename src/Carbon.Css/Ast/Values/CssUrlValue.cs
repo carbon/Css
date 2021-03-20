@@ -64,7 +64,7 @@ namespace Carbon.Css
 
             if (basePath[0] == '/')
             {
-                basePath = basePath.Substring(1);
+                basePath = basePath[1..];
             }
 
             // TODO: Eliminate this allocation
@@ -82,7 +82,7 @@ namespace Carbon.Css
         {
             if (text.Length > 3 && text[0] == 'u' && text[1] == 'r' && text[2] == 'l') // url
             {
-                text = text.Slice(3);
+                text = text[3..];
             }
 
             if (text[0] == '(' || text[0] == '"' || text[0] == '\'')

@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Carbon.Css
 {
-    public class CssScope
+    public sealed class CssScope
     {
         private readonly IDictionary<string, CssValue> items;
 
@@ -60,7 +60,7 @@ namespace Carbon.Css
                 return value;
             }
 
-            if (Parent != null)
+            if (Parent is not null)
             {
                 return Parent.GetValue(name, Count + 1);
             }
@@ -77,6 +77,6 @@ namespace Carbon.Css
             items.Clear();
         }
 
-        public CssScope GetChildScope() => new CssScope(this);
+        public CssScope GetChildScope() => new (this);
     }
 }

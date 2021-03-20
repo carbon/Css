@@ -9,7 +9,7 @@ namespace Carbon.Css
 {
     public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
 	{
-        public static readonly CssUnitValue Zero = new CssUnitValue(0, CssUnitInfo.Number);
+        public static readonly CssUnitValue Zero = new (0, CssUnitInfo.Number);
         
         public CssUnitValue(double value, string unitName)
             : this(value, CssUnitInfo.Get(unitName))
@@ -60,7 +60,7 @@ namespace Carbon.Css
                 return Number(value);
             }
 
-            return new CssUnitValue(value, CssUnitInfo.Get(text.Slice(read).Trim()));
+            return new CssUnitValue(value, CssUnitInfo.Get(text[read..].Trim()));
         }
 
 		#region Operators
@@ -96,7 +96,7 @@ namespace Carbon.Css
             }
             else if (other is CssUnitValue otherUnit)
             {
-                if (other.Kind == Kind || other.Kind == NodeKind.Number)
+                if (other.Kind == Kind || other.Kind is NodeKind.Number)
                 {
                     return new CssUnitValue(Value / otherUnit.Value, otherUnit.Unit);
                 }

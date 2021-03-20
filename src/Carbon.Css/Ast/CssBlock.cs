@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Carbon.Css
@@ -34,7 +35,7 @@ namespace Carbon.Css
         {
             foreach (var child in children)
             {
-                if (child is CssDeclaration declaration && declaration.Name == name)
+                if (child is CssDeclaration declaration && declaration.Name.Equals(name, StringComparison.Ordinal))
                 {
                     return declaration;
                 }

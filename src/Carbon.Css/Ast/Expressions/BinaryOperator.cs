@@ -1,10 +1,5 @@
 ﻿namespace Carbon.Css
 {
-	public enum UnaryOperator
-	{
-		Not // !
-	}
-
     public enum BinaryOperator
 	{
         // Logical

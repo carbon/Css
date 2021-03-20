@@ -96,27 +96,30 @@ namespace Carbon.Css
         public static readonly CssProperty AnimationTimingFunction  = new ("animation-timing-function", CssModule.Animations3);
 
         public static readonly CssProperty Appearance = new ("appearance", new CssCompatibility(
-            prefixed: new CompatibilityTable(chrome: 1, firefox: 1, safari: 3)
+            prefixed: new (chrome: 1, firefox: 1, safari: 3)
         ));
 
         public static readonly CssProperty Azimuth = new ("azimuth", CssModule.Core2_1);
 
-        public static readonly CssProperty BackfaceVisibility = new ("backface-visibility", CssModule.Transforms3);
+        public static readonly CssProperty BackfaceVisibility = new ("backface-visibility", CssModule.Transforms3, new CssCompatibility(
+            prefixed: new (chrome: 12, firefox: 10, safari: 5.1f),
+            standard: new (chrome: 16, firefox: 36)
+        ));
 
         // Backgrounds
         public static readonly CssProperty Background           = new ("background", CssModule.Core1);
         public static readonly CssProperty BackgroundAttachment = new ("background-attachment", CssModule.Core1);
 
         public static readonly CssProperty BackgroundClip = new ("background-clip", CssModule.BackgroundsAndBorders3, new CssCompatibility(
-            prefixed: new CompatibilityTable(chrome : 4,  firefox: 4, safari: 4),
-            standard: new CompatibilityTable(chrome : 15, firefox: 4, ie: 9, safari: 7)
+            prefixed: new (chrome : 4,  firefox: 4, safari: 4),
+            standard: new (chrome : 15, firefox: 4, ie: 9, safari: 7)
         ));
 
         public static readonly CssProperty BackgroundColor = new ("background-color", CssModule.Core1);
         public static readonly CssProperty BackgroundImage = new ("background-image", CssModule.Core1);
 
         public static readonly CssProperty BackgroundOrigin = new ("background-origin", CssModule.BackgroundsAndBorders3, new CssCompatibility(
-            standard: new CompatibilityTable(chrome: 1, firefox: 4, ie: 9, safari: 3)
+            standard: new (chrome: 1, firefox: 4, ie: 9, safari: 3)
         ));
 
         public static readonly CssProperty BackgroundPosition = new ("background-position", CssModule.Core1);
@@ -125,8 +128,8 @@ namespace Carbon.Css
 
         // Borders -------------------------------------------------------------------------------------------------------
         public static readonly CssCompatibility BorderImageCompatibility = new (
-            prefixed: new CompatibilityTable(chrome: 7, firefox: 3.5f, safari: 3),
-            standard: new CompatibilityTable(chrome: 16, firefox: 15, ie: 11, safari: 6.1f)
+            prefixed: new (chrome: 7, firefox: 3.5f, safari: 3),
+            standard: new (chrome: 16, firefox: 15, ie: 11, safari: 6.1f)
         );
 
         public static readonly CssProperty Border                  = new ("border", CssModule.Core1);
@@ -169,13 +172,13 @@ namespace Carbon.Css
         public static readonly CssProperty BoxDecorationBreak = new ("box-decoration-break");
 
         public static readonly CssProperty BoxShadow = new ("box-shadow", CssModule.UI(3), new CssCompatibility(
-            prefixed: new CompatibilityTable(chrome: 1, firefox: 3.5f, safari: 3.1f),
-            standard: new CompatibilityTable(chrome: 10, firefox: 4, ie: 9, safari: 5.1f)
+            prefixed: new (chrome: 1, firefox: 3.5f, safari: 3.1f),
+            standard: new (chrome: 10, firefox: 4, ie: 9, safari: 5.1f)
         ));
 
         public static readonly CssProperty BoxSizing = new ("box-sizing", CssModule.UI(3), new CssCompatibility(
-            prefixed: new CompatibilityTable(chrome: 1, firefox: 1, ie: 8, safari: 3),
-            standard: new CompatibilityTable(chrome: 10, firefox: 29, ie: 9, safari: 5.1f)
+            prefixed: new (chrome: 1, firefox: 1, ie: 8, safari: 3),
+            standard: new (chrome: 10, firefox: 29, ie: 9, safari: 5.1f)
         ));
 
         // Breaks
@@ -191,7 +194,7 @@ namespace Carbon.Css
 
         // TODO: Confirm support
         public static readonly CssProperty ClipPath = new ("clip-path", new CssCompatibility(
-            prefixed: new CompatibilityTable(chrome: 24f, safari: 7)   
+            prefixed: new (chrome: 24f, safari: 7)   
         ));
 
         public static readonly CssProperty ClipRule = new ("clip-rule", CssModule.Masking_1);
@@ -222,8 +225,8 @@ namespace Carbon.Css
         public static readonly CssProperty EmptyCells = new ("empty-cells");
 
         public static readonly CssProperty Filter = new ("filter", new CssCompatibility(
-           prefixed: new CompatibilityTable(chrome: 18, firefox: 3.6f, ie: 13, safari: 6),
-           standard: new CompatibilityTable(firefox: 35, safari: 9.1f)
+           prefixed: new (chrome: 18, firefox: 3.6f, ie: 13, safari: 6),
+           standard: new (firefox: 35, safari: 9.1f)
        ));
 
         // SVG (Fill)
@@ -260,9 +263,6 @@ namespace Carbon.Css
         public static readonly CssProperty FontWeight       = new ("font-weight",    CssModule.Core1);
 
         // Grids ---------------------------------------------------------------------------------------
-        public static readonly CssCompatibility GridComptability = new CssCompatibility(
-            prefixed: new CompatibilityTable(ie: 10)
-        );
 
         public static readonly CssProperty Grid                = new ("grid");
         public static readonly CssProperty GridAutoColumns     = new ("grid-auto-columns");
@@ -272,8 +272,8 @@ namespace Carbon.Css
         public static readonly CssProperty GridTemplateColumns = new ("grid-template-columns");
         public static readonly CssProperty GridTemplateRows    = new ("grid-template-rows");
 
-        public static readonly CssProperty GridColumns         = new ("grid-columns", GridComptability);
-        public static readonly CssProperty GridRows            = new ("grid-rows", GridComptability);
+        public static readonly CssProperty GridColumns         = new ("grid-columns");
+        public static readonly CssProperty GridRows            = new ("grid-rows");
 
         // 
         public static readonly CssProperty Height              = new ("height", CssModule.Core1);
@@ -286,8 +286,8 @@ namespace Carbon.Css
         public static readonly CssProperty HyphenateResource  = new ("hyphenate-resource");
 
         public static readonly CssProperty Hyphens = new ("hyphens", new CssModule(CssModuleType.Text, 3), new CssCompatibility(
-            prefixed: new CompatibilityTable(chrome: 15, firefox: 6, ie: 10, safari: 5.1f),
-            standard: new CompatibilityTable(firefox: 43)
+            prefixed: new (chrome: 15, firefox: 6, ie: 10, safari: 5.1f),
+            standard: new (firefox: 43)
         ));
 
         // https://developer.mozilla.org/en-US/docs/Web/CSS/hyphens
@@ -353,7 +353,7 @@ namespace Carbon.Css
         public static readonly CssProperty Order   = new ("order");
 
         public static readonly CssProperty Orphans = new ("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility(
-            standard: new CompatibilityTable(ie: 8)
+            standard: new (ie: 8)
         ));
 
         // Outlines -------------------------------------------------------------------------------
@@ -436,7 +436,7 @@ namespace Carbon.Css
         public static readonly CssProperty TextOutline          = new ("text-outline");
 
         public static readonly CssProperty TextShadow           = new ("text-shadow", new CssCompatibility(
-            standard: new CompatibilityTable(chrome: 2, firefox: 3.5f, ie: 10, safari: 4)
+            standard: new (chrome: 2, firefox: 3.5f, ie: 10, safari: 4)
         ));
 
         public static readonly CssProperty TextSpaceCollapse     = new ("text-space-collapse");
@@ -453,10 +453,10 @@ namespace Carbon.Css
 
         // - Transitions (Level 3 ) ---------------------------------------------------------------------------------------------------------------
 
-        public static readonly CssProperty Transition               = new ("transition", CssModule.Transitions3);
-        public static readonly CssProperty TransitionDelay          = new ("transition-delay", CssModule.Transitions3);
-        public static readonly CssProperty TransitionDuration       = new ("transition-duration", CssModule.Transitions3);
-        public static readonly CssProperty TransitionProperty       = new ("transition-property", CssModule.Transitions3);
+        public static readonly CssProperty Transition               = new ("transition",                 CssModule.Transitions3);
+        public static readonly CssProperty TransitionDelay          = new ("transition-delay",           CssModule.Transitions3);
+        public static readonly CssProperty TransitionDuration       = new ("transition-duration",        CssModule.Transitions3);
+        public static readonly CssProperty TransitionProperty       = new ("transition-property",        CssModule.Transitions3);
         public static readonly CssProperty TransitionTimingFunction = new ("transition-timing-function", CssModule.Transitions3);
 
         // - Unicode -------------------------------------------------------------------------
@@ -464,7 +464,7 @@ namespace Carbon.Css
         public static readonly CssProperty UnicodeRange = new ("unicode-range");
 
         public static readonly CssProperty UserSelect = new ("user-select", new CssCompatibility(
-            prefixed: new CompatibilityTable(chrome: 1, firefox: 1, ie: 10, safari: 3)
+            prefixed: new (chrome: 1, firefox: 1, ie: 10, safari: 3)
         ));
 
         public static readonly CssProperty VerticalAlign = new ("vertical-align", CssModule.Core1);
@@ -625,24 +625,24 @@ namespace Carbon.Css
             { "hyphenate-resource",     HyphenateResource },
             { "hyphens",                Hyphens },
             { "inline-box-align",       InlineBoxAlign },
-            { "left", Left },
-            { "letter-spacing", LetterSpacing },
-            { "line-break", LineBreak },
-            { "line-height", LineHeight },
-            { "list-style", ListStyle },
-            { "list-style-image", ListStyleImage },
-            { "list-style-position", ListStylePosition },
-            { "list-style-type", ListStyleType },
-            { "margin", Margin },
-            { "margin-bottom", MarginBottom },
-            { "margin-left", MarginLeft },
-            { "margin-right", MarginRight },
-            { "margin-top", MarginTop },
-            { "marquee-direction", MarqueeDirection },
-            { "marquee-loop", MarqueeLoop },
-            { "marquee-play-count", MarqueePlayCount },
-            { "marquee-speed", MarqueeSpeed },
-            { "marquee-style", MarqueeStyle },
+            { "left",                   Left },
+            { "letter-spacing",         LetterSpacing },
+            { "line-break",             LineBreak },
+            { "line-height",            LineHeight },
+            { "list-style",             ListStyle },
+            { "list-style-image",       ListStyleImage },
+            { "list-style-position",    ListStylePosition },
+            { "list-style-type",        ListStyleType },
+            { "margin",                 Margin },
+            { "margin-bottom",          MarginBottom },
+            { "margin-left",            MarginLeft },
+            { "margin-right",           MarginRight },
+            { "margin-top",             MarginTop },
+            { "marquee-direction",      MarqueeDirection },
+            { "marquee-loop",           MarqueeLoop },
+            { "marquee-play-count",     MarqueePlayCount },
+            { "marquee-speed",          MarqueeSpeed },
+            { "marquee-style",          MarqueeStyle },
 
             // Masking
             { "mask",               Mask },
@@ -662,14 +662,14 @@ namespace Carbon.Css
             { "mask-repeat",        MaskRepeat },
             { "mask-size",          MaskSize },
 
-            { "max-height", MaxHeight },
-            { "max-width", MaxWidth },
-            { "min-height", MinHeight },
-            { "min-width", MinWidth },
-            { "opacity", Opacity },
-            { "order", Order },
-            { "orphans", Orphans },
-            { "outline", Outline },
+            { "max-height",         MaxHeight },
+            { "max-width",          MaxWidth },
+            { "min-height",         MinHeight },
+            { "min-width",          MinWidth },
+            { "opacity",            Opacity },
+            { "order",              Order },
+            { "orphans",            Orphans },
+            { "outline",            Outline },
 
             // Outline
             { "outline-color",  OutlineColor },

@@ -4,21 +4,22 @@ namespace Carbon.Css
 {
     public static class CssUnitNames
     {
-        public static readonly string Lh = "lh";
-        public static readonly string S = "s";
-        public static readonly string Ms = "ms";
-        public static readonly string Px = "px";
-        public static readonly string Em = "em";
-        public static readonly string Vw = "vw";
-        public static readonly string Vh = "vh";
-        public static readonly string Deg = "deg";
-        public static readonly string Rem = "rem";
+        public static readonly string Lh      = "lh";
+        public static readonly string S       = "s";
+        public static readonly string Ms      = "ms";
+        public static readonly string Px      = "px";
+        public static readonly string Em      = "em";
+        public static readonly string Vw      = "vw";
+        public static readonly string Vh      = "vh";
+        public static readonly string Ex      = "ex";
+        public static readonly string Deg     = "deg";
+        public static readonly string Rem     = "rem";
         public static readonly string Percent = "%";
-        public static readonly string Vmin = "vmin";
-        public static readonly string Vmax = "vmax";
-        public static readonly string X = "x";
-        public static readonly string Vi = "vi";
-        public static readonly string Hz = "Hz";
+        public static readonly string Vmin    = "vmin";
+        public static readonly string Vmax    = "vmax";
+        public static readonly string X       = "x";
+        public static readonly string Vi      = "vi";
+        public static readonly string Hz      = "Hz";
 
         public static string Get(ReadOnlySpan<char> text)
         {
@@ -35,20 +36,10 @@ namespace Carbon.Css
             {
                 switch (text[0])
                 {
-                    case 'p':
-                        if (text[1] == 'x') return Px;
-                        break;
-
-                    case 'e':
-                        if (text[1] == 'm') return Em;
-                        break;
-                    case 'H':
-                        if (text[1] == 'z') return Hz;
-                        break;
-                    case 'm':
-                        if (text[1] == 's') return Ms;
-                        break;
-
+                    case 'p' when (text[1] == 'x'): return Px;
+                    case 'e' when (text[1] == 'm'): return Em;
+                    case 'H' when (text[1] == 'z'): return Hz;
+                    case 'm' when (text[1] == 's'): return Ms;
                     case 'v':
                         switch (text[1])
                         {

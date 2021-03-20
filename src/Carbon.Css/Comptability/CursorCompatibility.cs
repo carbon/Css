@@ -7,7 +7,7 @@
 
         public override bool HasPatch(CssDeclaration declaration, in BrowserInfo browser)
         {
-            return CssCursor.NeedsPatch(declaration.Value.ToString(), browser);
+            return CssCursor.NeedsPatch(declaration.Value.ToString()!, browser);
         }
 
         public override CssPatch GetPatch(CssDeclaration declaration, in BrowserInfo browser)

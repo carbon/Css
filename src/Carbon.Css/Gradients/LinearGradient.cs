@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.Json.Serialization;
 
 using Carbon.Css.Helpers;
 
@@ -19,8 +20,11 @@ namespace Carbon.Css.Gradients
             Stops = colorStops;
         }
 
+        [JsonPropertyName("direction")]
         public readonly LinearGradientDirection Direction { get; }
 
+        [JsonPropertyName("angle")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly double? Angle { get; }
 
         // [ <linear-color-stop> [, <linear-color-hint>]? ]# , <linear-color-stop>
@@ -73,7 +77,7 @@ namespace Carbon.Css.Gradients
         {
             if (text.StartsWith("linear-gradient(".AsSpan()))
             {
-                text = text.Slice(16, text.Length - 17);
+                text = text[16..^1];
             }
 
             if (text.Length == 0)
@@ -88,11 +92,11 @@ namespace Carbon.Css.Gradients
             {
                 angle = ReadAngle(text, out int read);
 
-                text = text.Slice(read);
+                text = text[read..];
             }
             else if (LinearGradientDirectionHelper.TryParse(text, out direction, out int read))
             {
-                text = text.Slice(read);
+                text = text[read..];
             }
 
             var colorStops = new List<ColorStop>();
@@ -101,22 +105,22 @@ namespace Carbon.Css.Gradients
             {
                 if (text[0] == ',')
                 {
-                    text = text.Slice(1);
+                    text = text[1..];
                 }
 
                 if (text.TryReadWhitespace(out int read))
                 {
-                    text = text.Slice(read);
+                    text = text[read..];
                 }
 
                 if (text[0] == ',')
                 {
-                    text = text.Slice(1);
+                    text = text[1..];
                 }
 
                 var colorStop = ColorStop.Read(text, out read);
                 
-                text = text.Slice(read);
+                text = text[read..];
                 
                 colorStops.Add(colorStop);
             }
@@ -132,7 +136,7 @@ namespace Carbon.Css.Gradients
         {
             double value = text.ReadNumber(out read);
 
-            text = text.Slice(read);
+            text = text[read..];
 
             if (text[0] == 'd' &&
                 text[1] == 'e' && 

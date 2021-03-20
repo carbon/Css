@@ -9,7 +9,7 @@ namespace Carbon.Css
 
         // <length> (Relative) | em, ex, cm, ch, rem, vh, vw, vmin, vmax	                                  | relative to
         public static readonly CssUnitInfo Em   = new (CssUnitNames.Em,   NodeKind.Length, CssUnitFlags.Relative); // | font size of the element
-        public static readonly CssUnitInfo Ex   = new ("ex",              NodeKind.Length, CssUnitFlags.Relative); // | x-height of the element’s font
+        public static readonly CssUnitInfo Ex   = new (CssUnitNames.Ex,   NodeKind.Length, CssUnitFlags.Relative); // | x-height of the element’s font
         public static readonly CssUnitInfo Cap  = new ("cap",             NodeKind.Length, CssUnitFlags.Relative); // | cap height (the nominal height of capital letters) of the element’s font
         public static readonly CssUnitInfo Ch   = new ("ch",              NodeKind.Length, CssUnitFlags.Relative); // | average character advance of a narrow glyph in the element’s font, as represented by the “0” (ZERO, U+0030) glyph
         public static readonly CssUnitInfo Ic   = new ("ic",              NodeKind.Length, CssUnitFlags.Relative); // | average character advance of a fullwidth glyph in the element’s font, as represented by the “水” (CJK water ideograph, U+6C34) glyph
@@ -58,7 +58,7 @@ namespace Carbon.Css
         public static readonly Dictionary<string, CssUnitInfo> items = new () {
             // <length> : relative
             { CssUnitNames.Em   , Em },
-            { "ex"              , Ex },
+            { CssUnitNames.Ex   , Ex },
             { "cap"             , Cap },
             { "ch"              , Ch },
             { "ic"              , Ic },
@@ -105,7 +105,7 @@ namespace Carbon.Css
             { CssUnitNames.X    , X },
         };
 
-        internal CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags = CssUnitFlags.None)
+        internal CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags = default)
         {
             Name = name;
             Kind = kind;

@@ -61,11 +61,7 @@ namespace Carbon.Css.Helpers
                 read++;
             }
 
-#if NETSTANDARD2_0
-            return double.Parse(text.Slice(0, read).ToString(), CultureInfo.InvariantCulture);
-#else
             return double.Parse(text.Slice(0, read), provider: CultureInfo.InvariantCulture);
-#endif
         }
 
         public static bool TryReadWhitespace(this ReadOnlySpan<char> text, out int read)

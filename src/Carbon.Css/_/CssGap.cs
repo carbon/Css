@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable IDE0057 // Use range operator
+
+using System;
 using System.Runtime.Serialization;
 
 namespace Carbon.Css
@@ -69,5 +71,15 @@ namespace Carbon.Css
         }
 
         public override int GetHashCode() => HashCode.Combine(X, Y);
+
+        public static bool operator ==(CssGap left, CssGap right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(CssGap left, CssGap right)
+        {
+            return !left.Equals(right);
+        }
     }
 }

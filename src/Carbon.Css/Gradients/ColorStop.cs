@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 using Carbon.Color;
 using Carbon.Css.Helpers;
@@ -16,6 +17,7 @@ namespace Carbon.Css.Gradients
 
         public readonly Rgba32 Color { get; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly double? Position { get; }
 
         public static ColorStop Parse(ReadOnlySpan<char> text)
@@ -32,11 +34,11 @@ namespace Carbon.Css.Gradients
            
             if (text.TryReadWhitespace(out read))
             {
-                text = text.Slice(read);
+                text = text[read..];
             }
 
             Rgba32 color = text.ReadColor(out int colorRead);
-            text = text.Slice(colorRead);
+            text = text[colorRead..];
 
             read += colorRead;
 
@@ -64,11 +66,7 @@ namespace Carbon.Css.Gradients
 
                 if (text.Length > 0)
                 {
-#if NETSTANDARD2_0
-                    angle = double.Parse(text.Slice(0, text.Length - 1).ToString(), CultureInfo.InvariantCulture) / 100d;
-#else
-                    angle = double.Parse(text.Slice(0, text.Length - 1), provider: CultureInfo.InvariantCulture) / 100d;
-#endif
+                    angle = double.Parse(text[0..^1], provider: CultureInfo.InvariantCulture) / 100d;
                 }
             }
         

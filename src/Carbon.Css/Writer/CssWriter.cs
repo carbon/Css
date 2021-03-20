@@ -299,7 +299,7 @@ namespace Carbon.Css
 
             if (absolutePath[0] == '/')
             {
-                absolutePath = absolutePath.Substring(1);
+                absolutePath = absolutePath[1..];
             }
 
             // Assume to be scss if there is no extension

@@ -16,11 +16,11 @@ namespace Carbon.Css
 
         public readonly BrowserPrefix Prefix => GetPrefix(Type);
 
-        public static BrowserInfo Chrome(float version)  => new BrowserInfo(BrowserType.Chrome, version);
-        public static BrowserInfo Firefox(float version) => new BrowserInfo(BrowserType.Firefox, version);
-        public static BrowserInfo Safari(float version)  => new BrowserInfo(BrowserType.Safari, version);
-        public static BrowserInfo Opera(float version)   => new BrowserInfo(BrowserType.Opera, version);
-        public static BrowserInfo IE(float version)      => new BrowserInfo(BrowserType.IE, version);
+        public static BrowserInfo Chrome(float version)  => new (BrowserType.Chrome, version);
+        public static BrowserInfo Firefox(float version) => new (BrowserType.Firefox, version);
+        public static BrowserInfo Safari(float version)  => new (BrowserType.Safari, version);
+        public static BrowserInfo Opera(float version)   => new (BrowserType.Opera, version);
+        public static BrowserInfo IE(float version)      => new (BrowserType.IE, version);
 
         public static readonly BrowserInfo Chrome1  = Chrome(1);
         public static readonly BrowserInfo Chrome4  = Chrome(4);
@@ -42,13 +42,11 @@ namespace Carbon.Css
         public static readonly BrowserInfo Firefox21 = Firefox(21);
         public static readonly BrowserInfo Firefox29 = Firefox(29);
 
-        public static readonly BrowserInfo IE6       = IE(6);
-        public static readonly BrowserInfo IE7       = IE(7);
-        public static readonly BrowserInfo IE8       = IE(8);
-        public static readonly BrowserInfo IE9       = IE(9);
-        public static readonly BrowserInfo IE10      = IE(10);
-        public static readonly BrowserInfo IE11      = IE(11);
-        public static readonly BrowserInfo IE12      = IE(12); // edge
+        public static readonly BrowserInfo IE8     = IE(8);
+        public static readonly BrowserInfo IE9     = IE(9);
+        public static readonly BrowserInfo IE10    = IE(10);
+        public static readonly BrowserInfo IE11    = IE(11);
+        public static readonly BrowserInfo IE12    = IE(12); // edge
 
         public static readonly BrowserInfo Opera4  = Opera(3);
         public static readonly BrowserInfo Opera9  = Opera(9);
@@ -61,6 +59,7 @@ namespace Carbon.Css
         public static readonly BrowserInfo Safari6  = Safari(6);
         public static readonly BrowserInfo Safari7  = Safari(7);
         public static readonly BrowserInfo Safari10 = Safari(10);
+        public static readonly BrowserInfo Safari13 = Safari(13);
 
         public static BrowserPrefix GetPrefix(BrowserType type) => type switch
         {
@@ -73,49 +72,5 @@ namespace Carbon.Css
         };
         
         public override string ToString() => Type + "/" + Version;
-    }
-
-    public readonly struct BrowserPrefix : IEquatable<BrowserPrefix>
-    {
-        public static readonly BrowserPrefix Moz    = new BrowserPrefix(BrowserPrefixKind.Moz,    "-moz-");
-        public static readonly BrowserPrefix MS     = new BrowserPrefix(BrowserPrefixKind.Ms,     "-ms-");
-        public static readonly BrowserPrefix Opera  = new BrowserPrefix(BrowserPrefixKind.O,      "-o-");
-        public static readonly BrowserPrefix Webkit = new BrowserPrefix(BrowserPrefixKind.Webkit, "-webkit-");
-
-        private BrowserPrefix(BrowserPrefixKind kind, string text)
-        {
-            Kind = kind;
-            Text = text;
-        }
-
-        public readonly BrowserPrefixKind Kind { get; }
-
-        public readonly string Text { get; }
-       
-        public static implicit operator string(BrowserPrefix prefix) => prefix.Text;
-
-        public readonly bool Equals(BrowserPrefix other) => Kind == other.Kind;
-
-        public readonly override int GetHashCode() => (int)Kind;
-    }
-
-    [Flags]
-    public enum BrowserPrefixKind
-    {
-        Moz = 1,
-        Ms = 2,
-        O = 4,
-        Webkit = 8
-    }
-
-    [Flags]
-    public enum BrowserType
-    {
-        Unknown = 0,
-        IE = 1,
-        Firefox = 2,
-        Safari = 4,
-        Chrome = 8,
-        Opera = 16
     }
 }

@@ -64,6 +64,11 @@ namespace Carbon.Css
             return obj is CssPlacement other && Equals(other);
         }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Justify, Align);
+        }
+
         public readonly override string ToString()
         {
             if (Align == Justify)

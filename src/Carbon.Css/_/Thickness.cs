@@ -56,8 +56,7 @@ namespace Carbon.Css
 
             value = value.Trim();
 
-            string[] parts = value.Split(Seperators.Space);
-
+            string[] parts = value.Split(' ');
 
             for (int i = 0; i < parts.Length; i++)
             {

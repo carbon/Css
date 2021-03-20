@@ -133,18 +133,14 @@ namespace Carbon.Css
 
         private static double ParseDouble(ReadOnlySpan<char> text)
         {
-            if (text[text.Length - 1] == 'd' &&
-				text[text.Length - 2] == 'e' && 
-				text[text.Length - 3] == 'g')
+            if (text[^1] == 'd' &&
+				text[^2] == 'e' && 
+				text[^3] == 'g')
             {
-				text = text.Slice(0, text.Length - 3);
+				text = text[0..^3];
             }
 
-#if NETSTANDARD2_0
-			return double.Parse(text.ToString(), CultureInfo.InvariantCulture);
-#else
 			return double.Parse(text, provider: CultureInfo.InvariantCulture);
-#endif
 		}
 
 		private static double GetAmount(CssValue value) => value.Kind switch

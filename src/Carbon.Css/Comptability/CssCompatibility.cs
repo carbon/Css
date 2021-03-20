@@ -2,8 +2,8 @@
 {
     public class CssCompatibility
     {
-        public static readonly CssCompatibility All     = new CssCompatibility();
-        public static readonly CssCompatibility Default = new CssCompatibility();
+        public static readonly CssCompatibility All     = new ();
+        public static readonly CssCompatibility Default = new ();
 
         public CssCompatibility(
             CompatibilityTable prefixed = default,

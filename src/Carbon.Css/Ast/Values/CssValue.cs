@@ -69,20 +69,11 @@ namespace Carbon.Css
             }
 
             value = (unitIndex > 0)
-                ? new CssUnitValue(ParseDouble(text.AsSpan(0, unitIndex)), CssUnitNames.Get(text.AsSpan(unitIndex)))
+                ? new CssUnitValue(double.Parse(text.AsSpan(0, unitIndex), provider: CultureInfo.InvariantCulture), CssUnitNames.Get(text.AsSpan(unitIndex)))
                 : new CssUnitValue(double.Parse(text, CultureInfo.InvariantCulture), CssUnitInfo.Number);
 
             return true;
-        }
-
-        private static double ParseDouble(ReadOnlySpan<char> text)
-        {
-#if NETSTANDARD2_0
-            return double.Parse(text.ToString(), CultureInfo.InvariantCulture);
-#else
-            return double.Parse(text, provider: CultureInfo.InvariantCulture);
-#endif
-        }
+        }      
 
         public static CssValue FromComponents(IEnumerable<CssValue> components)
         {
@@ -118,14 +109,12 @@ namespace Carbon.Css
         {
             return operation switch
             {
-                BinaryOperator.Divide                        => false,
+                BinaryOperator.Divide                         => false,
                 BinaryOperator.Add or BinaryOperator.Subtract => left.Kind == right.Kind,
                 BinaryOperator.Multiply => 
                         left.Kind == right.Kind ||
-                        left.Kind == NodeKind.Percentage ||
-                        right.Kind == NodeKind.Percentage ||
-                        left.Kind == NodeKind.Number ||
-                        right.Kind == NodeKind.Number,
+                        left.Kind is NodeKind.Percentage or NodeKind.Number ||
+                        right.Kind is NodeKind.Percentage or NodeKind.Number,
                 BinaryOperator.Mod => right.Kind == NodeKind.Number,
                 _                  => true
             };

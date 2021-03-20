@@ -48,28 +48,25 @@ namespace Carbon.Css
             {
                 foreach (var node in parser.ReadNodes())
                 {
-                    if (node.Kind == NodeKind.Mixin)
+                    if (node.Kind is NodeKind.Mixin)
                     {
                         var mixin = (MixinNode)node;
 
                         sheet.Context!.Mixins.Add(mixin.Name, mixin);
                     }
-                    else if (node.Kind == NodeKind.Directive)
+                    else if (node.Kind is NodeKind.Directive)
                     {
                         var directive = (CssDirective)node;
 
                         if (directive.Name is "support" && directive.Value != null)
                         {
-                            string[] parts = directive.Value.Split(Seperators.Space);
+                            string[] parts = directive.Value.Split(' ');
 
                             if (Enum.TryParse(parts[0].Trim(), true, out BrowserType browserType))
                             {
-                                if (browsers is null)
-                                {
-                                    browsers = new List<BrowserInfo>(2);
-                                }
+                                browsers ??= new List<BrowserInfo>(2);
 
-                                float browserVersion = float.Parse(parts[parts.Length - 1].Trim(trimBrowserChars), CultureInfo.InvariantCulture);
+                                float browserVersion = float.Parse(parts[^1].AsSpan().Trim(trimBrowserChars), provider: CultureInfo.InvariantCulture);
 
                                 browsers.Add(new BrowserInfo(browserType, browserVersion));
                             }
@@ -181,7 +178,7 @@ namespace Carbon.Css
 
         private void ImportInline(ImportRule rule)
         {
-            if (resolver is null) throw new ArgumentNullException(nameof(resolver));
+            if (resolver is null) throw new Exception("No resolver was set");
 
             // var relativePath = importRule.Url;
             var absolutePath = rule.Url.GetAbsolutePath(resolver.ScopedPath);
@@ -192,7 +189,7 @@ namespace Carbon.Css
                 absolutePath += ".scss";
             }
 
-            var stream = resolver.Open(absolutePath.TrimStart(Seperators.ForwardSlash));
+            var stream = resolver.Open(absolutePath.TrimStart('/'));
 
             if (stream != null)
             {
