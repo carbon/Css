@@ -54,13 +54,17 @@ namespace Carbon.Css
 
             foreach (var node in sheet.Children)
             {
-                if (node.Kind == NodeKind.If)
+                if (node.Kind is NodeKind.If)
                 {
                     EvaluateIf((IfBlock)node, i: i);
                 }
-                else if (node.Kind == NodeKind.For)
+                else if (node.Kind is NodeKind.For)
                 {
                     EvaluateFor((ForBlock)node);
+                }
+                else if (node.Kind is NodeKind.Each)
+                {
+                    EvaluateEach((EachBlock)node);
                 }
                 else if (node.Kind == NodeKind.Comment)
                 {
@@ -126,7 +130,12 @@ namespace Carbon.Css
         public void EvaluateFor(ForBlock block, int level = 0)
         {
             int start = (int)((CssUnitValue)EvalulateExpression(block.Start)).Value;
-            int end = (int)((CssUnitValue)EvalulateExpression(block.End)).Value;
+            int end   = (int)((CssUnitValue)EvalulateExpression(block.End)).Value;
+
+            if (!block.IsInclusive) // through
+            {
+                end--;
+            }
 
             if (end < start)
             {
@@ -138,6 +147,7 @@ namespace Carbon.Css
                 throw new Exception("Must be less than 10,000");
             }
 
+            
             scope = scope.GetChildScope();
 
             int a = 0;
@@ -146,7 +156,30 @@ namespace Carbon.Css
             {
                 if (a > 0) writer.WriteLine();
 
-                scope[block.Variable.Symbol] = CssUnitValue.Number(i);
+                scope[block.Variable.Symbol] = CssValue.Number(i);
+
+                WriteBlockBody(block, level);
+
+                a++;              
+            }
+
+            scope = scope.Parent!;
+        }
+
+        public void EvaluateEach(EachBlock block, int level = 0)
+        {
+            var enumerable = (CssValueList)EvalulateExpression(block.Enumerable);
+
+
+            scope = scope.GetChildScope();
+
+            int a = 0;
+
+            foreach (var value in enumerable)
+            {
+                if (a > 0) writer.WriteLine();
+
+                scope[block.Variable.Symbol] = value;
 
                 WriteBlockBody(block, level);
 

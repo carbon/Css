@@ -2,7 +2,7 @@
 {
     public enum ValueSeperator
     {
-        Comma,
-        Space
+        Comma = 1,
+        Space = 2
     }
 }

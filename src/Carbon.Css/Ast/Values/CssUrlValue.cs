@@ -15,8 +15,6 @@ namespace Carbon.Css
 
         public CssUrlValue(byte[] data, string contentType)
         {
-            // Works for resources only up to 32k in size in IE8.
-
             var sb = new StringBuilder();
 
             sb.Append("data:");

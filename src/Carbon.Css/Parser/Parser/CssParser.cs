@@ -318,13 +318,13 @@ namespace Carbon.Css.Parser
 
             ReadName(); // ! in
 
-            var start = ReadExpression();
+            CssValue start = ReadExpression();
 
-            ReadName(); // through or to
+            string name = ReadName(); // through (inclusive) or to (exclusive)
 
-            var end = ReadExpression();
+            CssValue end = ReadExpression();
 
-            var rule = new ForBlock(variable, start, end);
+            var rule = new ForBlock(variable, start, end, isInclusive: name.Equals("through", StringComparison.Ordinal));
 
             ReadBlock(rule);
 

@@ -78,6 +78,16 @@ namespace Carbon.Css
 
             return Align.Canonicalize() + " " + Justify.Canonicalize();
         }
+
+        public static bool operator ==(CssPlacement left, CssPlacement right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(CssPlacement left, CssPlacement right)
+        {
+            return !left.Equals(right);
+        }
     }
 }
 
