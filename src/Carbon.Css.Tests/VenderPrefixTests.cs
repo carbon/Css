@@ -39,7 +39,7 @@
 	to {opacity: 0.25;}
 }");
 
-            var atRule = (sheet.Children[0] as UnknownRule);
+            var atRule = (UnknownRule)sheet.Children[0];
 
             Assert.Equal("-webkit-keyframes", atRule.Name);
             Assert.Equal("fade", atRule.Text.ToString());
@@ -163,6 +163,25 @@ body {
   -ms-transform: rotate(90);
   -webkit-transform: rotate(90);
   transform: rotate(90);
+}", sheet.ToString());
+
+        }
+
+
+        [Fact]
+        public void BackfaceVisibility()
+        {
+            var sheet = StyleSheet.Parse(@"
+body { 
+  backface-visibility: hidden;
+}
+");
+
+            sheet.Context.SetCompatibility(BrowserInfo.Safari10);
+
+            Assert.Equal(@"body {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }", sheet.ToString());
 
         }
