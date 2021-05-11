@@ -30,6 +30,19 @@
             Assert.Equal(@"a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
         }
 
+
+        [Fact]
+        public void UnsupportedBrowser()
+        {
+            var sheet = StyleSheet.Parse(@"
+			//= support Safari >= 9
+            //= support IE >= 10
+			a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
+
+            Assert.Equal(@"a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
+        }
+
+
         [Fact]
         public void ParseWebkitPrefixedKeyframesRule()
         {
@@ -156,11 +169,10 @@ body {
 }
 ");
 
-            sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1, BrowserInfo.Firefox1, BrowserInfo.IE9);
+            sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1, BrowserInfo.Firefox1);
 
             Assert.Equal(@"body {
   -moz-transform: rotate(90);
-  -ms-transform: rotate(90);
   -webkit-transform: rotate(90);
   transform: rotate(90);
 }", sheet.ToString());
