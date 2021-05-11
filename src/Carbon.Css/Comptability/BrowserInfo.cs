@@ -17,19 +17,20 @@ namespace Carbon.Css
         public readonly BrowserPrefix Prefix => GetPrefix(Type);
 
         public static BrowserInfo Chrome(float version)  => new (BrowserType.Chrome, version);
+        public static BrowserInfo Edge(float version)    => new(BrowserType.Edge, version);
+
         public static BrowserInfo Firefox(float version) => new (BrowserType.Firefox, version);
         public static BrowserInfo Safari(float version)  => new (BrowserType.Safari, version);
         public static BrowserInfo Opera(float version)   => new (BrowserType.Opera, version);
-        public static BrowserInfo IE(float version)      => new (BrowserType.IE, version);
 
-        public static readonly BrowserInfo Chrome1  = Chrome(1);
-        public static readonly BrowserInfo Chrome4  = Chrome(4);
-        public static readonly BrowserInfo Chrome7  = Chrome(7);
-        public static readonly BrowserInfo Chrome10 = Chrome(10);
-        public static readonly BrowserInfo Chrome13 = Chrome(13);
-        public static readonly BrowserInfo Chrome26 = Chrome(26);
-        public static readonly BrowserInfo Chrome36 = Chrome(36);
-        public static readonly BrowserInfo Chrome50 = Chrome(50);
+        public static readonly BrowserInfo Chrome1   = Chrome(1);
+        public static readonly BrowserInfo Chrome4   = Chrome(4);
+        public static readonly BrowserInfo Chrome7   = Chrome(7);
+        public static readonly BrowserInfo Chrome10  = Chrome(10);
+        public static readonly BrowserInfo Chrome13  = Chrome(13);
+        public static readonly BrowserInfo Chrome26  = Chrome(26);
+        public static readonly BrowserInfo Chrome36  = Chrome(36);
+        public static readonly BrowserInfo Chrome50  = Chrome(50);
 
         public static readonly BrowserInfo Firefox1  = Firefox(1);
         public static readonly BrowserInfo Firefox4  = Firefox(4);
@@ -42,30 +43,24 @@ namespace Carbon.Css
         public static readonly BrowserInfo Firefox21 = Firefox(21);
         public static readonly BrowserInfo Firefox29 = Firefox(29);
 
-        public static readonly BrowserInfo IE8     = IE(8);
-        public static readonly BrowserInfo IE9     = IE(9);
-        public static readonly BrowserInfo IE10    = IE(10);
-        public static readonly BrowserInfo IE11    = IE(11);
-        public static readonly BrowserInfo IE12    = IE(12); // edge
+        public static readonly BrowserInfo Opera4    = Opera(3);
+        public static readonly BrowserInfo Opera9    = Opera(9);
+        public static readonly BrowserInfo Opera15   = Opera(15); // Based on Chromium
 
-        public static readonly BrowserInfo Opera4  = Opera(3);
-        public static readonly BrowserInfo Opera9  = Opera(9);
-        public static readonly BrowserInfo Opera15 = Opera(15); // Based on Chromium
-
-        public static readonly BrowserInfo Safari1  = Safari(1);
-        public static readonly BrowserInfo Safari3  = Safari(3);
-        public static readonly BrowserInfo Safari4  = Safari(4);
-        public static readonly BrowserInfo Safari5  = Safari(5);
-        public static readonly BrowserInfo Safari6  = Safari(6);
-        public static readonly BrowserInfo Safari7  = Safari(7);
-        public static readonly BrowserInfo Safari10 = Safari(10);
-        public static readonly BrowserInfo Safari13 = Safari(13);
+        public static readonly BrowserInfo Safari1   = Safari(1);
+        public static readonly BrowserInfo Safari3   = Safari(3);
+        public static readonly BrowserInfo Safari4   = Safari(4);
+        public static readonly BrowserInfo Safari5   = Safari(5);
+        public static readonly BrowserInfo Safari6   = Safari(6);
+        public static readonly BrowserInfo Safari7   = Safari(7);
+        public static readonly BrowserInfo Safari10  = Safari(10);
+        public static readonly BrowserInfo Safari13  = Safari(13);
 
         public static BrowserPrefix GetPrefix(BrowserType type) => type switch
         {
             BrowserType.Chrome  => BrowserPrefix.Webkit,
             BrowserType.Firefox => BrowserPrefix.Moz,
-            BrowserType.IE      => BrowserPrefix.MS,
+            BrowserType.Edge    => BrowserPrefix.Webkit, // Edge is based on Chromium as of v88
             BrowserType.Opera   => BrowserPrefix.Opera,
             BrowserType.Safari  => BrowserPrefix.Webkit,
             _                   => throw new Exception("Unexpected browser: " + type)

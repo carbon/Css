@@ -16,7 +16,7 @@
 
         public string Symbol { get; }
 
-        public override CssNode CloneNode() => new CssVariable(Symbol);
+        public override CssVariable CloneNode() => new (Symbol);
 
         public override string ToString() => "$" + Symbol;
     }

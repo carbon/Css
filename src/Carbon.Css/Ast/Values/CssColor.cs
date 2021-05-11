@@ -38,7 +38,7 @@ namespace Carbon.Css
 			return new CssColor($"rgba({r}, {g}, {b}, {a})");
 		}
 
-		public override CssNode CloneNode()
+		public override CssColor CloneNode()
 		{
 			return c_value.HasValue
 				? new CssColor(c_value.Value)

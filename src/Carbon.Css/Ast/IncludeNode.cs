@@ -13,7 +13,7 @@
 
         public CssValue? Args { get; }
 
-        public override CssNode CloneNode() => new IncludeNode(Name, Args);
+        public override IncludeNode CloneNode() => new (Name, Args);
     }
 }
 

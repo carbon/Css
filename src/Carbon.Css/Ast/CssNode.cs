@@ -19,7 +19,7 @@ namespace Carbon.Css
         public CssNode? Parent { get; set; }
 
         [JsonIgnore]
-        internal Trivia? Leading { get; set; }
+        internal Trivia? Leading { get; init; }
 
         [JsonIgnore]
         public Trivia? Trailing { get; set; }

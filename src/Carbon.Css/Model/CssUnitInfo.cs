@@ -37,8 +37,8 @@ namespace Carbon.Css
 
         // <angle> deg, grad, rad, turn
         public static readonly CssUnitInfo Deg  = new (CssUnitNames.Deg,  NodeKind.Angle);
-        public static readonly CssUnitInfo Grad = new ("grad",            NodeKind.Angle);
-        public static readonly CssUnitInfo Rad  = new ("rad",             NodeKind.Angle);
+        public static readonly CssUnitInfo Grad = new (CssUnitNames.Grad, NodeKind.Angle);
+        public static readonly CssUnitInfo Rad  = new (CssUnitNames.Rad,  NodeKind.Angle);
         public static readonly CssUnitInfo Turn = new ("turn",            NodeKind.Angle);
 
         // <time> | s, ms
@@ -82,12 +82,12 @@ namespace Carbon.Css
             { CssUnitNames.Px   , Px },
             
             // <percentage>
-            { "%"               , Percentage },
+            { CssUnitNames.Percent, Percentage },
 
             // <angle>
             { CssUnitNames.Deg  , Deg },
-            { "grad"            , Grad },
-            { "rad"             , Rad },
+            { CssUnitNames.Grad , Grad },
+            { CssUnitNames.Rad  , Rad },
             { "turn"            , Turn },
 
             // <time>
@@ -120,7 +120,7 @@ namespace Carbon.Css
 
         public static CssUnitInfo Get(ReadOnlySpan<char> name)
         {
-            if (name.Length == 1)
+            if (name.Length is 1)
             {
                 switch (name[0])
                 {
@@ -129,7 +129,7 @@ namespace Carbon.Css
                     case 'x': return X;
                 }
             }
-            else if (name.Length == 2)
+            else if (name.Length is 2)
             {
                 switch ((name[0], name[1]))
                 {
@@ -140,30 +140,14 @@ namespace Carbon.Css
                 }
             }
 
-            return Get(name.ToString());
-        }
+            string text = name.ToString();
 
-        public static CssUnitInfo Get(string name)
-        {
-            if (ReferenceEquals(CssUnitNames.Px, name))
-            {
-                return Px;
-            }
-            else if (ReferenceEquals(CssUnitNames.Em, name))
-            {
-                return Em;
-            }
-            else if (ReferenceEquals(CssUnitNames.Percent, name))
-            {
-                return Percentage;
-            }
-
-            if (items.TryGetValue(name, out var unit))
+            if (items.TryGetValue(text, out var unit))
             {
                 return unit;
             }
 
-            return new CssUnitInfo(name, NodeKind.Unknown);
+            return new CssUnitInfo(text, NodeKind.Unknown);
         }
 
         public bool Equals(CssUnitInfo? other)

@@ -1,4 +1,6 @@
-﻿namespace Carbon.Css
+﻿using System.Globalization;
+
+namespace Carbon.Css
 {
     public sealed class CssModule : CssCompatibility
     {
@@ -17,25 +19,25 @@
 
         public float Level { get; }
 
-        public override string ToString() => Type + " Level " + Level;
+        public override string ToString() => Type + " Level " + Level.ToString(CultureInfo.InvariantCulture);
 
         public static readonly CssModule Core1 = new (CssModuleType.Core, 1,
             standard: new CompatibilityTable(chrome: 1, firefox: 1, safari: 1)
         );
 
         public static readonly CssModule Core2 = new (CssModuleType.Core, 2,
-            standard: new CompatibilityTable(chrome: 1, firefox: 1, ie: 6, safari: 1)
+            standard: new CompatibilityTable(chrome: 1, edge: 6, firefox: 1, safari: 1)
         );
 
         public static readonly CssModule Core2_1 = new (CssModuleType.Core, 2.1f,
-            standard: new CompatibilityTable(chrome: 1, firefox: 1, ie: 8, safari: 1)
+            standard: new CompatibilityTable(chrome: 1, edge: 8, firefox: 1, safari: 1)
         );
 
         #region Animations
 
         public static readonly CssModule Animations3 = new (CssModuleType.Animations, 3,
-            prefixed: new CompatibilityTable(chrome: 1, firefox: 5, safari: 4),
-            standard: new CompatibilityTable(chrome: 26, firefox: 16, ie: 10, safari: 9)
+            prefixed: new CompatibilityTable(chrome: 1,            firefox: 5, safari: 4),
+            standard: new CompatibilityTable(chrome: 26, edge: 10, firefox: 16, safari: 9)
         );
 
         #endregion
@@ -49,7 +51,7 @@
         #region Color
 
         public static readonly CssModule Color3 = new (CssModuleType.Color, 3f,
-            standard: new CompatibilityTable(chrome: 1, firefox: 1, ie: 9, safari: 1.2f)
+            standard: new CompatibilityTable(chrome: 1, edge: 9, firefox: 1, safari: 1.2f)
         );
 
         #endregion
@@ -58,8 +60,8 @@
 
         // Columns (Level 3)
         public static readonly CssModule Columns3 = new (CssModuleType.Columns, 3,
-            prefixed: new CompatibilityTable(chrome: 10, firefox: 9, safari: 7),
-            standard: new CompatibilityTable(ie: 10, chrome: 50, safari: 9)
+            prefixed: new CompatibilityTable(chrome: 10,           firefox: 9, safari: 7),
+            standard: new CompatibilityTable(chrome: 50, edge: 10, firefox: 52, safari: 9)
         );
 
 
@@ -72,7 +74,7 @@
             type     : CssModuleType.Flexbox,
             level    : 1,
             prefixed : new CompatibilityTable(chrome: 21),
-            standard : new CompatibilityTable(chrome: 29, firefox: 28, safari: 9)
+            standard : new CompatibilityTable(chrome: 29, edge: 12, firefox: 28, safari: 9)
         );
 
         #endregion
@@ -89,7 +91,7 @@
         // https://caniuse.com/#feat=css-masks
         public static readonly CssModule Masking_1 = new (CssModuleType.Masking, 1,
             prefixed : new CompatibilityTable(chrome: 4, safari: 4),
-            standard : new CompatibilityTable(firefox: 53, ie: 18)
+            standard : new CompatibilityTable(firefox: 53)
         );
 
         #endregion
@@ -111,8 +113,8 @@
         #region Transforms
 
         public static readonly CssModule Transforms3 = new (CssModuleType.Transforms, 3,
-            prefixed: new CompatibilityTable(chrome: 10, firefox: 3.5f, ie: 9, safari: 4),
-            standard: new CompatibilityTable(chrome: 36, firefox: 16, ie: 10, safari: 9)
+            prefixed: new CompatibilityTable(chrome: 10, edge: 9,  firefox: 3.5f, safari: 4),
+            standard: new CompatibilityTable(chrome: 36, edge: 10, firefox: 16,   safari: 9)
         );
 
         #endregion
@@ -123,8 +125,8 @@
         // Standard in IE10
 
         public static readonly CssModule Transitions3 = new (CssModuleType.Transitions, 3,
-            prefixed: new CompatibilityTable(chrome: 1, firefox: 4, safari: 3),
-            standard: new CompatibilityTable(chrome: 26, firefox: 20, ie: 10, safari: 9)
+            prefixed: new CompatibilityTable(chrome: 1,            firefox: 4,  safari: 3),
+            standard: new CompatibilityTable(chrome: 26, edge: 10, firefox: 20, safari: 9)
         )
         { PatchValues = true };
 

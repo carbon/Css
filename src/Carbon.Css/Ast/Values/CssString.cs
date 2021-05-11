@@ -22,11 +22,9 @@ namespace Carbon.Css
             Text = text;
         }
 
-        // TODO: Use Utf8String when available
-
         public string Text { get; }
 
-        public override CssNode CloneNode() => new CssString(Text);
+        public override CssString CloneNode() => new (Text);
 
         internal override void WriteTo(TextWriter writer)
         {

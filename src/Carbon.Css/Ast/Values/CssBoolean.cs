@@ -13,7 +13,7 @@
 
         public bool Value { get; }
 
-        public override CssNode CloneNode() => new CssBoolean(Value);
+        public override CssBoolean CloneNode() => new (Value);
 
         public override string ToString() => Value ? "true" : "false";
 

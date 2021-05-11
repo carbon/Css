@@ -19,9 +19,19 @@ namespace Carbon.Css
             return new CssUnitValue(value, CssUnitInfo.Number);
         }
 
+        public static CssUnitValue Em(double value)
+        {
+            return new CssUnitValue(value, CssUnitInfo.Em);
+        }
+
+        public static CssUnitValue Px(double value)
+        {
+            return new CssUnitValue(value, CssUnitInfo.Px);
+        }
+
         public static CssValue Parse(string text)
         {
-            if (text.Length == 0)
+            if (text.Length is 0)
             {
                 throw new ArgumentException("Must not be empty", nameof(text));
             }

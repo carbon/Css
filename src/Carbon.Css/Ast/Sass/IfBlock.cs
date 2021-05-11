@@ -10,7 +10,7 @@
 
         public CssValue Condition { get; }
 
-        public override CssNode CloneNode()
+        public override IfBlock CloneNode()
         {
             var block = new IfBlock(Condition);
 

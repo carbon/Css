@@ -94,7 +94,7 @@ namespace Carbon.Css
                 throw new ArgumentNullException(nameof(resolver));
             }
 
-            foreach (var rule in Children.OfType<ImportRule>().ToArray())
+            foreach (var rule in Children.OfType<ImportRule>().ToList())
             {
                 if (rule.Url.IsPath)
                 {

@@ -20,10 +20,12 @@ namespace Carbon.Css
         public static readonly string X       = "x";
         public static readonly string Vi      = "vi";
         public static readonly string Hz      = "Hz";
+        public static readonly string Grad    = "grad";
+        public static readonly string Rad     = "rad";
 
         public static string Get(ReadOnlySpan<char> text)
         {
-            if (text.Length == 1)
+            if (text.Length is 1)
             {
                 switch (text[0])
                 {
@@ -32,14 +34,14 @@ namespace Carbon.Css
                     case 'x': return X;
                 }
             }
-            else if (text.Length == 2)
+            else if (text.Length is 2)
             {
                 switch (text[0])
                 {
-                    case 'p' when (text[1] == 'x'): return Px;
-                    case 'e' when (text[1] == 'm'): return Em;
-                    case 'H' when (text[1] == 'z'): return Hz;
-                    case 'm' when (text[1] == 's'): return Ms;
+                    case 'p' when (text[1] is 'x'): return Px;
+                    case 'e' when (text[1] is 'm'): return Em;
+                    case 'H' when (text[1] is 'z'): return Hz;
+                    case 'm' when (text[1] is 's'): return Ms;
                     case 'v':
                         switch (text[1])
                         {
@@ -50,7 +52,7 @@ namespace Carbon.Css
                 }
             }
 
-            else if (text.Length == 3)
+            else if (text.Length is 3)
             {
                 if (text[0] == 'd' && text[1] == 'e' && text[2] == 'g')
                 {
@@ -61,29 +63,18 @@ namespace Carbon.Css
                     return Rem;
                 }
             }
-            else if (text.Length == 4)
+            else if (text.Length is 4)
             {
-                switch (text[0])
+                if (text[0] is 'v' && text[1] is 'm')
                 {
-                    case 'v':
-                        switch (text[1])
-                        {
-                            case 'm':
-                                if (text[2] == 'a' && text[3] == 'x')
-                                {
-                                    return Vmax;
-                                }
-                                else if (text[2] == 'i' && text[3] == 'n')
-                                {
-                                    return Vmin;
-                                }
-                                break;
-                            default: break;
-                        }
-                      
-                        break;
-                    default:
-                        break;
+                    if (text[2] == 'a' && text[3] == 'x')
+                    {
+                        return Vmax;
+                    }
+                    else if (text[2] == 'i' && text[3] == 'n')
+                    {
+                        return Vmin;
+                    }
                 }
             }
 

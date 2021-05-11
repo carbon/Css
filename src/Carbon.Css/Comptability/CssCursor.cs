@@ -8,12 +8,12 @@ namespace Carbon.Css
     {
         private static readonly CssCompatibility grabCursor = new (
             prefixed: new (firefox: 1.5f, safari: 4f),
-            standard: new (chrome: 68, firefox: 27, ie: 15, safari: 11)
+            standard: new (chrome: 68, firefox: 27, edge: 15, safari: 11)
         );
 
         private static readonly CssCompatibility zoomCursor = new (
             prefixed: new (safari: 3),
-            standard: new (chrome: 37, ie: 12, firefox: 24, safari: 9)
+            standard: new (chrome: 37, edge: 12, firefox: 24, safari: 9)
         );
 
         private static readonly Dictionary<string, CssCompatibility> table = new ()

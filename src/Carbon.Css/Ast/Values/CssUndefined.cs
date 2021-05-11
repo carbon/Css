@@ -10,7 +10,7 @@
 
         public string VariableName { get; }
 
-        public override CssNode CloneNode() => new CssUndefined(VariableName);
+        public override CssUndefined CloneNode() => new (VariableName);
 
         public override string ToString() => $"/* ${VariableName} undefined */";
     }

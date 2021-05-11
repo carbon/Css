@@ -28,6 +28,7 @@ namespace Carbon.Css.Gradients
         public readonly double? Angle { get; }
 
         // [ <linear-color-stop> [, <linear-color-hint>]? ]# , <linear-color-stop>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly ColorStop[] Stops { get; }
 
         public readonly override string ToString()
@@ -138,9 +139,7 @@ namespace Carbon.Css.Gradients
 
             text = text[read..];
 
-            if (text[0] == 'd' &&
-                text[1] == 'e' && 
-                text[2] == 'g')
+            if (text.StartsWith("deg", StringComparison.Ordinal))
             {
                 read += 3;
             }

@@ -67,8 +67,8 @@ namespace Carbon.Css
 
             // TODO: Eliminate this allocation
 
-            // http://dev/styles/
-            var baseUri = new Uri("http://dev/" + basePath);
+            // https://dev/styles/
+            var baseUri = new Uri("https://dev/" + basePath);
 
             // Absolute path
             return new Uri(baseUri, relativeUri: Value).AbsolutePath;
@@ -78,7 +78,7 @@ namespace Carbon.Css
 
         public static CssUrlValue Parse(ReadOnlySpan<char> text)
         {
-            if (text.Length > 3 && text[0] == 'u' && text[1] == 'r' && text[2] == 'l') // url
+            if (text.StartsWith("url", StringComparison.Ordinal))
             {
                 text = text[3..];
             }

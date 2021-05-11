@@ -17,26 +17,26 @@ namespace Carbon.Css.Gradients
                 return false;
             }
 
-            if (text[0] == 't' && text[1] == 'o' && text[2] == ' ') // to 
+            if (text.StartsWith("to ", StringComparison.Ordinal)) // 'to ' 
             {
                 read += 3;
 
                 text = text[3..];
             }
 
-            if (text.StartsWith("top"))
+            if (text.StartsWith("top", StringComparison.Ordinal))
             {
                 read += 3;
 
                 text = text[3..];
 
-                if (text.StartsWith(" left"))
+                if (text.StartsWith(" left", StringComparison.Ordinal))
                 {
                     read += 5;
 
                     result = TopLeft;
                 }
-                else if (text.StartsWith(" right"))
+                else if (text.StartsWith(" right", StringComparison.Ordinal))
                 {
                     read += 6;
 
@@ -47,19 +47,19 @@ namespace Carbon.Css.Gradients
                     result = Top;
                 }
             }
-            else if (text.StartsWith("bottom"))
+            else if (text.StartsWith("bottom", StringComparison.Ordinal))
             {
                 read += 6;
 
                 text = text[6..];
 
-                if (text.StartsWith(" left"))
+                if (text.StartsWith(" left", StringComparison.Ordinal))
                 {
                     read += 5;
 
                     result = Left;
                 }
-                else if (text.StartsWith(" right"))
+                else if (text.StartsWith(" right", StringComparison.Ordinal))
                 {
                     read += 6;
 
@@ -70,13 +70,13 @@ namespace Carbon.Css.Gradients
                     result = Bottom;
                 }
             }
-            else if (text.StartsWith("left"))
+            else if (text.StartsWith("left", StringComparison.Ordinal))
             {
                 read += 4;
 
                 result = Left;
             }
-            else if (text.StartsWith("right"))
+            else if (text.StartsWith("right", StringComparison.Ordinal))
             {
                 read += 5;
 

@@ -8,11 +8,11 @@ namespace Carbon.Css
         private CompatibilityTable compatibility = default;
 
         private BrowserInfo[]? browserSupport = null;
-        private Dictionary<string, MixinNode>? mixins;
+        private Dictionary<string, MixinNode>? _mixins;
 
         public Dictionary<string, MixinNode> Mixins
         {
-            get => mixins ??= new Dictionary<string, MixinNode>();
+            get => _mixins ??= new Dictionary<string, MixinNode>();
         }
 
         public BrowserInfo[]? BrowserSupport => browserSupport;
@@ -43,14 +43,14 @@ namespace Carbon.Css
 
         public void SetCompatibility(params BrowserInfo[] targets)
         {
-            if (browserSupport != null) return;
+            if (browserSupport is not null) return;
 
             browserSupport = targets.OrderBy(t => t.Prefix.Text).ToArray();
 
-            float chrome = 0;
+            float chrome  = 0;
             float firefox = 0;
-            float ie = 0;
-            float safari = 0;
+            float edge    = 0;
+            float safari  = 0;
 
             foreach (var browser in browserSupport)
             {
@@ -58,12 +58,12 @@ namespace Carbon.Css
                 {
                     case BrowserType.Chrome  : chrome  = browser.Version; break;
                     case BrowserType.Firefox : firefox = browser.Version; break;
-                    case BrowserType.IE      : ie      = browser.Version; break;
+                    case BrowserType.Edge    : edge    = browser.Version; break;
                     case BrowserType.Safari  : safari  = browser.Version; break;
                 }
             }
 
-            compatibility = new CompatibilityTable(chrome, firefox, ie, safari);
+            compatibility = new CompatibilityTable(chrome, edge, firefox, safari);
         }
     }
 }

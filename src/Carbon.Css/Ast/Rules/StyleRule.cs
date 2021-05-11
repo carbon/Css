@@ -31,7 +31,7 @@ namespace Carbon.Css
 
         public int Depth { get; set; }
 
-        public override CssNode CloneNode()
+        public override StyleRule CloneNode()
         {
             var clone = new StyleRule(Selector) { Depth = Depth };
 

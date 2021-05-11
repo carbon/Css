@@ -40,7 +40,7 @@ namespace Carbon.Css
 
         public string? Priority { get; }
 
-        public override CssNode CloneNode() => new CssDeclaration(Info, (CssValue)Value.CloneNode(), Priority);
+        public override CssDeclaration CloneNode() => new (Info, (CssValue)Value.CloneNode(), Priority);
 
         public void WriteTo(StringBuilder sb)
         {

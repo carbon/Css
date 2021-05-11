@@ -96,7 +96,8 @@ namespace Carbon.Css
         public static readonly CssProperty AnimationTimingFunction  = new ("animation-timing-function", CssModule.Animations3);
 
         public static readonly CssProperty Appearance = new ("appearance", new CssCompatibility(
-            prefixed: new (chrome: 1, firefox: 1, safari: 3)
+            prefixed: new (chrome: 1,            firefox: 1, safari: 3),
+            standard: new (chrome: 84, edge: 83, firefox: 80)
         ));
 
         public static readonly CssProperty Azimuth = new ("azimuth", CssModule.Core2_1);
@@ -112,41 +113,41 @@ namespace Carbon.Css
 
         public static readonly CssProperty BackgroundClip = new ("background-clip", CssModule.BackgroundsAndBorders3, new CssCompatibility(
             prefixed: new (chrome : 4,  firefox: 4, safari: 4),
-            standard: new (chrome : 15, firefox: 4, ie: 9, safari: 7)
+            standard: new (chrome : 15, firefox: 4, edge: 9, safari: 7)
         ));
 
         public static readonly CssProperty BackgroundColor = new ("background-color", CssModule.Core1);
         public static readonly CssProperty BackgroundImage = new ("background-image", CssModule.Core1);
 
         public static readonly CssProperty BackgroundOrigin = new ("background-origin", CssModule.BackgroundsAndBorders3, new CssCompatibility(
-            standard: new (chrome: 1, firefox: 4, ie: 9, safari: 3)
+            standard: new (chrome: 1, edge: 9, firefox: 4, safari: 3)
         ));
 
-        public static readonly CssProperty BackgroundPosition = new ("background-position", CssModule.Core1);
-        public static readonly CssProperty BackgroundRepeat   = new ("background-repeat", CssModule.Core1);
-        public static readonly CssProperty BackgroundSize     = new ("background-size", CssModule.BackgroundsAndBorders3);
+        public static readonly CssProperty BackgroundPosition = new ("background-position",  CssModule.Core1);
+        public static readonly CssProperty BackgroundRepeat   = new ("background-repeat",    CssModule.Core1);
+        public static readonly CssProperty BackgroundSize     = new ("background-size",      CssModule.BackgroundsAndBorders3);
 
         // Borders -------------------------------------------------------------------------------------------------------
         public static readonly CssCompatibility BorderImageCompatibility = new (
-            prefixed: new (chrome: 7, firefox: 3.5f, safari: 3),
-            standard: new (chrome: 16, firefox: 15, ie: 11, safari: 6.1f)
+            prefixed: new (chrome: 7,            firefox: 3.5f, safari: 3),
+            standard: new (chrome: 16, edge: 11, firefox: 15,   safari: 6.1f)
         );
 
-        public static readonly CssProperty Border                  = new ("border", CssModule.Core1);
-        public static readonly CssProperty BorderBottom            = new ("border-bottom", CssModule.Core1);
-        public static readonly CssProperty BorderBottomColor       = new ("border-bottom-color", CssModule.Core1);
+        public static readonly CssProperty Border                  = new ("border",                 CssModule.Core1);
+        public static readonly CssProperty BorderBottom            = new ("border-bottom",          CssModule.Core1);
+        public static readonly CssProperty BorderBottomColor       = new ("border-bottom-color",    CssModule.Core1);
         public static readonly CssProperty BorderBottomLeftRadius  = new ("border-bottom-left-radius");
         public static readonly CssProperty BorderBottomRightRadius = new ("border-bottom-right-radius");
         public static readonly CssProperty BorderBottomStyle       = new ("border-bottom-style");
         public static readonly CssProperty BorderBottomWidth       = new ("border-bottom-width");
         public static readonly CssProperty BorderCollapse          = new ("border-collapse");
-        public static readonly CssProperty BorderColor             = new ("border-color", CssModule.Core1);
-        public static readonly CssProperty BorderImage             = new ("border-image", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageOutset       = new ("border-image-outset", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageRepeat       = new ("border-image-repeat", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageSlice        = new ("border-image-slice", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageSource       = new ("border-image-source", BorderImageCompatibility);
-        public static readonly CssProperty BorderImageWidth        = new ("border-image-width", BorderImageCompatibility);
+        public static readonly CssProperty BorderColor             = new ("border-color",           CssModule.Core1);
+        public static readonly CssProperty BorderImage             = new ("border-image",           BorderImageCompatibility);
+        public static readonly CssProperty BorderImageOutset       = new ("border-image-outset",    BorderImageCompatibility);
+        public static readonly CssProperty BorderImageRepeat       = new ("border-image-repeat",    BorderImageCompatibility);
+        public static readonly CssProperty BorderImageSlice        = new ("border-image-slice",     BorderImageCompatibility);
+        public static readonly CssProperty BorderImageSource       = new ("border-image-source",    BorderImageCompatibility);
+        public static readonly CssProperty BorderImageWidth        = new ("border-image-width",     BorderImageCompatibility);
 
         public static readonly CssProperty BorderLeft              = new ("border-left", CssModule.Core1);
         public static readonly CssProperty BorderLeftColor         = new ("border-left-color");
@@ -172,13 +173,13 @@ namespace Carbon.Css
         public static readonly CssProperty BoxDecorationBreak = new ("box-decoration-break");
 
         public static readonly CssProperty BoxShadow = new ("box-shadow", CssModule.UI(3), new CssCompatibility(
-            prefixed: new (chrome: 1, firefox: 3.5f, safari: 3.1f),
-            standard: new (chrome: 10, firefox: 4, ie: 9, safari: 5.1f)
+            prefixed: new (chrome: 1,           firefox: 3.5f, safari: 3.1f),
+            standard: new (chrome: 10, edge: 9, firefox: 4,    safari: 5.1f)
         ));
 
         public static readonly CssProperty BoxSizing = new ("box-sizing", CssModule.UI(3), new CssCompatibility(
-            prefixed: new (chrome: 1, firefox: 1, ie: 8, safari: 3),
-            standard: new (chrome: 10, firefox: 29, ie: 9, safari: 5.1f)
+            prefixed: new (chrome: 1,  edge: 8, firefox: 1,  safari: 3),
+            standard: new (chrome: 10, edge: 9, firefox: 29, safari: 5.1f)
         ));
 
         // Breaks
@@ -194,7 +195,8 @@ namespace Carbon.Css
 
         // TODO: Confirm support
         public static readonly CssProperty ClipPath = new ("clip-path", new CssCompatibility(
-            prefixed: new (chrome: 24f, safari: 7)   
+            prefixed: new (chrome: 24f, safari: 7),
+            standard: new (firefox: 54)
         ));
 
         public static readonly CssProperty ClipRule = new ("clip-rule", CssModule.Masking_1);
@@ -225,8 +227,8 @@ namespace Carbon.Css
         public static readonly CssProperty EmptyCells = new ("empty-cells");
 
         public static readonly CssProperty Filter = new ("filter", new CssCompatibility(
-           prefixed: new (chrome: 18, firefox: 3.6f, ie: 13, safari: 6),
-           standard: new (firefox: 35, safari: 9.1f)
+           prefixed: new (chrome: 18, edge: 13, firefox: 3.6f, safari: 6),
+           standard: new (chrome: 53, edge: 79, firefox: 35,   safari: 9.1f)
        ));
 
         // SVG (Fill)
@@ -286,14 +288,13 @@ namespace Carbon.Css
         public static readonly CssProperty HyphenateResource  = new ("hyphenate-resource");
 
         public static readonly CssProperty Hyphens = new ("hyphens", new CssModule(CssModuleType.Text, 3), new CssCompatibility(
-            prefixed: new (chrome: 15, firefox: 6, ie: 10, safari: 5.1f),
-            standard: new (firefox: 43)
+            prefixed: new (chrome: 15, edge: 10, firefox: 6, safari: 5.1f),
+            standard: new (chrome: 88,           firefox: 43)
         ));
 
         // https://developer.mozilla.org/en-US/docs/Web/CSS/hyphens
 
         public static readonly CssProperty InlineBoxAlign = new ("inline-box-align");
-
 
         public static readonly CssProperty Left = new ("left", CssModule.Core1);
         public static readonly CssProperty LetterSpacing = new ("letter-spacing");
@@ -340,11 +341,11 @@ namespace Carbon.Css
         public static readonly CssProperty MaskRepeat       = new ("mask-repeat",        CssModule.Masking_1);
         public static readonly CssProperty MaskSize         = new ("mask-size",          CssModule.Masking_1);
 
-        public static readonly CssProperty MaxHeight  = new ("max-height", CssModule.Core2_1);
-        public static readonly CssProperty MaxWidth   = new ("max-width", CssModule.Core2_1);
+        public static readonly CssProperty MaxHeight        = new ("max-height", CssModule.Core2_1);
+        public static readonly CssProperty MaxWidth         = new ("max-width", CssModule.Core2_1);
 
-        public static readonly CssProperty MinHeight  = new ("min-height", CssModule.Core2_1);
-        public static readonly CssProperty MinWidth   = new ("min-width", CssModule.Core2_1);
+        public static readonly CssProperty MinHeight        = new ("min-height", CssModule.Core2_1);
+        public static readonly CssProperty MinWidth         = new ("min-width", CssModule.Core2_1);
 
         // <= IE8 filter: alpha(opacity=xx)
         // IE8 introduced -ms-filter, which is synonymous with filter. Both are gone in IE10
@@ -353,7 +354,7 @@ namespace Carbon.Css
         public static readonly CssProperty Order   = new ("order");
 
         public static readonly CssProperty Orphans = new ("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility(
-            standard: new (ie: 8)
+            standard: new (edge: 8)
         ));
 
         // Outlines -------------------------------------------------------------------------------
@@ -395,7 +396,7 @@ namespace Carbon.Css
       
         public static readonly CssProperty Quotes = new ("quotes");
         public static readonly CssProperty Resize = new ("resize");
-        public static readonly CssProperty Right = new ("right", CssModule.Core1);
+        public static readonly CssProperty Right  = new ("right", CssModule.Core1);
 
         // Ruby (Level 3) ------------------------------------------------------------------------------------
 
@@ -436,7 +437,7 @@ namespace Carbon.Css
         public static readonly CssProperty TextOutline          = new ("text-outline");
 
         public static readonly CssProperty TextShadow           = new ("text-shadow", new CssCompatibility(
-            standard: new (chrome: 2, firefox: 3.5f, ie: 10, safari: 4)
+            standard: new (chrome: 2, edge: 10, firefox: 3.5f, safari: 4)
         ));
 
         public static readonly CssProperty TextSpaceCollapse     = new ("text-space-collapse");
@@ -464,7 +465,8 @@ namespace Carbon.Css
         public static readonly CssProperty UnicodeRange = new ("unicode-range");
 
         public static readonly CssProperty UserSelect = new ("user-select", new CssCompatibility(
-            prefixed: new (chrome: 1, firefox: 1, ie: 10, safari: 3)
+            prefixed: new (chrome: 1,  edge: 10, firefox: 1, safari: 3),
+            standard: new (chrome: 54,           firefox: 69)
         ));
 
         public static readonly CssProperty VerticalAlign = new ("vertical-align", CssModule.Core1);

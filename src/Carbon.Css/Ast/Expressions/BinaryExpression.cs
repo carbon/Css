@@ -25,6 +25,6 @@ namespace Carbon.Css
 
         public BinaryOperator Operator => (BinaryOperator)OperatorToken.Kind;
 
-        public override CssNode CloneNode() => new BinaryExpression(Left, OperatorToken, Right);
+        public override BinaryExpression CloneNode() => new (Left, OperatorToken, Right);
     }
 }

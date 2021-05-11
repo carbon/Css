@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable IDE0057 // Use range operator
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -27,7 +29,7 @@ namespace Carbon.Css.Parser
         {
             foreach (var node in ReadNodes())
             {
-                if (node.Kind == NodeKind.Rule)
+                if (node.Kind is NodeKind.Rule)
                 {
                     yield return (CssRule)node;
                 }
@@ -152,7 +154,7 @@ namespace Carbon.Css.Parser
 
             TokenList? text = null;
 
-            if (Current.Kind == TokenKind.Name)
+            if (Current.Kind is TokenKind.Name)
             {
                 text = ReadTokenSpan();
             }
@@ -196,7 +198,7 @@ namespace Carbon.Css.Parser
 
             string? selectorText = null;
 
-            if (Current.Kind == TokenKind.Name)
+            if (Current.Kind is TokenKind.Name)
             {
                 selectorText = ReadTokenSpan().ToString();
             }
@@ -210,7 +212,7 @@ namespace Carbon.Css.Parser
 
             var span = new TokenList();
 
-            while (Current.Kind != TokenKind.BlockStart && !IsEnd)
+            while (Current.Kind is not TokenKind.BlockStart && !IsEnd)
             {
                 span.Add(Consume()); // Read the token
             }
@@ -228,7 +230,7 @@ namespace Carbon.Css.Parser
 
             var span = new TokenList();
 
-            while (Current.Kind != TokenKind.BlockStart && !IsEnd)
+            while (Current.Kind is not TokenKind.BlockStart && !IsEnd)
             {
                 span.Add(Consume());
             }
@@ -274,7 +276,6 @@ namespace Carbon.Css.Parser
         #endregion
 
         #region Sass Rules
-
 
         public IfBlock ReadIfRule()
         {
@@ -583,8 +584,8 @@ namespace Carbon.Css.Parser
 
             ReadTrivia();
 
-            CssParameter[] parameters = (Current.Kind == TokenKind.LeftParenthesis)
-                ? ReadParameterList().ToArray()
+            IReadOnlyList<CssParameter> parameters = Current.Kind is TokenKind.LeftParenthesis
+                ? ReadParameterList()
                 : Array.Empty<CssParameter>();
             
             var mixin = new MixinNode(name.Text, parameters);
@@ -602,7 +603,7 @@ namespace Carbon.Css.Parser
 
             var list = new List<CssParameter>();
 
-            while (Current.Kind != TokenKind.RightParenthesis && !IsEnd)
+            while (Current.Kind is not TokenKind.RightParenthesis && !IsEnd)
             {
                 Consume(TokenKind.Dollar, LexicalMode.Unknown);
 
@@ -638,7 +639,7 @@ namespace Carbon.Css.Parser
 
         public IEnumerable<CssDeclaration> ReadDeclartions()
         {
-            while (Current.Kind != TokenKind.BlockEnd && !IsEnd)
+            while (Current.Kind is not TokenKind.BlockEnd && !IsEnd)
             {
                 yield return ReadDeclaration();
             }
@@ -695,7 +696,7 @@ namespace Carbon.Css.Parser
 
             ReadTrivia();
 
-            while (Current.Kind != TokenKind.BlockEnd)
+            while (Current.Kind is not TokenKind.BlockEnd)
             {
                 if (IsEnd) throw new UnbalancedBlock(blockStart);
 
@@ -833,13 +834,13 @@ namespace Carbon.Css.Parser
             var list = new CssSequence();
 
             while (!IsEnd
-                && Current.Kind != TokenKind.Colon
-                && Current.Kind != TokenKind.BlockStart
-                && Current.Kind != TokenKind.BlockEnd
-                && Current.Kind != TokenKind.Semicolon
-                && Current.Kind != TokenKind.Comma)
+                && !(Current.Kind is TokenKind.Colon
+                                  or TokenKind.BlockStart
+                                  or TokenKind.BlockEnd
+                                  or TokenKind.Semicolon
+                                  or TokenKind.Comma))
             {
-                if (Current.Kind == TokenKind.InterpolatedStringStart)
+                if (Current.Kind is TokenKind.InterpolatedStringStart)
                 {
                     list.Add(ReadInterpolatedString());
                 }
@@ -867,11 +868,11 @@ namespace Carbon.Css.Parser
             var list = new TokenList();
 
             while (!IsEnd 
-                && Current.Kind != TokenKind.Colon 
-                && Current.Kind != TokenKind.BlockStart
-                && Current.Kind != TokenKind.BlockEnd
-                && Current.Kind != TokenKind.Semicolon
-                && Current.Kind != TokenKind.Comma)
+                && !(Current.Kind is TokenKind.Colon 
+                                  or TokenKind.BlockStart
+                                  or TokenKind.BlockEnd
+                                  or TokenKind.Semicolon
+                                  or TokenKind.Comma))
             {
                 list.Add(Consume());
             }

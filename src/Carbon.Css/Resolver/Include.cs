@@ -20,7 +20,7 @@ namespace Carbon.Css.Resolver
 
             using var reader = file.OpenText();
 
-            while ((line = reader.ReadLine()) != null)
+            while ((line = reader.ReadLine()) is not null)
             {
                 writer.WriteLine(line);
             }

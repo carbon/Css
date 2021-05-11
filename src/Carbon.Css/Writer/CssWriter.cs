@@ -1,4 +1,7 @@
-﻿using System;
+﻿#pragma warning disable IDE0066 // Convert switch statement to expression
+#pragma warning disable IDE0090 // Use 'new(...)'
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -66,15 +69,15 @@ namespace Carbon.Css
                 {
                     EvaluateEach((EachBlock)node);
                 }
-                else if (node.Kind == NodeKind.Comment)
+                else if (node.Kind is NodeKind.Comment)
                 {
-                    if (i != 0) writer.WriteLine();
+                    if (i > 0) writer.WriteLine();
 
                     i++;
 
                     WriteComment((CssComment)node);
                 }
-                else if (node.Kind == NodeKind.Assignment)
+                else if (node.Kind is NodeKind.Assignment)
                 {
                     var variable = (CssAssignment)node;
 
@@ -82,14 +85,14 @@ namespace Carbon.Css
                 }
                 else if (node is CssRule rule)
                 {
-                    if (i != 0)
+                    if (i > 0)
                     {
                         writer.WriteLine();
                     }
 
                     i++;
 
-                    if (rule.Type == RuleType.Import)
+                    if (rule.Type is RuleType.Import)
                     {
                         var importRule = (ImportRule)rule;
 
@@ -283,9 +286,9 @@ namespace Carbon.Css
 
         private static bool AreEqual(CssValue lhs, CssValue rhs)
         {
-            if (lhs.Kind == NodeKind.Undefined)
+            if (lhs.Kind is NodeKind.Undefined)
             {
-                return rhs.Kind == NodeKind.Undefined || rhs is CssString { Text: "undefined" };
+                return rhs.Kind is NodeKind.Undefined || rhs is CssString { Text: "undefined" };
             }
 
             if (lhs is CssUnitValue lv && rhs is CssUnitValue rv)
@@ -298,7 +301,7 @@ namespace Carbon.Css
 
         private static double ToDouble(CssValue value)
         {
-            if (value is CssUnitValue uv && uv.Kind == NodeKind.Number)
+            if (value is CssUnitValue uv && uv.Kind is NodeKind.Number)
             {
                 return uv.Value;
             }
@@ -330,7 +333,7 @@ namespace Carbon.Css
             // var relativePath = importRule.Url;
             var absolutePath = importRule.Url.GetAbsolutePath(resolver.ScopedPath);
 
-            if (absolutePath[0] == '/')
+            if (absolutePath[0] is '/')
             {
                 absolutePath = absolutePath[1..];
             }
@@ -368,7 +371,7 @@ namespace Carbon.Css
 
                     writer.WriteLine($"/* --- Parse Error in '{absolutePath}' : {ex.Message} ");
 
-                    if (ex.Lines != null)
+                    if (ex.Lines is not null)
                     {
                         foreach (var line in ex.Lines)
                         {
@@ -397,7 +400,7 @@ namespace Carbon.Css
 
                 string? line;
 
-                while ((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) is not null)
                 {
                     writer.WriteLine(line);
                 }
@@ -455,14 +458,14 @@ namespace Carbon.Css
 
             foreach (CssValue value in list)
             {
-                if (i != 0)
+                if (i > 0)
                 {
                     if (list[i - 1] is CssInterpolatedString last)
                     {
                         WriteTrivia(last.Trailing);
                     }
 
-                    else if (list.Seperator == ValueSeperator.Space)
+                    else if (list.Seperator is ValueSeperator.Space)
                     {
                         writer.Write(' ');
                     }
@@ -527,7 +530,7 @@ namespace Carbon.Css
                 case NodeKind.ValueList:
                     var list = (CssValueList)value;
 
-                    if (list.Seperator == ValueSeperator.Space) yield return list;
+                    if (list.Seperator is ValueSeperator.Space) yield return list;
 
                     // Break out comma seperated values
                     foreach (var v in list)
@@ -584,7 +587,7 @@ namespace Carbon.Css
 
                 foreach (var r in Rewrite(styleRule))
                 {
-                    if (i != 0) writer.WriteLine();
+                    if (i > 0) writer.WriteLine();
 
                     WriteRuleInternal(r, depth);
 
@@ -641,21 +644,21 @@ namespace Carbon.Css
 
         public void WriteSelector(CssSelector selectorList)
         {
-            // throw new Exception(string.Join("|", selectorList));
+            // throw new Exception(string.Join('|', selectorList));
 
             for (int selectorIndex = 0; selectorIndex < selectorList.Count; selectorIndex++)
             {
                 var selector = selectorList[selectorIndex];
 
-                if (selectorIndex != 0)
+                if (selectorIndex > 0)
                 {
-                    if (selector.Count == 1)
+                    if (selector.Count is 1)
                     {
                         writer.Write(", ");
                     }
                     else
                     {
-                        writer.WriteLine(",");
+                        writer.WriteLine(',');
                     }
                 }
 
@@ -667,7 +670,7 @@ namespace Carbon.Css
 
                     bool isLast = (childIndex + 1) == selector.Count;
                     
-                    if ((item.Kind == NodeKind.Sequence || item.Trailing is not null) && !isLast)
+                    if ((item.Kind is NodeKind.Sequence || item.Trailing is not null) && !isLast)
                     {
                         writer.Write(' ');
                     }
@@ -686,7 +689,7 @@ namespace Carbon.Css
                 bool isLast = (i + 1) == sequence.Count;
 
                 // Skip trailing trivia
-                if (item.Trailing != null && !isLast)
+                if (item.Trailing is not null && !isLast)
                 {
                     writer.Write(' ');
                 }
@@ -708,7 +711,7 @@ namespace Carbon.Css
                 WriteValue(item);
                 
                 // Skip trailing trivia
-                if ((item.Kind == NodeKind.Sequence || item.Trailing is not null) && (i + 1) != value.Count)
+                if ((item.Kind is NodeKind.Sequence || item.Trailing is not null) && (i + 1) != value.Count)
                 {
                     writer.Write(' ');
                 }
@@ -789,7 +792,7 @@ namespace Carbon.Css
             // Write the declarations
             foreach (var node in block.Children) // TODO: Change to an immutable list?
             {
-                if (node.Kind == NodeKind.Include)
+                if (node.Kind is NodeKind.Include)
                 {
                     var b2 = new CssBlock(NodeKind.Block) {
                         node
@@ -806,11 +809,11 @@ namespace Carbon.Css
                         count++;
                     }
                 }
-                else if (node.Kind == NodeKind.Declaration)
+                else if (node.Kind is NodeKind.Declaration)
                 {
                     var declaration = (CssDeclaration)node;
 
-                    if (block.Children.Count == 1 && !declaration.Info.NeedsExpansion(declaration, browserSupport))
+                    if (block.Children.Count is 1 && !declaration.Info.NeedsExpansion(declaration, browserSupport))
                     {
                         condenced = true;
 
@@ -820,24 +823,24 @@ namespace Carbon.Css
                     }
                     else
                     {
-                        if (count == 0) writer.WriteLine();
+                        if (count is 0) writer.WriteLine();
 
                         WritePatchedDeclaration(declaration, depth + 1);
                     }
                 }
-                else if (node.Kind == NodeKind.Rule)  // Nested rule
+                else if (node.Kind is NodeKind.Rule)  // Nested rule
                 {
-                    if (count == 0) writer.WriteLine();
+                    if (count is 0) writer.WriteLine();
 
                     var childRule = (CssRule)node;
 
                     WriteRule(childRule, depth + 1);
                 }
-                else if (node.Kind == NodeKind.If)
+                else if (node.Kind is NodeKind.If)
                 {
                     EvaluateIf((IfBlock)node, depth + 1);
                 }
-                else if (node.Kind == NodeKind.For)
+                else if (node.Kind is NodeKind.For)
                 {
                 }
 
@@ -876,7 +879,7 @@ namespace Carbon.Css
         {
             CssProperty prop = declaration.Info;
 
-            if (browserSupport != null && prop.Compatibility.HasPatches)
+            if (browserSupport is not null && prop.Compatibility.HasPatches)
             {
                 BrowserPrefixKind prefixes = default;
 
@@ -938,11 +941,11 @@ namespace Carbon.Css
                 throw new Exception("Nested @media rules are not supported yet");
             }
 
-            var clone = (StyleRule)rule.CloneNode(); // TODO: Eliminate
+            var clone = rule.CloneNode(); // TODO: Eliminate
 
             if (rule.Flags.HasFlag(CssBlockFlags.HasIncludes)) // Expand the includes
             {
-                foreach (var includeNode in clone.Children.OfType<IncludeNode>().ToArray())
+                foreach (var includeNode in clone.Children.OfType<IncludeNode>().ToList())
                 {
                     scope = ExpandInclude(includeNode, clone);
 
@@ -950,12 +953,11 @@ namespace Carbon.Css
                 }
             }
 
-
             var root = new List<CssRule> {
                 clone
             };
 
-            foreach (var nestedRule in clone.Children.OfType<StyleRule>().ToArray())
+            foreach (var nestedRule in clone.Children.OfType<StyleRule>().ToList())
             {
                 foreach (var r in ExpandStyleRule(nestedRule, parent: clone))
                 {
@@ -991,7 +993,7 @@ namespace Carbon.Css
 
             if (hasNestedRules)
             {
-                foreach (CssNode childNode in rule.Children.ToArray())
+                foreach (CssNode childNode in rule.Children.ToList())
                 {
                     if (childNode is StyleRule childRule)
                     {
@@ -1037,7 +1039,7 @@ namespace Carbon.Css
 
             int i = 0;
 
-            foreach (var node in mixin.Children.ToArray())
+            foreach (var node in mixin.Children.ToList())
             {
                 // Bind variables
 
@@ -1056,15 +1058,15 @@ namespace Carbon.Css
             return childScope;
         }
 
-        public CssScope GetScope(CssParameter[] paramaters, CssValue? args)
+        public CssScope GetScope(IReadOnlyList<CssParameter> paramaters, CssValue? args)
         {
             CssValue[]? list = null;
 
-            if (args != null)
+            if (args is not null)
             {
                 if (args is CssValueList valueList)
                 {
-                    if (valueList.Seperator == ValueSeperator.Comma)
+                    if (valueList.Seperator is ValueSeperator.Comma)
                     {
                         list = valueList.OfType<CssValue>().ToArray();
                     }
@@ -1077,9 +1079,9 @@ namespace Carbon.Css
 
             CssScope child = scope.GetChildScope();
 
-            for (int i = 0; i < paramaters.Length; i++)
+            for (int i = 0; i < paramaters.Count; i++)
             {
-                ref CssParameter p = ref paramaters[i];
+                var p = paramaters[i];
 
                 CssValue? val = (list is not null && list.Length >= i + 1) ? list[i] : p.DefaultValue;
 
@@ -1095,20 +1097,19 @@ namespace Carbon.Css
 
         public static CssSelector ExpandSelector(StyleRule rule)
         {
-            var ancestors = new List<CssSelector>(rule.Depth)
-            {
+            var ancestors = new List<CssSelector>(rule.Depth) {
                 rule.Selector
             };
 
             StyleRule? current = rule;
 
-            while ((current = current.Parent as StyleRule) is not null)
+            while ((current = current!.Parent as StyleRule) is not null)
             {
                 ancestors.Add(current.Selector);
 
                 if (ancestors.Count > 6)
                 {
-                    var debugParts = string.Join(" ", ancestors);
+                    var debugParts = string.Join(' ', ancestors);
 
                     throw new Exception($"May not nest more than 6 levels deep. Was {debugParts}.");
                 }
@@ -1126,7 +1127,7 @@ namespace Carbon.Css
             {
                 var ancestor = ancestors[i];
 
-                if (ancestor.Count == 1 && ancestor.Contains(NodeKind.Reference))
+                if (ancestor.Count is 1 && ancestor.Contains(NodeKind.Reference))
                 {
                     var prev = span;
 
@@ -1219,7 +1220,7 @@ namespace Carbon.Css
 
             foreach (var node in current)
             {
-                span.Add(node.Kind == NodeKind.Reference ? new CssReference("&", prev) : node);
+                span.Add(node.Kind is NodeKind.Reference ? new CssReference("&", prev) : node);
             }
 
             return span;

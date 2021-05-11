@@ -35,7 +35,7 @@
         {
             BrowserType.Chrome  => Prefixed.Chrome > 0f  && !IsStandard(browser),
             BrowserType.Firefox => Prefixed.Firefox > 0f && !IsStandard(browser),
-            BrowserType.IE      => Prefixed.IE > 0f      && !IsStandard(browser),
+            BrowserType.Edge    => Prefixed.Edge > 0f    && !IsStandard(browser),
             BrowserType.Safari  => Prefixed.Safari > 0f  && !IsStandard(browser),
             _                   => false
         };
@@ -43,8 +43,8 @@
         public bool IsStandard(in BrowserInfo browser) => browser.Type switch
         {
             BrowserType.Chrome  => Standard.Safari != 0 && Standard.Chrome <= browser.Version,
+            BrowserType.Edge    => Standard.Edge != 0 && Standard.Edge <= browser.Version,
             BrowserType.Firefox => Standard.Firefox != 0 && Standard.Firefox <= browser.Version,
-            BrowserType.IE      => Standard.IE != 0 && Standard.IE <= browser.Version,
             BrowserType.Safari  => Standard.Safari != 0 && Standard.Safari <= browser.Version,
             _                   => false
         };

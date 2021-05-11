@@ -6,10 +6,10 @@ namespace Carbon.Css
     public enum BrowserType
     {
         Unknown = 0,
-        IE = 1,
+        Edge    = 1,
         Firefox = 2,
-        Safari = 4,
-        Chrome = 8,
-        Opera = 16
+        Safari  = 4,
+        Chrome  = 8,
+        Opera   = 16
     }
 }

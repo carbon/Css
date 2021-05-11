@@ -10,6 +10,19 @@ namespace Carbon.Css
     [JsonConverter(typeof(ThinknessJsonConverter))]
     public sealed class Thickness // of the margin, border, or padding
     {
+        public Thickness(CssUnitValue value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Top = value;
+            Left = value;
+            Bottom = value;
+            Right = value;
+        }
+
         public Thickness(CssUnitValue top, CssUnitValue left, CssUnitValue bottom, CssUnitValue right)
         {
             Top = top ?? throw new ArgumentNullException(nameof(top));
@@ -26,7 +39,9 @@ namespace Carbon.Css
 
         public CssUnitValue Right { get; }
 
-        public static bool TryParse(string value, [NotNullWhen(true)] out Thickness? result)
+        public static bool TryParse(
+            [NotNullWhen(true)] string? value, 
+            [NotNullWhen(true)] out Thickness? result)
         {
             if (value is null || value.Length == 0)
             {
@@ -49,10 +64,10 @@ namespace Carbon.Css
 
         public static Thickness Parse(string value)
         {
-            var top = CssUnitValue.Zero;
-            var left = CssUnitValue.Zero;
+            var top    = CssUnitValue.Zero;
+            var left   = CssUnitValue.Zero;
             var bottom = CssUnitValue.Zero;
-            var right = CssUnitValue.Zero;
+            var right  = CssUnitValue.Zero;
 
             value = value.Trim();
 
@@ -123,7 +138,6 @@ namespace Carbon.Css
                     return Top.ToString() + " " + Left.ToString();
                 }
             }
-
       
             var sb = StringBuilderCache.Aquire();
 

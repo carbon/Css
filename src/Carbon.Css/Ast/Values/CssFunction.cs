@@ -15,7 +15,7 @@ namespace Carbon.Css
 
         public CssValue Arguments { get; }
 
-        public override CssNode CloneNode() => new CssFunction(Name, Arguments);
+        public override CssFunction CloneNode() => new (Name, Arguments);
 
         internal override void WriteTo(TextWriter writer)
         {
@@ -25,6 +25,13 @@ namespace Carbon.Css
             writer.Write(')');
         }
 
-        public override string ToString() => Name + "(" + Arguments.ToString() + ")";
+        public override string ToString()
+        {
+            var writer = new StringWriter();
+
+            WriteTo(writer);
+
+            return writer.ToString();
+        }
     }
 }

@@ -2,11 +2,14 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.Json.Serialization;
 
 using Carbon.Css.Helpers;
+using Carbon.Css.Json;
 
 namespace Carbon.Css
 {
+    [JsonConverter(typeof(CssUnitValueJsonConverter))]
     public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
 	{
         public static readonly CssUnitValue Zero = new (0, CssUnitInfo.Number);
@@ -44,7 +47,7 @@ namespace Carbon.Css
             writer.Write(Unit.Name);
         }
 
-        public override CssNode CloneNode() => new CssUnitValue(Value, Unit);
+        public override CssUnitValue CloneNode() => new (Value, Unit);
 
         public new static CssUnitValue Parse(string text)
         {
@@ -70,13 +73,13 @@ namespace Carbon.Css
         // Min
         // Max
 
-		public CssValue Multiply(CssValue other)
+		public CssUnitValue Multiply(CssValue other)
 		{
-            if (other.Kind == NodeKind.Percentage)
+            if (other.Kind is NodeKind.Percentage)
             {
                 return new CssUnitValue(Value * (((CssUnitValue)other).Value / 100), Unit);
             }
-            else if (other.Kind == NodeKind.Number)
+            else if (other.Kind is NodeKind.Number)
             {
                 return new CssUnitValue(Value * (((CssUnitValue)other).Value), Unit);
             }
@@ -88,7 +91,7 @@ namespace Carbon.Css
             throw new Exception($"{this.Kind} and {other.Kind} are not compatible | {this} * {other}");
         }
 
-        public CssValue Divide(CssValue other)
+        public CssUnitValue Divide(CssValue other)
         {
             if (other.Kind is NodeKind.Percentage or NodeKind.Number)
             {
@@ -105,7 +108,7 @@ namespace Carbon.Css
             throw new Exception($"{this.Kind} and {other.Kind} are not compatible | | {this} / {other}");
         }
 
-        public CssValue Add(CssValue other)
+        public CssUnitValue Add(CssValue other)
 		{
 			if (other is CssUnitValue measurement && measurement.Kind == Kind)
             {
@@ -115,7 +118,7 @@ namespace Carbon.Css
             throw new Exception($"{this.Kind} and {other.Kind} are not compatible | {this} + {other}");
 		}
 
-        public CssValue Subtract(CssValue other)
+        public CssUnitValue Subtract(CssValue other)
         {
             if (other is CssUnitValue measurement && measurement.Kind == Kind)
             {

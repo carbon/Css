@@ -41,7 +41,10 @@ namespace Carbon.Css.Parser
         // Returns the current token and advances to the next
         public CssToken Consume()
         {
-            if (isEnd) throw new EndOfStreamException("Already ready the last token");
+            if (isEnd)
+            {
+                throw new EndOfStreamException("Already ready the last token");
+            }
 
             var c = current;
 
@@ -60,14 +63,17 @@ namespace Carbon.Css.Parser
 
         private CssToken ReadNext()
         {
-            if (reader.IsEof) throw new Exception("Cannot read past EOF. Current: " + current.ToString() + ".");
+            if (reader.IsEof)
+            {
+                throw new Exception("Cannot read past EOF. Current: " + current.ToString() + ".");
+            }
 
             if (stack.Count > 0)
             {
                 return stack.Pop();
             }
 
-            if (char.IsWhiteSpace(reader.Current) || reader.Current == '\uFEFF')
+            if (char.IsWhiteSpace(reader.Current) || reader.Current is '\uFEFF')
             {
                 return ReadTrivia();
             }
@@ -132,24 +138,20 @@ namespace Carbon.Css.Parser
                 case ')': return new CssToken(TokenKind.RightParenthesis, reader.Read(), reader.Position);
 
                 case '&':
-                    if (reader.Peek() == '&')
+                    if (reader.Peek() is '&')
                         return new CssToken(TokenKind.And, reader.Read(2), reader.Position - 1);
                     else
                         return new CssToken(TokenKind.Ampersand, reader.Read(), reader.Position);
 
-                case '|':
-                    if (reader.Peek() == '|') return new CssToken(TokenKind.Or, reader.Read(2), reader.Position - 1);
-
-                    else break;
+                case '|' when (reader.Peek() is '|'): // ||
+                    return new CssToken(TokenKind.Or, reader.Read(2), reader.Position - 1);
 
                 case '!': // !=
-                    if (reader.Peek() == '=') return new CssToken(TokenKind.NotEquals, reader.Read(2), reader.Position - 1);
+                    if (reader.Peek() is '=') return new CssToken(TokenKind.NotEquals, reader.Read(2), reader.Position - 1);
 
                     else break;
-                case '=': // ==
-                    if (reader.Peek() == '=') return new CssToken(TokenKind.Equals, reader.Read(2), reader.Position - 1);
-
-                    else break;
+                case '=' when (reader.Peek() is '='): // ==
+                    return new CssToken(TokenKind.Equals, reader.Read(2), reader.Position - 1);
 
                 case '>': // >=
                     if (reader.Peek() == '=') return new CssToken(TokenKind.Gte, reader.Read(2), reader.Position - 1);
@@ -227,14 +229,14 @@ namespace Carbon.Css.Parser
         {
             reader.Mark();
 
-            while (!char.IsWhiteSpace(reader.Current) &&
-                reader.Current != '{' &&
-                reader.Current != '}' &&
-                reader.Current != '(' &&
-                reader.Current != ')' &&
-                reader.Current != ';' &&
-                reader.Current != ':' &&
-                reader.Current != ',')
+            while (!char.IsWhiteSpace(reader.Current) && !(
+                reader.Current is '{'
+                               or '}'
+                               or '('
+                               or ')'
+                               or ';'
+                               or ':'
+                               or ','))
             {
                 if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Symbol");
 
