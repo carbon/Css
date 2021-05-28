@@ -7,39 +7,39 @@ namespace Carbon.Css
 {
     public sealed class CssSequence : CssValue, IEnumerable<CssValue>
     {
-        private readonly List<CssValue> children;
+        private readonly List<CssValue> _children;
 
         public CssSequence()
             : base(NodeKind.Sequence)
         {
-            children = new List<CssValue>();
+            _children = new List<CssValue>();
         }
 
         public CssSequence(int capacity)
             : base(NodeKind.Sequence)
         {
-            children = new List<CssValue>(capacity);
+            _children = new List<CssValue>(capacity);
         }
 
         public CssSequence(params CssValue[] items)
             : base(NodeKind.Sequence)
         {
-            children = new List<CssValue>(items);
+            _children = new List<CssValue>(items);
         }
 
         public void Add(CssValue item)
         {
-            children.Add(item);
+            _children.Add(item);
         }
 
         public void AddRange(IEnumerable<CssValue> items)
         {
-            this.children.AddRange(items);
+            _children.AddRange(items);
         }
 
-        public int Count => children.Count;
+        public int Count => _children.Count;
 
-        public CssValue this[int index] => children[index];
+        public CssValue this[int index] => _children[index];
 
         public override string ToString()
         {
@@ -54,14 +54,14 @@ namespace Carbon.Css
         
         internal override void WriteTo(TextWriter writer)
         {
-            for (int i = 0; i < children.Count; i++)
+            for (int i = 0; i < _children.Count; i++)
             {
-                CssValue item = children[i];
-                
-                writer.Write(item.ToString());
+                CssValue item = _children[i];
+
+                item.WriteTo(writer);
 
                 // Skip trailing trivia
-                if ((item.Trailing != null || item.Kind == NodeKind.Sequence) && (i + 1) != children.Count)
+                if ((item.Trailing != null || item.Kind is NodeKind.Sequence) && (i + 1) != _children.Count)
                 {
                     writer.Write(' ');
                 }
@@ -70,7 +70,7 @@ namespace Carbon.Css
 
         public bool Contains(NodeKind kind)
         {
-            foreach (var token in children)
+            foreach (var token in _children)
             {
                 if (token.Kind == kind) return true;
             }
@@ -78,8 +78,8 @@ namespace Carbon.Css
             return false;
         }
 
-        public IEnumerator<CssValue> GetEnumerator() => children.GetEnumerator();
+        public IEnumerator<CssValue> GetEnumerator() => _children.GetEnumerator();
       
-        IEnumerator IEnumerable.GetEnumerator() => children.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _children.GetEnumerator();
     }
 }

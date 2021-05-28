@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable IDE0057 // Use range operator
+
+using System;
 using System.IO;
 using System.Text;
 
@@ -10,7 +12,7 @@ namespace Carbon.Css
 
         public CssUrlValue(string value)
         {
-            Value = value;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         public CssUrlValue(byte[] data, string contentType)
@@ -51,11 +53,11 @@ namespace Carbon.Css
         {
             if (!IsPath)
             {
-                throw new ArgumentException("Has scheme:" + Value.Substring(0, Value.IndexOf(':')));
+                throw new ArgumentException(string.Concat("Has scheme: ", Value.AsSpan(0, Value.IndexOf(':'))));
             }
 
             // Already absolute
-            if (Value.Length > 0 && Value[0] == '/')
+            if (Value.StartsWith('/'))
             {
                 return Value;
             }
@@ -80,10 +82,10 @@ namespace Carbon.Css
         {
             if (text.StartsWith("url", StringComparison.Ordinal))
             {
-                text = text[3..];
+                text = text.Slice(3);
             }
 
-            if (text[0] == '(' || text[0] == '"' || text[0] == '\'')
+            if (text[0] is '(' or '"' or '\'')
             {
                 text = text.Trim(trimChars);
             }

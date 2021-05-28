@@ -14,7 +14,7 @@
         {
             var block = new IfBlock(Condition);
 
-            foreach (var child in children)
+            foreach (var child in _children)
             {
                 block.Add(child.CloneNode());
             }

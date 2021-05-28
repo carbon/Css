@@ -67,7 +67,7 @@ namespace Carbon.Css
 
         public void Add(string name, string value)
         {
-            children.Add(new CssDeclaration(name, value));
+            _children.Add(new CssDeclaration(name, value));
         }
 
         #endregion
