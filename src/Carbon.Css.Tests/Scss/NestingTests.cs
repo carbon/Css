@@ -174,5 +174,98 @@ nav a {
 }", sheet.ToString());
 
         }
+
+
+        [Fact]
+        public void NestedMultiselector()
+        {
+            string text = @"
+#header { 
+  min-height: 80px; 
+
+  a {
+    color: rgba(255,255,255,0.6);
+  }
+
+  header a {
+      color: #fcfcfc;
+  }
+
+  .inner {
+    display: table;
+  
+    h1, ul {
+      display: table-cell;
+    }
+
+    h1 {
+      font-size: 16px;
+    }
+
+    ul {
+      padding-left: 20px;
+
+      li {
+        display: inline-block;
+      }
+    }
+  }
+}";
+
+            Assert.Equal(@"
+#header { min-height: 80px; }
+#header a { color: rgba(255, 255, 255, 0.6); }
+#header header a { color: #fcfcfc; }
+#header .inner h1,
+#header .inner ul { display: table-cell; }
+#header .inner h1 { font-size: 16px; }
+#header .inner ul li { display: inline-block; }
+#header .inner ul { padding-left: 20px; }
+#header .inner { display: table; }
+".Trim(), StyleSheet.Parse(text).ToString());
+        }
+
+        [Fact]
+        public void NestedMultiselector2()
+        {
+            string text = @"
+#header { 
+  .inner {  
+    h1, ul {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+}";
+
+            var stylesheet = StyleSheet.Parse(text);
+
+            var node = (StyleRule)stylesheet.Children[0];
+
+            Assert.Equal(1, node.Depth);
+
+            node = (StyleRule)node.Children[0]; // .inner
+
+            Assert.Equal(2, node.Depth);
+
+            node = (StyleRule)node.Children[0]; // h1, ul
+
+            Assert.Equal(3, node.Depth);
+
+            Assert.Equal("h1", node.Selector[0].ToString());
+            Assert.Equal("ul", node.Selector[1].ToString());
+
+            var selector = CssWriter.ExpandSelector(node);
+
+            Assert.Equal("#header .inner h1, #header .inner ul", selector.ToString());
+
+            Assert.Equal(@"
+#header .inner h1,
+#header .inner ul {
+  display: table-cell;
+  vertical-align: middle;
+}
+".Trim(), stylesheet.ToString());
+        }
     }
 }

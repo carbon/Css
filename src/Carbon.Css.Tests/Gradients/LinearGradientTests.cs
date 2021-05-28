@@ -1,4 +1,7 @@
-﻿using System;
+﻿#pragma warning disable IDE0057 // Use range operator
+#pragma warning disable IDE0018 // Inline variable declaration
+
+using System;
 
 using Carbon.Color;
 
@@ -30,7 +33,6 @@ namespace Carbon.Css.Gradients.Tests
             Assert.Equal(new Rgba32(194, 234, 9), gradient.Stops[1].Color);
 
             Assert.Equal(4, gradient.Stops.Length);
-
         }
 
         [Fact]
@@ -154,7 +156,7 @@ namespace Carbon.Css.Gradients.Tests
         [Fact]
         public void ParseColorStopList()
         {
-            var text = "#00a 90%, #000 91%, #fff 92%".AsSpan();
+            string text = "#00a 90%, #000 91%, #fff 92%";
 
             int read;
 
@@ -162,7 +164,7 @@ namespace Carbon.Css.Gradients.Tests
 
             Assert.Equal(8, read);
 
-            var stop2 = ColorStop.Read(text.Slice(read + 2), out read);
+            var stop2 = ColorStop.Read(text.AsSpan(read + 2), out read);
 
             Assert.Equal(8, read);
 
