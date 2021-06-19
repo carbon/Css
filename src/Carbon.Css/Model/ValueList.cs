@@ -50,8 +50,8 @@ namespace Carbon.Css
             WriteTo(writer);
 
             return StringBuilderCache.ExtractAndRelease(sb);
-        }
-        
+        }      
+
         internal override void WriteTo(TextWriter writer)
         {
             for (int i = 0; i < _children.Count; i++)

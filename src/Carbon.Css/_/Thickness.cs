@@ -138,24 +138,24 @@ namespace Carbon.Css
                     return Top.ToString() + " " + Left.ToString();
                 }
             }
-      
-            var sb = StringBuilderCache.Aquire();
 
-            Top.WriteTo(sb);
+            var sb = new ValueStringBuilder(stackalloc char[30]);
 
-            sb.Append(' ');
-            Left.WriteTo(sb);
+            Top.WriteTo(ref sb);
 
             sb.Append(' ');
-            Bottom.WriteTo(sb);
+            Left.WriteTo(ref sb);
+
+            sb.Append(' ');
+            Bottom.WriteTo(ref sb);
             
             if (!ReferenceEquals(Left, Right))
             {
                 sb.Append(' ');
-                Right.WriteTo(sb);
+                Right.WriteTo(ref sb);
             }
 
-            return StringBuilderCache.ExtractAndRelease(sb);
+            return sb.ToString();
         }
     }
 }

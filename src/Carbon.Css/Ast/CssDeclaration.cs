@@ -59,11 +59,20 @@ namespace Carbon.Css
         {
             // color: red !important
 
-            var sb = StringBuilderCache.Aquire();
-            
-            WriteTo(sb);
+            var sb = new ValueStringBuilder(stackalloc char[30]);
 
-            return StringBuilderCache.ExtractAndRelease(sb);
+            sb.Append(Info.Name);
+
+            sb.Append(": ");
+            sb.Append(Value.ToString());
+
+            if (Priority is not null)
+            {
+                sb.Append(" !");
+                sb.Append(Priority);
+            }
+
+            return sb.ToString();
         }
     }
 }

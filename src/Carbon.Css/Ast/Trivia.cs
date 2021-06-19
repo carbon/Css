@@ -1,25 +1,22 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text;
 
+using Carbon.Css.Parser;
+
 namespace Carbon.Css
 {
-    using System;
-
-    using Parser;
-
     public sealed class Trivia : Collection<CssToken>
     {
         public override string ToString()
         {
-            var sb = StringBuilderCache.Aquire();
+            var sb = new ValueStringBuilder(30);
 
             foreach (var token in this)
             {
-                sb.Append(token.ToString());
+                sb.Append(token.Text);
             }
 
-            return StringBuilderCache.ExtractAndRelease(sb);
+            return sb.ToString();
         }
     }
-
 }

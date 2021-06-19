@@ -35,6 +35,12 @@ namespace Carbon.Css
             return Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
         }
 
+        internal void WriteTo(ref ValueStringBuilder sb)
+        {
+            sb.Append(Value.ToString(CultureInfo.InvariantCulture));
+            sb.Append(Unit.Name);
+        }
+
         internal void WriteTo(StringBuilder sb)
         {
             sb.Append(Value.ToString(CultureInfo.InvariantCulture));

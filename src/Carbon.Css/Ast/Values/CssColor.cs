@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 using Carbon.Color;
 
@@ -6,19 +7,19 @@ namespace Carbon.Css
 {
     public sealed class CssColor : CssValue
 	{
-		private readonly Rgba32? c_value;
-        private readonly string? s_value; // Rgba32 | string
+		private readonly Rgba32? _colorValue;
+		private readonly string? _stringValue;
 
 		public CssColor(string value)
 			: base(NodeKind.Color)
 		{
-			this.s_value = value;
+			_stringValue = value;
 		}
 
 		public CssColor(Rgba32 value)
 			: base(NodeKind.Color)
 		{
-            this.c_value = value;
+            _colorValue = value;
 		}
 
         internal override void WriteTo(TextWriter writer)
@@ -28,21 +29,21 @@ namespace Carbon.Css
 
         public override string ToString()
 		{
-			return c_value.HasValue
-				? c_value.ToString()!
-				: s_value!;
+			return _colorValue.HasValue
+				? _colorValue.ToString()!
+				: _stringValue!;
 		}
 
 		public static CssColor FromRgba(byte r, byte g, byte b, float a)
 		{
-			return new CssColor($"rgba({r}, {g}, {b}, {a})");
+			return new CssColor(FormattableString.Invariant($"rgba({r}, {g}, {b}, {a})"));
 		}
 
 		public override CssColor CloneNode()
 		{
-			return c_value.HasValue
-				? new CssColor(c_value.Value)
-				: new CssColor(s_value!);
+			return _colorValue.HasValue
+				? new CssColor(_colorValue.Value)
+				: new CssColor(_stringValue!);
 		}
     }
 }

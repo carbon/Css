@@ -22,6 +22,8 @@ namespace Carbon.Css
         public static readonly string Hz      = "Hz";
         public static readonly string Grad    = "grad";
         public static readonly string Rad     = "rad";
+        public static readonly string Rlh     = "rlh";
+        public static readonly string Turn    = "turn";
 
         public static string Get(ReadOnlySpan<char> text)
         {
@@ -58,9 +60,16 @@ namespace Carbon.Css
                 {
                     return Deg;
                 }
-                else if (text[0] == 'r' && text[1] == 'e' && text[2] == 'm')
+                else if (text[0] == 'r')
                 {
-                    return Rem;
+                    if (text[1] == 'e' && text[2] == 'm')
+                    {
+                        return Rem;
+                    }
+                    else if (text[1] == 'l' && text[2] == 'h')
+                    {
+                        return Rlh;
+                    }
                 }
             }
             else if (text.Length is 4)
