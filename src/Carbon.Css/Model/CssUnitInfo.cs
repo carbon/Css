@@ -15,7 +15,7 @@ namespace Carbon.Css
         public static readonly CssUnitInfo Ic   = new ("ic",              NodeKind.Length, CssUnitFlags.Relative); // | average character advance of a fullwidth glyph in the element’s font, as represented by the “水” (CJK water ideograph, U+6C34) glyph
         public static readonly CssUnitInfo Rem  = new (CssUnitNames.Rem,  NodeKind.Length, CssUnitFlags.Relative); // | font size of the root element
         public static readonly CssUnitInfo Lh   = new (CssUnitNames.Lh,   NodeKind.Length, CssUnitFlags.Relative); // | line height of the element
-        public static readonly CssUnitInfo Rlh  = new ("rlh",             NodeKind.Length, CssUnitFlags.Relative); // | line height of the root element
+        public static readonly CssUnitInfo Rlh  = new (CssUnitNames.Rlh,  NodeKind.Length, CssUnitFlags.Relative); // | line height of the root element
         public static readonly CssUnitInfo Vw   = new (CssUnitNames.Vw,   NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s width
         public static readonly CssUnitInfo Vh   = new (CssUnitNames.Vh,   NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s height
         public static readonly CssUnitInfo Vi   = new ("vi",              NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s size in the root element’s inline axis
@@ -39,7 +39,7 @@ namespace Carbon.Css
         public static readonly CssUnitInfo Deg  = new (CssUnitNames.Deg,  NodeKind.Angle);
         public static readonly CssUnitInfo Grad = new (CssUnitNames.Grad, NodeKind.Angle);
         public static readonly CssUnitInfo Rad  = new (CssUnitNames.Rad,  NodeKind.Angle);
-        public static readonly CssUnitInfo Turn = new ("turn",            NodeKind.Angle);
+        public static readonly CssUnitInfo Turn = new (CssUnitNames.Turn, NodeKind.Angle);
 
         // <time> | s, ms
         public static readonly CssUnitInfo S    = new (CssUnitNames.S,  NodeKind.Time);
@@ -64,7 +64,7 @@ namespace Carbon.Css
             { "ic"              , Ic },
             { CssUnitNames.Rem  , Rem },
             { CssUnitNames.Lh   , Lh },
-            { "rlh"             , Rlh },
+            { CssUnitNames.Rlh  , Rlh },
             { CssUnitNames.Vw   , Vw },
             { CssUnitNames.Vh   , Vh },
             { "vi"              , Vi },
@@ -88,7 +88,7 @@ namespace Carbon.Css
             { CssUnitNames.Deg  , Deg },
             { CssUnitNames.Grad , Grad },
             { CssUnitNames.Rad  , Rad },
-            { "turn"            , Turn },
+            { CssUnitNames.Turn , Turn },
 
             // <time>
             { CssUnitNames.S    , S },
@@ -137,6 +137,15 @@ namespace Carbon.Css
                     case ('e', 'm'): return Em;
                     case ('v', 'h'): return Vh;
                     case ('v', 'w'): return Vw;
+                }
+            }
+            else if (name.Length is 3)
+            {
+                switch ((name[0], name[1], name[2]))
+                {
+                    case ('d', 'e', 'g'): return Deg;
+                    case ('r', 'e', 'm'): return Rem;
+                    case ('r', 'l', 'h'): return Rlh;
                 }
             }
 
