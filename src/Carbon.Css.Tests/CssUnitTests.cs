@@ -10,9 +10,13 @@ namespace Carbon.Css.Tests
         [Fact]
         public void Lookup()
         {
-            Assert.Equal(CssUnitInfo.Px, CssUnitInfo.Get("px"));
-            Assert.Equal(CssUnitInfo.Pt, CssUnitInfo.Get("pt"));
+            Assert.Equal(CssUnitInfo.Px,  CssUnitInfo.Get("px"));
+            Assert.Equal(CssUnitInfo.Pt,  CssUnitInfo.Get("pt"));
             Assert.Equal(CssUnitInfo.Deg, CssUnitInfo.Get("deg"));
+            Assert.Equal(CssUnitInfo.Rlh, CssUnitInfo.Get("rlh"));
+            Assert.Equal(CssUnitInfo.Rem, CssUnitInfo.Get("rem"));
+
+
         }
 
         [Fact]
