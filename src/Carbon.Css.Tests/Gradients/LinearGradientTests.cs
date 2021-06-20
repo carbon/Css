@@ -22,6 +22,10 @@ namespace Carbon.Css.Gradients.Tests
             Assert.Equal(new Rgba32(194, 234, 9), gradient.Stops[1].Color);
 
             Assert.Equal(4, gradient.Stops.Length);
+
+            Assert.Equal("linear-gradient(-30deg, #9974ba 0%, #c2ea09 20%, #00cbe3 80%, #2f54b0 100%)", gradient.ToString());
+            Assert.Equal("linear-gradient(-30deg, #9974ba 0%, #c2ea09 20%, #00cbe3 80%, #2f54b0 100%)", LinearGradient.Parse(gradient.ToString()).ToString());
+
         }
 
         [Fact]
