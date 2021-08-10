@@ -1,0 +1,32 @@
+//= partial
+
+nav {
+  display: block;
+  margin: 0 -5px;
+
+  > ul {
+    width: 100%;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    line-height: 2.5;
+
+    > li {
+      position: relative;
+      display: inline-block;
+      margin: 0 5px 0;
+
+      > a {
+        display: inline-block;
+        border: none;
+        box-shadow: 0 0 0 1px $borderColor !important;
+        height: 40px;
+        line-height: if($fontScheme == sans, 40px, 43px);
+        padding: 0 25px;
+        font-weight: 400;
+        transition: all 0.2s ease-in-out; 
+        
+        &:hover { box-shadow: 0 0 0 1px rgba($accentColor, 0.5) !important; }
+      }
+    }
+  }
+}

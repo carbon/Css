@@ -1,0 +1,22 @@
+//= partial
+
+#zoomer {
+  transition: background 0.2s ease;
+  background: $maskColor;
+
+  &.closing { 
+    pointer-events: none;
+  }
+
+  &.closed {
+    pointer-events: none;
+    transition: background 0.1s ease, visibility 0 ease 0.2s;
+    background: transparent;
+  }
+
+  user-select: none;
+}
+
+.zoomable { 
+  cursor: zoom-in;
+}

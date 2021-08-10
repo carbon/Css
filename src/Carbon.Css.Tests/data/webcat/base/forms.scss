@@ -1,0 +1,94 @@
+//= partial
+
+input,
+textarea {
+  position: relative;
+  width: 100%;
+  font-size: 18px;
+  border: none;
+  border-bottom: $border;
+  background: $inputBackgroundColor;
+  padding: 14px;
+  box-sizing: border-box;
+  border-radius: 0;
+  -webkit-font-smoothing: antialiased;
+  color: $textColor;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+input:focus, 
+textarea:focus, 
+.field.focused input {
+  border-bottom: 1px solid rgba($accentColor, 0.5) !important;
+}
+
+textarea { resize: none; }
+
+button {
+  display: inline-block;
+  color: $accentColor;
+  position: relative;
+  margin: 0;
+  padding: 0 20px;
+  height: 46px;
+  line-height: 46px;
+  font-weight: 300;
+  font-size: 16px;
+  border: none;
+  background: transparent;
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba($accentColor, .3);
+  
+  -webkit-font-smoothing: antialiased;
+
+  &:focus { outline: none; }
+}
+
+button:hover {
+  color: #fff;
+  background: $accentColor;
+}
+
+.field {
+  position: relative;
+  margin: 0 0 20px;
+
+  > label { display: none; }
+
+  > .message {
+    display: block;
+    font-size: 12px;
+    color: #ef6469;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-style: normal;
+    visibility: hidden;
+    opacity: 0;
+    transition: margin 0.1s ease-out;
+    margin-right: 30px;
+    line-height: if($fontScheme == sans, 4.3em, 4.5em);
+  }
+
+  &.invalid {
+    > .message {
+      visibility: visible;
+      opacity: 1;
+      transition: margin 0.08s ease-out;
+      margin-right: 15px;
+    }
+    
+    > label { display: none; }
+  }
+}
+
+// audio button
+carbon-player .control, 
+carbon-player > .posterPlay {
+  border-radius: 0;
+}

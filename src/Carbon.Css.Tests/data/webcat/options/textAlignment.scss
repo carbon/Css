@@ -1,0 +1,12 @@
+//= partial
+
+@if $textAlignment == center {
+  #projects .info {
+    text-align: center;
+    position: relative;
+    left: -50px;
+  }
+  
+  .moreLink:before,
+  .moreLink:after { display: none; }
+}

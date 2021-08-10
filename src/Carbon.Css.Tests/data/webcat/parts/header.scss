@@ -1,0 +1,76 @@
+//= partial
+
+header {
+  display: block;
+  height: 44px;
+  padding: 23px 0;
+  margin: 0;
+  background: $backgroundColorAlt;
+  
+  p {
+  	font-size: 16px;
+		line-height: 44px;
+    text-align: center;
+    color: $smallColor;
+  }
+
+  .inner {
+    position: relative;
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 0 30px;
+    box-sizing: border-box;
+
+   	.col-1 {
+			float: left;
+			position: absolute;
+			z-index: 1;
+   	}
+  }
+}
+
+a.back {
+  position: relative;
+  display: inline-block;
+  box-shadow: 0 0 0 1px $borderColor !important;
+  height: 44px;
+  line-height: if($fontScheme == sans, 44px, 48px);
+  padding: 0 20px 0 35px;
+  font-size: 14px;
+  color: $arrowColor;
+  font-weight: 400;
+  text-align: right;
+  border-bottom: none !important;
+  transition: color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:before {
+    position: absolute;
+    top: 18px; left: 15px;
+    content: ' ';
+    display: block;
+    width: 10px;
+    height: 1px;
+    background: $arrowColor;
+    transform: rotate(-45deg);
+    transition: background 0.2s ease-in-out;
+  }
+
+  &:after {
+    position: absolute;
+    bottom: 18px; left: 15px;
+    content: ' ';
+    display: block;
+    width: 10px;
+    height: 1px;
+    background: $arrowColor;
+    transform: rotate(45deg);
+    transition: background 0.2s ease-in-out;
+  }
+}
+
+a.back:hover:before, 
+a.back:hover:after {
+  background: rgba($accentColor, 1) !important;
+}
+
+a.back:hover { color: $accentColor !important; box-shadow: 0 0 0 1px rgba($accentColor, 0.5) !important; }

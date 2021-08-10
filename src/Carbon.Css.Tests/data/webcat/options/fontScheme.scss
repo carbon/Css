@@ -1,0 +1,31 @@
+//= partial
+
+input,
+textarea,
+button { font-family: $fontFamily; }
+    
+carbon-player time {
+  font-family: $fontFamily;
+}
+
+@if $fontScheme == sans {
+  body {
+    -webkit-font-smoothing: antialiased;
+    font-weight: 400;
+  }
+  
+  .contactInfo h3 { font-weight: 400; }
+
+  nav > ul { letter-spacing: 0; }
+  
+  carbon-player time { font-weight: bold; }
+}
+
+@if $fontScheme == serif {
+  .row h4 { font-size: 16px; }
+
+  a {
+    box-shadow: inset 0 -2px 0px $backgroundColor, inset 0 -3px 0px $linkUnderlineColor;
+    border-bottom: none;
+  }
+}

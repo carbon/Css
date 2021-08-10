@@ -1,0 +1,260 @@
+//= partial
+
+#projects {
+  display: block;
+  position: relative;
+  border-top: $border;
+  background: $backgroundColor;
+  z-index: 10;
+
+  > .project {
+    position: relative;
+
+    &:last-child .item { border-bottom: none; }
+  }
+
+  .item {
+    position: relative;
+    display: block;
+    height: 450px;
+    border-bottom: $border;
+    box-shadow: none;
+    transition: background-color 0.8s ease-in-out;
+
+    &:hover {
+      color: inherit !important;
+      transition: background-color 0.4s ease-in-out;
+      background-color: rgba($accentColor, 0.05);
+    }
+
+    .innerWrapper {
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+
+    .inner {
+      position: relative;
+      width: 100%;
+      height: 450px;
+      margin: 0 auto;
+      display: table;
+      box-sizing: border-box;
+      padding: 75px 50px 50px;
+    }
+
+    .info {
+      width: 33%;
+      display: table-cell;
+      vertical-align: middle;
+
+      > h2 {
+        margin: 0 0 5px;
+        max-height: 90px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      
+      > p {
+        display: block;
+        width: 100%;
+        max-height: 168px;
+        text-overflow: ellipsis;
+        margin: 0 0 35px;
+        overflow: hidden;
+        color: $smallColor;
+      }
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 360px;
+      right: 50px;
+      padding: 8px;
+      height: 25px;
+      background-color: $backgroundColor;
+      border-radius: 4px 4px 0 0;
+      box-sizing: border-box;
+      width: 567px;
+
+      > li {
+        display: block;
+        float: left;
+        width: 8px; 
+        height: 8px;
+        margin: 0 4px 0 0;
+        border-radius: 40px;
+        background-color: rgba($textColor, 0.1);
+      }
+    }
+
+    .thumb {
+      position: absolute;
+      bottom: 0; right: 50px;
+      width: 567px;
+      height: 360px;
+      margin: 0;
+      background-position: center 0px;
+      border-radius: 0;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-color: $backgroundColorAlt;
+    }
+
+    &.noHeader {
+      .thumb {
+        background-position: center 0px;
+        border-radius: 0;
+      }
+      .thumb:before { display: none; }
+      .dots { display: none; }
+    }    
+  }
+}
+
+.moreLink {
+  position: relative;
+  display: inline-block;
+  margin: 0; 
+  padding: 0 20px;
+  width: 90px;
+  height: 44px;
+  line-height: if($fontScheme == sans, 44px, 47px);
+  font-size: 14px;
+  color: $accentColor;
+  box-shadow: inset 0 0 0 1px rgba($accentColor, 0.3);
+  text-transform: uppercase;
+  background-color: transparent;
+  transition: all 0.4s ease-in-out;
+
+  &:before {
+    position: absolute;
+    top: 18px; right: 25px;
+    content: ' ';
+    display: block;
+    width: 10px;
+    height: 1px;
+    background-color: $accentColor; 
+    transform: rotate(45deg);
+    transition: all 0.4s ease-in-out;
+  }
+
+  &:after {
+    position: absolute;
+    bottom: 18px; right: 25px;
+    content: ' ';
+    display: block;
+    width: 10px;
+    height: 1px;
+    background-color: $accentColor; 
+    transform: rotate(-45deg);
+    transition: all 0.4s ease-in-out;
+  }
+
+  &:hover {
+    color: #fff;
+    box-shadow: none;
+    background: $accentColor;
+    
+    &:before,
+    &:after { background-color: #fff; }
+  }
+}
+
+.centeredInfo {
+  .moreLink:before,
+  .moreLink:after { display: none; }
+}
+
+@if $textAlignment == left {
+  #projects .info {
+    box-sizing: border-box;
+  }
+}
+
+.newBug {
+  display: block;
+  position: absolute;
+  width: 22px;
+  height: 25px;
+  top: -25px;
+  right: 0;
+  overflow: hidden;
+
+  > i {
+    display: block;
+    position: absolute;
+    text-align: center;
+    transition: background 0.2s ease;
+
+    &:after {
+      display: block;
+      font: normal 14px/25px 'frontend';
+      content: '\e003';
+      color: #fff;
+      position: relative;
+    }
+  }
+}
+
+.item.noHeader .newBug {
+  width: 50px;
+  height: 50px;
+  top: 0;
+
+  > i {
+    top: -8px;
+    right: -23px;
+    width: 50px;
+    height: 20px;
+    background: rgba(42, 45, 53, 0.8);
+    padding: 8px;
+    transform: rotate(45deg);
+
+    &:after {
+      font-size: 16px;
+      top: 2px;
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+@if $colorScheme == light {
+          .newBug i:after { color: rgba(42, 45, 53, 0.8); }
+.noHeader .newBug i:after { color: #fff; }
+}
+
+.description ol,
+.about ol {
+  list-style: decimal;
+  list-style-position: inside;
+  margin-bottom: 20px;
+}
+
+.description ul,
+.about ul {
+  list-style: disc;
+  list-style-position: inside;
+  margin-bottom: 20px;
+}
+
+/* Position Thumb Editor Controls */
+#projects > .project {
+  carbon-editor {
+    position: relative;
+    max-width: 1060px;
+    display: block;
+    margin: 0 auto;
+  
+    > carbon-indicator {
+      top: 95px;
+      right: 566px;
+      left: auto;
+    }
+
+    carbon-menu {
+      left: auto;
+      top: 95px;
+      right: 406px;
+    }
+  }
+}

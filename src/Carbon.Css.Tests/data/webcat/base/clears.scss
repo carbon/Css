@@ -1,0 +1,17 @@
+//= partial
+
+.projectExpanded:after,
+.projectDetails:after,
+.projectMore:after,
+.aboutExtended:after,
+.row:after,
+li:after,
+.clear:after { 
+  display: block; 
+  content: "."; 
+  clear: both; 
+  font-size: 0; 
+  line-height: 0; 
+  height: 0; 
+  overflow: hidden; 
+}

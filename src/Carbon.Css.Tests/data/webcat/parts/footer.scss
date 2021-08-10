@@ -1,0 +1,59 @@
+//= partial
+
+footer {
+  display: block;
+  position: absolute;
+  width: 100%;
+  bottom: 0; 
+  left: 0;
+  border-top: $border;
+  margin: 0;
+  
+  a { transition: color .2s ease; }
+
+  > .inner {
+    display: block;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+
+  .contentWrapper {
+    padding: 20px 0;
+    display: table;
+    min-height: 80px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  carbon-branding, 
+  .footerBlurb {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 20px;
+  }
+
+  carbon-branding {
+     > a {
+      border-bottom: none !important;
+      box-shadow: none;
+    }
+    
+    carbon-glyph {
+      position: relative;
+      font: 28px/0 'frontend';
+      top: 7px;
+      margin: 0 -2px 0 -5px;
+    }
+
+    span:first-of-type { display: none; }
+  }
+
+  .footerBlurb { text-align: right; }
+
+  p,
+  carbon-branding {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+}

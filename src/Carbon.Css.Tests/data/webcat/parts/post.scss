@@ -1,0 +1,62 @@
+//= partial
+
+.postWrapper { margin-top: 4em; }
+
+.tag:before { content: '#'; }
+
+article {
+  display: block;
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto 6em;
+  text-align: center;
+  font-size: 0.75em;
+
+  carbon-grid {
+    position: relative;
+  }
+
+  > .body { font-size: 1rem; }
+
+  > .header,
+  > .body,
+  > .tags {
+    max-width: 460px;
+    margin: 1.5em auto;
+  }
+
+  > .tags {
+    > a {
+        opacity: 0.6;
+        margin: 0 .15em;
+        border-bottom: none !important;
+        transition: opacity .2s;
+        &:hover { opacity: 1 }
+        &.tag:before { opacity: 0.4;}
+    }
+  }
+  
+  // User styles?
+  p, ul, ol { margin: 0 0 1em 0; }
+
+  ul { 
+    list-style: disc;
+    list-style-position: inside;
+    padding-left: 0 !important;
+  }
+  
+  ol { 
+    list-style: decimal;
+    list-style-position: inside;
+    padding-left: 0 !important;
+  }
+
+  .longPost { 
+    text-align: left;
+    
+    ul, ol { 
+      padding-left: 1.4em !important;
+      list-style-position: outside; 
+    }
+  }
+}

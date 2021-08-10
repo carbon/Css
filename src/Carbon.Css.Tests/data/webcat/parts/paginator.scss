@@ -1,0 +1,59 @@
+//= partial
+
+carbon-paginator {
+  display: block;
+  padding: 50px 65px;
+  max-width: 1095px;
+  margin: 0 auto;
+  overflow: auto;
+  border-top: 1px solid rgba(0, 0, 0, .08);
+  box-sizing: border-box;
+
+  a {
+    display: inline-block;
+    width: 50%;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    box-sizing: border-box;
+    
+    b, .small { transition: all 0.2s ease-in-out; }
+    
+    svg {
+      stroke: $arrowColor;
+      height: 52px;
+      width: 15px;
+      position: relative;
+      display: inline-block;
+      stroke-width: 4px;
+      transition: stroke 0.2s ease-in-out;
+    }
+    
+    &.prev {
+      float: left;
+      margin-left: -35px;
+
+      > svg {
+        transform: scaleX(-1);
+        float: left;
+        padding-left: 20px;
+      }
+    }
+
+    &.next {
+      text-align: right;
+      float: right;
+      margin-right: -35px;
+
+      > svg {
+        float: right;
+        padding-left: 20px;
+      }
+    }
+    
+    &:hover {
+      .small { opacity: .5; }
+      svg { stroke: $accentColor; }
+    }
+  }
+  
+}

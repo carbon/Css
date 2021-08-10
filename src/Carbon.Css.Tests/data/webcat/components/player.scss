@@ -1,0 +1,392 @@
+//= partial
+
+@font-face {
+  font-family: 'player';
+  src: url('https://static.cmcdn.net/kits/106/fonts/player/player.woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+carbon-player {
+  display: block;
+  position: relative;
+  top: 0; 
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  font-family: 'player';
+}
+
+carbon-player.video    { background: #000; }
+
+carbon-player.standard { width: 768px; height: 432px; }
+carbon-player.big      { width: 960px; height: 540px; }
+carbon-player.hd       { width: 1280px; height: 720px; }
+
+carbon-player.fullscreen {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom:0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+carbon-player > video ,
+carbon-player > audio {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  top: 0;
+  left: 0; 
+  visibility: hidden;
+}
+
+carbon-player.played > video { visibility: visible; }
+
+video::-webkit-media-controls-panel { display: none; }
+
+/* = Flash Fallback
+----------------------------------------------- */
+carbon-player > .fallback {
+  position: absolute;
+  display: none;
+  width: 100%; 
+  height: 100%;
+  cursor: pointer;
+  background: #000;
+  color: #fff;
+  text-align: center;
+}
+
+carbon-player.fallback > .fallback      { display: block;  }
+carbon-player.fallback > .fallback > h2 { margin-top: 20%; }
+
+/* = Poster Play
+----------------------------------------------- */
+carbon-player > .posterPlay {
+  position: absolute; 
+  width: 136px;  
+  height: 136px;
+  top: 50%;
+  left: 50%;
+  margin: -68px 0 0 -68px;
+  background: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  opacity: 1;
+  border-radius: 50%;
+  z-index: 5;
+  text-align: center;
+  font-size: 136px;
+  line-height: 136px;
+  text-indent: 2px;
+  color: #fff;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+carbon-player > .posterPlay:before { content: '\e600'; }
+carbon-player > .posterPlay:hover  { background: rgba(0, 0, 0, 0.15); }
+
+carbon-player:hover  > .posterPlay { background: rgba(0, 0, 0, 0.15); }
+carbon-player.played > .posterPlay { display: none; }
+
+
+/* = Poster, Artwork, & Overlay
+----------------------------------------------- */
+carbon-player > .poster,
+carbon-player > .artwork,
+carbon-player > .overlay { 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%;
+}
+
+carbon-player > .poster,
+carbon-player > .artwork {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+carbon-player        > .poster { z-index: 1; cursor: pointer; background-color: #000; }
+carbon-player.played > .poster { display: none; }
+
+carbon-player > .overlay {
+  background: linear-gradient(to bottom, rgba(10,10,10,.05) 40%, rgba(10,10,10,0.5) 100%);
+}
+
+/* = Controls
+----------------------------------------------- */
+carbon-player .control {
+  width: 50px; 
+  height: 50px;
+  border-radius: 50%;
+  font-size: 50px;
+  color: #fff;
+  line-height: 50px;
+  cursor: pointer;
+  background: rgba(26,26,26,.2);
+  transition: background 0.2s;
+}
+
+carbon-player       .control:hover { background: rgba(115, 207, 203, 0.8); }
+
+carbon-player > carbon-controls { 
+  display: block;
+  position: relative;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: opacity .3s;
+}
+
+carbon-player.played.hovering  > carbon-controls,
+carbon-player.played.scrubbing > carbon-controls { opacity: 1; }
+carbon-player.played.hoverIdle > carbon-controls { opacity: 0; }
+
+/* .audio (always show controls) */
+carbon-player.audio                  > carbon-controls,
+carbon-player.audio.played.hoverIdle > carbon-controls { opacity: 1; }
+
+carbon-player > carbon-controls .box {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  transition: opacity 0.2s;
+}
+
+carbon-player.scrubbing > carbon-controls > .box,
+carbon-player.scrubbing > carbon-controls > .playToggle { opacity: 0; }
+
+carbon-player.fullscreen > carbon-controls > .box { bottom: 9%; }
+
+carbon-player.hoveringTrack > carbon-controls > .box,
+carbon-player.hoveringTrack > carbon-controls > .playToggle { opacity: 0; }
+
+/* = Play Toggle
+----------------------------------------------- */
+carbon-player .playToggle {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+carbon-player .playToggle:before { content: '\e600';}
+
+carbon-player.hovering .playToggle        { opacity: 1; }
+carbon-player.playing  .playToggle:before { content: '\e601'; }
+
+/* .audio (always show) */
+carbon-player.audio .playToggle { opacity: 1 !important; }
+
+/* = Scrubber
+----------------------------------------------- */
+carbon-player carbon-scrubber { 
+  display: block;
+  position: absolute; 
+  bottom: 0;
+  width: 100%;
+  height: 12px;
+  z-index: 5;
+}
+  
+carbon-player carbon-scrubber > .track {
+  position: absolute;
+  bottom: 0;
+  width: 100%; height: 6px;
+  background: rgba(255,255,255,0.15);
+  left: 0;
+  cursor: pointer;
+  transition: height 0.2s;
+}
+
+carbon-player carbon-scrubber:hover > .track { height: 12px; }
+
+/* TODO: Revisit waiting bar */
+carbon-player.waiting carbon-scrubber > .track { 
+  background: url('https://static.cmcdn.net/kits/124/player2/images/buffering.gif'); 
+}
+
+carbon-player.waiting.scrubbing carbon-scrubber > .track { 
+  background: none;
+}
+
+@keyframes bufferAnimation {
+  0%   { opacity: 1; }
+  50% { opacity: .6; }
+  100% { opacity: 1; }
+}
+
+carbon-player.loading .playToggle {
+  animation: bufferAnimation 2s infinite;
+  animation-timing-function: ease-in-out;
+}
+
+carbon-player carbon-scrubber > .track > .bufferedBar,
+carbon-player carbon-scrubber > .track > .playedBar { 
+  position: absolute; 
+  left: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.3); 
+  height: 100%;
+  bottom: 0;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  transition: border-radius 0.1s;
+}
+
+carbon-player carbon-scrubber > .track > .playedBar { background: #74CFCB; }
+
+carbon-player carbon-scrubber > .track > .playedBar.end,
+carbon-player carbon-scrubber > .track > .bufferedBar.end {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;  
+}
+
+/* = Time
+----------------------------------------------- */
+carbon-player {
+  time {
+    position: absolute; 
+    color: rgba(255,255,255,0.75);
+    text-rendering: optimizeLegibility;
+    font-size: 12px;
+    cursor: default;
+    text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+    bottom: 14px;
+    opacity: 0;
+  }
+
+  time.total { 
+    right: 0;
+    transition: color .2s; 
+  }
+
+  time.current {
+    left: 0;
+    transition: opacity 0.2s, color 10s;
+  }
+}
+
+/* .scrubbing  */
+carbon-player           carbon-scrubber:hover > time.current,
+carbon-player.scrubbing carbon-scrubber       > time.total { opacity: 1; }
+
+/* .video */
+carbon-player.video time.total { display: none; }
+
+/* .audio */
+carbon-player.audio time.current,
+carbon-player.audio time.total { 
+  bottom: 0px; 
+  opacity: 1 !important; 
+}
+
+carbon-player.audio time.current { left: 0 !important; }
+
+/* = Mute Toggle
+----------------------------------------------- */
+carbon-player .muteToggle {
+  display: inline-block;
+  background: rgba(26,26,26,.2);
+}
+
+carbon-player       .muteToggle:before { content: '\e604'; }
+carbon-player.muted .muteToggle:before { content: '\e605'; } /* .muted  */
+
+/* = Fullscreen Toggle
+----------------------------------------------- */
+carbon-player .fullscreenToggle {
+  display: inline-block;
+  display: none;
+  margin-bottom: 10px;
+}
+
+carbon-player            .fullscreenToggle:before { content: '\e602'; }
+carbon-player.fullscreen .fullscreenToggle:before { content: '\e603'; }  /* .fullscreen  */
+
+carbon-player.supportsFullscreen .fullscreenToggle { display: block; }
+
+/* = Other States
+----------------------------------------------- */
+carbon-player.hoverIdle * { cursor: none; }
+
+/* = Waveform
+----------------------------------------------- */
+carbon-waveform { 
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  opacity: .8;
+  transition: opacity .2s;
+}
+
+carbon-waveform > .bar { 
+  position: absolute; 
+  bottom: 0;
+  background: rgba(255,255,255,.75); 
+  transition: background 2s linear;
+}
+
+carbon-waveform > .bar.fill { background: #91E6D7; }
+
+carbon-player.hoveringTrack carbon-waveform > .bar { transition: none !important; }
+
+carbon-player.playing       carbon-waveform,
+carbon-player.hoveringTrack carbon-waveform { opacity: 1; }
+
+carbon-controls, carbon-waveform { -webkit-tap-highlight-color: rgba(0,0,0,0); }
+
+/* = Audio Scrubber 
+----------------------------------------------- */
+carbon-player.audio .playToggle {
+  background: rgba(145, 230, 215, 0.75);
+  left: 3.125%;
+  bottom: 30px;
+  transition: background 0.2s;
+}
+
+carbon-player.audio carbon-scrubber {
+  position: absolute;
+  width: calc(93.75% - 65px);
+  height: 50px;
+  left: calc(3.125% + 65px);
+  bottom: 25px;
+  transition: opacity 0.2s;
+}
+
+ /*offset margin to make room for scrubber time*/
+carbon-waveform { bottom: 20px; }
+
+/* = Collapsed 
+----------------------------------------------- */
+.collapsed {  
+  max-height: 90px;
+  height: 90px;
+}
+
+.collapsed carbon-player.audio .playToggle     { bottom: 5px; }
+.collapsed carbon-player.audio carbon-scrubber { bottom: 0px; }
+
+/* = Colors 
+----------------------------------------------- */
+carbon-player.audio .control               { background: rgba($accentColor, 0.8); }
+carbon-player.audio .control:hover         { background: rgba($accentColor, 1.0); }
+carbon-player.audio.loading .control:hover { background: rgba($accentColor, 0.8); }
+carbon-waveform > .bar.fill                { background: rgba($accentColor, 1.0); }
+carbon-player.audio.played time.current    {      color: rgba($accentColor, 1.0); }
+carbon-player.audio.ended  time.total      {      color: rgba($accentColor, 1.0); }
+carbon-player carbon-scrubber > .track > .playedBar { background: rgba($accentColor, 1.0); }
+carbon-player.video .control               { background: rgba(26,26,26, 0.2); }
+carbon-player.video .control:hover         { background: rgba($accentColor, 1.0); }

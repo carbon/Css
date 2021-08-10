@@ -1,0 +1,223 @@
+//= partial
+
+.contact {
+  position: absolute;
+  top: 0;
+  padding: 0;
+  width: 100%;
+  font-size: 22px;
+  line-height: 36px;
+  transition: visibility 0.3s ease, opacity 0.3s ease;
+  visibility: hidden; opacity: 0;
+  z-index: 9;
+  border-top: $border;
+
+  .row { border-top: none; }
+
+  .innerWrapper {
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+ 
+  .inner {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+
+    h2 {
+      margin: 0 0 40px;
+
+      .close {
+        top: 0; right: 0;
+        position: absolute;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        box-shadow: 0 0 0 1px #e4714b;
+        cursor: pointer;
+
+        svg { 
+          stroke-width: 6px; 
+          stroke: #e4714b;
+        }
+
+        &:hover {
+          background: #e4714b;
+          transition: background 0.15s ease-in;
+        }
+        &:hover svg { stroke: #fff; }
+      }
+    }
+  }
+}
+
+.showContact {
+  overflow: hidden;
+
+  main {
+    transform: translate(0, 600px);
+    transition: transform 0.3s ease;
+  }
+
+  header,
+  .project,
+  .mainInfo {
+    transition: opacity 0.15s ease-in;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+}
+
+.hideContact {
+  main {
+    transition: transform 0.3s ease;
+    transform: translate(0, 0px);
+  }
+  
+  header,
+  .project,
+  .mainInfo {
+    transition: opacity 0.15s ease-in;
+    opacity: 1;
+  }
+}
+
+.contactForm {
+  width: 66%;
+  float: right;
+
+  &.full {
+    margin: 0 auto;
+    float: none;
+  }
+
+  .field {
+    width: 100%;
+    position: relative;
+
+    > textarea {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 200px;
+    }
+  }
+
+  li {
+    position: relative;
+    
+    .field {
+      position: relative;
+      float: left;
+      width: calc(50% - 10px);
+      box-sizing: border-box;
+      padding: 0;
+
+      &:nth-child(2) { margin-left: 20px;
+}
+    }
+  }
+
+  .confirmedGuts {
+    visibility: hidden; opacity: 0;
+    text-align: left;
+
+    p {
+      font-size: 16px;
+      line-height: 26px;
+    }
+  }
+
+  .sent {
+    .guts {
+      transition: opacity 0.1s linear, visibility 0.1s linear;
+      visibility: hidden; 
+      opacity: 0; 
+      height: 0;
+    }
+    .confirmedGuts {
+      transition: opacity 0.1s linear, visibility 0.1s linear;
+      visibility: visible; 
+      opacity: 1;
+      text-align: center;
+    }
+  }
+}
+
+.contactInfo {
+  h3 { margin-bottom: 1em; }
+
+  a { display: inline-block; }
+}
+
+.contactSubInfo {
+  display: block;
+  margin: 0 auto;
+  float: left;
+  width: 33%;
+
+  span {
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  p {
+    position: relative;
+    font-size: 16px;
+    line-height: 26px;
+    min-height: 28px;
+    margin: 0 0 1em;
+
+    &.address span { display: block; }
+  }
+
+  .availability {
+    span { display: block; }
+
+    .now         { color: #67b038; }
+    .soon        { color: #ecaa0c; }
+    .unavailable { color: #c1c1c1; }
+  }
+}
+
+#contactForm .icon {
+  position: relative;
+  top: 0px;
+  left: 0;
+  right: 0;
+  visibility: hidden;
+  opacity: 0;
+  display: block;
+  margin: 0 auto 20px;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  z-index: 100;
+  transform: translate(0px, -20px);
+}
+
+#contactForm.sent .icon.success {
+  transition: transform 0.1s linear, opacity 0.1s linear, visibility 0.1s linear;
+  transform: translate(0px, 0px);
+  visibility: visible; 
+  opacity: 1;
+
+  &:before {
+    display: block;
+    font: 56px/56px 'frontend';
+    content: "\e04c";
+    position: absolute;
+    top: 0;
+    color: #67b038;
+    width: 56px;
+    height: 56px;
+    border: solid 1px #67b038;
+    border-radius: 100%;
+  }
+}
+
+.contact .inner h2 .close           { box-shadow: 0 0 0 1px $accentColor; }
+.contact .inner h2 .close svg       { stroke: $accentColor; }
+.contact .inner h2 .close:hover     { background: $accentColor; }
+.contact .inner h2 .close:hover svg { stroke: #fff; }

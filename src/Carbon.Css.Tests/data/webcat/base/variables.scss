@@ -1,0 +1,94 @@
+//= partial
+
+// Colors --------------------------------------------------------
+$backgroundColor: #f2f2f2;
+$backgroundColorAlt: #f2f2f2;
+
+$maskColor: rgba(255, 255, 255, 0.9); 
+
+$textColor: #333;
+$linkUnderlineColor: rgba(0, 0, 0, 0.15);
+$captionColor: rgba($textColor, 0.6);
+$smallColor: rgba($textColor, 0.6);
+$quoteColor: rgba($textColor, 0.3);
+$fontSmoothing: inherit;
+
+$borderColor: rgba(0, 0, 0, 0.1); 
+$border: 1px solid rgba(0, 0, 0, 0.08);
+$arrowColor: rgba(0, 0, 0, 0.3);
+
+$inputBackgroundColor: rgba(255, 255, 255, 0.8);
+
+// TODO: rename back to superLight once we've migrated
+@if $colorScheme == light { 
+  $backgroundColor: #ffffff;
+  $backgroundColorAlt: #f9f9f9;
+  
+  $maskColor: rgba(255, 255, 255, 0.9);  
+   
+  $textColor: #333;
+  $linkUnderlineColor: rgba(0, 0, 0, 0.15);
+  $captionColor: rgba(0, 0, 0, 0.5);
+  $smallColor: rgba(0, 0, 0, 0.5);
+  $quoteColor: rgba(0, 0, 0, 0.3);
+  $fontSmoothing: inherit;
+  
+  $borderColor: rgba(0, 0, 0, 0.1); 
+  $border: 1px solid rgba(0, 0, 0, 0.08);
+  $arrowColor: rgba(0, 0, 0, 0.3);
+  
+  $inputBackgroundColor: rgba(255, 255, 255, 0.8);
+}
+
+@if $colorScheme == dark { 
+  $backgroundColor: #2b2b2b;  
+  $backgroundColorAlt: #212121;
+  
+  $maskColor: rgba(43, 43, 43, 0.9);
+  
+  $textColor: #eee;
+  $linkUnderlineColor: rgba(255, 255, 255, 0.25);
+  $captionColor: rgba(255, 255, 255, 0.5);
+  $smallColor: rgba(255, 255, 255, 0.5);
+  $quoteColor: rgba(255, 255, 255, 0.3);
+  $fontSmoothing: antialiased;
+  
+  $borderColor: rgba(255, 255, 255,0.1);
+  $border: 1px solid rgba(255, 255, 255, 0.05);
+  $arrowColor: rgba(255, 255, 255, 0.3);
+  
+  $inputBackgroundColor: rgba(255, 255, 255, 0.02);
+}
+
+@if $colorScheme == superDark { 
+  $backgroundColor: #1a1a1a;  
+  $backgroundColorAlt: #111;
+  
+  $maskColor: rgba(0, 0, 0, 0.9);
+  
+  $textColor: #efefef;
+  $linkUnderlineColor: rgba(255, 255, 255, 0.25);
+  $captionColor: rgba(255, 255, 255, 0.5);
+  $smallColor: rgba(255, 255, 255, 0.5);
+  $quoteColor: rgba(255, 255, 255, 0.3);
+  $fontSmoothing: antialiased;
+  
+  $borderColor: rgba(255, 255, 255, 0.1);
+  $border: 1px solid rgba(255, 255, 255, 0.05);
+  $arrowColor: rgba(255, 255, 255, 0.3);
+  
+  $inputBackgroundColor: rgba(255, 255, 255, 0.02);
+}
+
+$linkColor: $textColor; 
+
+// Fonts --------------------------------------------------------
+$fontFamily: 'Karla', Helvetica, Arial, sans-serif; // sans
+
+@if $fontScheme == serif {
+  $fontFamily: 'Vollkorn', serif; // serif
+}
+
+@if $accentColor == undefined {
+  $accentColor: #7eb54e;
+}

@@ -1,0 +1,151 @@
+//= partial
+
+.projectPage .mainInfo { display: none; }
+
+.mainInfo {
+  position: relative;
+  width: 100%;
+  background: $backgroundColorAlt;
+  transition: background 0.3s ease;
+
+  .inner {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 75px 50px;
+    display: table;
+    box-sizing: border-box;
+  }
+
+  .logo {
+    display: block;
+    width: auto;
+    max-width: 510px;
+    height: 100px;
+  }
+
+  a.userPicWrapper {
+    width: 32%;
+    text-align: left;
+    display: table-cell;
+    vertical-align: middle;
+    border: none;
+  }
+
+  .userPic {
+    width: 275px;
+    height: 275px;
+    display: inline-block;
+    border-radius: 100%;
+    background-size: cover;
+    margin: 10px 0 0;
+  }
+
+  .userInfo {
+    width: 62%;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 0 0 70px;
+    box-sizing: border-box;
+
+    > h1 { 
+      margin: 0 0 15px;
+      line-height: 1;
+    }
+
+    > h3 {
+      font-weight: 400;
+      margin: 0 0 20px;
+    }
+
+    .blurb {
+      position: relative;
+      margin: 2em 0;
+
+      h3 { 
+        opacity: 1;
+
+        &:before {
+          display: inline-block;
+          content: "“";
+          position: absolute;
+          color: $borderColor;
+          font: 70px "Georgia", serif;
+          margin-left: -40px;
+          margin-top: -15px;
+        }
+
+        &:after {
+          display: inline-block;
+          content: "”";
+          position: absolute;
+          color: $borderColor;
+          font: 70px "Georgia", serif;
+          margin-left: 10px;
+          margin-top: -15px;
+        }
+      }
+    }
+
+    .links {
+      text-transform: capitalize;
+      margin: 0 0 2em;
+
+      h3 { 
+        margin: 0; 
+        opacity: 1; 
+      }
+
+      a { white-space: nowrap; }
+    }
+
+    .resume {
+      margin: 0 0 1em;
+      display: inline-block;
+
+      &:hover { box-shadow: none; }
+    }
+  }
+}
+
+
+a.twitter:hover     { color: #55ACEE !important; }
+a.dribbble:hover    { color: #EA4C89 !important; }
+a.linkedIn:hover    { color: #1482BA !important; }
+a.instagram:hover   { color: #55ACEE !important; }
+a.tumblr:hover      { color: #38465C !important; }
+a.carbonmade:hover  { color: #AA84D1 !important; }
+a.custom:hover      { color: #AA84D1 !important; }
+a.magnum:hover      { color: #e66e51 !important; }
+a.vimeo:hover       { color: #4bf !important; }
+a.vine:hover        { color: #1BB48A !important; }
+a.pinterest:hover   { color: #CA242D !important; }
+a.facebook:hover    { color: #3C599B !important; }
+a.flickr:hover      { color: #0664db !important; }
+a.behance:hover     { color: #1769FF !important; }
+a.etsy:hover        { color: #CF5619 !important; }
+
+.mainInfo.noCover {
+  text-align: center;
+  padding: 70px 0px;
+
+  .userInfo {
+    width: 100%;
+    padding-left: 0;
+
+    .blurb {
+      padding: 10px 0px;
+      width: 568px;
+      margin: 0 auto;
+    }
+  }
+}
+
+.mainInfo.noInfo {
+  padding: 70px 0px;
+
+  .userPicWrapper {
+    display: block;
+    width: 275px;
+    margin: 0 auto;
+  }
+}

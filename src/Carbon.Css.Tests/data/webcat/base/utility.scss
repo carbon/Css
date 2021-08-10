@@ -1,0 +1,32 @@
+//= partial
+
+.utility {
+  height: 100%;
+  font-size: 18px !important;
+  line-height: 1.65 !important;
+  text-align: center !important;
+  
+  .centerWrap {
+    display: table;
+    width: 100%; 
+    height: 60%;
+  }
+  
+  .centered {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}
+
+.utility #wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.utility h1 {
+  font-size: 1.6em !important;
+  margin-bottom: 1.2em !important;
+}

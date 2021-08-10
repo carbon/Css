@@ -1,0 +1,349 @@
+//= partial
+
+@media only screen and (max-width: 970px) {
+  #projects {
+    height: inherit;
+
+    .info {
+      left: 0;
+      width: 260px;
+      vertical-align: top;
+      padding-top: 50px;
+
+      h2 { max-height: 109px; }
+    }
+
+    .inner {
+      width: 800px;
+      height: 380px;
+      padding: 75px 40px 0;
+    }
+    
+    .thumb {
+      width: 440px;
+      height: 279px;
+      right: 30px;
+    }
+  
+    .dots {
+      width: 440px;
+      bottom: 279px;
+      right: 30px;
+    }
+  }
+
+  /* Position Thumb Editor Controls */
+  #projects > .project {
+    carbon-editor {
+      > carbon-indicator {
+        top: 100px;
+        right: 466px;
+      }
+      carbon-menu {
+        top: 105px;
+        right: 306px;
+      }
+    }
+  }
+
+
+  // .center #projects .info { left: -15px; }
+}
+
+@media only screen and (max-width: 800px) {
+  html {
+    -webkit-text-size-adjust: none
+  }
+  
+  h1 { font-size: 42px; }
+  h2 { font-size: 28px; }
+  h3 { font-size: 28px; }
+  
+  html, body {
+    font-size: 22px;
+  }
+  
+  nav > ul { 
+    font-size: 18px; 
+    line-height: 2.2; 
+  }
+  
+  a.back { 
+    display: block;
+    font-size: 18px; 
+    border-radius: 0.1px; 
+  }
+    
+  header {
+    height: auto;
+
+    p {
+      font-size: 20px;
+      line-height: 28px;
+      padding: 8px 0;
+    }
+
+    .col-1 {
+      position: absolute;
+      left: 20px;
+    }
+
+    .inner {
+      position: relative;
+      padding: 0 150px;
+    }
+  }
+  
+
+  .mainInfo {
+    .inner {
+      max-width: 800px;
+      padding: 50px 30px;
+    }
+    .userPicWrapper {
+      width: 260px;
+      margin-right: 2px;
+      vertical-align: top;
+    }
+    .userPic {
+      width: 250px;
+      height: 250px;
+      margin: 0;
+    }
+    .userInfo {
+      width: 480px;
+      padding: 0 0 0 80px;
+
+      .blurb h3:before,
+      .blurb h3:after {
+        margin-top: -10px;
+      }
+    }
+  }
+  
+  nav > ul > li > a {
+   height: 50px;
+   line-height: 50px !important;
+   padding: 0 25px;
+   border-radius: 0.1px;
+  }
+
+  // body.serif nav > ul > li > a { line-height: 50px !important; }
+
+  .moreLink {
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+  }
+  
+  .moreLink:before {
+    top: 21px;
+    right: 25px;
+    content: ' ';
+    display: block;
+    width: 10px;
+    height: 1px;
+  }
+  
+  .moreLink:after {
+    bottom: 21px;
+    right: 25px;
+    content: ' ';
+    width: 10px;
+    height: 1px;
+  }
+
+  /* Position Thumb Editor Controls */
+  #projects > .project {
+    carbon-editor {
+      > carbon-indicator {
+        top: 105px;
+        right: 320px;
+      }
+      carbon-menu {
+        top: 105px;
+        right: 160px;
+      }
+    }
+  }
+
+  // body.serif .moreLink { line-height: 52px; }
+  
+  section.project {
+    > .pieces .caption { padding: 30px 60px 0; }
+  }
+  
+  .projectDetails {
+    padding: 50px 30px;
+    margin: 0 auto 50px;
+    
+    > .info {
+      width: 100%;
+      float: none;
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    > .description {
+      width: 100%;
+      float: none;
+    }
+  }
+ 
+  carbon-paginator { padding: 30px 60px; }
+  carbon-paginator svg { height: 65px; }
+  carbon-paginator a.prev,
+  carbon-paginator a.next { margin: 0; }
+  carbon-paginator a.prev svg { margin-left: -50px; }
+  carbon-paginator a.next svg { margin-right: -50px; }
+  
+  .projectPage .projectMore .description { width: 740px; }
+  
+  .about .inner {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .row {
+    padding-top: 80px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+
+    .col-2 { width: 63%; }
+    .col-1 { width: 33%; }
+  }
+  
+  .contactForm {
+    width: 100%;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .contact .inner {
+    width: inherit;
+  }
+  
+  .contactSubInfo {
+    width: 100%;
+    text-align: center;
+  }
+  
+  #contactForm ul.guts li {
+    text-align: center;
+
+    button { float: none; }
+  } 
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  
+  html, body {
+    font-size: 1.1em;
+  }
+  
+  h1 { font-size: 3em; }
+  h2 { font-size: 2em; }
+  h3 { font-size: 1.5em; }
+  
+  .mainInfo {
+    .inner {
+      display: block;
+      max-width: 100%;
+      padding: 40px 20px;
+      box-sizing: border-box;
+    }
+    a.userPicWrapper {
+      display: block;
+      width: 100%;
+      margin: 0 0 10px 0;
+      vertical-align: top;
+      text-align: center;
+    }
+    .userPic {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto;
+    }
+    .userInfo {
+      display: block;
+      width: 100%;
+      padding: 0;
+      text-align: center;
+
+      .blurb h3:before,
+      .blurb h3:after {
+        margin-top: -10px;
+      }
+    }
+  }
+  
+  #projects {
+
+    .item {
+      height: auto;
+    
+      .info {
+        position: relative;
+        display: block;
+        width: 100%;
+        right: auto; left: auto;
+        text-align: center;
+        padding-top: 0;
+  
+        h2 { max-height: 3em; margin-bottom: 0; }
+        
+        p { margin-bottom: 0.9em; font-size: 1.5em; }
+      }
+
+      .inner {
+        width: 100%;
+        height: auto;
+        padding: 1.8em 1em 2.3em;
+      }
+      
+      .thumb {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 300px;
+        right: auto; left: auto; bottom: auto; top: auto;
+        
+        .newBug { top: -45px; }
+      }
+    
+      .dots {
+        display: none;
+      }
+    }
+  }
+  
+  carbon-piece.text {
+    .subtitle {
+      text-align: center;
+      padding: 0;
+    }
+    .paragraph {
+      padding: 0;
+    }
+    .quote {
+      padding: 0 0 0 1.75em;
+      
+      &:before { left: 0; }
+    }
+  }
+  
+  .moreLink {
+    display: none;
+  }
+  
+  nav > ul > li > a {
+   font-size: 1.4em;
+  }
+  
+  .description { font-size: 1.4em; }
+  
+}

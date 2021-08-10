@@ -1,0 +1,86 @@
+//= partial
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: $backgroundColor;
+  color: $textColor;
+  font: 18px/1.45 $fontFamily;
+  -webkit-font-smoothing: $fontSmoothing;
+}
+
+html { overflow-y: scroll; }
+
+main {
+  display: block;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  position: relative;
+  padding-bottom: 81px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.content {
+  position: relative;
+  margin: 0;
+  background: $backgroundColorAlt;
+}
+
+a {
+  text-decoration: none; 
+  color: $linkColor;
+  border-bottom: 1px solid $linkUnderlineColor;
+  
+  &:hover { border-bottom-color: rgba($linkUnderlineColor, 0.1); }
+}
+
+a:hover, a:hover b, a:hover i  { color: $accentColor !important; }
+
+ol, ul, li {
+  margin: 0; 
+  padding: 0;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;  
+}
+
+hr {
+  display: block;
+  height: 1px; 
+  width: 100%;
+  margin: 0; 
+  padding: 0;
+  background: $backgroundColorAlt;
+  border: none;
+  box-shadow: none;
+}
+
+section {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+img { border: 0; }
+
+// resets
+div, span, 
+table, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
+
+// carbon
+carbon-piece { display: block; }
