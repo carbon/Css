@@ -1,0 +1,35 @@
+﻿.world {
+    position: relative;
+    width: 670px;
+    height: 650px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.plane {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5000px;
+    height: 650px;
+    background-size: contain;
+}
+
+    .plane.background {
+        width: 5462px;
+        height: 1121px;
+        background-image: url('/onboard/images/background.png');
+    }
+
+    .plane.midground {
+        top: 50px;
+        width: 7012px;
+        height: 940px;
+        background-image: url('/onboard/images/midground.png');
+    }
+
+    .plane.foreground {
+        width: 7052px;
+        height: 966px;
+        background-image: url('/onboard/images/foreground.png');
+    }
