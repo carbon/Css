@@ -53,7 +53,7 @@ namespace Carbon.Css.Tests
 
         }
 
-        // [Fact]
+        [Fact(Skip = "Not implemented yet")] 
         public void Nested_2()
         {
             var sheet = StyleSheet.Parse(@"
