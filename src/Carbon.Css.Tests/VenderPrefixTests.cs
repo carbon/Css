@@ -1,69 +1,69 @@
 ﻿using System.IO;
-namespace Carbon.Css.Tests
+
+namespace Carbon.Css.Tests;
+
+public class VendorPrefixTests
 {
-    public class VendorPrefixTests
+    [Fact]
+    public void DoubleList5()
     {
-        [Fact]
-        public void DoubleList5()
-        {
-            var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse(@"
 			//= support Safari >= 5
 			a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
 
-            Assert.Equal(@"a {
+        Assert.Equal(@"a {
   -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
   transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
 }", sheet.ToString());
-        }
+    }
 
-        [Fact]
-        public void DoubleList6()
-        {
-            var sheet = StyleSheet.Parse(@"
+    [Fact]
+    public void DoubleList6()
+    {
+        var sheet = StyleSheet.Parse(@"
 			//= support Safari >= 9
 			a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
 
-            Assert.Equal(@"a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
-        }
+        Assert.Equal(@"a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
+    }
 
-
-        [Fact]
-        public void UnsupportedBrowser()
-        {
-            var sheet = StyleSheet.Parse(@"
+    [Fact]
+    public void UnsupportedBrowser()
+    {
+        var sheet = StyleSheet.Parse(@"
 			//= support Safari >= 9
             //= support IE >= 10
 			a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
 
-            Assert.Equal(@"a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
-        }
+        Assert.Equal(@"a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
+    }
 
 
-        [Fact]
-        public void ParseWebkitPrefixedKeyframesRule()
-        {
-            var sheet = StyleSheet.Parse(@"
+    [Fact]
+    public void ParseWebkitPrefixedKeyframesRule()
+    {
+        var sheet = StyleSheet.Parse(@"
 @-webkit-keyframes fade {
 	from {opacity: 1;}
 	to {opacity: 0.25;}
 }");
 
-            var atRule = (UnknownRule)sheet.Children[0];
+        var atRule = (UnknownRule)sheet.Children[0];
 
-            Assert.Equal("-webkit-keyframes", atRule.Name);
-            Assert.Equal("fade", atRule.Text.ToString());
+        Assert.Equal("-webkit-keyframes", atRule.Name);
+        Assert.Equal("fade", atRule.Text.ToString());
 
-            Assert.Equal(
+        Assert.Equal(
 @"@-webkit-keyframes fade {
   from { opacity: 1; }
   to { opacity: 0.25; }
 }", sheet.ToString());
-        }
+    }
 
-        [Fact]
-        public void Nested3()
-        {
-            var ss = StyleSheet.Parse(
+    [Fact]
+    public void Nested3()
+    {
+        var ss = StyleSheet.Parse(
 @"#networkLinks .block .emptyGuts,
 #networkLinks .block .populatedGuts,
 #networkLinks .block .editGuts {
@@ -71,23 +71,23 @@ namespace Carbon.Css.Tests
   z-index: 100;
 }");
 
-            Assert.Equal(
+        Assert.Equal(
 @"#networkLinks .block .emptyGuts,
 #networkLinks .block .populatedGuts,
 #networkLinks .block .editGuts {
   cursor: default;
   z-index: 100;
 }", ss.ToString());
-        }
-        
-        [Fact]
-        public void Nested()
-        {
-            var ss = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("nested.css").FullName));
+    }
 
-            ss.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1);
+    [Fact]
+    public void Nested()
+    {
+        var ss = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("nested.css").FullName));
 
-            Assert.Equal(@"#networkLinks .block .edit:before {
+        ss.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1);
+
+        Assert.Equal(@"#networkLinks .block .edit:before {
   font-family: 'carbonmade';
   font-size: 12px;
   line-height: 26px;
@@ -154,44 +154,43 @@ namespace Carbon.Css.Tests
 #networkLinks .block .controls { padding: 5px 0 10px 210px; }", ss.ToString());
 
 
-        }
+    }
 
-        [Fact]
-        public void Transform()
-        {
-            var sheet = StyleSheet.Parse(@"
+    [Fact]
+    public void Transform()
+    {
+        var sheet = StyleSheet.Parse(@"
 body { 
   transform: rotate(90);
 }
 ");
 
-            sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1, BrowserInfo.Firefox1);
+        sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1, BrowserInfo.Firefox1);
 
-            Assert.Equal(@"body {
+        Assert.Equal(@"body {
   -moz-transform: rotate(90);
   -webkit-transform: rotate(90);
   transform: rotate(90);
 }", sheet.ToString());
 
-        }
+    }
 
 
-        [Fact]
-        public void BackfaceVisibility()
-        {
-            var sheet = StyleSheet.Parse(@"
+    [Fact]
+    public void BackfaceVisibility()
+    {
+        var sheet = StyleSheet.Parse(@"
 body { 
   backface-visibility: hidden;
 }
 ");
 
-            sheet.Context.SetCompatibility(BrowserInfo.Safari10);
+        sheet.Context.SetCompatibility(BrowserInfo.Safari10);
 
-            Assert.Equal(@"body {
+        Assert.Equal(@"body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }", sheet.ToString());
 
-        }
     }
 }

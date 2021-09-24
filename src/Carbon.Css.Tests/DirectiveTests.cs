@@ -1,16 +1,15 @@
-﻿namespace Carbon.Css.Tests
+﻿namespace Carbon.Css.Tests;
+
+public class DirectiveTests
 {
-    public class DirectiveTests
+    [Fact]
+    public void ParsePartial()
     {
-        [Fact]
-        public void ParsePartial()
-        {
-            var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse(@"
 //= partial
 div { color: blue; }
 "); // Prevents standalone compilation
-            
-            Assert.Equal("div { color: blue; }", sheet.ToString());
-        }
+
+        Assert.Equal("div { color: blue; }", sheet.ToString());
     }
 }

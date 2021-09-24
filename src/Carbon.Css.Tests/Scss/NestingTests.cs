@@ -1,19 +1,19 @@
-﻿namespace Carbon.Css.Tests
+﻿namespace Carbon.Css.Tests;
+
+public class NestingTests
 {
-    public class NestingTests
+    [Fact]
+    public void SingleNestedReference()
     {
-        [Fact]
-        public void SingleNestedReference()
-        {
-            var css = StyleSheet.Parse("div { &.hide { display: none; } }");
+        var css = StyleSheet.Parse("div { &.hide { display: none; } }");
 
-            Assert.Equal("div.hide { display: none; }", css.ToString());
-        }
+        Assert.Equal("div.hide { display: none; }", css.ToString());
+    }
 
-        [Fact]
-        public void SingleDoubleNestedReference()
-        {
-            var css = StyleSheet.Parse(@"
+    [Fact]
+    public void SingleDoubleNestedReference()
+    {
+        var css = StyleSheet.Parse(@"
 #networkLinks .block {
   .edit {
     opacity: 0;
@@ -24,26 +24,26 @@
   }
 }".Trim());
 
-            var node = (((css.Children[0] as StyleRule).Children[0] as StyleRule)).Children[1] as StyleRule;
+        var node = (((css.Children[0] as StyleRule).Children[0] as StyleRule)).Children[1] as StyleRule;
 
-            var selector = CssWriter.ExpandSelector(node);
+        var selector = CssWriter.ExpandSelector(node);
 
-            Assert.True(selector[0][0] is CssReference);
-            Assert.True(selector[0][1] is CssString);
+        Assert.True(selector[0][0] is CssReference);
+        Assert.True(selector[0][1] is CssString);
 
-            // throw new System.Exception(string.Join(Environment.NewLine, selector[0].Select(a => a.Kind + " " + a.ToString())));
+        // throw new System.Exception(string.Join(Environment.NewLine, selector[0].Select(a => a.Kind + " " + a.ToString())));
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 #networkLinks .block .edit:before { font-family: 'carbon'; }
 #networkLinks .block .edit { opacity: 0; }
 ".Trim(), css.ToString());
 
-        }
+    }
 
-        [Fact]
-        public void NestedSelectorList()
-        {
-            var css = StyleSheet.Parse(@"
+    [Fact]
+    public void NestedSelectorList()
+    {
+        var css = StyleSheet.Parse(@"
 div {
   input,
   textarea {
@@ -52,50 +52,50 @@ div {
 }".Trim());
 
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 div input,
 div textarea { display: block; }
 ".Trim(), css.ToString());
-        }
+    }
 
-        [Fact]
-        public void SelectorListWithNestedReference()
-        {
-            var css = StyleSheet.Parse(@"div, span { .hide { display: none; } }");
+    [Fact]
+    public void SelectorListWithNestedReference()
+    {
+        var css = StyleSheet.Parse(@"div, span { .hide { display: none; } }");
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 
 div .hide,
 span .hide { display: none; }
 
 ".Trim(), css.ToString());
-        }
-        
-        [Fact]
-        public void B()
-        {
-            var css = StyleSheet.Parse("div { &.hide, &.hidden { display: none; } }");
+    }
 
-            Assert.Equal(@"
+    [Fact]
+    public void B()
+    {
+        var css = StyleSheet.Parse("div { &.hide, &.hidden { display: none; } }");
+
+        Assert.Equal(@"
 
 div.hide,
 div.hidden { display: none; }
 
 ".Trim(), css.ToString());
-        }
+    }
 
-        [Fact]
-        public void C()
-        {
-            var css = StyleSheet.Parse(".hide { body & { display: none; } }");
+    [Fact]
+    public void C()
+    {
+        var css = StyleSheet.Parse(".hide { body & { display: none; } }");
 
-            Assert.Equal("body .hide { display: none; }", css.ToString());
-        }
+        Assert.Equal("body .hide { display: none; }", css.ToString());
+    }
 
-        [Fact]
-        public void NestedMultiselector1()
-        {
-            var css = StyleSheet.Parse(@"
+    [Fact]
+    public void NestedMultiselector1()
+    {
+        var css = StyleSheet.Parse(@"
 
 .details {
   max-width: 60rem;
@@ -117,7 +117,7 @@ div.hidden { display: none; }
 ");
 
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 .details { max-width: 60rem; }
 .details .description ul { list-style: disc; }
 .details .description p:last-child,
@@ -129,13 +129,13 @@ div.hidden { display: none; }
 
 ".Trim(), css.ToString());
 
-        }
+    }
 
 
-        [Fact]
-        public void NestedStyleRewriterTest()
-        {
-            var sheet = StyleSheet.Parse(@"
+    [Fact]
+    public void NestedStyleRewriterTest()
+    {
+        var sheet = StyleSheet.Parse(@"
 
 nav {
   display: block;
@@ -156,7 +156,7 @@ nav {
 
 ");
 
-            Assert.Equal(
+        Assert.Equal(
 @"nav { display: block; }
 nav ul {
   margin: 0;
@@ -170,13 +170,13 @@ nav a {
   text-decoration: none;
 }", sheet.ToString());
 
-        }
+    }
 
 
-        [Fact]
-        public void NestedMultiselector()
-        {
-            string text = @"
+    [Fact]
+    public void NestedMultiselector()
+    {
+        string text = @"
 #header { 
   min-height: 80px; 
 
@@ -209,7 +209,7 @@ nav a {
   }
 }";
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 #header { min-height: 80px; }
 #header a { color: rgba(255, 255, 255, 0.6); }
 #header header a { color: #fcfcfc; }
@@ -220,12 +220,12 @@ nav a {
 #header .inner ul { padding-left: 20px; }
 #header .inner { display: table; }
 ".Trim(), StyleSheet.Parse(text).ToString());
-        }
+    }
 
-        [Fact]
-        public void NestedMultiselector2()
-        {
-            string text = @"
+    [Fact]
+    public void NestedMultiselector2()
+    {
+        string text = @"
 #header { 
   .inner {  
     h1, ul {
@@ -235,34 +235,33 @@ nav a {
   }
 }";
 
-            var stylesheet = StyleSheet.Parse(text);
+        var stylesheet = StyleSheet.Parse(text);
 
-            var node = (StyleRule)stylesheet.Children[0];
+        var node = (StyleRule)stylesheet.Children[0];
 
-            Assert.Equal(1, node.Depth);
+        Assert.Equal(1, node.Depth);
 
-            node = (StyleRule)node.Children[0]; // .inner
+        node = (StyleRule)node.Children[0]; // .inner
 
-            Assert.Equal(2, node.Depth);
+        Assert.Equal(2, node.Depth);
 
-            node = (StyleRule)node.Children[0]; // h1, ul
+        node = (StyleRule)node.Children[0]; // h1, ul
 
-            Assert.Equal(3, node.Depth);
+        Assert.Equal(3, node.Depth);
 
-            Assert.Equal("h1", node.Selector[0].ToString());
-            Assert.Equal("ul", node.Selector[1].ToString());
+        Assert.Equal("h1", node.Selector[0].ToString());
+        Assert.Equal("ul", node.Selector[1].ToString());
 
-            var selector = CssWriter.ExpandSelector(node);
+        var selector = CssWriter.ExpandSelector(node);
 
-            Assert.Equal("#header .inner h1, #header .inner ul", selector.ToString());
+        Assert.Equal("#header .inner h1, #header .inner ul", selector.ToString());
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 #header .inner h1,
 #header .inner ul {
   display: table-cell;
   vertical-align: middle;
 }
 ".Trim(), stylesheet.ToString());
-        }
     }
 }

@@ -1,53 +1,53 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Carbon.Css.Tests
+namespace Carbon.Css.Tests;
+
+public class VariableTests
 {
-    public class VariableTests
+    [Fact]
+    public void VariableReferencingVariable()
     {
-        [Fact]
-        public void VariableReferencingVariable()
-        {
-            var css = StyleSheet.Parse(@"
+        var css = StyleSheet.Parse(@"
 $red: #f00;
 $borderColor: $red;
 
 div { color: rgba($borderColor, 0.5); }");
 
-            Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", css.ToString());
-        }
+        Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", css.ToString());
+    }
 
-        [Fact]
-        public void ReferenceToSelfThrows()
-        {
-            var sheet = StyleSheet.Parse(@"
+    [Fact]
+    public void ReferenceToSelfThrows()
+    {
+        var sheet = StyleSheet.Parse(@"
 $red: #fff;
 $red: $red;	
 
 div { color: $red; }");
 
-            Assert.Throws<Exception>(() =>
-            {
-                sheet.ToString();
-            });
-        }
-
-        [Fact]
-        public void ParseAssignment()
+        Assert.Throws<Exception>(() =>
         {
-            var text = "$color: red;";
+            sheet.ToString();
+        });
+    }
 
-            var assignment = StyleSheet.Parse(text).Children[0] as CssAssignment;
+    [Fact]
+    public void ParseAssignment()
+    {
+        var text = "$color: red;";
 
-            Assert.Equal("color", assignment.Name);
+        var assignment = StyleSheet.Parse(text).Children[0] as CssAssignment;
 
-            Assert.Equal("red", assignment.Value.ToString());
-        }
+        Assert.Equal("color", assignment.Name);
 
-        [Fact]
-        public void VariableTest1()
-        {
-            var sheet = StyleSheet.Parse(@"
+        Assert.Equal("red", assignment.Value.ToString());
+    }
+
+    [Fact]
+    public void VariableTest1()
+    {
+        var sheet = StyleSheet.Parse(@"
 $blue: #dceef7;
 $yellow: #fff5cc;
 
@@ -57,28 +57,28 @@ body {
 }
 ");
 
-            var assignments = sheet.Children.OfType<CssAssignment>();
+        var assignments = sheet.Children.OfType<CssAssignment>();
 
-            Assert.Equal("#dceef7", assignments.First(a => a.Name == "blue").Value.ToString());
+        Assert.Equal("#dceef7", assignments.First(a => a.Name == "blue").Value.ToString());
 
-            Assert.Equal(2, assignments.Count());
+        Assert.Equal(2, assignments.Count());
 
-            Assert.Equal(
+        Assert.Equal(
 @"body {
   background-color: #dceef7;
   color: #fff5cc;
 }", sheet.ToString());
-        }
+    }
 
-        [Fact]
-        public void VariableTest3()
+    [Fact]
+    public void VariableTest3()
+    {
+        var dic = new Dictionary<string, CssValue>
         {
-            var dic = new Dictionary<string, CssValue>
-            {
-                ["monster"] = CssValue.Parse("red")
-            };
+            ["monster"] = CssValue.Parse("red")
+        };
 
-            var sheet = StyleSheet.Parse(
+        var sheet = StyleSheet.Parse(
 @"
 $blue: #dceef7;
 $yellow: #fff5cc;
@@ -89,44 +89,44 @@ body {
   monster: $monster;
 }");
 
-            Assert.Equal(
+        Assert.Equal(
 @"body {
   background-color: #dceef7;
   color: #fff5cc;
   monster: red;
 }", sheet.ToString(dic));
-        }
+    }
 
-        [Fact]
-        public void DefinedTests()
+    [Fact]
+    public void DefinedTests()
+    {
+        var dic = new Dictionary<string, CssValue>
         {
-            var dic = new Dictionary<string, CssValue>
-            {
-                ["monster"] = CssValue.Parse("purple")
-            };
+            ["monster"] = CssValue.Parse("purple")
+        };
 
-            // variable-exists
-            var sheet = StyleSheet.Parse(
+        // variable-exists
+        var sheet = StyleSheet.Parse(
 @"@if $monster != undefined {
     body { 
       background-color: red;
     }
 }");
 
-            Assert.Equal(@"body { background-color: red; }", sheet.ToString(dic));
+        Assert.Equal(@"body { background-color: red; }", sheet.ToString(dic));
 
-            sheet = StyleSheet.Parse(
-    @"@if $monster == undefined {
+        sheet = StyleSheet.Parse(
+@"@if $monster == undefined {
     body { 
       background-color: red;
     }
 }");
 
-            Assert.Equal("", sheet.ToString(dic));
+        Assert.Equal("", sheet.ToString(dic));
 
 
 
-            sheet = StyleSheet.Parse(@"
+        sheet = StyleSheet.Parse(@"
 
 @if $bananas == undefined {
     body { 
@@ -136,18 +136,18 @@ body {
 
 ");
 
-            Assert.Equal(@"body { background-color: red; }", sheet.ToString(dic));
-        }
+        Assert.Equal(@"body { background-color: red; }", sheet.ToString(dic));
+    }
 
-        [Fact]
-        public void VariableTest4()
+    [Fact]
+    public void VariableTest4()
+    {
+        var dic = new Dictionary<string, CssValue>
         {
-            var dic = new Dictionary<string, CssValue>
-            {
-                ["monster"] = CssValue.Parse("purple")
-            };
+            ["monster"] = CssValue.Parse("purple")
+        };
 
-            var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse(@"
 
 $blue: #dceef7;
 $yellow: #fff5cc;
@@ -162,7 +162,7 @@ body {
 
 ");
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 
 body {
   background-color: #dceef7;
@@ -172,13 +172,13 @@ body {
 }
 
 ".Trim(), sheet.ToString(dic));
-        }
+    }
 
 
-        [Fact]
-        public void VariableTest2()
-        {
-            var css = StyleSheet.Parse(@"
+    [Fact]
+    public void VariableTest2()
+    {
+        var css = StyleSheet.Parse(@"
 
 $addYellow: #fff5cc;
 $editBlue: #dceef7;
@@ -191,7 +191,7 @@ body { font-size: 14px; opacity: 0.5; }
 ");
 
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 
 body {
   font-size: 14px;
@@ -204,6 +204,5 @@ body {
 ".Trim(), css.ToString());
 
 
-        }
     }
 }

@@ -1,11 +1,11 @@
-﻿namespace Carbon.Css.Tests
+﻿namespace Carbon.Css.Tests;
+
+public class FunctionTests
 {
-    public class FunctionTests
+    [Fact]
+    public void LightenAndDarken()
     {
-        [Fact]
-        public void LightenAndDarken()
-        {
-            var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse(@"
 $red: #f00;
 $borderColor: $red;
 
@@ -13,14 +13,14 @@ div { color: darken($red, 10%); }
 div { color: lighten($red, 0.2); }");
 
 
-            Assert.Equal(@"div { color: #c00; }
+        Assert.Equal(@"div { color: #c00; }
 div { color: #f66; }", sheet.ToString());
-        }
+    }
 
-        [Fact]
-        public void FuncInMixin()
-        {
-            var sheet = StyleSheet.Parse(@"
+    [Fact]
+    public void FuncInMixin()
+    {
+        var sheet = StyleSheet.Parse(@"
 $red: #f00;
 $borderColor: $red;
 
@@ -35,16 +35,16 @@ div {
 
 ");
 
-            Assert.Equal(@"div {
+        Assert.Equal(@"div {
   color: #c00;
   color: #f66;
 }", sheet.ToString());
-        }
+    }
 
-        [Fact]
-        public void FuncNestedMixin()
-        {
-            var sheet = StyleSheet.Parse(@"
+    [Fact]
+    public void FuncNestedMixin()
+    {
+        var sheet = StyleSheet.Parse(@"
 $red: #f00;
 $borderColor: $red;
 
@@ -63,7 +63,7 @@ div {
 }");
 
 
-            Assert.Equal(@"div {
+        Assert.Equal(@"div {
   color: #c00;
   color: #f66;
 }
@@ -71,12 +71,12 @@ div div {
   color: #a11721;
   color: #ccc;
 }", sheet.ToString());
-        }
+    }
 
-        [Fact]
-        public void Test99()
-        {
-            var ss = StyleSheet.Parse(@"div {
+    [Fact]
+    public void Test99()
+    {
+        var ss = StyleSheet.Parse(@"div {
   .text,
   .placeholderText {
     position: relative;
@@ -95,7 +95,7 @@ div div {
 }");
 
 
-            Assert.Equal(
+        Assert.Equal(
 @"div .text,
 div .placeholderText {
   position: relative;
@@ -111,14 +111,14 @@ div .placeholderText {
   -webkit-font-smoothing: antialiased;
   z-index: 2;
 }", ss.ToString());
-        }
+    }
 
-        [Fact]
-        public void Test53()
-        {
-            var ss = StyleSheet.FromFile(TestHelper.GetTestFile("test53.css"));
+    [Fact]
+    public void Test53()
+    {
+        var ss = StyleSheet.FromFile(TestHelper.GetTestFile("test53.css"));
 
-            Assert.Equal(
+        Assert.Equal(
 @".block ::-webkit-input-placeholder {
   color: #cfcece;
   font-weight: 400;
@@ -203,6 +203,5 @@ div .placeholderText {
 }
 .block .description { padding: 5px 250px 20px 225px; }", ss.ToString());
 
-        }
     }
 }

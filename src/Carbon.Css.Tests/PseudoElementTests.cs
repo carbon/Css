@@ -1,11 +1,11 @@
-﻿namespace Carbon.Css.Tests
+﻿namespace Carbon.Css.Tests;
+
+public class PseudoElementTests
 {
-    public class PseudoElementTests
+    [Fact]
+    public void A()
     {
-        [Fact]
-        public void A()
-        {
-            var ss = StyleSheet.Parse(@"
+        var ss = StyleSheet.Parse(@"
 //= support Safari >= 5
 .block ::-webkit-input-placeholder { color: #cfcece ; font-weight: 400; }
 .block      :-ms-input-placeholder { color: #cfcece ; font-weight: 400; }
@@ -14,7 +14,7 @@
 ");
 
 
-            Assert.Equal(
+        Assert.Equal(
 @".block ::-webkit-input-placeholder {
   color: #cfcece;
   font-weight: 400;
@@ -31,6 +31,5 @@
   color: #cfcece;
   font-weight: 400;
 }", ss.ToString());
-        }
     }
 }

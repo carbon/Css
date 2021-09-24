@@ -1,14 +1,14 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace Carbon.Css.Tests
+namespace Carbon.Css.Tests;
+
+public class MixinTests
 {
-    public class MixinTests
+    [Fact]
+    public void MixinTest19()
     {
-        [Fact]
-        public void MixinTest19()
-        {
-            var ss = StyleSheet.Parse(@"
+        var ss = StyleSheet.Parse(@"
 
 @mixin serif($fontWeight:300) {
   font-family: 'Merriweather', serif;
@@ -24,7 +24,7 @@ h1, h2, h3, h4, h5, h6 {
 
 ");
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', serif;
@@ -35,12 +35,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ".Trim(), ss.ToString());
-        }
+    }
 
-        [Fact]
-        public void MixinTest15()
-        {
-            var ss = StyleSheet.Parse(@"
+    [Fact]
+    public void MixinTest15()
+    {
+        var ss = StyleSheet.Parse(@"
 $fontWeight: 500;
 
 @mixin serif($fontWeight: 300) {
@@ -55,10 +55,10 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 1rem 0;
 }");
 
-            for (var i = 0; i < 100; i++)
-            {
+        for (var i = 0; i < 100; i++)
+        {
 
-                Assert.Equal(@"
+            Assert.Equal(@"
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', serif;
@@ -69,15 +69,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ".Trim(), ss.ToString());
-            }
-
         }
 
+    }
 
-        [Fact]
-        public void ParseMixin30()
-        {
-            var ss = StyleSheet.Parse(@"
+
+    [Fact]
+    public void ParseMixin30()
+    {
+        var ss = StyleSheet.Parse(@"
 // Mixins
 @mixin dl-horizontal($dlSpacing : 7.5em, $dlGap : 0.625em) {
   dt {
@@ -99,12 +99,12 @@ h1, h2, h3, h4, h5, h6 {
   @include dl-horizontal(3.75em, 0.625em);
 }
 ");
-            Assert.Single(ss.Context.Mixins);
+        Assert.Single(ss.Context.Mixins);
 
-            Assert.Equal("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
-            Assert.Equal(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
+        Assert.Equal("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
+        Assert.Equal(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
 
-            Assert.Equal(@".left .awards dl dt,
+        Assert.Equal(@".left .awards dl dt,
 .left .exhibitions dl dt {
   text-align: left;
   overflow: hidden;
@@ -115,23 +115,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 .left .awards dl dd,
 .left .exhibitions dl dd { padding-left: 3.75em; }", ss.ToString());
-        }
+    }
 
-        [Fact]
-        public void ParseMixin7()
-        {
-            var mixins = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins2.css").FullName));
+    [Fact]
+    public void ParseMixin7()
+    {
+        var mixins = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins2.css").FullName));
 
-            Assert.Equal(13, mixins.Context.Mixins.Count);
+        Assert.Equal(13, mixins.Context.Mixins.Count);
 
-            var ss = StyleSheet.Parse(@".happy {
+        var ss = StyleSheet.Parse(@".happy {
 				@include li-horizontal;
 				font-size: 15px;
 				oranges: a;
 			} ", mixins.Context);
 
 
-            Assert.Equal(
+        Assert.Equal(
 @".happy {
   list-style: none;
   padding: 0;
@@ -153,22 +153,22 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: 0;
 }
 .happy li { padding-bottom: 1em; }", ss.ToString());
-        }
+    }
 
-        [Fact]
-        public void ParseMixin3()
-        {
-            var mixins = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins2.css").FullName));
+    [Fact]
+    public void ParseMixin3()
+    {
+        var mixins = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins2.css").FullName));
 
-            Assert.Equal(13, mixins.Context.Mixins.Count);
+        Assert.Equal(13, mixins.Context.Mixins.Count);
 
-            var ss = StyleSheet.Parse(@"
+        var ss = StyleSheet.Parse(@"
 .happy {
     @include dl-horizontal;
 				font-size: 15px;
 			} ", mixins.Context);
 
-            Assert.Equal(
+        Assert.Equal(
 @".happy { font-size: 15px; }
 .happy dt {
   text-align: left;
@@ -179,20 +179,20 @@ h1, h2, h3, h4, h5, h6 {
   width: 7.5em;
 }
 .happy dd { padding-left: 8.125em; }", ss.ToString());
-        }
+    }
 
-        [Fact]
-        public void ParseMixin4()
-        {
-            var mixins = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins2.css").FullName));
+    [Fact]
+    public void ParseMixin4()
+    {
+        var mixins = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins2.css").FullName));
 
-            Assert.Equal(13, mixins.Context.Mixins.Count);
+        Assert.Equal(13, mixins.Context.Mixins.Count);
 
-            var ss = StyleSheet.Parse(@".happy {
+        var ss = StyleSheet.Parse(@".happy {
 				@include li-horizontal;
 			} ", mixins.Context);
 
-            Assert.Equal(@".happy {
+        Assert.Equal(@".happy {
   list-style: none;
   padding: 0;
 }
@@ -211,12 +211,12 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: 0;
 }
 .happy li { padding-bottom: 1em; }", ss.ToString());
-        }
+    }
 
-        [Fact]
-        public void ParseMixin()
-        {
-            var text = @"@mixin left($dist, $x: 1) {
+    [Fact]
+    public void ParseMixin()
+    {
+        var text = @"@mixin left($dist, $x: 1) {
 							margin-left: $dist;
 							float: left;
 							apples: bananas;
@@ -228,22 +228,22 @@ h1, h2, h3, h4, h5, h6 {
 						}
 						";
 
-            var ss = StyleSheet.Parse(text);
+        var ss = StyleSheet.Parse(text);
 
-            Assert.Single(ss.Context.Mixins);
+        Assert.Single(ss.Context.Mixins);
 
-            Assert.Equal(@"main {
+        Assert.Equal(@"main {
   margin-left: 50px;
   float: left;
   apples: bananas;
 }", ss.ToString());
-        }
+    }
 
-        [Fact]
-        public void ParseMixin2()
-        {
-            var text =
-            @"@mixin round($radius) {
+    [Fact]
+    public void ParseMixin2()
+    {
+        var text =
+        @"@mixin round($radius) {
 				border-radius: $radius;
 				-webkit-border-radius: $radius;
 			}
@@ -252,28 +252,27 @@ h1, h2, h3, h4, h5, h6 {
 				@include round(50px, 20px);
 			}";
 
-            var ss = StyleSheet.Parse(text);
+        var ss = StyleSheet.Parse(text);
 
-            var rules = ss.Children.OfType<CssRule>().ToArray();
+        var rules = ss.Children.OfType<CssRule>().ToArray();
 
-            var include = rules[0].Children[0] as IncludeNode;
-            var args = include.Args as CssValueList;
+        var include = rules[0].Children[0] as IncludeNode;
+        var args = include.Args as CssValueList;
 
-            Assert.Equal(2, args.Count);
-            Assert.Equal("50px, 20px", args.ToString());
-            Assert.Equal("round", include.Name);
+        Assert.Equal(2, args.Count);
+        Assert.Equal("50px, 20px", args.ToString());
+        Assert.Equal("round", include.Name);
 
-            Assert.Equal("50px", args[0].ToString());
-            Assert.Equal("20px", args[1].ToString());
+        Assert.Equal("50px", args[0].ToString());
+        Assert.Equal("20px", args[1].ToString());
 
-            Assert.Equal(ValueSeperator.Comma, args.Seperator);
+        Assert.Equal(ValueSeperator.Comma, args.Seperator);
 
-            Assert.Single(ss.Context.Mixins);
+        Assert.Single(ss.Context.Mixins);
 
-            Assert.Equal(@"main {
+        Assert.Equal(@"main {
   border-radius: 50px;
   -webkit-border-radius: 50px;
 }", ss.ToString());
-        }
     }
 }

@@ -1,11 +1,11 @@
-﻿namespace Carbon.Css.Tests
+﻿namespace Carbon.Css.Tests;
+
+public class MaskingTests
 {
-    public class MaskingTests
+    [Fact]
+    public void A()
     {
-        [Fact]
-        public void A()
-        {
-            var text = @"
+        var text = @"
 //= support Safari >= 5
 
 div {
@@ -14,17 +14,12 @@ div {
 
 ";
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 
 div {
   -webkit-mask-image: url('mask.svg');
   mask-image: url('mask.svg');
 }
 ".Trim(), StyleSheet.Parse(text).ToString());
-
-
-
-
-        }
     }
 }

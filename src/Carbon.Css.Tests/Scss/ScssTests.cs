@@ -1,11 +1,11 @@
-﻿namespace Carbon.Css.Tests
+﻿namespace Carbon.Css.Tests;
+
+public class ScssTests
 {
-    public class ScssTests
+    [Fact]
+    public void ChildSelector()
     {
-        [Fact]
-        public void ChildSelector()
-        {
-            var ss = StyleSheet.Parse(@"div {
+        var ss = StyleSheet.Parse(@"div {
   input,
   textarea {
     padding: 10px 15px;
@@ -22,18 +22,18 @@
   }
 }");
 
-            Assert.Single(ss.Children);
+        Assert.Single(ss.Children);
 
-            var node = (StyleRule)((StyleRule)ss.Children[0]).Children[0];
-            var parent = (StyleRule)node.Parent;
+        var node = (StyleRule)((StyleRule)ss.Children[0]).Children[0];
+        var parent = (StyleRule)node.Parent;
 
-            Assert.Equal("div", parent.Selector.ToString());
-            Assert.Equal("input, textarea", node.Selector.ToString());
-            var selector = CssWriter.ExpandSelector(node);
+        Assert.Equal("div", parent.Selector.ToString());
+        Assert.Equal("input, textarea", node.Selector.ToString());
+        var selector = CssWriter.ExpandSelector(node);
 
-            Assert.Equal("div input, div textarea", selector.ToString());
+        Assert.Equal("div input, div textarea", selector.ToString());
 
-            Assert.Equal(@"div input,
+        Assert.Equal(@"div input,
 div textarea {
   padding: 10px 15px;
   margin: 0;
@@ -47,30 +47,30 @@ div textarea {
   time: 10s;
   undefined: /* $undefined undefined */;
 }", ss.ToString());
-        }
+    }
 
-      
 
-        [Fact]
-        public void DoubleList()
-        {
-            var sheet = StyleSheet.Parse(@"
+
+    [Fact]
+    public void DoubleList()
+    {
+        var sheet = StyleSheet.Parse(@"
 a { 
   transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
 }");
 
-            sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari5);
+        sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari5);
 
-            Assert.Equal(@"a {
+        Assert.Equal(@"a {
   -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
   transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
 }", sheet.ToString());
-        }
+    }
 
-        [Fact]
-        public void DoubleList2()
-        {
-            var sheet = StyleSheet.Parse(@".form {
+    [Fact]
+    public void DoubleList2()
+    {
+        var sheet = StyleSheet.Parse(@".form {
   padding-bottom: 3em;
   margin: 15px;
   padding-top: 3em;
@@ -157,9 +157,9 @@ a {
   }
 }");
 
-            sheet.Context.SetCompatibility(BrowserInfo.Chrome26, BrowserInfo.Safari5);
+        sheet.Context.SetCompatibility(BrowserInfo.Chrome26, BrowserInfo.Safari5);
 
-            Assert.Equal(@".form {
+        Assert.Equal(@".form {
   padding-bottom: 3em;
   margin: 15px;
   padding-top: 3em;
@@ -242,15 +242,15 @@ a {
   -webkit-transition: -webkit-transform 0.2s ease-in-out, opacity 0.4s ease-in-out;
   transition: transform 0.2s ease-in-out, opacity 0.4s ease-in-out;
 }", sheet.ToString());
-        }
+    }
 
 
 
 
-        [Fact]
-        public void NestedStyleRecursiveRewriterTest()
-        {
-            var sheet = StyleSheet.Parse(
+    [Fact]
+    public void NestedStyleRecursiveRewriterTest()
+    {
+        var sheet = StyleSheet.Parse(
 @"nav {
   ul {
     margin: 0;
@@ -271,7 +271,7 @@ a {
   }
 }");
 
-            Assert.Equal(
+        Assert.Equal(
 @"nav ul {
   margin: 0;
   padding: 0;
@@ -285,6 +285,5 @@ nav a {
 }
 nav i b { color: red; }", sheet.ToString());
 
-        }
     }
 }
