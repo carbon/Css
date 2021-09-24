@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using Xunit;
-
 namespace Carbon.Css.Tests
 {
 

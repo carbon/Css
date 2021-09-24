@@ -1,12 +1,8 @@
-﻿namespace Carbon.Css.Tests
+﻿using System.IO;
+namespace Carbon.Css.Tests
 {
-    using System.IO;
-
-    using Xunit;
-
     public class VendorPrefixTests
     {
-
         [Fact]
         public void DoubleList5()
         {

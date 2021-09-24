@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Carbon.Css.Tests
+﻿namespace Carbon.Css.Tests
 {
     public class CssUnitTests
     {
@@ -15,8 +13,6 @@ namespace Carbon.Css.Tests
             Assert.Equal(CssUnitInfo.Deg, CssUnitInfo.Get("deg"));
             Assert.Equal(CssUnitInfo.Rlh, CssUnitInfo.Get("rlh"));
             Assert.Equal(CssUnitInfo.Rem, CssUnitInfo.Get("rem"));
-
-
         }
 
         [Fact]

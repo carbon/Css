@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Carbon.Css.Tests
+﻿namespace Carbon.Css.Tests
 {
     public class CssValueTests
     {

@@ -1,11 +1,7 @@
 ﻿#pragma warning disable IDE0057 // Use range operator
 #pragma warning disable IDE0018 // Inline variable declaration
 
-using System;
-
 using Carbon.Color;
-
-using Xunit;
 
 namespace Carbon.Css.Gradients.Tests
 {

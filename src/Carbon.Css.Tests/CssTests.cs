@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Text;
 
-using Xunit;
-
 using Carbon.Css.Parser;
 
 namespace Carbon.Css.Tests

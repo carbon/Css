@@ -1,8 +1,4 @@
-﻿using System;
-
-using Xunit;
-
-namespace Carbon.Css.Tests
+﻿namespace Carbon.Css.Tests
 {
     public class FunctionTests
     {

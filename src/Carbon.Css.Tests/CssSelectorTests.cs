@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Xunit;
-
-namespace Carbon.Css.Parser.Tests
+﻿namespace Carbon.Css.Parser.Tests
 {
     public class CssSelectorTests
     {

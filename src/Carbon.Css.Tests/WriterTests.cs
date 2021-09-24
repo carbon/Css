@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Text;
 
-using Xunit;
-
 namespace Carbon.Css.Tests
 {
     public class WriterTests
