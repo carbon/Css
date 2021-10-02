@@ -266,7 +266,7 @@ h1, h2, h3, h4, h5, h6 {
         Assert.Equal("50px", args[0].ToString());
         Assert.Equal("20px", args[1].ToString());
 
-        Assert.Equal(ValueSeperator.Comma, args.Seperator);
+        Assert.Equal(CssValueSeperator.Comma, args.Seperator);
 
         Assert.Single(ss.Context.Mixins);
 

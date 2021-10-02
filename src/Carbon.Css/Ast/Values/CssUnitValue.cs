@@ -7,164 +7,159 @@ using System.Text.Json.Serialization;
 using Carbon.Css.Helpers;
 using Carbon.Css.Json;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+[JsonConverter(typeof(CssUnitValueJsonConverter))]
+public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
 {
-    [JsonConverter(typeof(CssUnitValueJsonConverter))]
-    public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
-	{
-        public static readonly CssUnitValue Zero = new (0, CssUnitInfo.Number);
-        
-        public CssUnitValue(double value, string unitName)
-            : this(value, CssUnitInfo.Get(unitName))
-        {
-        }
+    public static readonly CssUnitValue Zero = new(0, CssUnitInfo.Number);
 
-        public CssUnitValue(double value, CssUnitInfo unit)
-            : base(unit.Kind)
-        {
-            Value = value;
-            Unit = unit;
-        }
-
-        public double Value { get; }
-
-		public CssUnitInfo Unit { get; }
-
-        public override string ToString()
-        {
-            return Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
-        }
-
-        internal void WriteTo(ref ValueStringBuilder sb)
-        {
-            sb.Append(Value.ToString(CultureInfo.InvariantCulture));
-            sb.Append(Unit.Name);
-        }
-
-        internal void WriteTo(StringBuilder sb)
-        {
-            sb.Append(Value.ToString(CultureInfo.InvariantCulture));
-            sb.Append(Unit.Name);
-        }
-
-        internal override void WriteTo(TextWriter writer)
-        {
-            writer.Write(Value.ToString(CultureInfo.InvariantCulture));
-            writer.Write(Unit.Name);
-        }
-
-        public override CssUnitValue CloneNode() => new (Value, Unit);
-
-        public new static CssUnitValue Parse(string text)
-        {
-            return Parse(text.AsSpan());
-        }
-        
-        public static CssUnitValue Parse(ReadOnlySpan<char> text)
-        {
-            double value = text.ReadNumber(out int read);
-            
-            if (read == text.Length)
-            {
-                return Number(value);
-            }
-
-            return new CssUnitValue(value, CssUnitInfo.Get(text[read..].Trim()));
-        }
-
-		#region Operators
-
-        // Subtract
-        // Div
-        // Min
-        // Max
-
-		public CssUnitValue Multiply(CssValue other)
-		{
-            if (other.Kind is NodeKind.Percentage)
-            {
-                return new CssUnitValue(Value * (((CssUnitValue)other).Value / 100), Unit);
-            }
-            else if (other.Kind is NodeKind.Number)
-            {
-                return new CssUnitValue(Value * (((CssUnitValue)other).Value), Unit);
-            }
-            else if (other is CssUnitValue measurement)
-            {
-                return new CssUnitValue(Value * measurement.Value, measurement.Unit);
-            }
-
-            throw new Exception($"{this.Kind} and {other.Kind} are not compatible | {this} * {other}");
-        }
-
-        public CssUnitValue Divide(CssValue other)
-        {
-            if (other.Kind is NodeKind.Percentage or NodeKind.Number)
-            {
-                return new CssUnitValue(Value / (((CssUnitValue)other).Value), Unit);
-            }
-            else if (other is CssUnitValue otherUnit)
-            {
-                if (other.Kind == Kind || other.Kind is NodeKind.Number)
-                {
-                    return new CssUnitValue(Value / otherUnit.Value, otherUnit.Unit);
-                }
-            }
-
-            throw new Exception($"{this.Kind} and {other.Kind} are not compatible | | {this} / {other}");
-        }
-
-        public CssUnitValue Add(CssValue other)
-		{
-			if (other is CssUnitValue measurement && measurement.Kind == Kind)
-            {
-                return new CssUnitValue(Value + measurement.Value, measurement.Unit); 
-            }
-
-            throw new Exception($"{this.Kind} and {other.Kind} are not compatible | {this} + {other}");
-		}
-
-        public CssUnitValue Subtract(CssValue other)
-        {
-            if (other is CssUnitValue measurement && measurement.Kind == Kind)
-            {
-                return new CssUnitValue(Value - measurement.Value, measurement.Unit);
-            }
-
-            throw new Exception($"{this.Kind} and {other.Kind} are not compatible | {this} - {other}");
-        }
-
-        #endregion
-
-        public void Deconstruct(out double value, out CssUnitInfo unit)
-        {
-            (value, unit) = (Value, Unit);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Unit, Value);
-        }
-
-        public bool Equals(CssUnitValue? other)
-        {
-            if (other is null) return this is null;
-
-            if (ReferenceEquals(this, other)) return true;
-
-            return Unit.Equals(other.Unit)
-                && Value == other.Value; 
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is CssUnitValue other && Equals(other);
-        }
+    public CssUnitValue(double value, string unitName)
+        : this(value, CssUnitInfo.Get(unitName))
+    {
     }
 
-	// CssLength
-	// CssTime
-	// ...
+    public CssUnitValue(double value, CssUnitInfo unit)
+        : base(unit.Kind)
+    {
+        Value = value;
+        Unit = unit;
+    }
+
+    public double Value { get; }
+
+    public CssUnitInfo Unit { get; }
+
+    public override string ToString()
+    {
+        return Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
+    }
+
+    internal void WriteTo(ref ValueStringBuilder sb)
+    {
+        sb.Append(Value.ToString(CultureInfo.InvariantCulture));
+        sb.Append(Unit.Name);
+    }
+
+    internal void WriteTo(StringBuilder sb)
+    {
+        sb.Append(Value.ToString(CultureInfo.InvariantCulture));
+        sb.Append(Unit.Name);
+    }
+
+    internal override void WriteTo(TextWriter writer)
+    {
+        writer.Write(Value.ToString(CultureInfo.InvariantCulture));
+        writer.Write(Unit.Name);
+    }
+
+    public override CssUnitValue CloneNode() => new(Value, Unit);
+
+    public new static CssUnitValue Parse(string text)
+    {
+        return Parse(text.AsSpan());
+    }
+
+    public static CssUnitValue Parse(ReadOnlySpan<char> text)
+    {
+        double value = text.ReadNumber(out int read);
+
+        if (read == text.Length)
+        {
+            return Number(value);
+        }
+
+        return new CssUnitValue(value, CssUnitInfo.Get(text[read..].Trim()));
+    }
+
+    #region Operators
+
+    // Subtract
+    // Div
+    // Min
+    // Max
+
+    public CssUnitValue Multiply(CssValue other)
+    {
+        if (other.Kind is NodeKind.Percentage)
+        {
+            return new CssUnitValue(Value * (((CssUnitValue)other).Value / 100), Unit);
+        }
+        else if (other.Kind is NodeKind.Number)
+        {
+            return new CssUnitValue(Value * (((CssUnitValue)other).Value), Unit);
+        }
+        else if (other is CssUnitValue measurement)
+        {
+            return new CssUnitValue(Value * measurement.Value, measurement.Unit);
+        }
+
+        throw new Exception($"{Kind} and {other.Kind} are not compatible | {this} * {other}");
+    }
+
+    public CssUnitValue Divide(CssValue other)
+    {
+        if (other.Kind is NodeKind.Percentage or NodeKind.Number)
+        {
+            return new CssUnitValue(Value / (((CssUnitValue)other).Value), Unit);
+        }
+        else if (other is CssUnitValue otherUnit)
+        {
+            if (other.Kind == Kind || other.Kind is NodeKind.Number)
+            {
+                return new CssUnitValue(Value / otherUnit.Value, otherUnit.Unit);
+            }
+        }
+
+        throw new Exception($"{Kind} and {other.Kind} are not compatible | | {this} / {other}");
+    }
+
+    public CssUnitValue Add(CssValue other)
+    {
+        if (other is CssUnitValue measurement && measurement.Kind == Kind)
+        {
+            return new CssUnitValue(Value + measurement.Value, measurement.Unit);
+        }
+
+        throw new Exception($"{Kind} and {other.Kind} are not compatible | {this} + {other}");
+    }
+
+    public CssUnitValue Subtract(CssValue other)
+    {
+        if (other is CssUnitValue measurement && measurement.Kind == Kind)
+        {
+            return new CssUnitValue(Value - measurement.Value, measurement.Unit);
+        }
+
+        throw new Exception($"{Kind} and {other.Kind} are not compatible | {this} - {other}");
+    }
+
+    #endregion
+
+    public void Deconstruct(out double value, out CssUnitInfo unit)
+    {
+        (value, unit) = (Value, Unit);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Unit, Value);
+    }
+
+    public bool Equals(CssUnitValue? other)
+    {
+        if (other is null) return this is null;
+
+        if (ReferenceEquals(this, other)) return true;
+
+        return Unit.Equals(other.Unit)
+            && Value == other.Value;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is CssUnitValue other && Equals(other);
+    }
 }
 
 // A dimension is a number immediately followed by a unit identifier.

@@ -1,7 +1,6 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css;
+
+public enum UnaryOperator
 {
-    public enum UnaryOperator
-	{
-		Not  = 1 // !
-	}
+    Not = 1 // !
 }

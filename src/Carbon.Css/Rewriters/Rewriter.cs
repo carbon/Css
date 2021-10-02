@@ -1,38 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+public sealed class RewriterCollection : Collection<ICssRewriter>
 {
-    public sealed class RewriterCollection : Collection<ICssRewriter>
+    public IEnumerable<CssRule> Rewrite(CssRule rule, int index = 0)
     {
-        public IEnumerable<CssRule> Rewrite(CssRule rule, int index = 0)
+        if (Count == 0)
         {
-            if (Count == 0)
-            {
-                yield return rule;
+            yield return rule;
 
-                yield break;
-            }
-
-            // TODO: Pass along in order
-
-            // Chain
-
-            foreach (var r in this[index].Rewrite(rule))
-            {
-                if (Count > index + 1)
-                {
-                    foreach (var r2 in Rewrite(r, ++index))
-                    {
-                        yield return r2;
-                    }
-                }
-                else
-                {
-                    yield return r;
-                }
-            }
-
+            yield break;
         }
+
+        // TODO: Pass along in order
+
+        // Chain
+
+        foreach (var r in this[index].Rewrite(rule))
+        {
+            if (Count > index + 1)
+            {
+                foreach (var r2 in Rewrite(r, ++index))
+                {
+                    yield return r2;
+                }
+            }
+            else
+            {
+                yield return r;
+            }
+        }
+
     }
 }

@@ -1,13 +1,12 @@
 ﻿using System.IO;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+public interface ICssResolver
 {
-    public interface ICssResolver
-    {
-        string ScopedPath { get; } // subpath ? 
+    string ScopedPath { get; } // subpath ? 
 
-        Stream Open(string absolutePath);
+    Stream Open(string absolutePath);
 
-        // TODO: GetStreamAsync
-    }
+    // TODO: GetStreamAsync
 }

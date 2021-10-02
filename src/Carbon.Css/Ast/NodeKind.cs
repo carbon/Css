@@ -1,57 +1,55 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum NodeKind
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum NodeKind
-    {
-        Unknown = 0,
+    Unknown = 0,
 
-        Document,
-        Comment,
-        Rule,
-        Expression,
-        Declaration,
-        Block,
-        Function,
-        Selector,
-        Assignment,
-        Variable,
-        InterpolatedString,
-        Reference, // &
-        Sequence,
+    Document,
+    Comment,
+    Rule,
+    Expression,
+    Declaration,
+    Block,
+    Function,
+    Selector,
+    Assignment,
+    Variable,
+    InterpolatedString,
+    Reference, // &
+    Sequence,
 
-        // Values
-        ValueList,
-        Url,
-        Number,
-        String,
-        Boolean,
-        Color,
-        Undefined,
+    // Values
+    ValueList,
+    Url,
+    Number,
+    String,
+    Boolean,
+    Color,
+    Undefined,
 
-        // Measurements
-        Angle,
-        Frequency,
-        Length,
-        Time,
-        Percentage,
-        Resolution,
-        UnknownMeasurement,
+    // Measurements
+    Angle,
+    Frequency,
+    Length,
+    Time,
+    Percentage,
+    Resolution,
+    UnknownMeasurement,
 
-        // Extensions
-        Directive,
+    // Extensions
+    Directive,
 
-        // Sass
-        Mixin,
-        Include,
-        If,
-        For,
-        Each,
-        While
-    }
+    // Sass
+    Mixin,
+    Include,
+    If,
+    For,
+    Each,
+    While
 }
-
 
 /*
 stylesheet  : [ CDO | CDC | S | statement ]*;

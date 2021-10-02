@@ -1,29 +1,28 @@
 ﻿using System;
 using System.IO;
 
-namespace Carbon.Css.Resolver
+namespace Carbon.Css.Resolver;
+
+internal readonly struct Include
 {
-    internal readonly struct Include
+    private readonly FileInfo _file;
+
+    public Include(FileInfo file)
     {
-        private readonly FileInfo file;
+        _file = file;
+    }
 
-        public Include(FileInfo file)
+    public DateTime Modified => _file.LastWriteTime;
+
+    public void WriteTo(TextWriter writer)
+    {
+        string? line;
+
+        using var reader = _file.OpenText();
+
+        while ((line = reader.ReadLine()) is not null)
         {
-            this.file = file;
-        }
-
-        public DateTime Modified => file.LastWriteTime;
-
-        public void WriteTo(TextWriter writer)
-        {
-            string? line;
-
-            using var reader = file.OpenText();
-
-            while ((line = reader.ReadLine()) is not null)
-            {
-                writer.WriteLine(line);
-            }
+            writer.WriteLine(line);
         }
     }
 }

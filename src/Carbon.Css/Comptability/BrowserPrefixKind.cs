@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+[Flags]
+public enum BrowserPrefixKind
 {
-    [Flags]
-    public enum BrowserPrefixKind
-    {
-        Moz = 1,
-        Ms = 2,
-        O = 4,
-        Webkit = 8
-    }
+    Moz    = 1,
+    Ms     = 2,
+    O      = 4,
+    Webkit = 8
 }

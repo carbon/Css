@@ -2,50 +2,49 @@
 using System.IO;
 using System.Text;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+using Parser;
+
+public sealed class TokenList : Collection<CssToken>
 {
-    using Parser;
-
-    public sealed class TokenList : Collection<CssToken>
+    public override string ToString()
     {
-        public override string ToString()
+        var sb = StringBuilderCache.Aquire();
+
+        using var writer = new StringWriter(sb);
+
+        WriteTo(writer);
+
+        return StringBuilderCache.ExtractAndRelease(sb);
+    }
+
+    public void WriteTo(TextWriter writer)
+    {
+        if (Count == 1)
         {
-            var sb = StringBuilderCache.Aquire();
+            if (this[0].IsTrivia) return;
 
-            using var writer = new StringWriter(sb);
+            writer.Write(this[0].Text);
 
-            WriteTo(writer);
-
-            return StringBuilderCache.ExtractAndRelease(sb);
+            return;
         }
 
-        public void WriteTo(TextWriter writer)
+        for (int i = 0; i < Count; i++)
         {
-            if (Count == 1)
+            CssToken token = this[i];
+
+            if (token.IsTrivia)
             {
-                if (this[0].IsTrivia) return;
+                // Skip leading and trailing trivia
+                if (i == 0 || i + 1 == Count) continue;
 
-                writer.Write(this[0].Text);
+                writer.Write(' ');
 
-                return;
+                continue;
             }
 
-            for (int i = 0; i < Count; i++)
-            {
-                CssToken token = this[i];
-
-                if (token.IsTrivia)
-                {
-                    // Skip leading and trailing trivia
-                    if (i == 0 || i + 1 == Count) continue;
-
-                    writer.Write(' ');
-
-                    continue;
-                }
-
-                writer.Write(token.Text);
-            }
+            writer.Write(token.Text);
         }
     }
 }

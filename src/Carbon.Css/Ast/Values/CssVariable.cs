@@ -1,25 +1,24 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css;
+
+using Parser;
+
+public sealed class CssVariable : CssValue
 {
-    using Parser;
+    public CssVariable(CssToken token)
+        : this(token.Text)
+    { }
 
-    public sealed class CssVariable : CssValue
+    public CssVariable(string text)
+        : base(NodeKind.Variable)
     {
-        public CssVariable(CssToken token)
-            : this(token.Text)
-        { }
-
-        public CssVariable(string text)
-            : base(NodeKind.Variable)
-        {
-            Symbol = text;
-        }
-
-        public string Symbol { get; }
-
-        public override CssVariable CloneNode() => new (Symbol);
-
-        public override string ToString() => "$" + Symbol;
+        Symbol = text;
     }
+
+    public string Symbol { get; }
+
+    public override CssVariable CloneNode() => new(Symbol);
+
+    public override string ToString() => "$" + Symbol;
 }
 
 // Variable (mathematics), a symbol that represents a quantity in a mathematical expression

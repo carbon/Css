@@ -1,18 +1,17 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css;
+
+public sealed class EachBlock : CssBlock
 {
-    public sealed class EachBlock : CssBlock
+    public EachBlock(CssVariable variable, CssValue enumerable)
+        : base(NodeKind.Each)
     {
-		public EachBlock(CssVariable variable, CssValue enumerable)
-			: base(NodeKind.Each)
-		{
-            Variable = variable;
-			Enumerable = enumerable;
-		}
+        Variable = variable;
+        Enumerable = enumerable;
+    }
 
-		public CssVariable Variable { get; }
+    public CssVariable Variable { get; }
 
-		public CssValue Enumerable { get; }
-	}
+    public CssValue Enumerable { get; }
 }
 
 /*

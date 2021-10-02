@@ -1,9 +1,8 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css;
+
+public sealed class FontFaceRule : CssRule
 {
-    public sealed class FontFaceRule : CssRule
-    {
-        public override RuleType Type => RuleType.FontFace;
-    }
+    public override RuleType Type => RuleType.FontFace;
 }
 
 

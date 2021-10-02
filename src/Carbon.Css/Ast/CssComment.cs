@@ -1,13 +1,12 @@
-﻿namespace Carbon.Css
-{
-	public sealed class CssComment : CssNode
-	{
-		public CssComment(string text)
-			: base(NodeKind.Comment)
-        {
-            Text = text;
-		}
+﻿namespace Carbon.Css;
 
-		public string Text { get; }
+public sealed class CssComment : CssNode
+{
+    public CssComment(string text)
+        : base(NodeKind.Comment)
+    {
+        Text = text;
     }
+
+    public string Text { get; }
 }

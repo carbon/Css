@@ -2,37 +2,36 @@
 
 using Carbon.Css.Parser;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+public sealed class CssString : CssValue
 {
-    public sealed class CssString : CssValue
+    public CssString(CssToken token)
+        : this(token.Text)
+    { }
+
+    internal CssString(CssToken token, Trivia? trailing)
+       : this(token.Text)
     {
-        public CssString(CssToken token)
-            : this(token.Text)
-        { }
-
-        internal CssString(CssToken token, Trivia? trailing)
-           : this(token.Text)
-        {
-            this.Trailing = trailing;
-        }
-
-        public CssString(string text)
-            : base(NodeKind.String)
-        {
-            Text = text;
-        }
-
-        public string Text { get; }
-
-        public override CssString CloneNode() => new (Text);
-
-        internal override void WriteTo(TextWriter writer)
-        {
-            writer.Write(Text);
-        }
-
-        public override string ToString() => Text;
+        this.Trailing = trailing;
     }
+
+    public CssString(string text)
+        : base(NodeKind.String)
+    {
+        Text = text;
+    }
+
+    public string Text { get; }
+
+    public override CssString CloneNode() => new(Text);
+
+    internal override void WriteTo(TextWriter writer)
+    {
+        writer.Write(Text);
+    }
+
+    public override string ToString() => Text;
 }
 
 /*

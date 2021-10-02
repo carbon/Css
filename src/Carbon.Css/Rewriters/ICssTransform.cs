@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+public interface ICssRewriter
 {
-    public interface ICssRewriter
-    {
-        IEnumerable<CssRule> Rewrite(CssRule rule);
-    }
+    IEnumerable<CssRule> Rewrite(CssRule rule);
 }

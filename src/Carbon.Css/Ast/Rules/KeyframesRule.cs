@@ -1,28 +1,27 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css;
+
+public sealed class KeyframesRule : CssRule
 {
-    public sealed class KeyframesRule : CssRule
+    public KeyframesRule(string name)
     {
-        public KeyframesRule(string name)
+        Name = name;
+    }
+
+    public override RuleType Type => RuleType.Keyframes;
+
+    public string Name { get; }
+
+    // TODO: Keyframes
+
+    public override CssNode CloneNode()
+    {
+        var rule = new KeyframesRule(Name);
+
+        foreach (var child in Children)
         {
-            Name = name;
+            rule.Add(child.CloneNode());
         }
 
-        public override RuleType Type => RuleType.Keyframes;
-
-        public string Name { get; }
-
-        // TODO: Keyframes
-
-        public override CssNode CloneNode()
-        {
-            var rule = new KeyframesRule(Name);
-
-            foreach (var child in Children)
-            {
-                rule.Add(child.CloneNode());
-            }
-
-            return rule;
-        }
+        return rule;
     }
 }

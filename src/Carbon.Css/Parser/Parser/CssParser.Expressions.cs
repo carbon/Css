@@ -1,39 +1,38 @@
 ﻿using System;
 
-namespace Carbon.Css.Parser
+namespace Carbon.Css.Parser;
+
+public sealed partial class CssParser : IDisposable
 {
-    public sealed partial class CssParser : IDisposable
+    public CssValue ReadExpression()
     {
-        public CssValue ReadExpression()
-        {
-            // Literal (Number, Measurement, Variable, ...
-            var left = ReadComponent();
+        // Literal (Number, Measurement, Variable, ...
+        var left = ReadComponent();
 
-            return Current.IsBinaryOperator ? ReadExpressionFrom(left) : left;
-        }
-
-        public CssValue ReadExpressionFrom(CssValue left)
-        {
-            var operatorToken = Consume(); // Read operator
-
-            ReadTrivia();
-
-            // This may be another expression... 
-            // TODO: Make recurssive
-            var right = ReadComponent();
-
-            return new BinaryExpression(left, operatorToken, right);
-        }
+        return Current.IsBinaryOperator ? ReadExpressionFrom(left) : left;
     }
 
-    /*
-    public struct CssOperator
+    public CssValue ReadExpressionFrom(CssValue left)
     {
-        // Leading
-        // ...
+        var operatorToken = Consume(); // Read operator
+
+        ReadTrivia();
+
+        // This may be another expression... 
+        // TODO: Make recurssive
+        var right = ReadComponent();
+
+        return new BinaryExpression(left, operatorToken, right);
     }
-    */
 }
+
+/*
+public struct CssOperator
+{
+    // Leading
+    // ...
+}
+*/
 
 /*
 // https://en.wikipedia.org/wiki/Shunting-yard_algorithm

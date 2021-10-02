@@ -1,25 +1,24 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css;
+
+using Parser;
+
+public sealed class CssAssignment : CssNode
 {
-    using Parser;
-
-    public sealed class CssAssignment : CssNode
+    public CssAssignment(string name, CssValue value)
+        : base(NodeKind.Assignment)
     {
-        public CssAssignment(string name, CssValue value)
-            : base(NodeKind.Assignment)
-        {
-            Name = name;
-            Value = value;
-        }
-
-        public CssAssignment(CssToken name, CssValue value)
-            : base(NodeKind.Assignment)
-        {
-            Name = name.Text;
-            Value = value;
-        }
-
-        public string Name { get; }
-
-        public CssValue Value { get; }
+        Name = name;
+        Value = value;
     }
+
+    public CssAssignment(CssToken name, CssValue value)
+        : base(NodeKind.Assignment)
+    {
+        Name = name.Text;
+        Value = value;
+    }
+
+    public string Name { get; }
+
+    public CssValue Value { get; }
 }

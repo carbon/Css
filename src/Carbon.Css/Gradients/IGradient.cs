@@ -1,12 +1,10 @@
-﻿namespace Carbon.Css.Gradients
+﻿namespace Carbon.Css.Gradients;
+
+public interface IGradient
 {
-    public interface IGradient
-    {
 
-    }
-
-    // Linear
-    // Radial
-    // Conic
-    
 }
+
+// Linear
+// Radial
+// Conic

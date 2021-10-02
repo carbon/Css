@@ -3,77 +3,75 @@ using System.Globalization;
 
 using Carbon.Color;
 
-namespace Carbon.Css.Helpers
+namespace Carbon.Css.Helpers;
+
+internal static class ReadOnlySpanExtensions
 {
-
-    internal static class ReadOnlySpanExtensions
+    public static Rgba32 ReadColor(this ReadOnlySpan<char> text, out int read)
     {
-        public static Rgba32 ReadColor(this ReadOnlySpan<char> text, out int read)
+        read = 0;
+
+        char current;
+
+        bool isFunction = false;
+
+        while (read < text.Length)
         {
-            read = 0;
+            current = text[read];
 
-            char current;
+            // if we detect a function, read until )
+            // otherwise, read until end or space
 
-            bool isFunction = false;
-
-            while (read < text.Length)
+            if (isFunction)
             {
-                current = text[read];
-
-                // if we detect a function, read until )
-                // otherwise, read until end or space
-
-                if (isFunction)
+                if (current == ')')
                 {
-                    if (current == ')')
-                    {
-                        read++;
-                        break;
-                    }
-                }
-                else if (current == '(')
-                {
-                    isFunction = true;
-                }
-                else if (current is ' ' or ',')
-                {
+                    read++;
                     break;
                 }
-
-                read++;
+            }
+            else if (current == '(')
+            {
+                isFunction = true;
+            }
+            else if (current is ' ' or ',')
+            {
+                break;
             }
 
-            return Rgba32.Parse(text.Slice(0, read));           
+            read++;
         }
 
-        public static double ReadNumber(this ReadOnlySpan<char> text, out int read)
+        return Rgba32.Parse(text.Slice(0, read));
+    }
+
+    public static double ReadNumber(this ReadOnlySpan<char> text, out int read)
+    {
+        read = 0;
+
+        // leading -
+        if (text[0] == '-')
         {
-            read = 0;
-
-            // leading -
-            if (text[0] == '-')
-            {
-                read++;
-            }
-
-            while (text.Length > read && (char.IsDigit(text[read]) || text[read] == '.'))
-            {
-                read++;
-            }
-
-            return double.Parse(text.Slice(0, read), provider: CultureInfo.InvariantCulture);
+            read++;
         }
 
-        public static bool TryReadWhitespace(this ReadOnlySpan<char> text, out int read)
+        while (text.Length > read && (char.IsDigit(text[read]) || text[read] == '.'))
         {
-            read = 0;
-
-            while (text.Length > read && text[read] == ' ')
-            {
-                read++;
-            }
-
-            return read > 0;
+            read++;
         }
+
+        return double.Parse(text.Slice(0, read), provider: CultureInfo.InvariantCulture);
+    }
+
+    public static bool TryReadWhitespace(this ReadOnlySpan<char> text, out int read)
+    {
+        read = 0;
+
+        while (text.Length > read && text[read] == ' ')
+        {
+            read++;
+        }
+
+        return read > 0;
     }
 }

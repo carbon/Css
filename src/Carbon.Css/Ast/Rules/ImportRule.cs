@@ -1,35 +1,34 @@
 ﻿using System.IO;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+public sealed class ImportRule : CssRule
 {
-    public sealed class ImportRule : CssRule
+    public ImportRule(CssUrlValue url)
     {
-        public ImportRule(CssUrlValue url)
-        {
-            Url = url;
-        }
+        Url = url;
+    }
 
-        public override RuleType Type => RuleType.Import;
+    public override RuleType Type => RuleType.Import;
 
-        public CssUrlValue Url { get; }
+    public CssUrlValue Url { get; }
 
-        public void WriteTo(TextWriter writer)
-        {
-            writer.Write("@import ");
+    public void WriteTo(TextWriter writer)
+    {
+        writer.Write("@import ");
 
-            Url.WriteTo(writer);
+        Url.WriteTo(writer);
 
-            writer.Write(';');
-        }
+        writer.Write(';');
+    }
 
-        public override string ToString()
-        {
-            using var writer = new StringWriter();
+    public override string ToString()
+    {
+        using var writer = new StringWriter();
 
-            WriteTo(writer);
+        WriteTo(writer);
 
-            return writer.ToString();
-        }
+        return writer.ToString();
     }
 }
 

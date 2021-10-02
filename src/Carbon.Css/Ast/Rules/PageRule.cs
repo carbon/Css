@@ -1,14 +1,13 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css;
+
+public sealed class PageRule : CssRule
 {
-    public sealed class PageRule : CssRule
+    public override RuleType Type => RuleType.Page;
+
+    public PageRule(CssSelector? selector = null)
     {
-        public override RuleType Type => RuleType.Page;
-
-        public PageRule(CssSelector? selector = null)
-        {
-            Selector = selector;
-        }
-
-        public CssSelector? Selector { get; }
+        Selector = selector;
     }
+
+    public CssSelector? Selector { get; }
 }

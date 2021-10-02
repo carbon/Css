@@ -1,9 +1,8 @@
 ﻿using System.IO;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+public interface IStylesheet
 {
-    public interface IStylesheet
-    {
-        void WriteTo(TextWriter writer);
-    }
+    void WriteTo(TextWriter writer);
 }

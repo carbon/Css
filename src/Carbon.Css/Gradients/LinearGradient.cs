@@ -6,146 +6,145 @@ using System.Text.Json.Serialization;
 
 using Carbon.Css.Helpers;
 
-namespace Carbon.Css.Gradients
+namespace Carbon.Css.Gradients;
+
+public readonly struct LinearGradient : IGradient
 {
-    public readonly struct LinearGradient : IGradient
+    public LinearGradient(
+        LinearGradientDirection direction,
+        double? angle,
+        ColorStop[] colorStops)
     {
-        public LinearGradient(
-            LinearGradientDirection direction, 
-            double? angle, 
-            ColorStop[] colorStops)
+        Direction = direction;
+        Angle = angle;
+        Stops = colorStops;
+    }
+
+    [JsonPropertyName("direction")]
+    public readonly LinearGradientDirection Direction { get; }
+
+    [JsonPropertyName("angle")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public readonly double? Angle { get; }
+
+    // [ <linear-color-stop> [, <linear-color-hint>]? ]# , <linear-color-stop>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public readonly ColorStop[] Stops { get; }
+
+    public readonly override string ToString()
+    {
+        using var sb = new ValueStringBuilder(100);
+
+        sb.Append("linear-gradient(");
+
+        if (Angle.HasValue)
         {
-            Direction = direction;
-            Angle = angle;
-            Stops = colorStops;
+            sb.Append(Angle.Value.ToString(CultureInfo.InvariantCulture));
+            sb.Append("deg");
+        }
+        else if (Direction != default)
+        {
+            sb.Append("to ");
+
+            sb.Append(LinearGradientDirectionHelper.Canonicalize(Direction));
         }
 
-        [JsonPropertyName("direction")]
-        public readonly LinearGradientDirection Direction { get; }
-
-        [JsonPropertyName("angle")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly double? Angle { get; }
-
-        // [ <linear-color-stop> [, <linear-color-hint>]? ]# , <linear-color-stop>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly ColorStop[] Stops { get; }
-
-        public readonly override string ToString()
+        for (int i = 0; i < Stops.Length; i++)
         {
-            using var sb = new ValueStringBuilder(100);
+            ref ColorStop stop = ref Stops[i];
 
-            sb.Append("linear-gradient(");
+            sb.Append(", ");
 
-            if (Angle.HasValue)
+            sb.Append(stop.Color.ToString());
+
+            if (stop.Position is double position)
             {
-                sb.Append(Angle.Value.ToString(CultureInfo.InvariantCulture));
-                sb.Append("deg");
+                sb.Append(' ');
+                sb.Append(position.ToString("0.##%", CultureInfo.InvariantCulture));
             }
-            else if (Direction != default)
-            {
-                sb.Append("to ");
-
-                sb.Append(LinearGradientDirectionHelper.Canonicalize(Direction));
-            }
-
-            for (int i = 0; i < Stops.Length; i++)
-            {
-                ref ColorStop stop = ref Stops[i];
-
-                sb.Append(", ");
-
-                sb.Append(stop.Color.ToString());
-
-                if (stop.Position is double position)
-                {
-                    sb.Append(' ');
-                    sb.Append(position.ToString("0.##%", CultureInfo.InvariantCulture));
-                }
-            }
-
-            sb.Append(')');
-            
-            return sb.ToString();
         }
 
-        public static LinearGradient Parse(string text)
+        sb.Append(')');
+
+        return sb.ToString();
+    }
+
+    public static LinearGradient Parse(string text)
+    {
+        return Parse(text.AsSpan());
+    }
+
+    public static LinearGradient Parse(ReadOnlySpan<char> text)
+    {
+        if (text.StartsWith("linear-gradient("))
         {
-            return Parse(text.AsSpan());
+            text = text[16..^1];
         }
 
-        public static LinearGradient Parse(ReadOnlySpan<char> text)
+        if (text.Length == 0)
         {
-            if (text.StartsWith("linear-gradient("))
+            throw new ArgumentException("May not be empty", nameof(text));
+        }
+
+        double? angle = null;
+        LinearGradientDirection direction = default;
+
+        if (char.IsDigit(text[0]) || text[0] == '-')
+        {
+            angle = ReadAngle(text, out int read);
+
+            text = text[read..];
+        }
+        else if (LinearGradientDirectionHelper.TryParse(text, out direction, out int read))
+        {
+            text = text[read..];
+        }
+
+        var colorStops = new List<ColorStop>();
+
+        while (text.Length > 0)
+        {
+            if (text[0] == ',')
             {
-                text = text[16..^1];
+                text = text[1..];
             }
 
-            if (text.Length == 0)
+            if (text.TryReadWhitespace(out int read))
             {
-                throw new ArgumentException("May not be empty", nameof(text));
-            }
-
-            double? angle = null;
-            LinearGradientDirection direction = default;
-
-            if (char.IsDigit(text[0]) || text[0] == '-')
-            {
-                angle = ReadAngle(text, out int read);
-
                 text = text[read..];
             }
-            else if (LinearGradientDirectionHelper.TryParse(text, out direction, out int read))
+
+            if (text[0] == ',')
             {
-                text = text[read..];
+                text = text[1..];
             }
 
-            var colorStops = new List<ColorStop>();
-
-            while (text.Length > 0)
-            {
-                if (text[0] == ',')
-                {
-                    text = text[1..];
-                }
-
-                if (text.TryReadWhitespace(out int read))
-                {
-                    text = text[read..];
-                }
-
-                if (text[0] == ',')
-                {
-                    text = text[1..];
-                }
-
-                var colorStop = ColorStop.Read(text, out read);
-                
-                text = text[read..];
-                
-                colorStops.Add(colorStop);
-            }
-
-            // TODO: Set the default stops 
-
-            // // [ <angle> | to [top | bottom] || [left | right] ],]? <color-stop>[, <color-stop>]+);
-
-            return new LinearGradient(direction, angle, colorStops.ToArray());
-        }
-
-        private static double ReadAngle(ReadOnlySpan<char> text, out int read)
-        {
-            double value = text.ReadNumber(out read);
+            var colorStop = ColorStop.Read(text, out read);
 
             text = text[read..];
 
-            if (text.StartsWith("deg", StringComparison.Ordinal))
-            {
-                read += 3;
-            }
-
-            return value;
+            colorStops.Add(colorStop);
         }
+
+        // TODO: Set the default stops 
+
+        // // [ <angle> | to [top | bottom] || [left | right] ],]? <color-stop>[, <color-stop>]+);
+
+        return new LinearGradient(direction, angle, colorStops.ToArray());
+    }
+
+    private static double ReadAngle(ReadOnlySpan<char> text, out int read)
+    {
+        double value = text.ReadNumber(out read);
+
+        text = text[read..];
+
+        if (text.StartsWith("deg", StringComparison.Ordinal))
+        {
+            read += 3;
+        }
+
+        return value;
     }
 }
 

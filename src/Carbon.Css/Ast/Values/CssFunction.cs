@@ -1,37 +1,36 @@
 ﻿using System.IO;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+public class CssFunction : CssValue
 {
-    public class CssFunction : CssValue
+    public CssFunction(string name, CssValue arguments)
+        : base(NodeKind.Function)
     {
-        public CssFunction(string name, CssValue arguments)
-            : base(NodeKind.Function)
-        {
-            Name = name;
-            Arguments = arguments;
-        }
+        Name = name;
+        Arguments = arguments;
+    }
 
-        public string Name { get; }
+    public string Name { get; }
 
-        public CssValue Arguments { get; }
+    public CssValue Arguments { get; }
 
-        public override CssFunction CloneNode() => new (Name, Arguments);
+    public override CssFunction CloneNode() => new(Name, Arguments);
 
-        internal override void WriteTo(TextWriter writer)
-        {
-            writer.Write(Name);
-            writer.Write('(');
-            Arguments.WriteTo(writer);
-            writer.Write(')');
-        }
+    internal override void WriteTo(TextWriter writer)
+    {
+        writer.Write(Name);
+        writer.Write('(');
+        Arguments.WriteTo(writer);
+        writer.Write(')');
+    }
 
-        public override string ToString()
-        {
-            var writer = new StringWriter();
+    public override string ToString()
+    {
+        var writer = new StringWriter();
 
-            WriteTo(writer);
+        WriteTo(writer);
 
-            return writer.ToString();
-        }
+        return writer.ToString();
     }
 }

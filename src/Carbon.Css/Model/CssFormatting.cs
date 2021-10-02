@@ -1,9 +1,8 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css;
+
+public enum CssFormatting
 {
-    public enum CssFormatting
-    {
-        Original = 1,
-        Pretty = 2,
-        None = 3
-    }
+    Original = 1,
+    Pretty = 2,
+    None = 3
 }

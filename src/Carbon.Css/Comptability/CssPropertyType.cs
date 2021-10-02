@@ -1,300 +1,299 @@
-﻿namespace Carbon.Css
+﻿namespace Carbon.Css;
+
+public enum CssPropertyType
 {
-    public enum CssPropertyType
-    {
-        Unknown = 0,
+    Unknown = 0,
 
-        // Animations (Level 3) -----------
-        Animation,
-        AnimationDelay,
-        AnimationDirection,
-        AnimationDuration,
-        AnimationIterationCount,
-        AnimationName,
-        AnimationPlayState,
-        AnimationTimingFunction,
-        // --------------------------------
+    // Animations (Level 3) -----------
+    Animation,
+    AnimationDelay,
+    AnimationDirection,
+    AnimationDuration,
+    AnimationIterationCount,
+    AnimationName,
+    AnimationPlayState,
+    AnimationTimingFunction,
+    // --------------------------------
 
-        Appearance,
+    Appearance,
 
-        BackfaceVisibility,
+    BackfaceVisibility,
 
-        // Backgrounds -----------
-        Background,
-        BackgroundAttachment,
-        BackgroundClip,
-        BackgroundColor,
-        BackgroundImage,
-        BackgroundOrigin,
-        BackgroundPosition,
-        BackgroundRepeat,
-        BackgroundSize,
+    // Backgrounds -----------
+    Background,
+    BackgroundAttachment,
+    BackgroundClip,
+    BackgroundColor,
+    BackgroundImage,
+    BackgroundOrigin,
+    BackgroundPosition,
+    BackgroundRepeat,
+    BackgroundSize,
 
-        // Borders -----------
-        Border,
-        BorderBottom,
-        BorderBottomColor,
-        BorderBottomLeftRadius,
-        BorderBottomRightRadius,
-        BorderBottomStyle,
-        BorderBottomWidth,
-        BorderCollapse,
-        BorderColor,
-        BorderImage,
-        BorderImageOutset,
-        BorderImageRepeat,
-        BorderImageSlice,
-        BorderImageSource,
-        BorderImageWidth,
+    // Borders -----------
+    Border,
+    BorderBottom,
+    BorderBottomColor,
+    BorderBottomLeftRadius,
+    BorderBottomRightRadius,
+    BorderBottomStyle,
+    BorderBottomWidth,
+    BorderCollapse,
+    BorderColor,
+    BorderImage,
+    BorderImageOutset,
+    BorderImageRepeat,
+    BorderImageSlice,
+    BorderImageSource,
+    BorderImageWidth,
 
-        BorderLeft,
-        BorderLeftColor,
-        BorderLeftStyle,
-        BorderLeftWidth,
-        BorderRadius,
-        BorderRight,
-        BorderRightColor,
-        BorderRightStyle,
-        BorderRightWidth,
-        BorderSpacing,
-        BorderStyle,
-        BorderTop,
-        BorderTopColor,
-        BorderTopLeftRadius,
-        BorderTopRightRadius,
-        BorderTopStyle,
-        BorderTopWidth,
-        BorderWidth,
+    BorderLeft,
+    BorderLeftColor,
+    BorderLeftStyle,
+    BorderLeftWidth,
+    BorderRadius,
+    BorderRight,
+    BorderRightColor,
+    BorderRightStyle,
+    BorderRightWidth,
+    BorderSpacing,
+    BorderStyle,
+    BorderTop,
+    BorderTopColor,
+    BorderTopLeftRadius,
+    BorderTopRightRadius,
+    BorderTopStyle,
+    BorderTopWidth,
+    BorderWidth,
 
-        Bottom,
-        BoxDecorationBreak,
+    Bottom,
+    BoxDecorationBreak,
 
-        BoxShadow,
+    BoxShadow,
 
-        BoxSizing,
+    BoxSizing,
 
-        // Breaks
-        BreakAfter,
-        BreakBefore,
-        BreakInside,
+    // Breaks
+    BreakAfter,
+    BreakBefore,
+    BreakInside,
 
 
-        CaptionSide,
-        Clear,
+    CaptionSide,
+    Clear,
 
-        Clip,
+    Clip,
 
-        // TODO: Confirm support
-        ClipPath,
+    // TODO: Confirm support
+    ClipPath,
 
-        Color,
+    Color,
 
-        ColumnCount,
-        ColumnFill,
-        ColumnGap,
-        ColumnRule,
-        ColumnRuleColor,
-        ColumnRuleStyle,
-        ColumnRuleWidth,
-        ColumnSpan,
-        ColumnWidth,
-        Columns,
+    ColumnCount,
+    ColumnFill,
+    ColumnGap,
+    ColumnRule,
+    ColumnRuleColor,
+    ColumnRuleStyle,
+    ColumnRuleWidth,
+    ColumnSpan,
+    ColumnWidth,
+    Columns,
 
-        Content,
+    Content,
 
-        // Counters ----------------------------------------------------
-        CounterIncrement,
-        CounterReset,
+    // Counters ----------------------------------------------------
+    CounterIncrement,
+    CounterReset,
 
-        Cursor,
-        Direction,
-        Display,
+    Cursor,
+    Direction,
+    Display,
 
-        EmptyCells,
-        Filter,
+    EmptyCells,
+    Filter,
 
-        // Fit ---------------------------------------------------------
-        Fit,
-        FitPosition,
+    // Fit ---------------------------------------------------------
+    Fit,
+    FitPosition,
 
-        // Flex --------------------------------------------------------
-        FlexAlign,
-        FlexFlow,
-        FlexLinePack,
-        FlexOrder,
-        FlexPack,
+    // Flex --------------------------------------------------------
+    FlexAlign,
+    FlexFlow,
+    FlexLinePack,
+    FlexOrder,
+    FlexPack,
 
-        Float,
-        FloatOffset,
+    Float,
+    FloatOffset,
 
-        // Fonts -------------------------------------------------------
-        Font,
-        FontFamily,
-        FontSize,
-        FontSizeAdjust,
-        FontStretch,
-        FontStyle,
-        FontVariant,
-        FontWeight,
+    // Fonts -------------------------------------------------------
+    Font,
+    FontFamily,
+    FontSize,
+    FontSizeAdjust,
+    FontStretch,
+    FontStyle,
+    FontVariant,
+    FontWeight,
 
-        // Grids -------------------------------------------------------
-        GridColumns,
-        GridRows,
+    // Grids -------------------------------------------------------
+    GridColumns,
+    GridRows,
 
-        Height,
+    Height,
 
-        // Hyphens -----------------------------------------------------
-        HyphenateAfter,
-        HyphenateBefore,
-        HyphenateCharacter,
-        HyphenateLines,
-        HyphenateResource,
+    // Hyphens -----------------------------------------------------
+    HyphenateAfter,
+    HyphenateBefore,
+    HyphenateCharacter,
+    HyphenateLines,
+    HyphenateResource,
 
-        Hyphens,
+    Hyphens,
 
-        InlineBoxAlign,
-        Left,
-        LetterSpacing,
+    InlineBoxAlign,
+    Left,
+    LetterSpacing,
 
-        // Lines
-        LineBreak,
-        LineHeight,
+    // Lines
+    LineBreak,
+    LineHeight,
 
-        // List Styles -------------------------------------------------
-        ListStyle,
-        ListStyleImage,
-        ListStylePosition,
-        ListStyleType,
+    // List Styles -------------------------------------------------
+    ListStyle,
+    ListStyleImage,
+    ListStylePosition,
+    ListStyleType,
 
-        // Margins -----------------------------------------------------
-        Margin,
-        MarginBottom,
-        MarginLeft,
-        MarginRight,
-        MarginTop,
+    // Margins -----------------------------------------------------
+    Margin,
+    MarginBottom,
+    MarginLeft,
+    MarginRight,
+    MarginTop,
 
-        // Marquee -----------------------------------------------------
-        MarqueeDirection,
-        MarqueeLoop,
-        MarqueePlayCount,
-        MarqueeSpeed,
-        MarqueeStyle,
+    // Marquee -----------------------------------------------------
+    MarqueeDirection,
+    MarqueeLoop,
+    MarqueePlayCount,
+    MarqueeSpeed,
+    MarqueeStyle,
 
-        MaxHeight,
-        MaxWidth,
+    MaxHeight,
+    MaxWidth,
 
-        MinHeight,
-        MinWidth,
+    MinHeight,
+    MinWidth,
 
-        Opacity,
+    Opacity,
 
-        Orphans,
+    Orphans,
 
-        // Outlines ----------------------------------------------------
-        Outline,
-        OutlineColor,
-        OutlineOffset,
-        OutlineStyle,
-        OutlineWidth,
+    // Outlines ----------------------------------------------------
+    Outline,
+    OutlineColor,
+    OutlineOffset,
+    OutlineStyle,
+    OutlineWidth,
 
-        // Overflow ----------------------------------------------------
-        Overflow,
-        OverflowStyle,
-        OverflowWrap,
-        OverflowX,
-        OverflowY,
+    // Overflow ----------------------------------------------------
+    Overflow,
+    OverflowStyle,
+    OverflowWrap,
+    OverflowX,
+    OverflowY,
 
-        // Padding -----------------------------------------------------
-        Padding,
-        PaddingBottom,
-        PaddingLeft,
-        PaddingRight,
-        PaddingTop,
+    // Padding -----------------------------------------------------
+    Padding,
+    PaddingBottom,
+    PaddingLeft,
+    PaddingRight,
+    PaddingTop,
 
-        Page,
+    Page,
 
-        // Page Breaks -------------------------------------------------
-        PageBreakAfter,
-        PageBreakBefore,
-        PageBreakInside,
+    // Page Breaks -------------------------------------------------
+    PageBreakAfter,
+    PageBreakBefore,
+    PageBreakInside,
 
-        // Perspective
-        Perspective,
-        PerspectiveOrigin,
-        PerspectiveOriginX,
-        PerspectiveOriginY,
+    // Perspective
+    Perspective,
+    PerspectiveOrigin,
+    PerspectiveOriginX,
+    PerspectiveOriginY,
 
-        Position,
-        Quotes,
-        Resize,
-        Right,
+    Position,
+    Quotes,
+    Resize,
+    Right,
 
-        // Ruby (Level 3) ----------------------------------------------
+    // Ruby (Level 3) ----------------------------------------------
 
-        RubyAlign,
-        RubyOverhang,
-        RubyPosition,
-        RubySpan,
+    RubyAlign,
+    RubyOverhang,
+    RubyPosition,
+    RubySpan,
 
-        Size,
-        Speak,
+    Size,
+    Speak,
 
-        TableLayout,
+    TableLayout,
 
-        // Text --------------------------------------------------------
-        TextAlign,
-        TextAlignLast,
-        TextDecoration,
-        TextDecorationColor,
-        TextDecorationLine,
-        TextDecorationSkip,
-        TextDecorationStyle,
-        TextEmphasis,
-        TextEmphasisColor,
-        TextEmphasisPosition,
-        TextEmphasisStyle,
-        TextHeight,
-        TextIndent,
-        TextJustify,
-        TextOutline,
-        TextShadow,
-        TextSpaceCollapse,
-        TextTransform,
-        TextUnderlinePosition,
-        TextWrap,
+    // Text --------------------------------------------------------
+    TextAlign,
+    TextAlignLast,
+    TextDecoration,
+    TextDecorationColor,
+    TextDecorationLine,
+    TextDecorationSkip,
+    TextDecorationStyle,
+    TextEmphasis,
+    TextEmphasisColor,
+    TextEmphasisPosition,
+    TextEmphasisStyle,
+    TextHeight,
+    TextIndent,
+    TextJustify,
+    TextOutline,
+    TextShadow,
+    TextSpaceCollapse,
+    TextTransform,
+    TextUnderlinePosition,
+    TextWrap,
 
-        Top,
+    Top,
 
-        // Transforms (Level 3) ----------------------------------------
-        Transform,
-        TransformOrigin,
-        TransformStyle,
+    // Transforms (Level 3) ----------------------------------------
+    Transform,
+    TransformOrigin,
+    TransformStyle,
 
-        // - Transitions (Level 3 ) ------------------------------------
+    // - Transitions (Level 3 ) ------------------------------------
 
-        Transition,
-        TransitionDelay,
-        TransitionDuration,
-        TransitionProperty,
-        TransitionTimingFunction,
+    Transition,
+    TransitionDelay,
+    TransitionDuration,
+    TransitionProperty,
+    TransitionTimingFunction,
 
-        // - Unicode ---------------------------------------------------
-        UnicodeBidi,
-        UnicodeRange,
+    // - Unicode ---------------------------------------------------
+    UnicodeBidi,
+    UnicodeRange,
 
-        UserSelect,
+    UserSelect,
 
-        VerticalAlign,
-        Visibility,
-        WhiteSpace,
-        Widows,
-        Width,
+    VerticalAlign,
+    Visibility,
+    WhiteSpace,
+    Widows,
+    Width,
 
-        // Words
-        WordBreak,
-        WordSpacing,
-        WordWrap,
+    // Words
+    WordBreak,
+    WordSpacing,
+    WordWrap,
 
-        ZIndex,
-    }
+    ZIndex,
 }
