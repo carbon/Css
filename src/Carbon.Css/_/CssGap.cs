@@ -6,6 +6,9 @@ using System.Runtime.Serialization;
 namespace Carbon.Css;
 
 public readonly struct CssGap : IEquatable<CssGap>
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
     public CssGap(double value)
         : this(new CssUnitValue(value, CssUnitInfo.Px)) { }
@@ -27,20 +30,6 @@ public readonly struct CssGap : IEquatable<CssGap>
 
     [DataMember(Name = "y", Order = 2)]
     public readonly CssUnitValue Y { get; }
-
-    // 1px 1px
-    // 1px
-
-    public readonly override string ToString()
-    {
-        if (X.Equals(Y))
-        {
-            return X.ToString();
-        }
-      
-
-        return $"{X} {Y}";
-    }
 
     public static CssGap Parse(string text)
     {
@@ -75,6 +64,44 @@ public readonly struct CssGap : IEquatable<CssGap>
     }
 
     public override int GetHashCode() => HashCode.Combine(X, Y);
+
+    // 1px 1px
+    // 1px
+
+    public readonly override string ToString()
+    {
+        if (X.Equals(Y))
+        {
+            return X.ToString();
+        }
+
+
+        return $"{X} {Y}";
+    }
+
+#if NET6_0_OR_GREATER
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
+    {
+        if (X.Equals(Y))
+        {
+            return X.TryFormat(destination, out charsWritten);
+        }
+
+        return destination.TryWrite($"{X} {Y}", out charsWritten);
+    }
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        if (X.Equals(Y))
+        {
+            return X.ToString();
+        }
+
+        return $"{X} {Y}";
+    }
+
+#endif
 
     public static bool operator ==(CssGap left, CssGap right)
     {

@@ -11,6 +11,9 @@ namespace Carbon.Css;
 
 [JsonConverter(typeof(CssUnitValueJsonConverter))]
 public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
     public static readonly CssUnitValue Zero = new(0, CssUnitInfo.Number);
 
@@ -29,11 +32,6 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
     public double Value { get; }
 
     public CssUnitInfo Unit { get; }
-
-    public override string ToString()
-    {
-        return Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
-    }
 
     internal void WriteTo(ref ValueStringBuilder sb)
     {
@@ -160,6 +158,29 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
     {
         return obj is CssUnitValue other && Equals(other);
     }
+
+    public override string ToString()
+    {
+#if NET6_0_OR_GREATER
+        return string.Create(CultureInfo.InvariantCulture, $"{Value}{Unit.Name}");
+#else
+        return Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
+#endif
+    }
+
+#if NET6_0_OR_GREATER
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
+    {
+        return destination.TryWrite($"{Value}{Unit.Name}", out charsWritten);
+    }
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
+    }
+
+#endif
 }
 
 // A dimension is a number immediately followed by a unit identifier.
