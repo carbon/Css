@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <LangVersion>10</LangVersion>
-    <Version>0.49.0</Version>
+    <Version>0.50.0</Version>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>true</WarningsAsErrors>
 
