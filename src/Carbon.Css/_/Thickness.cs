@@ -7,8 +7,9 @@ using Carbon.Css.Json;
 
 namespace Carbon.Css;
 
+// of the margin, border, or padding
 [JsonConverter(typeof(ThinknessJsonConverter))]
-public sealed class Thickness // of the margin, border, or padding
+public sealed class Thickness
 {
     public Thickness(CssUnitValue value)
     {
@@ -135,7 +136,7 @@ public sealed class Thickness // of the margin, border, or padding
             }
             else
             {
-                return Top.ToString() + " " + Left.ToString();
+                return $"{Top} {Left}";
             }
         }
 
