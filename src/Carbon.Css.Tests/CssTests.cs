@@ -3,46 +3,46 @@ using System.Text;
 
 using Carbon.Css.Parser;
 
-namespace Carbon.Css.Tests
+namespace Carbon.Css.Tests;
+
+public class CssTests
 {
-    public class CssTests
+    [Fact]
+    public void EnsureFlushBehavior()
     {
-        [Fact]
-        public void EnsureFlushBehavior()
-        {
-            var output = new MemoryStream();
+        var output = new MemoryStream();
 
-            var sheet = StyleSheet.Parse("body { color: red; }", new CssContext());
+        var sheet = StyleSheet.Parse("body { color: red; }", new CssContext());
 
-            // StreamWriter.Dispose() closes the underlying stream. DO NOT DISPOSE
+        // StreamWriter.Dispose() closes the underlying stream. DO NOT DISPOSE
 
-            var writer = new StreamWriter(output, Encoding.UTF8);
+        var writer = new StreamWriter(output, Encoding.UTF8);
 
-            sheet.WriteTo(writer);
+        sheet.WriteTo(writer);
 
-            writer.Flush();
+        writer.Flush();
 
-            Assert.Equal(23, output.Length);
-        }
+        Assert.Equal(23, output.Length);
+    }
 
-        [Fact]
-        public void Test1()
-        {
-            var ss = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("test1.css").FullName));
+    [Fact]
+    public void Test1()
+    {
+        var ss = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("test1.css").FullName));
 
-            var writer = new StringWriter();
+        var writer = new StringWriter();
 
-            ss.WriteTo(writer);
+        ss.WriteTo(writer);
 
-            // throw new System.Exception(ss.ToString());
+        // throw new System.Exception(ss.ToString());
 
-            // throw new System.Exception(ss.ToString());
-        }
+        // throw new System.Exception(ss.ToString());
+    }
 
-        [Fact]
-        public void ParsePrintMedia()
-        {
-            var text = @"@media print {
+    [Fact]
+    public void ParsePrintMedia()
+    {
+        var text = @"@media print {
   *,
   *::before,
   *::after {
@@ -111,30 +111,30 @@ namespace Carbon.Css.Tests
   }
 }";
 
-            var sheet = StyleSheet.Parse(text);
+        var sheet = StyleSheet.Parse(text);
 
-            var mediaRule = sheet.Children[0] as MediaRule;
+        var mediaRule = sheet.Children[0] as MediaRule;
 
-            Assert.Equal(16, mediaRule.Children.Count);
+        Assert.Equal(16, mediaRule.Children.Count);
 
-        }
+    }
 
-        [Fact]
-        public void ChainedColonSelector()
-        {
-            var text = @"
+    [Fact]
+    public void ChainedColonSelector()
+    {
+        var text = @"
 .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top,
 .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom { color: red; }".Trim();
 
-            var sheet = StyleSheet.Parse(text);
+        var sheet = StyleSheet.Parse(text);
 
-            Assert.Equal(".card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top, .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom", (sheet.Children[0] as StyleRule).Selector.ToString());
-        }
+        Assert.Equal(".card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top, .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom", (sheet.Children[0] as StyleRule).Selector.ToString());
+    }
 
-        [Fact]
-        public void A()
-        {
-            var text = @"
+    [Fact]
+    public void A()
+    {
+        var text = @"
 @media (min-width: 576px) {
   .card-group {
     -ms-flex-flow: row wrap;
@@ -198,73 +198,73 @@ namespace Carbon.Css.Tests
 }";
 
 
-            var sheet = StyleSheet.Parse(text);
+        var sheet = StyleSheet.Parse(text);
 
-            var rule = sheet.Children[0] as MediaRule;
+        var rule = sheet.Children[0] as MediaRule;
 
-            Assert.Equal(14, rule.Children.Count);
-        }
+        Assert.Equal(14, rule.Children.Count);
+    }
 
-        [Fact]
-        public void QuotedSvgUrl()
-        {
-            var text = @".custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+    [Fact]
+    public void QuotedSvgUrl()
+    {
+        var text = @".custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
   background-image: url(""data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"");
         }";
 
-            var sheet = StyleSheet.Parse(text);
+        var sheet = StyleSheet.Parse(text);
 
-            var rule = sheet.Children[0] as StyleRule;
+        var rule = sheet.Children[0] as StyleRule;
 
-            Assert.Equal(".custom-checkbox .custom-control-input:checked ~ .custom-control-label::after", rule.Selector.ToString());
-        }
+        Assert.Equal(".custom-checkbox .custom-control-input:checked ~ .custom-control-label::after", rule.Selector.ToString());
+    }
 
-        [Fact]
-        public void ParseBootstrap()
+    [Fact]
+    public void ParseBootstrap()
+    {
+        // https://github.com/carbon/Css/issues/1
+        var text = File.ReadAllText(TestHelper.GetTestFile("bootstrap.css").FullName);
+
+
+        var sheet = StyleSheet.Parse(text);
+
+        Assert.Equal(1088, sheet.Children.Count);
+
+    }
+
+    [Fact]
+    public void ParseProject()
+    {
+        Assert.Throws<UnbalancedBlock>(() =>
         {
-            // https://github.com/carbon/Css/issues/1
-            var text = File.ReadAllText(TestHelper.GetTestFile("bootstrap.css").FullName);
+            StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("project.css").FullName));
+        });
+    }
 
+    [Fact]
+    public void ParseMixins()
+    {
+        var ss = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins.css").FullName));
 
-            var sheet = StyleSheet.Parse(text);
+        Assert.Equal(6, ss.Context.Mixins.Count);
 
-            Assert.Equal(1088, sheet.Children.Count);
+        var fontText = File.ReadAllText(TestHelper.GetTestFile("fonts.css").FullName);
 
-        }
+        _ = StyleSheet.Parse(fontText, ss.Context);
+    }
 
-        [Fact]
-        public void ParseProject()
-        {
-            Assert.Throws<UnbalancedBlock>(() =>
-            {
-                StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("project.css").FullName));
-            });
-        }
+    [Fact]
+    public void PathTest()
+    {
+        var key = "/images/hi.gif";
 
-        [Fact]
-        public void ParseMixins()
-        {
-            var ss = StyleSheet.Parse(File.ReadAllText(TestHelper.GetTestFile("mixins.css").FullName));
+        Assert.Equal("/images/", key.Replace(Path.GetFileName(key), string.Empty));
+    }
 
-            Assert.Equal(6, ss.Context.Mixins.Count);
-
-            var fontText = File.ReadAllText(TestHelper.GetTestFile("fonts.css").FullName);
-
-            _ = StyleSheet.Parse(fontText, ss.Context);
-        }
-
-        [Fact]
-        public void PathTest()
-        {
-            var key = "/images/hi.gif";
-
-            Assert.Equal("/images/", key.Replace(Path.GetFileName(key), string.Empty));
-        }
-
-        [Fact]
-        public void MediaQuery()
-        {
-            string text = @"
+    [Fact]
+    public void MediaQuery()
+    {
+        string text = @"
 @media only screen and (min-width : 1600px) {
   .projects { column-count: 3; }
   .main {   margin-left: 240px; }
@@ -272,11 +272,11 @@ namespace Carbon.Css.Tests
   .contactForm { width: 760px; margin: 0 auto; }
 }";
 
-            var css = StyleSheet.Parse(text);
+        var css = StyleSheet.Parse(text);
 
 
 
-            Assert.Equal(
+        Assert.Equal(
 @"@media only screen and (min-width : 1600px) {
   .projects { column-count: 3; }
   .main { margin-left: 240px; }
@@ -286,224 +286,224 @@ namespace Carbon.Css.Tests
     margin: 0 auto;
   }
 }", css.ToString());
-        }
+    }
 
-        [Fact]
-        public void Modes()
-        {
-            var mode = new LexicalModeContext(LexicalMode.Selector);
+    [Fact]
+    public void Modes()
+    {
+        var mode = new LexicalModeContext(LexicalMode.Selector);
 
-            Assert.Equal(LexicalMode.Selector, mode.Current);
+        Assert.Equal(LexicalMode.Selector, mode.Current);
 
-            mode.Enter(LexicalMode.Block);
+        mode.Enter(LexicalMode.Block);
 
-            Assert.Equal(LexicalMode.Block, mode.Current);
+        Assert.Equal(LexicalMode.Block, mode.Current);
 
-            mode.Enter(LexicalMode.Value);
+        mode.Enter(LexicalMode.Value);
 
-            Assert.Equal(LexicalMode.Value, mode.Current);
+        Assert.Equal(LexicalMode.Value, mode.Current);
 
-            mode.Leave(LexicalMode.Value);
+        mode.Leave(LexicalMode.Value);
 
-            Assert.Equal(LexicalMode.Block, mode.Current);
+        Assert.Equal(LexicalMode.Block, mode.Current);
 
-            mode.Leave(LexicalMode.Block);
+        mode.Leave(LexicalMode.Block);
 
-            Assert.Equal(LexicalMode.Selector, mode.Current);
-        }
+        Assert.Equal(LexicalMode.Selector, mode.Current);
+    }
 
 
-        [Fact]
-        public void ZoomOut()
-        {
-            var sheet = StyleSheet.Parse(
+    [Fact]
+    public void ZoomOut()
+    {
+        var sheet = StyleSheet.Parse(
 @"//= support Safari >= 7
 div { cursor: zoom-out }"
 );
 
-            Assert.Equal(
+        Assert.Equal(
 @"div {
   cursor: -webkit-zoom-out;
   cursor: zoom-out;
 }", sheet.ToString()
-            );
-        }
+        );
+    }
 
-        [Fact]
-        public void GrabSupport()
-        {
-            var sheet = StyleSheet.Parse(
+    [Fact]
+    public void GrabSupport()
+    {
+        var sheet = StyleSheet.Parse(
 @"//= support Firefox >= 5
 //= support Safari >= 1
 div { cursor: grab }"
 );
 
-            Assert.Equal(
+        Assert.Equal(
 @"div {
   cursor: -moz-grab;
   cursor: -webkit-grab;
   cursor: grab;
 }", sheet.ToString()
-            );
-        }
+        );
+    }
 
-        [Fact]
-        public void DirivitiveComment()
-        {
-            var sheet = StyleSheet.Parse(
+    [Fact]
+    public void DirivitiveComment()
+    {
+        var sheet = StyleSheet.Parse(
 @"//= support Firefox >= 5
 //= support Chrome >= 1
 div { transition: width 1s }"
 );
 
-            /*
-			Assert.Equal(
-				expected: @"div { transition: width: 5px; }", 
-				actual: sheet.ToString()
-			);
-			*/
+        /*
+        Assert.Equal(
+            expected: @"div { transition: width: 5px; }", 
+            actual: sheet.ToString()
+        );
+        */
 
-            Assert.Equal(
-                expected: @"div {
+        Assert.Equal(
+            expected: @"div {
   -moz-transition: width 1s;
   -webkit-transition: width 1s;
   transition: width 1s;
 }",
-                actual: sheet.ToString()
-            );
-        }
+            actual: sheet.ToString()
+        );
+    }
 
-        [Fact]
-        public void LineComment()
-        {
-            var sheet = StyleSheet.Parse(@"// hello
+    [Fact]
+    public void LineComment()
+    {
+        var sheet = StyleSheet.Parse(@"// hello
 			hi { hello: test; }");
 
-            Assert.Equal("hi { hello: test; }", sheet.ToString());
-        }
+        Assert.Equal("hi { hello: test; }", sheet.ToString());
+    }
 
-        [Fact]
-        public void ImportSelector()
-        {
-            var sheet = StyleSheet.Parse("@import url(core.css);");
+    [Fact]
+    public void ImportSelector()
+    {
+        var sheet = StyleSheet.Parse("@import url(core.css);");
 
-            var rule = sheet.Children[0] as ImportRule;
+        var rule = sheet.Children[0] as ImportRule;
 
-            Assert.Single(sheet.Children);
-            Assert.Equal(RuleType.Import, rule.Type);
-            Assert.Equal("@import url('core.css');", rule.ToString());
-            Assert.Equal("url('core.css')", rule.Url.ToString());
+        Assert.Single(sheet.Children);
+        Assert.Equal(RuleType.Import, rule.Type);
+        Assert.Equal("@import url('core.css');", rule.ToString());
+        Assert.Equal("url('core.css')", rule.Url.ToString());
 
-            Assert.Equal("@import url('core.css');", sheet.ToString());
-        }
+        Assert.Equal("@import url('core.css');", sheet.ToString());
+    }
 
-        [Fact]
-        public void ParseSelector2()
-        {
-            var sheet = StyleSheet.Parse("#monster { font-color: red; background-color: url(http://google.com); }");
+    [Fact]
+    public void ParseSelector2()
+    {
+        var sheet = StyleSheet.Parse("#monster { font-color: red; background-color: url(http://google.com); }");
 
-            var style = sheet.Children[0] as StyleRule;
+        var style = sheet.Children[0] as StyleRule;
 
-            Assert.Single(sheet.Children);
-            Assert.Equal(RuleType.Style, style.Type);
-            Assert.Equal("#monster", style.Selector.ToString());
-            Assert.Equal(2, style.Children.Count);
+        Assert.Single(sheet.Children);
+        Assert.Equal(RuleType.Style, style.Type);
+        Assert.Equal("#monster", style.Selector.ToString());
+        Assert.Equal(2, style.Children.Count);
 
-            var x = (CssDeclaration)style[0];
-            var y = (CssDeclaration)style[1];
+        var x = (CssDeclaration)style[0];
+        var y = (CssDeclaration)style[1];
 
-            Assert.Equal("font-color", x.Name.ToString());
-            Assert.Equal("red", x.Value.ToString());
-            Assert.Equal("background-color", y.Name.ToString());
-            Assert.Equal("url(http://google.com)", y.Value.ToString());
-        }
+        Assert.Equal("font-color", x.Name.ToString());
+        Assert.Equal("red", x.Value.ToString());
+        Assert.Equal("background-color", y.Name.ToString());
+        Assert.Equal("url(http://google.com)", y.Value.ToString());
+    }
 
-        [Fact]
-        public void Unclosed()
-        {
-            var sheet = StyleSheet.Parse("div.wrapper.upgraded .message.enterPaymentDetailsGuts { opacity: 0; position: absolute; width: 740px; height: 280px }");
+    [Fact]
+    public void Unclosed()
+    {
+        var sheet = StyleSheet.Parse("div.wrapper.upgraded .message.enterPaymentDetailsGuts { opacity: 0; position: absolute; width: 740px; height: 280px }");
 
-            sheet.ToString();
-        }
+        sheet.ToString();
+    }
 
 
-        [Fact]
-        public void CalcTest()
-        {
-            var styles = "main { margin: 0.5in; width: calc(100%/3 - 2*1em - 2*1px); }";
+    [Fact]
+    public void CalcTest()
+    {
+        var styles = "main { margin: 0.5in; width: calc(100%/3 - 2*1em - 2*1px); }";
 
-            Assert.Equal(@"main {
+        Assert.Equal(@"main {
   margin: 0.5in;
   width: calc(100% / 3 - 2 * 1em - 2 * 1px);
 }", StyleSheet.Parse(styles).ToString());
 
-        }
+    }
 
 
-        [Fact]
-        public void GitIssue2()
-        {
-            var styles = @"
+    [Fact]
+    public void GitIssue2()
+    {
+        var styles = @"
 
 .someClass { font-size: 1.2em; }
 .someClass { font-size: 1.2rem; }
 
 ".Trim();
 
-            Assert.Equal(@"
+        Assert.Equal(@"
 .someClass { font-size: 1.2em; }
 .someClass { font-size: 1.2rem; }
 ".Trim(), StyleSheet.Parse(styles).ToString());
 
-        }
+    }
 
 
 
 
-        [Fact]
-        public void CharsetRuleTest()
-        {
-            // var styles = "@charset \"UTF-8\";", StyleSheet.Parse(styles).ToString());
+    [Fact]
+    public void CharsetRuleTest()
+    {
+        // var styles = "@charset \"UTF-8\";", StyleSheet.Parse(styles).ToString());
 
-        }
+    }
 
 
-        [Fact]
-        public void ColorTests()
-        {
-            Assert.Equal("red", CssValue.Parse("red").ToString());
+    [Fact]
+    public void ColorTests()
+    {
+        Assert.Equal("red", CssValue.Parse("red").ToString());
 
-            var value = StyleSheet.Parse(@"body { background-color: rgba(#ffffff, 0.5) }");
+        var value = StyleSheet.Parse(@"body { background-color: rgba(#ffffff, 0.5) }");
 
-            Assert.Equal("body { background-color: rgba(255, 255, 255, 0.5); }", value.ToString());
+        Assert.Equal("body { background-color: rgba(255, 255, 255, 0.5); }", value.ToString());
 
-        }
+    }
 
-        [Fact]
-        public void ParseEmpty()
-        {
-            StyleSheet.Parse(@"a {
+    [Fact]
+    public void ParseEmpty()
+    {
+        StyleSheet.Parse(@"a {
       }");
 
-        }
+    }
 
-        [Fact]
-        public void ComponentValues()
-        {
-            Assert.Equal("red", CssValue.Parse("red").ToString());
+    [Fact]
+    public void ComponentValues()
+    {
+        Assert.Equal("red", CssValue.Parse("red").ToString());
 
-            var value = CssValue.Parse("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset");
-            var value2 = CssValue.Parse(@"""Gill Sans"", Futura, sans-serif");
+        var value = CssValue.Parse("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset");
+        var value2 = CssValue.Parse(@"""Gill Sans"", Futura, sans-serif");
 
-            Assert.Equal("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset", value.ToString());
-            Assert.Equal(@"""Gill Sans"", Futura, sans-serif", value2.ToString());
-        }
+        Assert.Equal("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset", value.ToString());
+        Assert.Equal(@"""Gill Sans"", Futura, sans-serif", value2.ToString());
+    }
 
 
-        [Fact]
-        public void FontFace()
-        {
-            var styles = @"@font-face {
+    [Fact]
+    public void FontFace()
+    {
+        var styles = @"@font-face {
     font-family: 'CMBilling';
     src: url('../fonts/cm-billing-webfont.eot');
     src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),
@@ -512,22 +512,22 @@ div { transition: width 1s }"
     font-style: normal;
 		}";
 
-            var sheet = StyleSheet.Parse(styles);
+        var sheet = StyleSheet.Parse(styles);
 
-            var value = ((CssDeclaration)((CssRule)sheet.Children[0])[2]).Value;
+        var value = ((CssDeclaration)((CssRule)sheet.Children[0])[2]).Value;
 
-            //  url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/cm-billing-webfont.woff') format('woff')
+        //  url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/cm-billing-webfont.woff') format('woff')
 
-            var list = (CssValueList)value;
-            var list_1_0 = (CssValueList)list[1];
+        var list = (CssValueList)value;
+        var list_1_0 = (CssValueList)list[1];
 
-            Assert.Equal(2, list.Count);
-            Assert.Equal("url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype')", list[0].ToString());
+        Assert.Equal(2, list.Count);
+        Assert.Equal("url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype')", list[0].ToString());
 
-            Assert.Equal("url('../fonts/cm-billing-webfont.woff')", list_1_0[0].ToString());
-            Assert.Equal("format('woff')", list_1_0[1].ToString().ToString());
+        Assert.Equal("url('../fonts/cm-billing-webfont.woff')", list_1_0[0].ToString());
+        Assert.Equal("format('woff')", list_1_0[1].ToString().ToString());
 
-            Assert.Equal(@"@font-face {
+        Assert.Equal(@"@font-face {
   font-family: 'CMBilling';
   src: url('../fonts/cm-billing-webfont.eot');
   src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/cm-billing-webfont.woff') format('woff');
@@ -536,8 +536,8 @@ div { transition: width 1s }"
 }", sheet.ToString());
 
 
-            // Test 2
-            StyleSheet.Parse(@"
+        // Test 2
+        StyleSheet.Parse(@"
 /*	Font -------------------------------------------------*/
 
 @font-face {
@@ -595,58 +595,58 @@ div { transition: width 1s }"
     font-weight: 300;
     font-style: normal;
 }");
-        }
+    }
 
-        [Fact]
-        public void ParseUnquotedUrl()
-        {
-            var styles = @"			
+    [Fact]
+    public void ParseUnquotedUrl()
+    {
+        var styles = @"			
 p { font-color: red; background: url(http://google.com); }
 			";
 
-            var sheet = StyleSheet.Parse(styles);
+        var sheet = StyleSheet.Parse(styles);
 
-            var rule = (StyleRule)sheet.Children[0];
+        var rule = (StyleRule)sheet.Children[0];
 
-            Assert.Equal("http://google.com", ((CssFunction)rule.GetDeclaration("background").Value).Arguments.ToString());
-        }
+        Assert.Equal("http://google.com", ((CssFunction)rule.GetDeclaration("background").Value).Arguments.ToString());
+    }
 
-        [Fact]
-        public void CssValueTypes()
-        {
-            Assert.Equal(NodeKind.Number, CssValue.Parse("123").Kind);
-            Assert.Equal(NodeKind.Number, CssValue.Parse("-123").Kind);
-            Assert.Equal(NodeKind.Number, CssValue.Parse("123.5").Kind);
-        }
+    [Fact]
+    public void CssValueTypes()
+    {
+        Assert.Equal(NodeKind.Number, CssValue.Parse("123").Kind);
+        Assert.Equal(NodeKind.Number, CssValue.Parse("-123").Kind);
+        Assert.Equal(NodeKind.Number, CssValue.Parse("123.5").Kind);
+    }
 
-        [Fact]
-        public void Declares()
-        {
-            Assert.Equal("font-size: 14px", new CssDeclaration("font-size", "14px").ToString());
-            Assert.Equal("font-size: 14px !important", new CssDeclaration("font-size", "14px", "important").ToString());
-        }
+    [Fact]
+    public void Declares()
+    {
+        Assert.Equal("font-size: 14px", new CssDeclaration("font-size", "14px").ToString());
+        Assert.Equal("font-size: 14px !important", new CssDeclaration("font-size", "14px", "important").ToString());
+    }
 
-        [Fact]
-        public void ParseDXImageTransformFilter()
-        {
-            StyleSheet.Parse("body { filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9defe', endColorstr='#7fc1e6',GradientType=1 ); } /* IE6-9 fallback on horizontal gradient */");
-        }
+    [Fact]
+    public void ParseDXImageTransformFilter()
+    {
+        StyleSheet.Parse("body { filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9defe', endColorstr='#7fc1e6',GradientType=1 ); } /* IE6-9 fallback on horizontal gradient */");
+    }
 
-        [Fact]
-        public void Parse11()
-        {
-            Assert.Equal(":focus { outline: 0; }", StyleSheet.Parse(@":focus { outline:0; }").ToString());
+    [Fact]
+    public void Parse11()
+    {
+        Assert.Equal(":focus { outline: 0; }", StyleSheet.Parse(@":focus { outline:0; }").ToString());
 
-            Assert.Equal(".projects li:first-child { background-color: orange; }", StyleSheet.Parse(@".projects li:first-child { background-color: orange; }").ToString());
+        Assert.Equal(".projects li:first-child { background-color: orange; }", StyleSheet.Parse(@".projects li:first-child { background-color: orange; }").ToString());
 
-            Assert.Equal(".projects li:first-child a { background-color: orange; }", StyleSheet.Parse(@".projects li:first-child a { background-color: orange; }").ToString());
-        }
+        Assert.Equal(".projects li:first-child a { background-color: orange; }", StyleSheet.Parse(@".projects li:first-child a { background-color: orange; }").ToString());
+    }
 
-        [Fact]
-        public void Parse3()
-        {
+    [Fact]
+    public void Parse3()
+    {
 
-            var styleSheet = @"
+        var styleSheet = @"
 div#profile_locationEdit table				{ width:100%; }
 div#profile_locationEdit table td 			{ padding:2px 0; }
 div#profile_locationEdit table td.addLab 	{ width:90px; font-size:13px; }
@@ -1559,15 +1559,14 @@ input 		{ font-family: Helvetica, Arial, sans-serif; }
 	}
 ";
 
-            var parser = new CssParser(styleSheet);
+        var parser = new CssParser(styleSheet);
 
 
-            foreach (var block in parser.ReadRules())
-            {
-                // Console.WriteLine(block);
-            }
-
+        foreach (var block in parser.ReadRules())
+        {
+            // Console.WriteLine(block);
         }
 
     }
+
 }
