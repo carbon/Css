@@ -100,6 +100,8 @@ public sealed class CssProperty : IEquatable<CssProperty>
         standard: new (chrome: 84, edge: 83, firefox: 80)
     ));
 
+    public static readonly CssProperty AspectRatio = new ("aspect-ratio");
+
     public static readonly CssProperty Azimuth = new ("azimuth", CssModule.Core2_1);
 
     public static readonly CssProperty BackfaceVisibility = new ("backface-visibility", CssModule.Transforms3, new CssCompatibility(
@@ -493,8 +495,9 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "animation-play-state", AnimationPlayState },
         { "animation-timing-function", AnimationTimingFunction },
 
-        { "appearance", Appearance },
-        { "azimuth", Azimuth },
+        { "appearance",          Appearance },
+        { "aspect-ratio",        AspectRatio },
+        { "azimuth",             Azimuth },
         { "backface-visibility", BackfaceVisibility },
 
         // Backgrounds
