@@ -6,7 +6,6 @@ public sealed class BrowserPrefix : IEquatable<BrowserPrefix>
 {
     public static readonly BrowserPrefix Moz    = new (BrowserPrefixKind.Moz,    "-moz-");
     public static readonly BrowserPrefix MS     = new (BrowserPrefixKind.Ms,     "-ms-");
-    public static readonly BrowserPrefix Opera  = new (BrowserPrefixKind.O,      "-o-");
     public static readonly BrowserPrefix Webkit = new (BrowserPrefixKind.Webkit, "-webkit-");
 
     private BrowserPrefix(BrowserPrefixKind kind, string text)

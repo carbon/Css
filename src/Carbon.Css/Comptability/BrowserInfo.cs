@@ -21,7 +21,6 @@ public readonly struct BrowserInfo
 
     public static BrowserInfo Firefox(float version) => new (BrowserType.Firefox, version);
     public static BrowserInfo Safari(float version)  => new (BrowserType.Safari, version);
-    public static BrowserInfo Opera(float version)   => new (BrowserType.Opera, version);
 
     public static readonly BrowserInfo Chrome1   = Chrome(1);
     public static readonly BrowserInfo Chrome4   = Chrome(4);
@@ -43,10 +42,6 @@ public readonly struct BrowserInfo
     public static readonly BrowserInfo Firefox21 = Firefox(21);
     public static readonly BrowserInfo Firefox29 = Firefox(29);
 
-    public static readonly BrowserInfo Opera4    = Opera(3);
-    public static readonly BrowserInfo Opera9    = Opera(9);
-    public static readonly BrowserInfo Opera15   = Opera(15); // Based on Chromium
-
     public static readonly BrowserInfo Safari1   = Safari(1);
     public static readonly BrowserInfo Safari3   = Safari(3);
     public static readonly BrowserInfo Safari4   = Safari(4);
@@ -61,7 +56,6 @@ public readonly struct BrowserInfo
         BrowserType.Chrome  => BrowserPrefix.Webkit,
         BrowserType.Firefox => BrowserPrefix.Moz,
         BrowserType.Edge    => BrowserPrefix.Webkit, // Edge is based on Chromium as of v88
-        BrowserType.Opera   => BrowserPrefix.Opera,
         BrowserType.Safari  => BrowserPrefix.Webkit,
         _                   => throw new Exception("Unexpected browser: " + type)
     };

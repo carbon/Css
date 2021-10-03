@@ -7,6 +7,5 @@ public enum BrowserPrefixKind
 {
     Moz    = 1,
     Ms     = 2,
-    O      = 4,
-    Webkit = 8
+    Webkit = 4
 }
