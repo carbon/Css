@@ -1,42 +1,41 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Carbon.Css
+namespace Carbon.Css;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum CssBoxAlignment
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum CssBoxAlignment
-    {
-        Unknown       = 0,
-        Start         = 1, // flush left or top     
-        End           = 2, // flush right or bottom  
-        Center        = 3, // centered
+    Unknown       = 0,
+    Start         = 1, // flush left or top     
+    End           = 2, // flush right or bottom  
+    Center        = 3, // centered
 
-        SelfStart     = 4, // self-start
-        SelfEnd       = 5, // self-end
+    SelfStart     = 4, // self-start
+    SelfEnd       = 5, // self-end
 
-        // 
-        // <baseline-position> 
-        Baseline      = 7, // baseline
-        FirstBaseline = 8, // first baseline
-        LastBaseline  = 9, // last baseline
+    // 
+    // <baseline-position> 
+    Baseline      = 7, // baseline
+    FirstBaseline = 8, // first baseline
+    LastBaseline  = 9, // last baseline
 
-        // <content-distribution>
-        SpaceAround   = 10, // space-around
-        SpaceBetween  = 11, // space-between          
-        SpaceEvenly   = 12, // space-evenly
-        Stretch       = 13, // stretch
+    // <content-distribution>
+    SpaceAround   = 10, // space-around
+    SpaceBetween  = 11, // space-between          
+    SpaceEvenly   = 12, // space-evenly
+    Stretch       = 13, // stretch
         
-        // <overflow-position>? <content-position>
-        SafeCenter    = 15,
-        UnsafeCenter  = 16,
-    }
-
-    // <baseline-position> | <content-distribution> | <overflow-position>? <content-position>
-    
-    // <content-distribution> = space-between | space-around | space-evenly | stretch
-    // <baseline-position> = [ first | last ]? baseline
-    // <overflow-position> = unsafe | safe
-    // <content-position> = center | start | end | flex-start | flex-end
+    // <overflow-position>? <content-position>
+    SafeCenter    = 15,
+    UnsafeCenter  = 16,
 }
+
+// <baseline-position> | <content-distribution> | <overflow-position>? <content-position>
+    
+// <content-distribution> = space-between | space-around | space-evenly | stretch
+// <baseline-position> = [ first | last ]? baseline
+// <overflow-position> = unsafe | safe
+// <content-position> = center | start | end | flex-start | flex-end
 
 // CSS Box Alignment v3
 // https://drafts.csswg.org/css-align-3/#propdef-align-content
