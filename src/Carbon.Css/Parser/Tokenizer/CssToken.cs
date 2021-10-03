@@ -1,6 +1,11 @@
-﻿namespace Carbon.Css.Parser;
+﻿using System;
+
+namespace Carbon.Css.Parser;
 
 public readonly struct CssToken
+#if NET6_0_OR_GREATER
+    : ISpanFormattable
+#endif
 {
     public CssToken(TokenKind kind, char value, int position)
     {
@@ -29,6 +34,20 @@ public readonly struct CssToken
         kind = Kind;
         text = Text;
     }
+
+#if NET6_0_OR_GREATER
+
+    bool ISpanFormattable.TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        return destination.TryWrite($"{Kind}: '{Text}'", out charsWritten);
+    }
+
+    string IFormattable.ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return $"{Kind}: '{Text}'";
+    }
+
+#endif
 
     #region Helpers
 
