@@ -5,8 +5,10 @@ public class CssPropertyTests
     [Fact]
     public void Common()
     {
+        Assert.Equal(CssProperty.Color,   CssProperty.Get("color"));
         Assert.Equal(CssProperty.Display, CssProperty.Get("display"));
-        Assert.Equal(CssProperty.Width, CssProperty.Get("width"));
+        Assert.Equal(CssProperty.Font,    CssProperty.Get("font"));
+        Assert.Equal(CssProperty.Width,   CssProperty.Get("width"));
     }
 
     // clip-path, clip-rule and mask properties [css-masking-1]

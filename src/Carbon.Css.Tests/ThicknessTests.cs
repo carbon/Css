@@ -13,6 +13,8 @@ public class ThicknessTests
         Assert.Equal("200px", edge.Right.ToString());
 
         Assert.Equal("100px 200px", edge.ToString());
+
+        Assert.Equal("100px 200px", $"{edge}");
     }
 
     [Fact]
@@ -39,6 +41,9 @@ public class ThicknessTests
         Assert.Equal("2", edge.Left.ToString());
         Assert.Equal("3", edge.Bottom.ToString());
         Assert.Equal("4", edge.Right.ToString());
+
+        Assert.Equal("1 2 3 4", edge.ToString());
+        Assert.Equal("1 2 3 4", $"{edge}");
     }
 
     [Fact]
