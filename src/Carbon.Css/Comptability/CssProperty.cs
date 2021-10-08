@@ -486,19 +486,19 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
     public static readonly Dictionary<string, CssProperty> Map = new() {
         // Animations
-        { "animation", Animation },
-        { "animation-delay", AnimationDelay },
-        { "animation-direction", AnimationDirection },
-        { "animation-duration", AnimationDuration },
-        { "animation-iteration-count", AnimationIterationCount },
-        { "animation-name", AnimationName },
-        { "animation-play-state", AnimationPlayState },
-        { "animation-timing-function", AnimationTimingFunction },
-
-        { "appearance",          Appearance },
-        { "aspect-ratio",        AspectRatio },
-        { "azimuth",             Azimuth },
-        { "backface-visibility", BackfaceVisibility },
+        { "animation",                  Animation },
+        { "animation-delay",            AnimationDelay },
+        { "animation-direction",        AnimationDirection },
+        { "animation-duration",         AnimationDuration },
+        { "animation-iteration-count",  AnimationIterationCount },
+        { "animation-name",             AnimationName },
+        { "animation-play-state",       AnimationPlayState },
+        { "animation-timing-function",  AnimationTimingFunction },
+                                        
+        { "appearance",                 Appearance },
+        { "aspect-ratio",               AspectRatio },
+        { "azimuth",                    Azimuth },
+        { "backface-visibility",        BackfaceVisibility },
 
         // Backgrounds
         { "background",                 Background },
@@ -546,22 +546,22 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "border-top-width",           BorderTopWidth },
         { "border-width",               BorderWidth },
 
-        { "bottom",                 Bottom },
-        { "box-decoration-break",   BoxDecorationBreak },
-        { "box-shadow",             BoxShadow },
-        { "box-sizing",             BoxSizing },
-        { "break-after",            BreakAfter },
-        { "break-before",           BreakBefore },
-        { "break-inside",           BreakInside },
-        { "caption-side",           CaptionSide },
-        { "clear",                  Clear },
-
-        // Clipping
-        { "clip",                   Clip },
-        { "clip-path",              ClipPath },
-        { "clip-rule",              ClipRule },
-                                    
-        { "color",                  Color },
+        { "bottom",                     Bottom },
+        { "box-decoration-break",       BoxDecorationBreak },
+        { "box-shadow",                 BoxShadow },
+        { "box-sizing",                 BoxSizing },
+        { "break-after",                BreakAfter },
+        { "break-before",               BreakBefore },
+        { "break-inside",               BreakInside },
+        { "caption-side",               CaptionSide },
+        { "clear",                      Clear },
+                                        
+        // Clipping                     
+        { "clip",                       Clip },
+        { "clip-path",                  ClipPath },
+        { "clip-rule",                  ClipRule },
+                                        
+        { "color",                      Color },
 
         // Column
         { "column-count",           ColumnCount },
@@ -758,13 +758,13 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "top", Top },
 
         // Transform
-        { "transform",           Transform },
-        { "transform-origin",    TransformOrigin },
-        { "transform-style",     TransformStyle },
-        { "transition",          Transition },
-        { "transition-delay",    TransitionDelay },
-        { "transition-duration", TransitionDuration },
-        { "transition-property", TransitionProperty },
+        { "transform",                  Transform },
+        { "transform-origin",           TransformOrigin },
+        { "transform-style",            TransformStyle },
+        { "transition",                 Transition },
+        { "transition-delay",           TransitionDelay },
+        { "transition-duration",        TransitionDuration },
+        { "transition-property",        TransitionProperty },
 
         { "transition-timing-function", TransitionTimingFunction },
         { "unicode-bidi",               UnicodeBidi },
