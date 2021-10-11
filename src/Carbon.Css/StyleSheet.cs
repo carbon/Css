@@ -222,7 +222,7 @@ public sealed class StyleSheet : CssRoot, IStylesheet
                     {
                         foreach (var line in ex.Lines)
                         {
-                            sb.Append(line.Number.ToString().PadLeft(5));
+                            sb.Append($"{line.Number,5}");
                             sb.Append(". ");
 
                             if (line.Number == ex.Location.Line)

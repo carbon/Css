@@ -75,7 +75,6 @@ public readonly struct CssGap : IEquatable<CssGap>
             return X.ToString();
         }
 
-
         return $"{X} {Y}";
     }
 

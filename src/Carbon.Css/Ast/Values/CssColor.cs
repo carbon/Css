@@ -22,6 +22,8 @@ public sealed class CssColor : CssValue
         _colorValue = value;
     }
 
+    internal Rgba32? Rgba32Value => _colorValue;
+
     internal override void WriteTo(TextWriter writer)
     {
         writer.Write(ToString());

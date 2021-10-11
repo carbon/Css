@@ -4,7 +4,7 @@
     <AssemblyName>Carbon.Css</AssemblyName>
     <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <LangVersion>10</LangVersion>
-    <Version>0.50.0</Version>
+    <Version>0.51.0</Version>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>true</WarningsAsErrors>
 
@@ -18,7 +18,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Carbon.Color" Version="2.28.0" />
+    <PackageReference Include="Carbon.Color" Version="2.29.0" />
   </ItemGroup>
 
 </Project>
