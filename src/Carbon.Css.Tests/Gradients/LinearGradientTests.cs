@@ -54,6 +54,20 @@ public class LinearGradientTests
     }
 
     [Fact]
+    public void ParsePartialDegrees()
+    {
+        var result = LinearGradient.Parse("linear-gradient(135.532deg, orange, orange 60%, cyan)");
+
+        Assert.Equal(135.532d, result.Angle);
+
+        Assert.Equal("ffa500ff", result.Stops[0].Color.ToHex8());
+        Assert.Equal("ffa500ff", result.Stops[1].Color.ToHex8());
+        Assert.Equal("00ffffff", result.Stops[2].Color.ToHex8());
+
+        Assert.Equal("linear-gradient(135.532deg, #ffa500, #ffa500 60%, #0ff)", result.ToString());
+    }
+
+    [Fact]
     public void ParseNamedColors()
     {
         var result = LinearGradient.Parse("linear-gradient(135deg, orange, orange 60%, cyan)");
