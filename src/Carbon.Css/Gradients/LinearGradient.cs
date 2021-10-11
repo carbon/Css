@@ -33,13 +33,17 @@ public readonly struct LinearGradient : IGradient
 
     public readonly override string ToString()
     {
-        using var sb = new ValueStringBuilder(100);
+        using var sb = new ValueStringBuilder(128);
+
+        Span<char> buffer = new char[10];
 
         sb.Append("linear-gradient(");
 
-        if (Angle.HasValue)
+        if (Angle is double angle)
         {
-            sb.Append(Angle.Value.ToString(CultureInfo.InvariantCulture));
+            angle.TryFormat(buffer, out int c, "0.######", CultureInfo.InvariantCulture);
+
+            sb.Append(buffer.Slice(0, c));
             sb.Append("deg");
         }
         else if (Direction != default)
@@ -55,12 +59,23 @@ public readonly struct LinearGradient : IGradient
 
             sb.Append(", ");
 
-            sb.Append(stop.Color.ToString());
+            if (stop.Color.IsOpaque)
+            {
+                stop.Color.TryFormatHexString(buffer, out int c);
+
+                sb.Append(buffer.Slice(0, c));
+            }
+            else
+            {
+                sb.Append(stop.Color.ToString());
+            }
 
             if (stop.Position is double position)
             {
+                position.TryFormat(buffer, out int c, "0.##%", CultureInfo.InvariantCulture);
+
                 sb.Append(' ');
-                sb.Append(position.ToString("0.##%", CultureInfo.InvariantCulture));
+                sb.Append(buffer.Slice(0, c));
             }
         }
 
