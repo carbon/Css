@@ -203,13 +203,13 @@ public sealed partial class CssParser : IDisposable
             selectorText = ReadTokenSpan().ToString();
         }
 
-        return new CharsetRule(selectorText!);
+        return new CharsetRule(selectorText.AsMemory());
     }
 
     public KeyframesRule ReadKeyframesRule()
     {
         // @media only screen and (min-width : 1600px) {
-
+        
         var span = new TokenList();
 
         while (Current.Kind is not TokenKind.BlockStart && !IsEnd)

@@ -9,8 +9,8 @@ internal sealed class SourceReader : IDisposable
     private const char EofChar = '\0';
 
     private readonly TextReader textReader;
-    private char current;
-    private int position;
+    private char _current;
+    private int _position;
 
     private readonly StringBuilder sb;
 
@@ -21,18 +21,18 @@ internal sealed class SourceReader : IDisposable
     {
         this.textReader = textReader;
 
-        position = 0;
-        current = '.';
+        _position = 0;
+        _current = '.';
         sb = new StringBuilder();
         markStart = -1;
         marked = -1;
     }
 
-    public char Current => current;
+    public char Current => _current;
 
-    public bool IsEof => current == EofChar;
+    public bool IsEof => _current == EofChar;
 
-    public int Position => position;
+    public int Position => _position;
 
     public char Peek()
     {
@@ -47,7 +47,7 @@ internal sealed class SourceReader : IDisposable
     /// <returns></returns>
     public char Read()
     {
-        char c = current;
+        char c = _current;
 
         Next();
 
@@ -56,11 +56,13 @@ internal sealed class SourceReader : IDisposable
 
     public string Read(int count)
     {
-        var buffer = new char[count];
+        Span<char> buffer = count <= 16
+            ? stackalloc char[count]
+            : new char[count];
 
         for (int i = 0; i < count; i++)
         {
-            buffer[i] = current;
+            buffer[i] = _current;
 
             Next();
         }
@@ -75,18 +77,18 @@ internal sealed class SourceReader : IDisposable
     {
         if (IsEof) throw new Exception("Cannot read past EOF.");
 
-        if (marked != -1 && (marked <= this.position))
+        if (marked != -1 && (marked <= _position))
         {
-            sb.Append(current);
+            sb.Append(_current);
         }
 
         int charCode = textReader.Read(); // -1 if there are no more chars to read (e.g. stream has ended)
 
-        this.current = (charCode > 0) ? (char)charCode : EofChar;
+        _current = (charCode > 0) ? (char)charCode : EofChar;
 
-        position++;
+        _position++;
 
-        return current;
+        return _current;
     }
 
     #region Mark
@@ -95,15 +97,15 @@ internal sealed class SourceReader : IDisposable
 
     public int Mark(bool appendCurrent = true)
     {
-        markStart = position;
-        marked = position;
+        markStart = _position;
+        marked = _position;
 
         if (appendCurrent == false)
         {
             marked++;
         }
 
-        return position;
+        return _position;
 
     }
 

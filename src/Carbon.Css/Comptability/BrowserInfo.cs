@@ -57,7 +57,7 @@ public readonly struct BrowserInfo
         BrowserType.Firefox => BrowserPrefix.Moz,
         BrowserType.Edge    => BrowserPrefix.Webkit, // Edge is based on Chromium as of v88
         BrowserType.Safari  => BrowserPrefix.Webkit,
-        _                   => throw new Exception("Unexpected browser: " + type)
+        _                   => throw new Exception($"Unexpected browser. Was {type}")
     };
         
     public override string ToString() => $"{Type}/{Version}";

@@ -12,12 +12,14 @@ public readonly struct CssUrlValue
 
     public CssUrlValue(string value)
     {
-        Value = value ?? throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
+
+        Value = value;
     }
 
     public CssUrlValue(byte[] data, string contentType)
     {
-        var sb = new StringBuilder();
+        var sb = new ValueStringBuilder(12 + contentType.Length + (data.Length * 2));
 
         sb.Append("data:");
         sb.Append(contentType);
@@ -27,7 +29,7 @@ public readonly struct CssUrlValue
         Value = sb.ToString();
     }
 
-    public readonly string Value { get; }
+    public string Value { get; }
 
     public void WriteTo(TextWriter writer)
     {
@@ -51,15 +53,17 @@ public readonly struct CssUrlValue
 
     public readonly string GetAbsolutePath(string basePath) /* /styles/ */
     {
+        if (Value.Length is 0) return null!;
+
         if (!IsPath)
         {
             throw new ArgumentException(string.Concat("Has scheme: ", Value.AsSpan(0, Value.IndexOf(':'))));
         }
 
         // Already absolute
-        if (Value.StartsWith('/'))
+        if (Value[0] == '/')
         {
-            return Value;
+            return Value.ToString();
         }
 
         if (basePath[0] == '/')

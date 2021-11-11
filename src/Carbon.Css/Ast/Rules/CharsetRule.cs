@@ -1,15 +1,17 @@
-﻿namespace Carbon.Css;
+﻿using System;
+
+namespace Carbon.Css;
 
 public sealed class CharsetRule : CssRule
 {
-    public CharsetRule(string text)
+    public CharsetRule(ReadOnlyMemory<char> text)
     {
-        this.Encoding = text;
+        Encoding = text;
     }
 
     public override RuleType Type => RuleType.Charset;
 
-    public string? Encoding { get; }
+    public ReadOnlyMemory<char> Encoding { get; }
 }
 
 // @charset "UTF-8";

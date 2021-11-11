@@ -216,10 +216,11 @@ public sealed class StyleSheet : CssRoot, IStylesheet
 
                     AddChild(new CssComment($" --- Syntax error reading '{absolutePath}' : {ex.Message} --- "));
 
-                    var sb = StringBuilderCache.Aquire();
 
-                    if (ex.Lines != null)
+                    if (ex.Lines is {  Count: > 0})
                     {
+                        var sb = new ValueStringBuilder(512);
+
                         foreach (var line in ex.Lines)
                         {
                             sb.Append($"{line.Number,5}");
@@ -230,11 +231,12 @@ public sealed class StyleSheet : CssRoot, IStylesheet
                                 sb.Append("* ");
                             }
 
-                            sb.AppendLine(line.Text);
+                            sb.Append(line.Text);
+                            sb.Append(Environment.NewLine);
                         }
-                    }
 
-                    AddChild(new CssComment(StringBuilderCache.ExtractAndRelease(sb)));
+                        AddChild(new CssComment(sb.ToString()));
+                    }
 
                     return;
                 }

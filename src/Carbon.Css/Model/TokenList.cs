@@ -10,13 +10,28 @@ public sealed class TokenList : Collection<CssToken>
 {
     public override string ToString()
     {
-        var sb = StringBuilderCache.Aquire();
+        if (Count == 1)
+        {
+            if (this[0].IsTrivia)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return this[0].Text;
+            }
+        }
+        else
+        {
 
-        using var writer = new StringWriter(sb);
+            var sb = StringBuilderCache.Aquire();
 
-        WriteTo(writer);
+            using var writer = new StringWriter(sb);
 
-        return StringBuilderCache.ExtractAndRelease(sb);
+            WriteTo(writer);
+
+            return StringBuilderCache.ExtractAndRelease(sb);
+        }
     }
 
     public void WriteTo(TextWriter writer)

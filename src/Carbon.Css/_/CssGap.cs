@@ -5,10 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Carbon.Css;
 
-public readonly struct CssGap : IEquatable<CssGap>
-#if NET6_0_OR_GREATER
-    , ISpanFormattable
-#endif
+public readonly struct CssGap : IEquatable<CssGap>, ISpanFormattable
 {
     public CssGap(double value)
         : this(new CssUnitValue(value, CssUnitInfo.Px)) { }
@@ -78,8 +75,6 @@ public readonly struct CssGap : IEquatable<CssGap>
         return $"{X} {Y}";
     }
 
-#if NET6_0_OR_GREATER
-
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
     {
         if (X.Equals(Y))
@@ -99,8 +94,6 @@ public readonly struct CssGap : IEquatable<CssGap>
 
         return $"{X} {Y}";
     }
-
-#endif
 
     public static bool operator ==(CssGap left, CssGap right)
     {

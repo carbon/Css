@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 
 using Carbon.Color;
@@ -38,7 +39,7 @@ public sealed class CssColor : CssValue
 
     public static CssColor FromRgba(byte r, byte g, byte b, float a)
     {
-        return new CssColor(FormattableString.Invariant($"rgba({r}, {g}, {b}, {a})"));
+        return new CssColor(string.Create(CultureInfo.InvariantCulture, $"rgba({r}, {g}, {b}, {a})"));
     }
 
     public override CssColor CloneNode()

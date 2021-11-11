@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-using Carbon.Css.Parser;
+﻿using Carbon.Css.Parser;
 
 namespace Carbon.Css;
 

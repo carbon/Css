@@ -5,7 +5,7 @@ namespace Carbon.Css;
 
 public sealed class CssProperty : IEquatable<CssProperty>
 {
-    private readonly CssCompatibility? compatibility;
+    private readonly CssCompatibility? _compatibility;
 
     public CssProperty(string name)
         : this(name, null, null)
@@ -20,11 +20,11 @@ public sealed class CssProperty : IEquatable<CssProperty>
         Name = name;
         Module = module;
 
-        this.compatibility = compatibility;
+        this._compatibility = compatibility;
 
         if (compatibility is null && module != null)
         {
-            this.compatibility = module;
+            this._compatibility = module;
         }
     }
 
@@ -34,7 +34,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
     public CssModule? Module { get; }
 
-    public CssCompatibility Compatibility => compatibility ?? CssCompatibility.Default;
+    public CssCompatibility Compatibility => _compatibility ?? CssCompatibility.Default;
 
     public bool NeedsExpansion(CssDeclaration declaration, in BrowserInfo[]? browsers)
     {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable IDE0057 // Use range operator
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -96,7 +98,7 @@ public readonly struct LinearGradient : IGradient
             text = text[16..^1];
         }
 
-        if (text.Length == 0)
+        if (text.Length is 0)
         {
             throw new ArgumentException("May not be empty", nameof(text));
         }
@@ -104,7 +106,7 @@ public readonly struct LinearGradient : IGradient
         double? angle = null;
         LinearGradientDirection direction = default;
 
-        if (char.IsDigit(text[0]) || text[0] == '-')
+        if (char.IsDigit(text[0]) || text[0] is '-')
         {
             angle = ReadAngle(text, out int read);
 

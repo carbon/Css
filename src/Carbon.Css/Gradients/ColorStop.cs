@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable IDE0057 // Use range operator
+
+using System;
 using System.Globalization;
 using System.Text.Json.Serialization;
 
@@ -75,6 +77,13 @@ public readonly struct ColorStop
 
     public readonly override string ToString()
     {
-        return Color.ToHex6() + " " + Position?.ToString("0%", CultureInfo.InvariantCulture);
+        if (Position != null)
+        {
+            return string.Create(CultureInfo.InvariantCulture, $"{Color.ToHexString()} {Position.Value:0%}");
+        }
+        else
+        {
+            return Color.ToHexString();
+        }
     }
 }

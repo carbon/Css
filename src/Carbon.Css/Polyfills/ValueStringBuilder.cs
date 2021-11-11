@@ -7,6 +7,7 @@
 
 using System.Buffers;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace System.Text
@@ -67,6 +68,35 @@ namespace System.Text
             }
         }
 
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AppendInvariant(double value)
+        {
+            if (value.TryFormat(_chars.Slice(_pos), out int written, provider: CultureInfo.InvariantCulture))
+            {
+                _pos += written;
+            }
+            else
+            {
+                Append(value.ToString(CultureInfo.InvariantCulture));
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AppendInvariant(int value)
+        {
+            if (value.TryFormat(_chars.Slice(_pos), out int written, provider: CultureInfo.InvariantCulture))
+            {
+                _pos += written;
+            }
+            else
+            {
+                Append(value.ToString(CultureInfo.InvariantCulture));
+            }
+        }
+
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Append(string? s)
         {
@@ -95,11 +125,7 @@ namespace System.Text
                 Grow(s.Length);
             }
 
-            s
-#if !NET6_0_OR_GREATER
-                .AsSpan()
-#endif
-                .CopyTo(_chars.Slice(pos));
+            s.CopyTo(_chars.Slice(pos));
             _pos += s.Length;
         }
 

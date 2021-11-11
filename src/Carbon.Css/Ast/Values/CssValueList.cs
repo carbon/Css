@@ -8,28 +8,28 @@ namespace Carbon.Css;
 
 public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
 {
-    private readonly IList<CssValue> items;
+    private readonly IList<CssValue> _items;
 
     public CssValueList(IList<CssValue> values, CssValueSeperator seperator = CssValueSeperator.Comma)
        : base(NodeKind.ValueList)
     {
-        this.items = values;
+        _items = values;
         Seperator = seperator;
     }
 
     public CssValueSeperator Seperator { get; }
 
-    public CssValue this[int index] => items[index];
+    public CssValue this[int index] => _items[index];
 
-    public int Count => items.Count;
+    public int Count => _items.Count;
 
     public override CssNode CloneNode()
     {
-        var clonedValues = new CssValue[items.Count];
+        var clonedValues = new CssValue[_items.Count];
 
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < _items.Count; i++)
         {
-            clonedValues[i] = (CssValue)items[i].CloneNode();
+            clonedValues[i] = (CssValue)_items[i].CloneNode();
         }
 
         return new CssValueList(clonedValues, Seperator);
@@ -39,27 +39,27 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
     {
         string seperator = Seperator == CssValueSeperator.Space ? " " : ", ";
 
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < _items.Count; i++)
         {
             if (i > 0)
             {
                 writer.Write(seperator);
             }
 
-            items[i].WriteTo(writer);
+            _items[i].WriteTo(writer);
         }
     }
 
     public override string ToString()
     {
-        return string.Join(Seperator == CssValueSeperator.Space ? " " : ", ", items);
+        return string.Join(Seperator is CssValueSeperator.Space ? " " : ", ", _items);
     }
 
     #region IEnumerator
 
-    IEnumerator<CssValue> IEnumerable<CssValue>.GetEnumerator() => items.GetEnumerator();
+    IEnumerator<CssValue> IEnumerable<CssValue>.GetEnumerator() => _items.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 
     #endregion
 }

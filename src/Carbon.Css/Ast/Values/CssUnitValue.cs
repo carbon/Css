@@ -10,10 +10,7 @@ using Carbon.Css.Json;
 namespace Carbon.Css;
 
 [JsonConverter(typeof(CssUnitValueJsonConverter))]
-public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
-#if NET6_0_OR_GREATER
-    , ISpanFormattable
-#endif
+public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanFormattable
 {
     public static readonly CssUnitValue Zero = new(0, CssUnitInfo.Number);
 
@@ -35,13 +32,13 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
 
     internal void WriteTo(ref ValueStringBuilder sb)
     {
-        sb.Append(Value.ToString(CultureInfo.InvariantCulture));
+        sb.AppendInvariant(Value);
         sb.Append(Unit.Name);
     }
 
     internal void WriteTo(StringBuilder sb)
     {
-        sb.Append(Value.ToString(CultureInfo.InvariantCulture));
+        sb.Append(CultureInfo.InvariantCulture, $"{Value}");
         sb.Append(Unit.Name);
     }
 
@@ -161,14 +158,8 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
 
     public override string ToString()
     {
-#if NET6_0_OR_GREATER
         return string.Create(CultureInfo.InvariantCulture, $"{Value}{Unit.Name}");
-#else
-        return Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
-#endif
     }
-
-#if NET6_0_OR_GREATER
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
     {
@@ -177,10 +168,8 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>
 
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return Value.ToString(CultureInfo.InvariantCulture) + Unit.Name;
+        return string.Create(CultureInfo.InvariantCulture, $"{Value}{Unit.Name}");
     }
-
-#endif
 }
 
 // A dimension is a number immediately followed by a unit identifier.
