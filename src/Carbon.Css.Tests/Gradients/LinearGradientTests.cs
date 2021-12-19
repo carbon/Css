@@ -165,6 +165,8 @@ public class LinearGradientTests
 
         Assert.Equal(Rgba32.Parse("#00a"), stop.Color);
         Assert.Null(stop.Position);
+
+        Assert.Equal("#00a", stop.ToString());
     }
 
     [Fact]
@@ -184,8 +186,12 @@ public class LinearGradientTests
 
         Assert.Equal(Rgba32.Parse("#00a"), stop1.Color);
         Assert.Equal(0.9, stop1.Position);
+        Assert.Equal("#00a 90%", stop1.ToString());
+
 
         Assert.Equal(Rgba32.Parse("#000"), stop2.Color);
+        Assert.Equal("#000 91%", stop2.ToString());
+
 
     }
 
