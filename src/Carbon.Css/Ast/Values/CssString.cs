@@ -13,7 +13,7 @@ public sealed class CssString : CssValue
     internal CssString(CssToken token, Trivia? trailing)
        : this(token.Text)
     {
-        this.Trailing = trailing;
+        Trailing = trailing;
     }
 
     public CssString(string text)

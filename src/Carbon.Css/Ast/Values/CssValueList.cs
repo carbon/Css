@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Carbon.Css;
 
@@ -37,7 +38,7 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
 
     internal override void WriteTo(TextWriter writer)
     {
-        string seperator = Seperator == CssValueSeperator.Space ? " " : ", ";
+        string seperator = Seperator is CssValueSeperator.Space ? " " : ", ";
 
         for (int i = 0; i < _items.Count; i++)
         {
@@ -47,6 +48,21 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
             }
 
             _items[i].WriteTo(writer);
+        }
+    }
+
+    internal override void WriteTo(StringBuilder sb)
+    {
+        string seperator = Seperator is CssValueSeperator.Space ? " " : ", ";
+
+        for (int i = 0; i < _items.Count; i++)
+        {
+            if (i > 0)
+            {
+                sb.Append(seperator);
+            }
+
+            _items[i].WriteTo(sb);
         }
     }
 

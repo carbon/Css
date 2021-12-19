@@ -95,8 +95,6 @@ namespace System.Text
             }
         }
 
-
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Append(string? s)
         {

@@ -1,10 +1,14 @@
 ﻿#pragma warning disable IDE0057 // Use range operator
 
 using System;
+using System.Text.Json.Serialization;
 using System.Runtime.Serialization;
+
+using Carbon.Css.Json;
 
 namespace Carbon.Css;
 
+[JsonConverter(typeof(CssGapJsonConverter))]
 public readonly struct CssGap : IEquatable<CssGap>, ISpanFormattable
 {
     public CssGap(double value)

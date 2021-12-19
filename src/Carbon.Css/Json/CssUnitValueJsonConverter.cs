@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Carbon.Css.Json;
 
-internal sealed class CssUnitValueJsonConverter : JsonConverter<CssUnitValue>
+public sealed class CssUnitValueJsonConverter : JsonConverter<CssUnitValue>
 {
     public override CssUnitValue Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

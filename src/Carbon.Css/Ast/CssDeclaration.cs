@@ -47,6 +47,7 @@ public sealed class CssDeclaration : CssNode
         sb.Append(Info.Name);
 
         sb.Append(": ");
+
         sb.Append(Value.ToString());
 
         if (Priority is not null)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 using Carbon.Css.Parser;
 
@@ -127,6 +128,16 @@ public abstract class CssValue : CssNode
             BinaryOperator.Mod => right.Kind == NodeKind.Number,
             _ => true
         };
+    }
+
+    internal virtual void WriteTo(ref ValueStringBuilder sb)
+    {
+        sb.Append(ToString());
+    }
+
+    internal virtual void WriteTo(StringBuilder sb)
+    {
+        sb.Append(ToString());
     }
 
     internal virtual void WriteTo(TextWriter writer)

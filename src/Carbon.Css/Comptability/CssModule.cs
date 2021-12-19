@@ -19,10 +19,10 @@ public sealed class CssModule : CssCompatibility
 
     public float Level { get; }
 
-    public override string ToString() => Type + " Level " + Level.ToString(CultureInfo.InvariantCulture);
+    public override string ToString() => string.Create(CultureInfo.InvariantCulture, $"{Type} Level {Level}");
 
     public static readonly CssModule Core1 = new (CssModuleType.Core, 1,
-        standard: new CompatibilityTable(chrome: 1, firefox: 1, safari: 1)
+        standard: new CompatibilityTable(chrome: 1, edge: 6, firefox: 1, safari: 1)
     );
 
     public static readonly CssModule Core2 = new (CssModuleType.Core, 2,
@@ -120,9 +120,6 @@ public sealed class CssModule : CssCompatibility
     #endregion
 
     #region Transitions
-
-    // Unsupported in IE9
-    // Standard in IE10
 
     public static readonly CssModule Transitions3 = new (CssModuleType.Transitions, 3,
         prefixed: new CompatibilityTable(chrome: 1,            firefox: 4,  safari: 3),

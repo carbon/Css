@@ -20,11 +20,11 @@ public sealed class CssProperty : IEquatable<CssProperty>
         Name = name;
         Module = module;
 
-        this._compatibility = compatibility;
+        _compatibility = compatibility;
 
         if (compatibility is null && module != null)
         {
-            this._compatibility = module;
+            _compatibility = module;
         }
     }
 
@@ -468,7 +468,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
     public static readonly CssProperty UserSelect = new ("user-select", new CssCompatibility(
         prefixed: new (chrome: 1,  edge: 10, firefox: 1, safari: 3),
-        standard: new (chrome: 54,           firefox: 69)
+        standard: new (chrome: 54, edge: 79, firefox: 69)
     ));
 
     public static readonly CssProperty VerticalAlign = new ("vertical-align", CssModule.Core1);
