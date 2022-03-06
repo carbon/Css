@@ -4,7 +4,7 @@ namespace Carbon.Css;
 
 internal static class PatchFactory
 {
-    public static readonly CssPatcher PrefixName = new PrefixNamePatcher();
+    public static readonly CssPatcher PrefixName         = new PrefixNamePatcher();
     public static readonly CssPatcher PrefixNameAndValue = new PrefixNameAndValuePatcher();
 
     // transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;

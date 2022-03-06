@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Carbon.Css.Parser;
@@ -54,10 +55,11 @@ internal sealed class SourceReader : IDisposable
         return c;
     }
 
+    [SkipLocalsInit]
     public string Read(int count)
     {
         Span<char> buffer = count <= 16
-            ? stackalloc char[count]
+            ? stackalloc char[16]
             : new char[count];
 
         for (int i = 0; i < count; i++)

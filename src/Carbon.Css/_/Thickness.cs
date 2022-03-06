@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -13,10 +14,7 @@ public sealed class Thickness
 {
     public Thickness(CssUnitValue value)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         Top = value;
         Left = value;
@@ -26,10 +24,15 @@ public sealed class Thickness
 
     public Thickness(CssUnitValue top, CssUnitValue left, CssUnitValue bottom, CssUnitValue right)
     {
-        Top = top ?? throw new ArgumentNullException(nameof(top));
-        Left = left ?? throw new ArgumentNullException(nameof(top));
-        Bottom = bottom ?? throw new ArgumentNullException(nameof(top));
-        Right = right ?? throw new ArgumentNullException(nameof(top));
+        ArgumentNullException.ThrowIfNull(top);
+        ArgumentNullException.ThrowIfNull(left);
+        ArgumentNullException.ThrowIfNull(bottom);
+        ArgumentNullException.ThrowIfNull(right);
+
+        Top = top;
+        Left = left;
+        Bottom = bottom;
+        Right = right;
     }
 
     public CssUnitValue Top { get; }
@@ -126,6 +129,7 @@ public sealed class Thickness
         return new Thickness(top, left, bottom, right);
     }
 
+    [SkipLocalsInit]
     public override string ToString()
     {
         if (Top.Equals(Bottom) && Left.Equals(Right))

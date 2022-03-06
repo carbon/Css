@@ -6,7 +6,8 @@
     <Version>0.53.0</Version>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>true</WarningsAsErrors>
-
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  
     <!-- Package Properties-->
     <Authors>iamcarbon</Authors>
     <Description>Fast (S)CSS parser and auto-prefixer.</Description>

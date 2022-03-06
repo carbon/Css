@@ -37,7 +37,7 @@ public readonly struct LinearGradient : IGradient
     {
         using var sb = new ValueStringBuilder(128);
 
-        Span<char> buffer = new char[10];
+        Span<char> buffer = new char[12];
 
         sb.Append("linear-gradient(");
 
@@ -72,12 +72,11 @@ public readonly struct LinearGradient : IGradient
                 sb.Append(stop.Color.ToString());
             }
 
-            if (stop.Position is double position)
+            if (stop.Position is double position 
+                && position.TryFormat(buffer, out int positionLength, "0.##%", CultureInfo.InvariantCulture))
             {
-                position.TryFormat(buffer, out int c, "0.##%", CultureInfo.InvariantCulture);
-
                 sb.Append(' ');
-                sb.Append(buffer.Slice(0, c));
+                sb.Append(buffer.Slice(0, positionLength));
             }
         }
 

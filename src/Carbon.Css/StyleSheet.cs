@@ -89,10 +89,7 @@ public sealed class StyleSheet : CssRoot, IStylesheet
 
     public void InlineImports()
     {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
+        ArgumentNullException.ThrowIfNull(resolver);
 
         foreach (var rule in Children.OfType<ImportRule>().ToList())
         {

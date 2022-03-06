@@ -479,8 +479,7 @@ public sealed partial class CssParser : IDisposable
         {
             var unit = tokenizer.Consume().Text;
 
-            return new CssUnitValue(value, unit)
-            {
+            return new CssUnitValue(value, unit) {
                 Trailing = ReadTrivia()
             };
         }
@@ -498,8 +497,7 @@ public sealed partial class CssParser : IDisposable
 
         var symbol = Consume(TokenKind.Name, LexicalMode.Value);   // read symbol
 
-        return new CssVariable(symbol)
-        {
+        return new CssVariable(symbol) {
             Leading = ReadTrivia()
         };
     }
@@ -835,10 +833,10 @@ public sealed partial class CssParser : IDisposable
 
         while (!IsEnd
             && !(Current.Kind is TokenKind.Colon
-                                or TokenKind.BlockStart
-                                or TokenKind.BlockEnd
-                                or TokenKind.Semicolon
-                                or TokenKind.Comma))
+                              or TokenKind.BlockStart
+                              or TokenKind.BlockEnd
+                              or TokenKind.Semicolon
+                              or TokenKind.Comma))
         {
             if (Current.Kind is TokenKind.InterpolatedStringStart)
             {
@@ -869,10 +867,10 @@ public sealed partial class CssParser : IDisposable
 
         while (!IsEnd 
             && !(Current.Kind is TokenKind.Colon 
-                                or TokenKind.BlockStart
-                                or TokenKind.BlockEnd
-                                or TokenKind.Semicolon
-                                or TokenKind.Comma))
+                              or TokenKind.BlockStart
+                              or TokenKind.BlockEnd
+                              or TokenKind.Semicolon
+                              or TokenKind.Comma))
         {
             list.Add(Consume());
         }

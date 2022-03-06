@@ -301,7 +301,7 @@ public sealed class CssWriter : IDisposable
 
     private static double ToDouble(CssValue value)
     {
-        if (value is CssUnitValue uv && uv.Kind is NodeKind.Number)
+        if (value is CssUnitValue { Kind: NodeKind.Number } uv)
         {
             return uv.Value;
         }
@@ -795,8 +795,8 @@ public sealed class CssWriter : IDisposable
             if (node.Kind is NodeKind.Include)
             {
                 var b2 = new CssBlock(NodeKind.Block) {
-                        node
-                    };
+                    node
+                };
 
                 scope = ExpandInclude((IncludeNode)node, b2);
 

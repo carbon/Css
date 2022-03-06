@@ -12,25 +12,46 @@ public sealed class TokenList : Collection<CssToken>
     {
         if (Count == 1)
         {
-            if (this[0].IsTrivia)
-            {
-                return string.Empty;
-            }
-            else
-            {
-                return this[0].Text;
-            }
+            return this[0].IsTrivia
+                ? string.Empty
+                : this[0].Text;
         }
         else
         {
+            var sb = new ValueStringBuilder(256);
 
-            var sb = StringBuilderCache.Aquire();
+            WriteTo(ref sb);
 
-            using var writer = new StringWriter(sb);
+            return sb.ToString();
+        }
+    }
 
-            WriteTo(writer);
+    private void WriteTo(ref ValueStringBuilder writer)
+    {
+        if (Count == 1)
+        {
+            if (this[0].IsTrivia) return;
 
-            return StringBuilderCache.ExtractAndRelease(sb);
+            writer.Append(this[0].Text);
+
+            return;
+        }
+
+        for (int i = 0; i < Count; i++)
+        {
+            CssToken token = this[i];
+
+            if (token.IsTrivia)
+            {
+                // Skip leading and trailing trivia
+                if (i == 0 || i + 1 == Count) continue;
+
+                writer.Append(' ');
+
+                continue;
+            }
+
+            writer.Append(token.Text);
         }
     }
 

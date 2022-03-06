@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Carbon.Css;
 
@@ -56,6 +57,7 @@ public sealed class CssDeclaration : CssNode
         }
     }
 
+    [SkipLocalsInit]
     public override string ToString()
     {
         // color: red !important
