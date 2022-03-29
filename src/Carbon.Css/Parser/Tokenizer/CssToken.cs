@@ -18,11 +18,11 @@ public readonly struct CssToken: ISpanFormattable
         Position = position;
     }
 
-    public readonly TokenKind Kind;
+    public TokenKind Kind { get; }
 
-    public readonly int Position;
+    public int Position { get; }
 
-    public readonly string Text;
+    public string Text { get; }
 
     public readonly override string ToString() => $"{Kind}: '{Text}'";
 

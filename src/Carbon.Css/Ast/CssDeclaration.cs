@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Carbon.Css;
@@ -46,10 +47,8 @@ public sealed class CssDeclaration : CssNode
     public void WriteTo(StringBuilder sb)
     {
         sb.Append(Info.Name);
-
-        sb.Append(": ");
-
-        sb.Append(Value.ToString());
+        sb.Append(": ");       
+        sb.Append(Value.ToString());        
 
         if (Priority is not null)
         {
@@ -68,7 +67,14 @@ public sealed class CssDeclaration : CssNode
 
         sb.Append(": ");
 
-        sb.Append(Value.ToString());
+        if (Value is ISpanFormattable unitValue)
+        {
+            sb.AppendSpanFormattable(unitValue);
+        }
+        else
+        {
+            sb.Append(Value.ToString());
+        }
 
         if (Priority is not null)
         {

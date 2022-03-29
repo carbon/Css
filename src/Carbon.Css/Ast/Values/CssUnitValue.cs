@@ -163,7 +163,7 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanForm
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
     {
-        return destination.TryWrite($"{Value}{Unit.Name}", out charsWritten);
+        return destination.TryWrite(CultureInfo.InvariantCulture, $"{Value}{Unit.Name}", out charsWritten);
     }
 
     public string ToString(string? format, IFormatProvider? formatProvider)

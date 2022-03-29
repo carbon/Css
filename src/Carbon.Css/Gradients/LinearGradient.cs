@@ -43,9 +43,7 @@ public readonly struct LinearGradient : IGradient
 
         if (Angle is double angle)
         {
-            angle.TryFormat(buffer, out int c, "0.######", CultureInfo.InvariantCulture);
-
-            sb.Append(buffer.Slice(0, c));
+            sb.AppendSpanFormattable(angle, "0.######", CultureInfo.InvariantCulture);
             sb.Append("deg");
         }
         else if (Direction != default)
@@ -72,11 +70,10 @@ public readonly struct LinearGradient : IGradient
                 sb.Append(stop.Color.ToString());
             }
 
-            if (stop.Position is double position 
-                && position.TryFormat(buffer, out int positionLength, "0.##%", CultureInfo.InvariantCulture))
+            if (stop.Position is double position)
             {
                 sb.Append(' ');
-                sb.Append(buffer.Slice(0, positionLength));
+                sb.AppendSpanFormattable(position, "0.##%", CultureInfo.InvariantCulture);
             }
         }
 

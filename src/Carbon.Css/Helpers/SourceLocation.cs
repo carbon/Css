@@ -1,4 +1,6 @@
-﻿namespace Carbon.Css.Helpers;
+﻿using System.Globalization;
+
+namespace Carbon.Css.Helpers;
 
 public readonly struct SourceLocation
 {
@@ -18,5 +20,5 @@ public readonly struct SourceLocation
     // 1 based
     public int Column { get; }
 
-    public readonly override string ToString() => $"({Line},{Column})";
+    public readonly override string ToString() => string.Create(CultureInfo.InvariantCulture, $"({Line},{Column})");
 }
