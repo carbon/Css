@@ -21,7 +21,6 @@ public class LinearGradientTests
 
         Assert.Equal("linear-gradient(-30deg, #9974ba 0%, #c2ea09 20%, #00cbe3 80%, #2f54b0 100%)", gradient.ToString());
         Assert.Equal("linear-gradient(-30deg, #9974ba 0%, #c2ea09 20%, #00cbe3 80%, #2f54b0 100%)", LinearGradient.Parse(gradient.ToString()).ToString());
-
     }
 
     [Fact]
@@ -191,8 +190,6 @@ public class LinearGradientTests
 
         Assert.Equal(Rgba32.Parse("#000"), stop2.Color);
         Assert.Equal("#000 91%", stop2.ToString());
-
-
     }
 
     [Fact]

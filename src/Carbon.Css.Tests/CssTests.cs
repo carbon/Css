@@ -622,7 +622,8 @@ p { font-color: red; background: url(http://google.com); }
     [Fact]
     public void Declares()
     {
-        Assert.Equal("font-size: 14px", new CssDeclaration("font-size", "14px").ToString());
+		Assert.Equal("font-weight: bold", new CssDeclaration("font-weight", "bold").ToString());
+		Assert.Equal("font-size: 14px", new CssDeclaration("font-size", "14px").ToString());
         Assert.Equal("font-size: 14px !important", new CssDeclaration("font-size", "14px", "important").ToString());
     }
 
