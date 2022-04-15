@@ -52,7 +52,7 @@ internal static class ReadOnlySpanExtensions
         read = 0;
 
         // leading -
-        if (text[0] == '-')
+        if (text[0] is '-')
         {
             read++;
         }
@@ -69,7 +69,7 @@ internal static class ReadOnlySpanExtensions
     {
         read = 0;
 
-        while (text.Length > read && text[read] == ' ')
+        while (text.Length > read && text[read] is ' ')
         {
             read++;
         }

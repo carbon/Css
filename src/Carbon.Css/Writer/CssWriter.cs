@@ -425,15 +425,15 @@ public sealed class CssWriter : IDisposable
 
         switch (value.Kind)
         {
-            case NodeKind.Variable: WriteVariable((CssVariable)value); break;
-            case NodeKind.ValueList: WriteValueList((CssValueList)value); break;
-            case NodeKind.Function: WriteFunction((CssFunction)value); break;
-            case NodeKind.Expression: WriteValue(EvalulateExpression((CssValue)value)); break;
-            case NodeKind.InterpolatedString: WriteInterpolatedString((CssInterpolatedString)value); break;
-            case NodeKind.Reference: WriteReference((CssReference)value); break;
-            case NodeKind.Sequence: WriteSequence((CssSequence)value); break;
-            case NodeKind.String: WriteString((CssString)value); break;
-            case NodeKind.Undefined: writer.Write(value.ToString()); break;
+            case NodeKind.Variable           : WriteVariable((CssVariable)value); break;
+            case NodeKind.ValueList          : WriteValueList((CssValueList)value); break;
+            case NodeKind.Function           : WriteFunction((CssFunction)value); break;
+            case NodeKind.Expression         : WriteValue(EvalulateExpression((CssValue)value)); break;
+            case NodeKind.InterpolatedString : WriteInterpolatedString((CssInterpolatedString)value); break;
+            case NodeKind.Reference          : WriteReference((CssReference)value); break;
+            case NodeKind.Sequence           : WriteSequence((CssSequence)value); break;
+            case NodeKind.String             : WriteString((CssString)value); break;
+            case NodeKind.Undefined          : writer.Write(value.ToString()); break;
             default:
                 // TODO: Improve error handling
                 WriteUnitValue((CssUnitValue)value);
@@ -605,15 +605,15 @@ public sealed class CssWriter : IDisposable
         Indent(depth);
 
         switch (rule)
-        {
-            case ImportRule importRule: WriteImportRule(importRule); break;
-            case MediaRule mediaRule: WriteMediaRule(mediaRule, depth); break;
-            case StyleRule styleRule: WriteStyleRule(styleRule, depth); break;
-            case FontFaceRule fontFaceRule: WriteFontFaceRule(fontFaceRule, depth); break;
-            case KeyframesRule keyFrameRule: WriteKeyframesRule(keyFrameRule, depth); break;
-            case UnknownRule atRule: WriteAtRule(atRule, depth); break;
+        {   
+            case ImportRule importRule      : WriteImportRule(importRule);             break;
+            case MediaRule mediaRule        : WriteMediaRule(mediaRule, depth);        break;
+            case StyleRule styleRule        : WriteStyleRule(styleRule, depth);        break;
+            case FontFaceRule fontFaceRule  : WriteFontFaceRule(fontFaceRule, depth);  break;
+            case KeyframesRule keyFrameRule : WriteKeyframesRule(keyFrameRule, depth); break;
+            case UnknownRule atRule         : WriteAtRule(atRule, depth);              break;
             default:
-                throw new Exception("Unhandled rule:" + rule.GetType().Name);
+                throw new Exception($"Unhandled rule. Was {rule.GetType().Name}");
         }
     }
 

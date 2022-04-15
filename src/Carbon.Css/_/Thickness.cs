@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -12,23 +11,16 @@ namespace Carbon.Css;
 [JsonConverter(typeof(ThinknessJsonConverter))]
 public sealed class Thickness
 {
-    public Thickness(CssUnitValue value)
+    public Thickness(CssUnitValue value!!)
     {
-        ArgumentNullException.ThrowIfNull(value);
-
         Top = value;
         Left = value;
         Bottom = value;
         Right = value;
     }
 
-    public Thickness(CssUnitValue top, CssUnitValue left, CssUnitValue bottom, CssUnitValue right)
+    public Thickness(CssUnitValue top!!, CssUnitValue left!!, CssUnitValue bottom!!, CssUnitValue right!!)
     {
-        ArgumentNullException.ThrowIfNull(top);
-        ArgumentNullException.ThrowIfNull(left);
-        ArgumentNullException.ThrowIfNull(bottom);
-        ArgumentNullException.ThrowIfNull(right);
-
         Top = top;
         Left = left;
         Bottom = bottom;

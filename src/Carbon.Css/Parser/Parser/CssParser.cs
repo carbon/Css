@@ -714,11 +714,11 @@ public sealed partial class CssParser : IDisposable
                     case "media"   : 
                         block.Flags |= CssBlockFlags.HasChildMedia;
                         block.Add(ReadMediaRule()); continue;
-                    default        : throw new Exception("Unexpected rule reading block:" + name.Text);
+                    default        : throw new Exception($"Unexpected rule reading block. Was {name.Text}");
                 }
             }
 
-            if (Current.Kind == TokenKind.Dollar)
+            if (Current.Kind is TokenKind.Dollar)
             {
                 block.Add(ReadAssignment());
 

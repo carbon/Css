@@ -10,14 +10,12 @@ public readonly struct CssUrlValue
 {
     // url('')
 
-    public CssUrlValue(string value)
+    public CssUrlValue(string value!!)
     {
-        ArgumentNullException.ThrowIfNull(value);
-
         Value = value;
     }
 
-    public CssUrlValue(byte[] data, string contentType)
+    public CssUrlValue(byte[] data!!, string contentType)
     {
         var sb = new ValueStringBuilder(12 + contentType.Length + (data.Length * 2));
 
