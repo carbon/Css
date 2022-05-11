@@ -1,31 +1,25 @@
-﻿using System.IO;
-using System.Linq;
-
-namespace Carbon.Css.Tests;
+﻿namespace Carbon.Css.Tests;
 
 public class MixinTests
 {
     [Fact]
     public void MixinTest19()
     {
-        var ss = StyleSheet.Parse(@"
+        var ss = StyleSheet.Parse("""
+        @mixin serif($fontWeight:300) {
+          font-family: 'Merriweather', serif;
+          font-weight: $fontWeight;
+        }
 
-@mixin serif($fontWeight:300) {
-  font-family: 'Merriweather', serif;
-  font-weight: $fontWeight;
-}
+        h1, h2, h3, h4, h5, h6 {
+          @include serif;
+          line-height: 1.2em;
+          text-rendering: optimizeLegibility;
+          margin: 0 0 1rem 0;
+        }
+        """);
 
-h1, h2, h3, h4, h5, h6 {
-  @include serif;
-  line-height: 1.2em;
-  text-rendering: optimizeLegibility;
-  margin: 0 0 1rem 0;
-}
-
-");
-
-        Assert.Equal(@"
-
+        Assert.Equal("""
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', serif;
   font-weight: 300;
@@ -33,42 +27,39 @@ h1, h2, h3, h4, h5, h6 {
   text-rendering: optimizeLegibility;
   margin: 0 0 1rem 0;
 }
-
-".Trim(), ss.ToString());
+""", ss.ToString());
     }
 
     [Fact]
     public void MixinTest15()
     {
-        var ss = StyleSheet.Parse(@"
-$fontWeight: 500;
+        var ss = StyleSheet.Parse("""
+            $fontWeight: 500;
 
-@mixin serif($fontWeight: 300) {
-  font-family: 'Merriweather', serif;
-  font-weight: $fontWeight;
-}
+            @mixin serif($fontWeight: 300) {
+              font-family: 'Merriweather', serif;
+              font-weight: $fontWeight;
+            }
 
-h1, h2, h3, h4, h5, h6 {
-  @include serif;
-  line-height: 1.2em;
-  text-rendering: optimizeLegibility;
-  margin: 0 0 1rem 0;
-}");
+            h1, h2, h3, h4, h5, h6 {
+              @include serif;
+              line-height: 1.2em;
+              text-rendering: optimizeLegibility;
+              margin: 0 0 1rem 0;
+            }
+            """);
 
         for (var i = 0; i < 100; i++)
         {
-
-            Assert.Equal(@"
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Merriweather', serif;
-  font-weight: 300;
-  line-height: 1.2em;
-  text-rendering: optimizeLegibility;
-  margin: 0 0 1rem 0;
-}
-
-".Trim(), ss.ToString());
+            Assert.Equal("""
+                h1, h2, h3, h4, h5, h6 {
+                  font-family: 'Merriweather', serif;
+                  font-weight: 300;
+                  line-height: 1.2em;
+                  text-rendering: optimizeLegibility;
+                  margin: 0 0 1rem 0;
+                }
+                """, ss.ToString());
         }
 
     }
@@ -77,34 +68,36 @@ h1, h2, h3, h4, h5, h6 {
     [Fact]
     public void ParseMixin30()
     {
-        var ss = StyleSheet.Parse(@"
-// Mixins
-@mixin dl-horizontal($dlSpacing : 7.5em, $dlGap : 0.625em) {
-  dt {
-    text-align: left;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    float: left;
-    width: $dlSpacing;
-  }
-  dd {
-    padding-left: $dlSpacing;
-  }
-}
+        var ss = StyleSheet.Parse("""
+            // Mixins
+            @mixin dl-horizontal($dlSpacing : 7.5em, $dlGap : 0.625em) {
+              dt {
+                text-align: left;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                float: left;
+                width: $dlSpacing;
+              }
+              dd {
+                padding-left: $dlSpacing;
+              }
+            }
 
-// CSS
-.left .awards dl,
-.left .exhibitions dl {
-  @include dl-horizontal(3.75em, 0.625em);
-}
-");
+            // CSS
+            .left .awards dl,
+            .left .exhibitions dl {
+              @include dl-horizontal(3.75em, 0.625em);
+            }
+
+            """);
         Assert.Single(ss.Context.Mixins);
 
         Assert.Equal("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
         Assert.Equal(2, ss.Context.Mixins["dl-horizontal"].Parameters.Count);
 
-        Assert.Equal(@".left .awards dl dt,
+        Assert.Equal("""
+.left .awards dl dt,
 .left .exhibitions dl dt {
   text-align: left;
   overflow: hidden;
@@ -114,7 +107,8 @@ h1, h2, h3, h4, h5, h6 {
   width: 3.75em;
 }
 .left .awards dl dd,
-.left .exhibitions dl dd { padding-left: 3.75em; }", ss.ToString());
+.left .exhibitions dl dd { padding-left: 3.75em; }
+""", ss.ToString());
     }
 
     [Fact]
@@ -124,35 +118,38 @@ h1, h2, h3, h4, h5, h6 {
 
         Assert.Equal(13, mixins.Context.Mixins.Count);
 
-        var ss = StyleSheet.Parse(@".happy {
-				@include li-horizontal;
-				font-size: 15px;
-				oranges: a;
-			} ", mixins.Context);
-
+        var ss = StyleSheet.Parse("""
+            .happy {
+              @include li-horizontal;
+              font-size: 15px;
+              oranges: a;
+            } 
+            """, mixins.Context);
 
         Assert.Equal(
-@".happy {
-  list-style: none;
-  padding: 0;
-  font-size: 15px;
-  oranges: a;
-}
-.happy li h5 {
-  position: inherit;
-  text-align: left;
-  display: inline-block;
-  margin-right: 0.625em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  width: inherit;
-}
-.happy li p {
-  display: inline;
-  padding-left: 0;
-}
-.happy li { padding-bottom: 1em; }", ss.ToString());
+            """
+            .happy {
+              list-style: none;
+              padding: 0;
+              font-size: 15px;
+              oranges: a;
+            }
+            .happy li h5 {
+              position: inherit;
+              text-align: left;
+              display: inline-block;
+              margin-right: 0.625em;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              width: inherit;
+            }
+            .happy li p {
+              display: inline;
+              padding-left: 0;
+            }
+            .happy li { padding-bottom: 1em; }
+            """, ss.ToString());
     }
 
     [Fact]
@@ -162,23 +159,26 @@ h1, h2, h3, h4, h5, h6 {
 
         Assert.Equal(13, mixins.Context.Mixins.Count);
 
-        var ss = StyleSheet.Parse(@"
-.happy {
-    @include dl-horizontal;
-				font-size: 15px;
-			} ", mixins.Context);
+        var ss = StyleSheet.Parse("""
+            .happy {
+                @include dl-horizontal;
+                font-size: 15px;
+            } 
+            """, mixins.Context);
 
         Assert.Equal(
-@".happy { font-size: 15px; }
-.happy dt {
-  text-align: left;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  float: left;
-  width: 7.5em;
-}
-.happy dd { padding-left: 8.125em; }", ss.ToString());
+            """
+            .happy { font-size: 15px; }
+            .happy dt {
+              text-align: left;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              float: left;
+              width: 7.5em;
+            }
+            .happy dd { padding-left: 8.125em; }
+            """, ss.ToString());
     }
 
     [Fact]
@@ -188,11 +188,14 @@ h1, h2, h3, h4, h5, h6 {
 
         Assert.Equal(13, mixins.Context.Mixins.Count);
 
-        var ss = StyleSheet.Parse(@".happy {
-				@include li-horizontal;
-			} ", mixins.Context);
+        var ss = StyleSheet.Parse("""
+            .happy {
+              @include li-horizontal;
+            } 
+            """, mixins.Context);
 
-        Assert.Equal(@".happy {
+        Assert.Equal("""
+.happy {
   list-style: none;
   padding: 0;
 }
@@ -210,47 +213,52 @@ h1, h2, h3, h4, h5, h6 {
   display: inline;
   padding-left: 0;
 }
-.happy li { padding-bottom: 1em; }", ss.ToString());
+.happy li { padding-bottom: 1em; }
+""", ss.ToString());
     }
 
     [Fact]
     public void ParseMixin()
     {
         var text = @"@mixin left($dist, $x: 1) {
-							margin-left: $dist;
-							float: left;
-							apples: bananas;
-							
-						}
+                            margin-left: $dist;
+                            float: left;
+                            apples: bananas;
+                            
+                        }
 
-						main { 
-							@include left(50px);
-						}
-						";
+                        main { 
+                            @include left(50px);
+                        }
+                        ";
 
         var ss = StyleSheet.Parse(text);
 
         Assert.Single(ss.Context.Mixins);
 
-        Assert.Equal(@"main {
-  margin-left: 50px;
-  float: left;
-  apples: bananas;
-}", ss.ToString());
+        Assert.Equal("""
+            main {
+              margin-left: 50px;
+              float: left;
+              apples: bananas;
+            }
+            """, ss.ToString());
     }
 
     [Fact]
     public void ParseMixin2()
     {
         var text =
-        @"@mixin round($radius) {
-				border-radius: $radius;
-				-webkit-border-radius: $radius;
-			}
+        """
+        @mixin round($radius) {
+          border-radius: $radius;
+          -webkit-border-radius: $radius;
+        }
 
-			main { 
-				@include round(50px, 20px);
-			}";
+        main { 
+          @include round(50px, 20px);
+        }
+        """;
 
         var ss = StyleSheet.Parse(text);
 
@@ -270,9 +278,11 @@ h1, h2, h3, h4, h5, h6 {
 
         Assert.Single(ss.Context.Mixins);
 
-        Assert.Equal(@"main {
-  border-radius: 50px;
-  -webkit-border-radius: 50px;
-}", ss.ToString());
+        Assert.Equal("""
+            main {
+              border-radius: 50px;
+              -webkit-border-radius: 50px;
+            }
+            """, ss.ToString());
     }
 }

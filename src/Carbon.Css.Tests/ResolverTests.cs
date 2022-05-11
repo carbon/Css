@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-
-namespace Carbon.Css.Tests;
+﻿namespace Carbon.Css.Tests;
 
 public class ResolverTests
 {
@@ -20,7 +17,6 @@ public class ResolverTests
             ["fontScheme"] = CssValue.Parse("serif"),
             ["textAlignment"] = CssValue.Parse("left")
         };
-
 
         sheet.SetResolver(new CssResolver("webcat"));
 

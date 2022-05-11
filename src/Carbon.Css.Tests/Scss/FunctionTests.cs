@@ -5,112 +5,121 @@ public class FunctionTests
     [Fact]
     public void LightenAndDarken()
     {
-        var sheet = StyleSheet.Parse(@"
-$red: #f00;
-$borderColor: $red;
+        var sheet = StyleSheet.Parse("""
+            $red: #f00;
+            $borderColor: $red;
 
-div { color: darken($red, 10%); }
-div { color: lighten($red, 0.2); }");
+            div { color: darken($red, 10%); }
+            div { color: lighten($red, 0.2); }
+            """);
 
 
-        Assert.Equal(@"div { color: #c00; }
-div { color: #f66; }", sheet.ToString());
+        Assert.Equal("""
+            div { color: #c00; }
+            div { color: #f66; }
+            """, sheet.ToString());
     }
 
     [Fact]
     public void FuncInMixin()
     {
-        var sheet = StyleSheet.Parse(@"
-$red: #f00;
-$borderColor: $red;
+        var sheet = StyleSheet.Parse("""
+            $red: #f00;
+            $borderColor: $red;
 
-@mixin hi() {
-  color: darken($red, 10%);
-  color: lighten($red, 0.2);
-}
+            @mixin hi() {
+              color: darken($red, 10%);
+              color: lighten($red, 0.2);
+            }
 
-div {
-  @include hi;
-}
+            div {
+              @include hi;
+            }
+            """);
 
-");
-
-        Assert.Equal(@"div {
-  color: #c00;
-  color: #f66;
-}", sheet.ToString());
+        Assert.Equal("""
+            div {
+              color: #c00;
+              color: #f66;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
     public void FuncNestedMixin()
     {
-        var sheet = StyleSheet.Parse(@"
-$red: #f00;
-$borderColor: $red;
+        var sheet = StyleSheet.Parse("""
+            $red: #f00;
+            $borderColor: $red;
 
-@mixin hi($a, $b) {
-  color: darken($red, 10%);
-  color: lighten($red, 0.2);
-  
-  div { 
-    color: darken(#e33b47, 20%);
-	color: darken($a, 20%);
-  }
-}
+            @mixin hi($a, $b) {
+              color: darken($red, 10%);
+              color: lighten($red, 0.2);
+              
+              div { 
+                color: darken(#e33b47, 20%);
+                color: darken($a, 20%);
+              }
+            }
 
-div {
-  @include hi(#fff);
-}");
+            div {
+              @include hi(#fff);
+            }
+            """);
 
-
-        Assert.Equal(@"div {
-  color: #c00;
-  color: #f66;
-}
-div div {
-  color: #a11721;
-  color: #ccc;
-}", sheet.ToString());
+        Assert.Equal("""
+            div {
+              color: #c00;
+              color: #f66;
+            }
+            div div {
+              color: #a11721;
+              color: #ccc;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
     public void Test99()
     {
-        var ss = StyleSheet.Parse(@"div {
-  .text,
-  .placeholderText {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding: 0 50px 0 225px;
-    line-height: 60px;
-    font-size: 18px;
-    font-weight: 400;
-    color: #333;
-    text-overflow: ellipsis;
-     white-space: nowrap;
-    -webkit-font-smoothing: antialiased;
-    z-index: 2;
-  }
-}");
-
+        var ss = StyleSheet.Parse("""
+            div {
+              .text,
+              .placeholderText {
+                position: relative;
+                display: block;
+                overflow: hidden;
+                padding: 0 50px 0 225px;
+                line-height: 60px;
+                font-size: 18px;
+                font-weight: 400;
+                color: #333;
+                text-overflow: ellipsis;
+                 white-space: nowrap;
+                -webkit-font-smoothing: antialiased;
+                z-index: 2;
+              }
+            }
+            """);
 
         Assert.Equal(
-@"div .text,
-div .placeholderText {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  padding: 0 50px 0 225px;
-  line-height: 60px;
-  font-size: 18px;
-  font-weight: 400;
-  color: #333;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  -webkit-font-smoothing: antialiased;
-  z-index: 2;
-}", ss.ToString());
+            """
+            div .text,
+            div .placeholderText {
+              position: relative;
+              display: block;
+              overflow: hidden;
+              padding: 0 50px 0 225px;
+              line-height: 60px;
+              font-size: 18px;
+              font-weight: 400;
+              color: #333;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              -webkit-font-smoothing: antialiased;
+              z-index: 2;
+            }
+            """, ss.ToString());
     }
 
     [Fact]
@@ -119,7 +128,8 @@ div .placeholderText {
         var ss = StyleSheet.FromFile(TestHelper.GetTestFile("test53.css"));
 
         Assert.Equal(
-@".block ::-webkit-input-placeholder {
+"""
+.block ::-webkit-input-placeholder {
   color: #cfcece;
   font-weight: 400;
 }
@@ -201,7 +211,8 @@ div .placeholderText {
   line-height: 20px;
   color: #a3a3a3;
 }
-.block .description { padding: 5px 250px 20px 225px; }", ss.ToString());
+.block .description { padding: 5px 250px 20px 225px; }
+""", ss.ToString());
 
     }
 }

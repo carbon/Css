@@ -55,31 +55,25 @@ public class OperatorTests
         // https://stackoverflow.com/questions/4988944/how-to-prevent-division-when-using-variables-separated-by-a-slash-in-css-propert
 
         // font-size/line-height
-        var css = StyleSheet.Parse(@"
-div {
-    font: italic small-caps normal 13px/150% Arial, Helvetica, sans-serif;
-}
+        var css = StyleSheet.Parse("""
+            div {
+                font: italic small-caps normal 13px/150% Arial, Helvetica, sans-serif;
+            }
+            """);
 
-");
-
-
-        Assert.Equal(@"
-
-div { font: italic small-caps normal 13px / 150% Arial, Helvetica, sans-serif; }
-
-".Trim(), css.ToString());
-
+        Assert.Equal("""
+            div { font: italic small-caps normal 13px / 150% Arial, Helvetica, sans-serif; }
+            """, css.ToString());
     }
 
     [Fact]
     public void A()
     {
-        var css = StyleSheet.Parse(@"
-div {
-    width: 10px / 2;
-}
-
-");
+        var css = StyleSheet.Parse("""
+            div {
+                width: 10px / 2;
+            }
+            """);
 
         var div = (StyleRule)css.Children[0];
 
@@ -93,36 +87,40 @@ div {
     [Fact]
     public void ExpressionTest7()
     {
-        var css = StyleSheet.Parse(@"
-$bgColor: #ffffff;
+        var css = StyleSheet.Parse(
+            """
+            $bgColor: #ffffff;
 
-@if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
-  div {
-    color: darken($bgColor, 50%);
-    background-color: darken($bgColor, 0.5);
-  }
-}
-");
+            @if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
+              div {
+                color: darken($bgColor, 50%);
+                background-color: darken($bgColor, 0.5);
+              }
+            }
+            """);
 
         Assert.Equal(
-@"div {
-  color: #808080;
-  background-color: #808080;
-}", css.ToString());
+            """
+            div {
+              color: #808080;
+              background-color: #808080;
+            }
+            """, css.ToString());
     }
 
     [Fact]
     public void ExpressionTest1()
     {
-        var sheet = StyleSheet.Parse(@"
-$bgColor: orange;
+        var sheet = StyleSheet.Parse(
+            """
+            $bgColor: orange;
 
-@if $bgColor == orange { 
-  div {
-    background-color: $bgColor;
-  }
-}
-");
+            @if $bgColor == orange { 
+              div {
+                background-color: $bgColor;
+              }
+            }
+            """);
 
         Assert.Equal("div { background-color: orange; }", sheet.ToString().Trim());
     }
@@ -130,17 +128,15 @@ $bgColor: orange;
     [Fact]
     public void ExpressionTest2()
     {
-        var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse("""
+            $bgColor: #ffffff;
 
-
-$bgColor: #ffffff;
-
-@if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
-  div {
-    background-color: $bgColor;
-  }
-}
-");
+            @if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
+              div {
+                background-color: $bgColor;
+              }
+            }
+            """);
 
         Assert.Equal("div { background-color: #ffffff; }", sheet.ToString());
     }

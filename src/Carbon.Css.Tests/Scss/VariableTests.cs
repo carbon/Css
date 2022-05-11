@@ -1,18 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Carbon.Css.Tests;
+﻿namespace Carbon.Css.Tests;
 
 public class VariableTests
 {
     [Fact]
     public void VariableReferencingVariable()
     {
-        var css = StyleSheet.Parse(@"
-$red: #f00;
-$borderColor: $red;
+        var css = StyleSheet.Parse("""
+            $red: #f00;
+            $borderColor: $red;
 
-div { color: rgba($borderColor, 0.5); }");
+            div { color: rgba($borderColor, 0.5); }
+            """);
 
         Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", css.ToString());
     }
@@ -20,11 +18,12 @@ div { color: rgba($borderColor, 0.5); }");
     [Fact]
     public void ReferenceToSelfThrows()
     {
-        var sheet = StyleSheet.Parse(@"
-$red: #fff;
-$red: $red;	
+        var sheet = StyleSheet.Parse("""
+            $red: #fff;
+            $red: $red;	
 
-div { color: $red; }");
+            div { color: $red; }
+            """);
 
         Assert.Throws<Exception>(() =>
         {
@@ -47,54 +46,59 @@ div { color: $red; }");
     [Fact]
     public void VariableTest1()
     {
-        var sheet = StyleSheet.Parse(@"
-$blue: #dceef7;
-$yellow: #fff5cc;
+        var sheet = StyleSheet.Parse(
+            """
+            $blue: #dceef7;
+            $yellow: #fff5cc;
 
-body { 
-  background-color: $blue;
-  color: $yellow;
-}
-");
+            body { 
+              background-color: $blue;
+              color: $yellow;
+            }
+            """);
 
         var assignments = sheet.Children.OfType<CssAssignment>();
 
-        Assert.Equal("#dceef7", assignments.First(a => a.Name == "blue").Value.ToString());
+        Assert.Equal("#dceef7", assignments.First(a => a.Name is "blue").Value.ToString());
 
         Assert.Equal(2, assignments.Count());
 
         Assert.Equal(
-@"body {
-  background-color: #dceef7;
-  color: #fff5cc;
-}", sheet.ToString());
+            """
+            body {
+              background-color: #dceef7;
+              color: #fff5cc;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
     public void VariableTest3()
     {
-        var dic = new Dictionary<string, CssValue>
-        {
+        var dic = new Dictionary<string, CssValue> {
             ["monster"] = CssValue.Parse("red")
         };
 
         var sheet = StyleSheet.Parse(
-@"
-$blue: #dceef7;
-$yellow: #fff5cc;
+            """
+            $blue: #dceef7;
+            $yellow: #fff5cc;
 
-body { 
-  background-color: $blue;
-  color: $yellow;
-  monster: $monster;
-}");
+            body { 
+              background-color: $blue;
+              color: $yellow;
+              monster: $monster;
+            }
+            """);
 
         Assert.Equal(
-@"body {
-  background-color: #dceef7;
-  color: #fff5cc;
-  monster: red;
-}", sheet.ToString(dic));
+            """
+            body {
+              background-color: #dceef7;
+              color: #fff5cc;
+              monster: red;
+            }
+            """, sheet.ToString(dic));
     }
 
     [Fact]
@@ -116,27 +120,25 @@ body {
         Assert.Equal(@"body { background-color: red; }", sheet.ToString(dic));
 
         sheet = StyleSheet.Parse(
-@"@if $monster == undefined {
-    body { 
-      background-color: red;
-    }
-}");
+            """
+            @if $monster == undefined {
+                body { 
+                  background-color: red;
+                }
+            }
+            """);
 
         Assert.Equal("", sheet.ToString(dic));
 
+        sheet = StyleSheet.Parse("""
+            @if $bananas == undefined {
+                body { 
+                  background-color: red;
+                }
+            }
+            """);
 
-
-        sheet = StyleSheet.Parse(@"
-
-@if $bananas == undefined {
-    body { 
-      background-color: red;
-    }
-}
-
-");
-
-        Assert.Equal(@"body { background-color: red; }", sheet.ToString(dic));
+        Assert.Equal("body { background-color: red; }", sheet.ToString(dic));
     }
 
     [Fact]
@@ -147,62 +149,54 @@ body {
             ["monster"] = CssValue.Parse("purple")
         };
 
-        var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse(
+            """
+            $blue: #dceef7;
+            $yellow: #fff5cc;
+            $padding: 10px;
+            $padding-right: 20px;
+            body { 
+              background-color: $blue;
+              color: $yellow;
+              monster: $monster;
+              padding: $padding $padding-right $padding $padding;
+            }
+            """);
 
-$blue: #dceef7;
-$yellow: #fff5cc;
-$padding: 10px;
-$padding-right: 20px;
-body { 
-  background-color: $blue;
-  color: $yellow;
-  monster: $monster;
-  padding: $padding $padding-right $padding $padding;
-}
-
-");
-
-        Assert.Equal(@"
-
-body {
-  background-color: #dceef7;
-  color: #fff5cc;
-  monster: purple;
-  padding: 10px 20px 10px 10px;
-}
-
-".Trim(), sheet.ToString(dic));
+        Assert.Equal(
+            """
+            body {
+              background-color: #dceef7;
+              color: #fff5cc;
+              monster: purple;
+              padding: 10px 20px 10px 10px;
+            }
+            """, sheet.ToString(dic));
     }
-
 
     [Fact]
     public void VariableTest2()
     {
-        var css = StyleSheet.Parse(@"
+        var css = StyleSheet.Parse(
+            """
+            $addYellow: #fff5cc;
+            $editBlue: #dceef7;
 
-$addYellow: #fff5cc;
-$editBlue: #dceef7;
+            body { font-size: 14px; opacity: 0.5; }
+            .editBlock button.save { background: $addYellow; }
+            .editBlock.populated button.save { background: $editBlue; }
+            .rotatedBox { box-sizing: border-box; }
+            """);
 
-body { font-size: 14px; opacity: 0.5; }
-.editBlock button.save { background: $addYellow; }
-.editBlock.populated button.save { background: $editBlue; }
-.rotatedBox { box-sizing: border-box; }
-
-");
-
-
-        Assert.Equal(@"
-
-body {
-  font-size: 14px;
-  opacity: 0.5;
-}
-.editBlock button.save { background: #fff5cc; }
-.editBlock.populated button.save { background: #dceef7; }
-.rotatedBox { box-sizing: border-box; }
-
-".Trim(), css.ToString());
-
-
+        Assert.Equal(
+            """
+            body {
+              font-size: 14px;
+              opacity: 0.5;
+            }
+            .editBlock button.save { background: #fff5cc; }
+            .editBlock.populated button.save { background: #dceef7; }
+            .rotatedBox { box-sizing: border-box; }
+            """, css.ToString());
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 
 using Carbon.Css.Parser;
 
@@ -42,7 +41,8 @@ public class CssTests
     [Fact]
     public void ParsePrintMedia()
     {
-        var text = @"@media print {
+        var text = """
+@media print {
   *,
   *::before,
   *::after {
@@ -53,7 +53,7 @@ public class CssTests
     text-decoration: underline;
   }
   abbr[title]::after {
-    content: "" ("" attr(title) "")"";
+    content: " (" attr(title) ")";
   }
   pre {
     white-space: pre-wrap !important;
@@ -109,7 +109,8 @@ public class CssTests
   .table-bordered td {
     border: 1px solid #dee2e6 !important;
   }
-}";
+}
+""";
 
         var sheet = StyleSheet.Parse(text);
 
@@ -122,9 +123,10 @@ public class CssTests
     [Fact]
     public void ChainedColonSelector()
     {
-        var text = @"
+        var text = """
 .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top,
-.card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom { color: red; }".Trim();
+.card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom { color: red; }
+""";
 
         var sheet = StyleSheet.Parse(text);
 
@@ -197,7 +199,6 @@ public class CssTests
   }
 }";
 
-
         var sheet = StyleSheet.Parse(text);
 
         var rule = sheet.Children[0] as MediaRule;
@@ -208,9 +209,11 @@ public class CssTests
     [Fact]
     public void QuotedSvgUrl()
     {
-        var text = @".custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
-  background-image: url(""data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"");
-        }";
+        var text = """
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E");
+}
+""";
 
         var sheet = StyleSheet.Parse(text);
 
@@ -264,20 +267,20 @@ public class CssTests
     [Fact]
     public void MediaQuery()
     {
-        string text = @"
+        string text = """
 @media only screen and (min-width : 1600px) {
   .projects { column-count: 3; }
   .main {   margin-left: 240px; }
   .projectDetails-bottom { display: none; }
   .contactForm { width: 760px; margin: 0 auto; }
-}";
+}
+""";
 
         var css = StyleSheet.Parse(text);
 
-
-
         Assert.Equal(
-@"@media only screen and (min-width : 1600px) {
+"""
+@media only screen and (min-width : 1600px) {
   .projects { column-count: 3; }
   .main { margin-left: 240px; }
   .projectDetails-bottom { display: none; }
@@ -285,7 +288,8 @@ public class CssTests
     width: 760px;
     margin: 0 auto;
   }
-}", css.ToString());
+}
+""", css.ToString());
     }
 
     [Fact]
@@ -333,17 +337,21 @@ div { cursor: zoom-out }"
     public void GrabSupport()
     {
         var sheet = StyleSheet.Parse(
-@"//= support Firefox >= 5
+"""
+//= support Firefox >= 5
 //= support Safari >= 1
-div { cursor: grab }"
+div { cursor: grab }
+"""
 );
 
         Assert.Equal(
-@"div {
+"""
+div {
   cursor: -moz-grab;
   cursor: -webkit-grab;
   cursor: grab;
-}", sheet.ToString()
+}
+""", sheet.ToString()
         );
     }
 
@@ -351,10 +359,11 @@ div { cursor: grab }"
     public void DirivitiveComment()
     {
         var sheet = StyleSheet.Parse(
-@"//= support Firefox >= 5
-//= support Chrome >= 1
-div { transition: width 1s }"
-);
+            """
+            //= support Firefox >= 5
+            //= support Chrome >= 1
+            div { transition: width 1s }
+            """);
 
         /*
         Assert.Equal(
@@ -364,11 +373,13 @@ div { transition: width 1s }"
         */
 
         Assert.Equal(
-            expected: @"div {
-  -moz-transition: width 1s;
-  -webkit-transition: width 1s;
-  transition: width 1s;
-}",
+            expected: """
+            div {
+              -moz-transition: width 1s;
+              -webkit-transition: width 1s;
+              transition: width 1s;
+            }
+            """,
             actual: sheet.ToString()
         );
     }
@@ -377,7 +388,7 @@ div { transition: width 1s }"
     public void LineComment()
     {
         var sheet = StyleSheet.Parse(@"// hello
-			hi { hello: test; }");
+            hi { hello: test; }");
 
         Assert.Equal("hi { hello: test; }", sheet.ToString());
     }
@@ -432,41 +443,34 @@ div { transition: width 1s }"
     {
         var styles = "main { margin: 0.5in; width: calc(100%/3 - 2*1em - 2*1px); }";
 
-        Assert.Equal(@"main {
-  margin: 0.5in;
-  width: calc(100% / 3 - 2 * 1em - 2 * 1px);
-}", StyleSheet.Parse(styles).ToString());
-
+        Assert.Equal("""
+            main {
+              margin: 0.5in;
+              width: calc(100% / 3 - 2 * 1em - 2 * 1px);
+            }
+            """, StyleSheet.Parse(styles).ToString());
     }
-
 
     [Fact]
     public void GitIssue2()
     {
-        var styles = @"
+        var styles = 
+            """
+            .someClass { font-size: 1.2em; }
+            .someClass { font-size: 1.2rem; }
+            """;
 
-.someClass { font-size: 1.2em; }
-.someClass { font-size: 1.2rem; }
-
-".Trim();
-
-        Assert.Equal(@"
-.someClass { font-size: 1.2em; }
-.someClass { font-size: 1.2rem; }
-".Trim(), StyleSheet.Parse(styles).ToString());
-
+        Assert.Equal("""
+            .someClass { font-size: 1.2em; }
+            .someClass { font-size: 1.2rem; }
+            """, StyleSheet.Parse(styles).ToString());
     }
-
-
-
 
     [Fact]
     public void CharsetRuleTest()
     {
         // var styles = "@charset \"UTF-8\";", StyleSheet.Parse(styles).ToString());
-
     }
-
 
     [Fact]
     public void ColorTests()
@@ -503,14 +507,16 @@ div { transition: width 1s }"
     [Fact]
     public void FontFace()
     {
-        var styles = @"@font-face {
-    font-family: 'CMBilling';
-    src: url('../fonts/cm-billing-webfont.eot');
-    src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/cm-billing-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-		}";
+        var styles = """
+            @font-face {
+              font-family: 'CMBilling';
+              src: url('../fonts/cm-billing-webfont.eot');
+              src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),
+                   url('../fonts/cm-billing-webfont.woff') format('woff');
+              font-weight: normal;
+              font-style: normal;
+            }
+            """;
 
         var sheet = StyleSheet.Parse(styles);
 
@@ -527,17 +533,19 @@ div { transition: width 1s }"
         Assert.Equal("url('../fonts/cm-billing-webfont.woff')", list_1_0[0].ToString());
         Assert.Equal("format('woff')", list_1_0[1].ToString().ToString());
 
-        Assert.Equal(@"@font-face {
-  font-family: 'CMBilling';
-  src: url('../fonts/cm-billing-webfont.eot');
-  src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/cm-billing-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}", sheet.ToString());
-
+        Assert.Equal("""
+            @font-face {
+              font-family: 'CMBilling';
+              src: url('../fonts/cm-billing-webfont.eot');
+              src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/cm-billing-webfont.woff') format('woff');
+              font-weight: normal;
+              font-style: normal;
+            }
+            """, sheet.ToString());
 
         // Test 2
-        StyleSheet.Parse(@"
+        StyleSheet.Parse("""
+
 /*	Font -------------------------------------------------*/
 
 @font-face {
@@ -594,7 +602,8 @@ div { transition: width 1s }"
          url('../fonts/ColfaxWebRegularSub.woff') format('woff');
     font-weight: 300;
     font-style: normal;
-}");
+}
+""");
     }
 
     [Fact]
@@ -602,7 +611,7 @@ div { transition: width 1s }"
     {
         var styles = @"			
 p { font-color: red; background: url(http://google.com); }
-			";
+            ";
 
         var sheet = StyleSheet.Parse(styles);
 
@@ -622,8 +631,8 @@ p { font-color: red; background: url(http://google.com); }
     [Fact]
     public void Declares()
     {
-		Assert.Equal("font-weight: bold", new CssDeclaration("font-weight", "bold").ToString());
-		Assert.Equal("font-size: 14px", new CssDeclaration("font-size", "14px").ToString());
+        Assert.Equal("font-weight: bold", new CssDeclaration("font-weight", "bold").ToString());
+        Assert.Equal("font-size: 14px", new CssDeclaration("font-size", "14px").ToString());
         Assert.Equal("font-size: 14px !important", new CssDeclaration("font-size", "14px", "important").ToString());
     }
 
@@ -646,8 +655,7 @@ p { font-color: red; background: url(http://google.com); }
     [Fact]
     public void Parse3()
     {
-
-        var styleSheet = @"
+        var styleSheet = """
 div#profile_locationEdit table				{ width:100%; }
 div#profile_locationEdit table td 			{ padding:2px 0; }
 div#profile_locationEdit table td.addLab 	{ width:90px; font-size:13px; }
@@ -656,44 +664,44 @@ table.info { width:100%; margin:16px 0 0 0; padding:0; }
 table.info td { vertical-align:top; }
 table.info td p { margin:0 0 16px 0; line-height:20px; }
 table.info td p.tiny { margin-bottom:0; color:#999; }
-	
+    
 div.body p { margin:0 0 16px 0; line-height:20px; }
 
 .availabilityRow { width:760px; padding:20px 0; }
 
 .availabilityRow .controlRow { display:block; margin-left:20px; }
-	
+    
 .availabilityRow .controlRow a.button {
-	display:block;
-	float:left;
-	width:190px; height:50px;
-	margin:0 12px 0 0;
-	border:2px solid #000;
-	background: #000 url('../img/project/bg_buttonBlack.png') repeat-x 0 0;
-	color:#f4f4f4;
-	font-size:16px;
-	text-align:center;
-	line-height:50px;
-	border-radius:8px;
-	box-shadow:0 0 5px 1px rgba(0, 0, 0, 0.3);
-	filter:alpha(opacity=40); opacity:0.4;
+    display:block;
+    float:left;
+    width:190px; height:50px;
+    margin:0 12px 0 0;
+    border:2px solid #000;
+    background: #000 url('../img/project/bg_buttonBlack.png') repeat-x 0 0;
+    color:#f4f4f4;
+    font-size:16px;
+    text-align:center;
+    line-height:50px;
+    border-radius:8px;
+    box-shadow:0 0 5px 1px rgba(0, 0, 0, 0.3);
+    filter:alpha(opacity=40); opacity:0.4;
 }
 
 .availabilityRow .controlRow a.button:hover { border:2px solid #6CC3F4; }
 .availabilityRow .controlRow a.button.selected {
-	box-shadow:0 0 5px 2px #6CC3F4;
-	border:2px solid #000;
-	cursor:default;
-	filter:alpha(opacity=100); opacity:1.0;
-	}
-	
+    box-shadow:0 0 5px 2px #6CC3F4;
+    border:2px solid #000;
+    cursor:default;
+    filter:alpha(opacity=100); opacity:1.0;
+    }
+    
 .availabilityRow .controlRow .or {
-	float:left;
-	height:50px;
-	margin:0 12px 0 0;
-	color:#999;
-	line-height:50px;
-	}
+    float:left;
+    height:50px;
+    margin:0 12px 0 0;
+    color:#999;
+    line-height:50px;
+    }
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -704,13 +712,13 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
-	margin:0;
-	padding:0;
-	border:0;
-	outline:0;
-	font-size:100%;
-	vertical-align:baseline;
-	background:transparent;
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
 }
 
 ol, ul { list-style:none; }
@@ -718,15 +726,15 @@ ol, ul { list-style:none; }
 :focus { outline:0; }
 
 button:hover, button:active, button:focus {
-	cursor: pointer;
-	outline: none;
-	-moz-outline-style: none;
+    cursor: pointer;
+    outline: none;
+    -moz-outline-style: none;
 }
-	
+    
 
 article,footer,header,section { margin:0; padding:0; display:block; }
 aside,details { margin:0; padding:0; }
-	
+    
 /*============================================================
  Defaults
 ============================================================*/
@@ -754,20 +762,20 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
-	margin:0;
-	padding:0;
-	border:0;
-	outline:0;
-	font-size:100%;
-	vertical-align:baseline;
-	background:transparent;
-	}
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+    }
 ol, ul { list-style:none; }
 
 h1, h2, h3, h4, h5, h6 {
-	font-weight: normal;
+    font-weight: normal;
 }
-	
+    
 /* = HTML 5
 ----------------------------------------------- */
 article,footer,header,section { margin:0; padding:0; display:block; }
@@ -779,296 +787,296 @@ aside,details { margin:0; padding:0; }
 ============================================================*/
 
 .clearfix {
-	display: inline-block;
+    display: inline-block;
 }
 
 body.account strong {
-	font-family: 'Colfax-Medium';
+    font-family: 'Colfax-Medium';
 }
 
 body.account .left ul {
-	font-size: 1.8em;
-	margin-top: 6px;
+    font-size: 1.8em;
+    margin-top: 6px;
 }
 
 body.account .left ul li {
-	height: 36px;
-	text-align: center;
-	margin-bottom: 12px;
+    height: 36px;
+    text-align: center;
+    margin-bottom: 12px;
 }
 
 body.account .left ul li span {
-	color: #E9F6FF;
-	position: relative;
-	margin-right: 5px;
-	width: 75px;
-	text-align: center;
+    color: #E9F6FF;
+    position: relative;
+    margin-right: 5px;
+    width: 75px;
+    text-align: center;
 }
 
 body.account .right ul li:before {
-	content:'\2022';
-	font: 1.2em 'CMBilling';
-	position: relative;
-	top: 0;
-	margin-right: 10px;
+    content:'\2022';
+    font: 1.2em 'CMBilling';
+    position: relative;
+    top: 0;
+    margin-right: 10px;
 }
 
 body.account .right ul {
-	padding-left: 90px;
+    padding-left: 90px;
 }
 
 body.account .divider {
-	position: absolute;
-	width: 20px;
-	text-align: center;
-	left: 50%;
-	margin-left: -10px;
-	float: left;
-	opacity: 1;
-	padding-top: 9px;
-	line-height: 2em;
+    position: absolute;
+    width: 20px;
+    text-align: center;
+    left: 50%;
+    margin-left: -10px;
+    float: left;
+    opacity: 1;
+    padding-top: 9px;
+    line-height: 2em;
 }
 
 body.account .divider ul li.line {
-	opacity: .3;
-	width: 1px;
-	margin-left: 9px;
-	border-left: 1px solid rgba(36, 76, 102, 1);
-	margin-bottom: 3px;
+    opacity: .3;
+    width: 1px;
+    margin-left: 9px;
+    border-left: 1px solid rgba(36, 76, 102, 1);
+    margin-bottom: 3px;
 }
 
 body.account .message h1 {
-	text-align: center;
-	color: #244D66;
-	text-shadow: 0 2px 0px rgba(255, 255, 255, 0.3);
-	font: 3em 'Colfax-Medium';
+    text-align: center;
+    color: #244D66;
+    text-shadow: 0 2px 0px rgba(255, 255, 255, 0.3);
+    font: 3em 'Colfax-Medium';
 }
 
 body.account .subtitle {
-	text-align: center;
-	margin-bottom: 2em;
-	font-size: .8em;
-	top: -12px;
-	position: relative;
-	opacity: .5;
+    text-align: center;
+    margin-bottom: 2em;
+    font-size: .8em;
+    top: -12px;
+    position: relative;
+    opacity: .5;
 }
 
 body.account .content {
-	color: #4C4C4C;
-	width: 800px;
-	margin-left: auto;
-	margin-right: auto;
-	border-radius: 4px;
-	margin-bottom: 50px;
-	position: relative;
+    color: #4C4C4C;
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 4px;
+    margin-bottom: 50px;
+    position: relative;
 }
 
 body.account div.message {
-	padding: 30px;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-	box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-	position: relative;
-	z-index: 1;
+    padding: 30px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 1;
 
 text-shadow: 0 2px 1px rgba(255, 255, 255, 0.3);
 font-size: 1.2em;
 line-height: 1.5em;
 
-	
+    
 /*	background-color: #62698A;*/
 
-	background: rgb(169,222,254); /* Old browsers */
-	background: -moz-radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%, rgba(127,193,230,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(169,222,254,1)), color-stop(100%,rgba(127,193,230,1))); /* Chrome,Safari4+ */
-	background: -webkit-radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%,rgba(127,193,230,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%,rgba(127,193,230,1) 100%); /* Opera 12+ */
-	background: -ms-radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%,rgba(127,193,230,1) 100%); /* IE10+ */
-	background: radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%,rgba(127,193,230,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9defe', endColorstr='#7fc1e6',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-	
+    background: rgb(169,222,254); /* Old browsers */
+    background: -moz-radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%, rgba(127,193,230,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(169,222,254,1)), color-stop(100%,rgba(127,193,230,1))); /* Chrome,Safari4+ */
+    background: -webkit-radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%,rgba(127,193,230,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%,rgba(127,193,230,1) 100%); /* Opera 12+ */
+    background: -ms-radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%,rgba(127,193,230,1) 100%); /* IE10+ */
+    background: radial-gradient(center, ellipse cover,  rgba(169,222,254,1) 0%,rgba(127,193,230,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9defe', endColorstr='#7fc1e6',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    
 }
 
 
 body.account .cardNumber span.message {
-	color: rgba(97, 104, 138, 0.7);
-	position: absolute;
-	top: 124px;
-	font-size: 11px;
-	left: 142px;
+    color: rgba(97, 104, 138, 0.7);
+    position: absolute;
+    top: 124px;
+    font-size: 11px;
+    left: 142px;
 }
 
 body.account .securityCode span.message {
-	color: rgba(97, 104, 138, 0.7);
-	position: absolute;
-	top: 205px;
-	font-size: 11px;
-	left: 142px;
+    color: rgba(97, 104, 138, 0.7);
+    position: absolute;
+    top: 205px;
+    font-size: 11px;
+    left: 142px;
 }
 
 body.account .expiration span.message {
-	color: rgba(97, 104, 138, 0.7);
-	position: absolute;
-	top: 287px;
-	font-size: 11px;
-	left: 142px;
+    color: rgba(97, 104, 138, 0.7);
+    position: absolute;
+    top: 287px;
+    font-size: 11px;
+    left: 142px;
 }
 
 
 body.account span.message {
-	display: none;
+    display: none;
 }
 
 body.account .invalid span.message {
-	display: inherit;
+    display: inherit;
 }
 
 body.account .left {
-	width: 340px;
-	float: left;
+    width: 340px;
+    float: left;
 }
 
 body.account .right {
-	padding-left: 370px;
+    padding-left: 370px;
 }
 
 
 
 body.account div.wrapper .data, div.wrapper .action, div.wrapper .message {
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
 }
 
 body.account div.data.choosePlanGuts div {
-	margin-left: -40px;
-	margin-right: -40px;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	text-align: center;
-	position: absolute;
-	font-family: 'Colfax-Bold';
-	width: 800px;
+    margin-left: -40px;
+    margin-right: -40px;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    text-align: center;
+    position: absolute;
+    font-family: 'Colfax-Bold';
+    width: 800px;
 }
 
 
 body.account .yearly .year .top {
-	font-size: 54px;
-	height: 56px;
-	top: 0;
-	padding-top: 38px;
-	color: #E5C4DC;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-	letter-spacing: -2px;
-	opacity: 1;
+    font-size: 54px;
+    height: 56px;
+    top: 0;
+    padding-top: 38px;
+    color: #E5C4DC;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    letter-spacing: -2px;
+    opacity: 1;
 }
 
 
 body.account .yearly .top span {
-	font-family: 'Colfax-Medium';
-	font-size: 25px;
-	top: -17px;
-	position: relative;
-	margin-right: 7px;
-	margin-left: 10px;
-	letter-spacing: 0px;
-	opacity: 1;
+    font-family: 'Colfax-Medium';
+    font-size: 25px;
+    top: -17px;
+    position: relative;
+    margin-right: 7px;
+    margin-left: 10px;
+    letter-spacing: 0px;
+    opacity: 1;
 }
 
 body.account .yearly .bottom {
-	background-color: rgba(231, 245, 255, 0.5);
-	color: #244D66;
-	font-size: 13px;
-	height: 25px;
-	cursor: pointer;
-	bottom: 0;
-	padding-top: 10px;
+    background-color: rgba(231, 245, 255, 0.5);
+    color: #244D66;
+    font-size: 13px;
+    height: 25px;
+    cursor: pointer;
+    bottom: 0;
+    padding-top: 10px;
 }
 
 body.account .monthly .top {
-	font-size: 13px;
-	height: 25px;
-	cursor: pointer;
-	top: 0;
-	padding-top: 9px;
-	color: #244D66;
+    font-size: 13px;
+    height: 25px;
+    cursor: pointer;
+    top: 0;
+    padding-top: 9px;
+    color: #244D66;
 }
 
 
 body.account .monthly .bottom {
-	background-color: rgba(231, 245, 255, 0.5);
-	color: white;
-	font-size: 54px;
-	height: 176px;
-	bottom: 0;
-	padding-top: 18px;
-	color: #E5C4DC;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-	letter-spacing: -2px;
-	opacity: 1;
+    background-color: rgba(231, 245, 255, 0.5);
+    color: white;
+    font-size: 54px;
+    height: 176px;
+    bottom: 0;
+    padding-top: 18px;
+    color: #E5C4DC;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    letter-spacing: -2px;
+    opacity: 1;
 }
 
 body.account .monthly .bottom span {
-	font-size: 25px;
-	font-weight: 500;
-	top: -17px;
-	position: relative;
-	margin-right: 7px;
-	margin-left: 10px;
-	letter-spacing: 0px;
-	opacity: 1;
-	font-family: 'Colfax-Medium';
+    font-size: 25px;
+    font-weight: 500;
+    top: -17px;
+    position: relative;
+    margin-right: 7px;
+    margin-left: 10px;
+    letter-spacing: 0px;
+    opacity: 1;
+    font-family: 'Colfax-Medium';
 }
 
 /*invisible state for transition*/
 
 body.account .monthly .year div.top {
-	font-size: 54px;
-	height: 56px;
-	top: 0;
-	padding-top: 200px;
-	color: #E5C4DC;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-	letter-spacing: -2px;
-	opacity: 0;
+    font-size: 54px;
+    height: 56px;
+    top: 0;
+    padding-top: 200px;
+    color: #E5C4DC;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    letter-spacing: -2px;
+    opacity: 0;
 }
 
 body.account .monthly .year div.top span {
-	font-size: 25px;
-	font-weight: 500;
-	top: -17px;
-	position: relative;
-	margin-right: 7px;
-	margin-left: 10px;
-	letter-spacing: 0px;
-	padding-top: 200px;
+    font-size: 25px;
+    font-weight: 500;
+    top: -17px;
+    position: relative;
+    margin-right: 7px;
+    margin-left: 10px;
+    letter-spacing: 0px;
+    padding-top: 200px;
 }
 
 body.account .yearly .month div.bottom {
-	background-color: rgba(231, 245, 255, 0.5);
-	color: white;
-	font-size: 54px;
-	bottom: 0;
-	padding-top: 200px;
-	color: #E5C4DC;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-	letter-spacing: -2px;
-	opacity: 1;
+    background-color: rgba(231, 245, 255, 0.5);
+    color: white;
+    font-size: 54px;
+    bottom: 0;
+    padding-top: 200px;
+    color: #E5C4DC;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    letter-spacing: -2px;
+    opacity: 1;
 }
 
 body.account .yearly .month div.bottom span {
-	font-size: 25px;
-	font-weight: 500;
-	top: -17px;
-	position: relative;
-	margin-right: 7px;
-	margin-left: 10px;
-	letter-spacing: 0px;
-	opacity: 1;
-	padding-top: 200px;
+    font-size: 25px;
+    font-weight: 500;
+    top: -17px;
+    position: relative;
+    margin-right: 7px;
+    margin-left: 10px;
+    letter-spacing: 0px;
+    opacity: 1;
+    padding-top: 200px;
 }
 
 
@@ -1127,75 +1135,75 @@ div.wrapper.enterPaymentDetails .data.enterPaymentDetailsGuts.payPal { position:
 div.wrapper.enterPaymentDetails .action.enterPaymentDetailsGuts.payPal { opacity: 1; position: absolute; width: 760px; top: 520px; z-index: 200; }
 
 div.data.upgradedGuts p {
-	text-align: center;
+    text-align: center;
 }
 
 body.account .data {
-	background-color: white;
-	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-	box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-	position: relative;
-	padding: 40px;
+    background-color: white;
+    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+    position: relative;
+    padding: 40px;
 }
 
 body.account .choosePlan.yearly .data {
-	background: url(../img/yearBG.svg) no-repeat 226px 25px #CAEBFE;
+    background: url(../img/yearBG.svg) no-repeat 226px 25px #CAEBFE;
 }
 
 body.account .choosePlan.monthly .data {
-	background: url(../img/yearBG.svg) no-repeat 226px -200px #CAEBFE;
+    background: url(../img/yearBG.svg) no-repeat 226px -200px #CAEBFE;
 }
 
 body.account .choosePlan.monthly .bottom {
-	background: url(../img/yearBG.svg) no-repeat 226px 000px rgba(232, 245, 255, 0.50);
+    background: url(../img/yearBG.svg) no-repeat 226px 000px rgba(232, 245, 255, 0.50);
 }
 
 body.account .choosePlan.yearly .bottom {
-	background: url(../img/yearBG.svg) no-repeat 226px 200px rgba(232, 245, 255, 0.50);
+    background: url(../img/yearBG.svg) no-repeat 226px 200px rgba(232, 245, 255, 0.50);
 }
 
 
 body.account .creditCardImg {
-	width: 190px;
-	height: 35px;
-	background: url(../img/sprite_creditCards.png) no-repeat 0 0;
-	position: relative;
-	display: inline;
-	float: right;
-	top: -36px;
+    width: 190px;
+    height: 35px;
+    background: url(../img/sprite_creditCards.png) no-repeat 0 0;
+    position: relative;
+    display: inline;
+    float: right;
+    top: -36px;
 }
 
 body.account form#payment.americanExpress .creditCardImg {
-	background: url(../img/sprite_creditCards.png) no-repeat 0 -42px;
+    background: url(../img/sprite_creditCards.png) no-repeat 0 -42px;
 }
 
 
 body.account form#payment.visa .creditCardImg {
-	background: url(../img/sprite_creditCards.png) no-repeat 0 -84px;
+    background: url(../img/sprite_creditCards.png) no-repeat 0 -84px;
 }
 
 body.account form#payment.discover .creditCardImg {
-	background: url(../img/sprite_creditCards.png) no-repeat 0 -126px;
+    background: url(../img/sprite_creditCards.png) no-repeat 0 -126px;
 }
 
 body.account form#payment.masterCard .creditCardImg {
-	background: url(../img/sprite_creditCards.png) no-repeat 0 -168px;
+    background: url(../img/sprite_creditCards.png) no-repeat 0 -168px;
 }
 
 body.account .securityCodeImg {
-	width: 190px;
-	height: 35px;
-	background: url(../img/sprite_creditCards.png) no-repeat 0 -251px;
-	display: inline;
-	float: left;
-	position: relative;
-	top: -37px;
-	left: 297px;
+    width: 190px;
+    height: 35px;
+    background: url(../img/sprite_creditCards.png) no-repeat 0 -251px;
+    display: inline;
+    float: left;
+    position: relative;
+    top: -37px;
+    left: 297px;
 }
 
 body.account form#payment.americanExpress .securityCodeImg {
-	background: url(../img/sprite_creditCards.png) no-repeat 0 -209px;
+    background: url(../img/sprite_creditCards.png) no-repeat 0 -209px;
 }
 
 body.account li.cardNumber input { width: 269px; 
@@ -1206,16 +1214,16 @@ body.account li.securityCode input { width: 76px;
 
 
 body.account p.fineprint {
-	text-align: center;
-	color: rgba(97, 104, 138, 0.69);
-	line-height: 1.4em;
-	font-size: 0.95em;
-	position: absolute;
-	bottom: 34px;
-	width: 680px;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
+    text-align: center;
+    color: rgba(97, 104, 138, 0.69);
+    line-height: 1.4em;
+    font-size: 0.95em;
+    position: absolute;
+    bottom: 34px;
+    width: 680px;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
 }
 
 .monthly p.fineprint.month { opacity: 1; }
@@ -1233,270 +1241,270 @@ body.account p.fineprint {
 
 
 span.withPayPal {
-	color: white;
-	position: absolute;
-	left: 0;
-	right: 0;
-	opacity: 0;
-	-moz-transition: all .5s linear;
-	-ms-transition: all .5s linear;
-	-webkit-transition: all .5s linear;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    color: white;
+    position: absolute;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    -moz-transition: all .5s linear;
+    -ms-transition: all .5s linear;
+    -webkit-transition: all .5s linear;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .payPal button.big {
-	color: transparent;
-	text-shadow: none;
+    color: transparent;
+    text-shadow: none;
 }
 
 .payPal span.withPayPal {
-	opacity: 1;
-	-moz-transition: all .5s linear;
-	-ms-transition: all .5s linear;
-	-webkit-transition: all .5s linear;
+    opacity: 1;
+    -moz-transition: all .5s linear;
+    -ms-transition: all .5s linear;
+    -webkit-transition: all .5s linear;
 }
 
 
 .expirationMonth label, .expirationYear label {
-	background: url(../img/select_arrow.png) no-repeat 142px 14px #DEFAE5;
+    background: url(../img/select_arrow.png) no-repeat 142px 14px #DEFAE5;
 }
 
 body.account #payment fieldset {
-	position: relative;
-	color: #62698A;
+    position: relative;
+    color: #62698A;
 }
 
 body.account #payment legend {
-	color: #62698A;
-	font: 1.2em 'Colfax';
+    color: #62698A;
+    font: 1.2em 'Colfax';
 }
 
 body.account #payment fieldset ol {
-	margin-top: 43px;
-	display: inline-block;
-	width: 100%;
-	border-bottom: 1px solid #EFF0F3;
-	padding-bottom: 16px;
-	margin-bottom: 36px;
-	-moz-transition: all .5s linear;
-	-ms-transition: all .5s linear;
-	-webkit-transition: all .5s linear;
+    margin-top: 43px;
+    display: inline-block;
+    width: 100%;
+    border-bottom: 1px solid #EFF0F3;
+    padding-bottom: 16px;
+    margin-bottom: 36px;
+    -moz-transition: all .5s linear;
+    -ms-transition: all .5s linear;
+    -webkit-transition: all .5s linear;
 }
 
 body.account .payPal fieldset ol {
-	opacity: 0;
+    opacity: 0;
 }
 
 body.account #payment fieldset ol li {
-	padding-top: 20px;
-	border-top: 1px solid #EFF0F3;
-	padding-bottom: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #EFF0F3;
+    padding-bottom: 20px;
 }
 
 body.account #payment fieldset ol label {
-	width: 141px;
-	display: block;
-	float: left;
-	position: relative;
-	top: 10px;
-	font-size: 1 em;
+    width: 141px;
+    display: block;
+    float: left;
+    position: relative;
+    top: 10px;
+    font-size: 1 em;
 }
 
 body.account li.expiration .inputContainer {
-	display: inline;
-	position: relative;
+    display: inline;
+    position: relative;
 }
 
 body.account li.expiration .inputContainer select {
-	position: relative;
-	top: 7px;
+    position: relative;
+    top: 7px;
 }
 
 
 body.account .paymentOptions {
-	color: rgba(97, 104, 138, 0.5);
-	position: absolute;
-	right: 0;
-	top: 0;
-	text-transform: uppercase;
-	font: .9em 'Colfax';
+    color: rgba(97, 104, 138, 0.5);
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-transform: uppercase;
+    font: .9em 'Colfax';
 }
 
 body.account .paymentOptions label {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 body.account .paymentOptions input  {
-	height: 1em;
-	width: 1em;
+    height: 1em;
+    width: 1em;
 }
 
 body.account .paymentOptions span.or {
-	color: #bdbec1;
-	font-size: .8em;
-	margin-right: 10px;
-	margin-left: 10px;
-	text-transform: lowercase;
+    color: #bdbec1;
+    font-size: .8em;
+    margin-right: 10px;
+    margin-left: 10px;
+    text-transform: lowercase;
 }
 
 body.account .paymentOptions span  {
-	border-radius	: 30px;
-	background-color: white;
-	padding: 8px 1px 7px 6px;
-	margin-right: 6px;
-	position: relative;
-	top: -1px;
-	width: 1em;
-	height: 1em;
+    border-radius	: 30px;
+    background-color: white;
+    padding: 8px 1px 7px 6px;
+    margin-right: 6px;
+    position: relative;
+    top: -1px;
+    width: 1em;
+    height: 1em;
 }
 
 body.account .creditCard .paymentOptions #creditCardLabel span  {
-	background-color: #EBEBEB;
+    background-color: #EBEBEB;
 }
 
 body.account .payPal .paymentOptions #paypalLabel span  {
-	background-color: #EBEBEB;
+    background-color: #EBEBEB;
 }
 
 body.account .focused input {
-	border: 1px solid #D1D3DC;
-	-webkit-box-shadow: 0 0 6px rgba(97, 105, 141, 0.20);
-	   -moz-box-shadow: 0 0 6px rgba(97, 105, 141, 0.20);
-	        box-shadow: 0 0 6px rgba(97, 105, 141, 0.20);
-	
+    border: 1px solid #D1D3DC;
+    -webkit-box-shadow: 0 0 6px rgba(97, 105, 141, 0.20);
+       -moz-box-shadow: 0 0 6px rgba(97, 105, 141, 0.20);
+            box-shadow: 0 0 6px rgba(97, 105, 141, 0.20);
+    
 }
 
 body.account .invalid input {
-	background-color: #4C4C4C;
-	color: white;
-	background: url(../img/error.png) no-repeat right center #4C4C4C;
-	
+    background-color: #4C4C4C;
+    color: white;
+    background: url(../img/error.png) no-repeat right center #4C4C4C;
+    
 }
 
 
 body.account select:focus {
-	outline: 2px auto -webkit-focus-ring-color;
+    outline: 2px auto -webkit-focus-ring-color;
 }
 
 
 body.account .upgradedGuts .data {
-	height: 120px;
-	padding-top: 80px;
+    height: 120px;
+    padding-top: 80px;
 }
 
 body.account button.big {
-	background-color: #97BC65;
-	border-radius: 6px;
-	border-style: none;
-	width: 300px;
-	height: 58px;
-	color: #fff;
-	cursor: pointer;
-	position: relative;
-	-moz-transition: all .05s linear;
-	-ms-transition: all .05s linear;
-	-webkit-transition: all .05s linear;
-	border-bottom: 1px solid #2e6e23;
-	padding-top: 10px;
-	-moz-box-shadow: inset 0 -10px 40px rgba(0, 0, 0, 0.15);
-	-webkit-box-shadow: inset 0 -10px 40px rgba(0, 0, 0, 0.15);
-	box-shadow: inset 0 -10px 40px rgba(0, 0, 0, 0.15);
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    background-color: #97BC65;
+    border-radius: 6px;
+    border-style: none;
+    width: 300px;
+    height: 58px;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    -moz-transition: all .05s linear;
+    -ms-transition: all .05s linear;
+    -webkit-transition: all .05s linear;
+    border-bottom: 1px solid #2e6e23;
+    padding-top: 10px;
+    -moz-box-shadow: inset 0 -10px 40px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: inset 0 -10px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: inset 0 -10px 40px rgba(0, 0, 0, 0.15);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 
 body.account button.big:hover {
-	background-color: #97BC65;
-	-moz-box-shadow:    inset 0 -10px 40px rgba(0, 0, 0, 0.25);
-	-webkit-box-shadow: inset 0 -10px 40px rgba(0, 0, 0, 0.25);
-	box-shadow:         inset 0 -10px 40px rgba(0, 0, 0, 0.25); 
-	
+    background-color: #97BC65;
+    -moz-box-shadow:    inset 0 -10px 40px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: inset 0 -10px 40px rgba(0, 0, 0, 0.25);
+    box-shadow:         inset 0 -10px 40px rgba(0, 0, 0, 0.25); 
+    
 }
 
 body.account button.big:active {
-	top: 1px;
-	position: relative;
-	background-color: #97BC65;
-	border-bottom: 1px solid #2e6e23;
-	-moz-box-shadow:    inset 0 10px 40px rgba(0, 0, 0, 0.25);
-	-webkit-box-shadow: inset 0 10px 40px rgba(0, 0, 0, 0.25);
-	box-shadow:         inset 0 10px 40px rgba(0, 0, 0, 0.25); 
-	
+    top: 1px;
+    position: relative;
+    background-color: #97BC65;
+    border-bottom: 1px solid #2e6e23;
+    -moz-box-shadow:    inset 0 10px 40px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: inset 0 10px 40px rgba(0, 0, 0, 0.25);
+    box-shadow:         inset 0 10px 40px rgba(0, 0, 0, 0.25); 
+    
 }
 
 
 /*div.alert.one {
-	position: absolute;
-	width: 720px;
-	z-index: 300;
-	text-align: center;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	background-color: #3B4362;
-	-moz-box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
-	-webkit-box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
-	box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
-	padding: 20px;
+    position: absolute;
+    width: 720px;
+    z-index: 300;
+    text-align: center;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: #3B4362;
+    -moz-box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
+    padding: 20px;
 }*/
 
 body.account .error {
-	position: absolute;
-	width: 760px;
-	z-index: 300;
-	text-align: center;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	background-color: #FB6366;
-	-moz-box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
-	-webkit-box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
-	box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
-	padding: 20px;
-	opacity: 0;
-	-moz-transition: all .3s linear;
-	-ms-transition: all .3s linear;
-	-webkit-transition: all .3s linear;
+    position: absolute;
+    width: 760px;
+    z-index: 300;
+    text-align: center;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: #FB6366;
+    -moz-box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    opacity: 0;
+    -moz-transition: all .3s linear;
+    -ms-transition: all .3s linear;
+    -webkit-transition: all .3s linear;
 }
 
 body.account .invalid .error {
-	opacity: 1;
+    opacity: 1;
 }
 
 body.account .error h1.message {
-	color: white;
-	font-size: 1.5em;
-	margin-bottom: 10px;
-	margin-top: 0;
+    color: white;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    margin-top: 0;
     font-family: 'Colfax';
     font-weight: normal;
 }
 
 body.account .error p.description {
-	color: #8a2d2d;
-	font-size: 1.em;
-	line-height: 1.4em;
-	font-family: 'Colfax';
+    color: #8a2d2d;
+    font-size: 1.em;
+    line-height: 1.4em;
+    font-family: 'Colfax';
 }
 
 /*	Spinner -------------------------------------------------*/
 
 
 div.spinner {
-	position: relative;
-	width: 54px;
-	height: 54px;
-	display: inline-block;
+    position: relative;
+    width: 54px;
+    height: 54px;
+    display: inline-block;
 }
     
 div.spinner div {
-	width: 6%;
-	height: 12%;
-	position: absolute;
-	opacity: 0;
-	-webkit-animation: fade 1s linear infinite;
-	-webkit-border-radius: 50px;
-	background-color: #B5D2E0;
-	right: 11px;
-	top: 42px;
+    width: 6%;
+    height: 12%;
+    position: absolute;
+    opacity: 0;
+    -webkit-animation: fade 1s linear infinite;
+    -webkit-border-radius: 50px;
+    background-color: #B5D2E0;
+    right: 11px;
+    top: 42px;
 }
     
 div.spinner div.bar1 {-webkit-transform:rotate(0deg) translate(0, -142%); -webkit-animation-delay: 0s;}    
@@ -1513,8 +1521,8 @@ div.spinner div.bar11 {-webkit-transform:rotate(300deg) translate(0, -142%); -we
 div.spinner div.bar12 {-webkit-transform:rotate(330deg) translate(0, -142%); -webkit-animation-delay: -0.0833s;}
 
 @animation fade {
-	from {opacity: 1;}
-	to {opacity: 0.25;}
+    from {opacity: 1;}
+    to {opacity: 0.25;}
 }
 
 /* = Layout
@@ -1522,14 +1530,14 @@ div.spinner div.bar12 {-webkit-transform:rotate(330deg) translate(0, -142%); -we
 html { height: 100%; }
 
 body {
-  	height: 100%;
-	min-width: 1000px; 
-	background: #efefef;
-	font-family: Helvetica, Arial, sans-serif; 
-	color: #666;
-	font-size: 13px;
-	background: #eee;
-	}
+    height: 100%;
+    min-width: 1000px; 
+    background: #efefef;
+    font-family: Helvetica, Arial, sans-serif; 
+    color: #666;
+    font-size: 13px;
+    background: #eee;
+    }
 
 /* = Styles
 ----------------------------------------------- */
@@ -1551,14 +1559,15 @@ input 		{ font-family: Helvetica, Arial, sans-serif; }
 ----------------------------------------------- */
 
 .clear {
-	clear:both;
-	display:block;
-	height:0px;
-	margin:0; padding:0;
-	overflow:hidden;
-	font-size:0px;
-	}
-";
+    clear:both;
+    display:block;
+    height:0px;
+    margin:0; padding:0;
+    overflow:hidden;
+    font-size:0px;
+    }
+
+""";
 
         var parser = new CssParser(styleSheet);
 

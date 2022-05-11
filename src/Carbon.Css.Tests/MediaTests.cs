@@ -5,14 +5,14 @@ public class MediaTests
     [Fact]
     public void Basic()
     {
-        var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse("""
+            @media (min-width: 700px) { 
+                div { 
+                    width: 100px;
+                }
+            }
+            """);
 
-@media (min-width: 700px) { 
-	div { 
-		width: 100px;
-	}
-}
-");
         Assert.Single(sheet.Children);
 
         var mediaRule = (MediaRule)sheet.Children[0];
@@ -27,16 +27,15 @@ public class MediaTests
     [Fact]
     public void Nested()
     {
-        var sheet = StyleSheet.Parse(@"
-
-@media (min-width: 700px) { 
-	div { 
-		width: 100px;
-             
-        span { width: 50px; }
-	}
-}
-");
+        var sheet = StyleSheet.Parse("""
+            @media (min-width: 700px) { 
+              div { 
+                width: 100px;
+                         
+                span { width: 50px; }
+              }
+            }
+            """);
         Assert.Single(sheet.Children);
 
 
@@ -50,15 +49,14 @@ public class MediaTests
     [Fact(Skip = "Not implemented yet")]
     public void Nested_2()
     {
-        var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse("""
+            div { 
+                @media (min-width: 700px) { 
+                    span { width: 50px; }
+                }
+            }
+            """);
 
-	div { 
-        @media (min-width: 700px) { 
-            span { width: 50px; }
-        }
-	}
-
-");
         Assert.Single(sheet.Children);
 
 
@@ -66,35 +64,33 @@ public class MediaTests
   div { width: 100px; }
   div span { width: 50px; }
 }", sheet.ToString());
-
     }
-
 
     [Fact]
     public void MediaMixin1()
     {
-        var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse("""
 @mixin hi { 
   color: red;
 }
 
 @mixin blerg { 
-	a {
-		color: pink;
+    a {
+        color: pink;
 
-		&:hover { color: #000; }
-	}
+        &:hover { color: #000; }
+    }
 }
 
 @media (min-width: 700px) { 
-	@include blerg;
+    @include blerg;
 
-	div { 
-		background-color: $bgColor;
-		@include hi;
-	}
+    div { 
+        background-color: $bgColor;
+        @include hi;
+    }
 }
-");
+""");
 
         Assert.Equal(2, sheet.Context.Mixins.Count);
 
@@ -124,36 +120,37 @@ public class MediaTests
 $bgColor: orange;
 
 @mixin hi { 
-	color: red;
+    color: red;
 }
 
 @mixin blerg { 
-	a {
-		color: pink;
+    a {
+        color: pink;
 
-		&:hover { color: #000; }
-	}
+        &:hover { color: #000; }
+    }
 }
 
 @media (min-width: 700px) { 
-	@include blerg;
+    @include blerg;
 
-	div { 
-		background-color: $bgColor;
-		@include hi;
-	}
+    div { 
+        background-color: $bgColor;
+        @include hi;
+    }
 }
 ");
 
 
-        Assert.Equal(@"@media (min-width: 700px) {
-  a { color: pink; }
-  a:hover { color: #000; }
-  div {
-    background-color: orange;
-    color: red;
-  }
-}", sheet.ToString());
+        Assert.Equal("""
+            @media (min-width: 700px) {
+              a { color: pink; }
+              a:hover { color: #000; }
+              div {
+                background-color: orange;
+                color: red;
+              }
+            }
+            """, sheet.ToString());
     }
-
 }

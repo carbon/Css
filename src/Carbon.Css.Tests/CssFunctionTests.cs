@@ -6,12 +6,11 @@ public class CssFunctionTests
     public void Unquote()
     {
         var sheet = StyleSheet.Parse(
-          @"
-            $t1: ""calc((100% - 600px) / 2)""; 
+          """
+          $t1: "calc((100% - 600px) / 2)"; 
 
-            div { padding: unquote($t1) }
-        ");
-
+          div { padding: unquote($t1) }     
+          """);
 
         Assert.Equal("div { padding: calc((100% - 600px) / 2); }", sheet.ToString());
     }

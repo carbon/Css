@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Carbon.Css.Parser.Tests;
+﻿namespace Carbon.Css.Parser.Tests;
 
 public class TokenizerTests
 {
@@ -36,10 +34,11 @@ background-color: rgba($bg-color, $shade);
     [Fact]
     public void TokenizeSimpleMixin()
     {
-        var tokens = GetTokens(@"
-@mixin hi { 
-color: red;
-}".Trim());
+        var tokens = GetTokens("""
+            @mixin hi { 
+            color: red;
+            }
+            """);
 
 
         Assert.Equal((TokenKind.AtSymbol, "@"),   tokens[0].AsTuple());
