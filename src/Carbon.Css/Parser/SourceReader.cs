@@ -9,35 +9,35 @@ internal sealed class SourceReader : IDisposable
 {
     private const char EofChar = '\0';
 
-    private readonly TextReader textReader;
+    private readonly TextReader _textReader;
     private char _current;
     private int _position;
 
     private readonly StringBuilder sb;
 
-    private int markStart;
-    private int marked;
+    private int _markStart;
+    private int _marked;
 
     public SourceReader(TextReader textReader)
     {
-        this.textReader = textReader;
+        this._textReader = textReader;
 
         _position = 0;
         _current = '.';
         sb = new StringBuilder();
-        markStart = -1;
-        marked = -1;
+        _markStart = -1;
+        _marked = -1;
     }
 
     public char Current => _current;
 
-    public bool IsEof => _current == EofChar;
+    public bool IsEof => _current is EofChar;
 
     public int Position => _position;
 
     public char Peek()
     {
-        int charCode = textReader.Peek();
+        int charCode = _textReader.Peek();
 
         return (charCode > 0) ? (char)charCode : EofChar;
     }
@@ -79,12 +79,12 @@ internal sealed class SourceReader : IDisposable
     {
         if (IsEof) throw new Exception("Cannot read past EOF.");
 
-        if (marked != -1 && (marked <= _position))
+        if (_marked != -1 && (_marked <= _position))
         {
             sb.Append(_current);
         }
 
-        int charCode = textReader.Read(); // -1 if there are no more chars to read (e.g. stream has ended)
+        int charCode = _textReader.Read(); // -1 if there are no more chars to read (e.g. stream has ended)
 
         _current = (charCode > 0) ? (char)charCode : EofChar;
 
@@ -95,16 +95,16 @@ internal sealed class SourceReader : IDisposable
 
     #region Mark
 
-    public int MarkStart => markStart;
+    public int MarkStart => _markStart;
 
     public int Mark(bool appendCurrent = true)
     {
-        markStart = _position;
-        marked = _position;
+        _markStart = _position;
+        _marked = _position;
 
-        if (appendCurrent == false)
+        if (!appendCurrent)
         {
-            marked++;
+            _marked++;
         }
 
         return _position;
@@ -113,7 +113,7 @@ internal sealed class SourceReader : IDisposable
 
     public string Unmark()
     {
-        marked = -1;
+        _marked = -1;
 
         var value = sb.ToString();
 
@@ -128,7 +128,7 @@ internal sealed class SourceReader : IDisposable
 
     public void Dispose()
     {
-        textReader.Dispose();
+        _textReader.Dispose();
     }
 
     #endregion
