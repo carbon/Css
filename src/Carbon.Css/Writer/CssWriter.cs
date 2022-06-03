@@ -13,17 +13,17 @@ namespace Carbon.Css;
 
 public sealed class CssWriter : IDisposable
 {
-    private readonly TextWriter writer;
-    private readonly CssContext context;
-    private readonly ICssResolver? resolver;
+    private readonly TextWriter _writer;
+    private readonly CssContext _context;
+    private readonly ICssResolver? _resolver;
     private int includeCount;
     private int importCount;
     private int nodeCount;
     private bool skipMath;
 
-    private BrowserInfo[]? browserSupport;
+    private BrowserInfo[]? _browserSupport;
 
-    private CssScope scope;
+    private CssScope _scope;
 
     public CssWriter(
         TextWriter writer,
@@ -31,17 +31,17 @@ public sealed class CssWriter : IDisposable
         CssScope? scope = null,
         ICssResolver? resolver = null)
     {
-        this.writer = writer;
-        this.context = context ?? new CssContext();
-        this.resolver = resolver;
-        this.scope = scope ?? new CssScope();
+        _writer = writer;
+        _context = context ?? new CssContext();
+        _resolver = resolver;
+        _scope = scope ?? new CssScope();
 
         includeCount = 0;
         importCount = 0;
         nodeCount = 0;
         skipMath = false;
 
-        this.browserSupport = this.context.BrowserSupport;
+        _browserSupport = this._context.BrowserSupport;
     }
 
     public void WriteRoot(StyleSheet sheet)
@@ -71,7 +71,7 @@ public sealed class CssWriter : IDisposable
             }
             else if (node.Kind is NodeKind.Comment)
             {
-                if (i > 0) writer.WriteLine();
+                if (i > 0) _writer.WriteLine();
 
                 i++;
 
@@ -81,13 +81,13 @@ public sealed class CssWriter : IDisposable
             {
                 var variable = (CssAssignment)node;
 
-                scope[variable.Name] = variable.Value;
+                _scope[variable.Name] = variable.Value;
             }
             else if (node is CssRule rule)
             {
                 if (i > 0)
                 {
-                    writer.WriteLine();
+                    _writer.WriteLine();
                 }
 
                 i++;
@@ -96,7 +96,7 @@ public sealed class CssWriter : IDisposable
                 {
                     var importRule = (ImportRule)rule;
 
-                    if (!importRule.Url.IsPath || resolver is null)
+                    if (!importRule.Url.IsPath || _resolver is null)
                     {
                         WriteImportRule(importRule);
                     }
@@ -123,7 +123,7 @@ public sealed class CssWriter : IDisposable
         {
             if (i > 0)
             {
-                writer.WriteLine();
+                _writer.WriteLine();
             }
 
             WriteBlockBody(block, level);
@@ -151,22 +151,22 @@ public sealed class CssWriter : IDisposable
         }
 
 
-        scope = scope.GetChildScope();
+        _scope = _scope.GetChildScope();
 
         int a = 0;
 
         for (int i = start; i <= end; i++)
         {
-            if (a > 0) writer.WriteLine();
+            if (a > 0) _writer.WriteLine();
 
-            scope[block.Variable.Symbol] = CssValue.Number(i);
+            _scope[block.Variable.Symbol] = CssValue.Number(i);
 
             WriteBlockBody(block, level);
 
             a++;
         }
 
-        scope = scope.Parent!;
+        _scope = _scope.Parent!;
     }
 
     public void EvaluateEach(EachBlock block, int level = 0)
@@ -174,22 +174,22 @@ public sealed class CssWriter : IDisposable
         var enumerable = (CssValueList)EvalulateExpression(block.Enumerable);
 
 
-        scope = scope.GetChildScope();
+        _scope = _scope.GetChildScope();
 
         int a = 0;
 
         foreach (var value in enumerable)
         {
-            if (a > 0) writer.WriteLine();
+            if (a > 0) _writer.WriteLine();
 
-            scope[block.Variable.Symbol] = value;
+            _scope[block.Variable.Symbol] = value;
 
             WriteBlockBody(block, level);
 
             a++;
         }
 
-        scope = scope.Parent!;
+        _scope = _scope.Parent!;
     }
 
     private void WriteBlockBody(CssBlock block, int level = 0)
@@ -200,7 +200,7 @@ public sealed class CssWriter : IDisposable
         {
             if (child is CssRule rule)
             {
-                if (i > 0) writer.WriteLine();
+                if (i > 0) _writer.WriteLine();
 
                 WriteRule(rule);
 
@@ -208,11 +208,11 @@ public sealed class CssWriter : IDisposable
             }
             else if (child is CssAssignment assignment)
             {
-                scope[assignment.Name] = assignment.Value;
+                _scope[assignment.Name] = assignment.Value;
             }
             else if (child is CssDeclaration declaration)
             {
-                if (i > 0) writer.WriteLine();
+                if (i > 0) _writer.WriteLine();
 
                 WriteDeclaration(declaration, level);
 
@@ -227,8 +227,8 @@ public sealed class CssWriter : IDisposable
     {
         switch (expression.Kind)
         {
-            case NodeKind.Variable: return scope.GetValue(((CssVariable)expression).Symbol);
-            case NodeKind.Expression: return EvalBinaryExpression((BinaryExpression)expression);
+            case NodeKind.Variable   : return _scope.GetValue(((CssVariable)expression).Symbol);
+            case NodeKind.Expression : return EvalBinaryExpression((BinaryExpression)expression);
             case NodeKind.Function:
 
                 var function = (CssFunction)expression;
@@ -325,13 +325,13 @@ public sealed class CssWriter : IDisposable
 
     public void InlineImport(ImportRule importRule, StyleSheet sheet)
     {
-        if (resolver is null)
+        if (_resolver is null)
         {
             throw new Exception("No resolver registered");
         }
 
         // var relativePath = importRule.Url;
-        var absolutePath = importRule.Url.GetAbsolutePath(resolver.ScopedPath);
+        var absolutePath = importRule.Url.GetAbsolutePath(_resolver.ScopedPath);
 
         if (absolutePath[0] is '/')
         {
@@ -344,14 +344,14 @@ public sealed class CssWriter : IDisposable
             absolutePath += ".scss";
         }
 
-        writer.WriteLine();
-        writer.WriteLine("/* " + absolutePath + " */");
+        _writer.WriteLine();
+        _writer.WriteLine("/* " + absolutePath + " */");
 
-        var stream = resolver.Open(absolutePath);
+        var stream = _resolver.Open(absolutePath);
 
         if (stream is null)
         {
-            writer.WriteLine("/* not found */");
+            _writer.WriteLine("/* not found */");
 
             return;
         }
@@ -360,34 +360,34 @@ public sealed class CssWriter : IDisposable
         {
             try
             {
-                var css = StyleSheet.Parse(stream, context);
+                var css = StyleSheet.Parse(stream, _context);
 
                 WriteRoot(css);
             }
             catch (SyntaxException ex)
             {
-                writer.WriteLine("body, html { background-color: red !important; }");
-                writer.WriteLine("body * { display: none; }");
+                _writer.WriteLine("body, html { background-color: red !important; }");
+                _writer.WriteLine("body * { display: none; }");
 
-                writer.WriteLine($"/* --- Parse Error in '{absolutePath}' : {ex.Message} ");
+                _writer.WriteLine($"/* --- Parse Error in '{absolutePath}' : {ex.Message} ");
 
                 if (ex.Lines is not null)
                 {
                     foreach (var line in ex.Lines)
                     {
-                        writer.Write(line.Number.ToString(CultureInfo.InvariantCulture).PadLeft(4)); // 1
-                        writer.Write(". ");
+                        _writer.Write(line.Number.ToString(CultureInfo.InvariantCulture).PadLeft(4)); // 1
+                        _writer.Write(". ");
 
                         if (line.Number == ex.Location.Line)
                         {
-                            writer.Write("* ");
+                            _writer.Write("* ");
                         }
 
-                        writer.WriteLine(line.Text);
+                        _writer.WriteLine(line.Text);
                     }
                 }
 
-                writer.Write("*/");
+                _writer.Write("*/");
 
                 return;
             }
@@ -402,16 +402,16 @@ public sealed class CssWriter : IDisposable
 
             while ((line = reader.ReadLine()) is not null)
             {
-                writer.WriteLine(line);
+                _writer.WriteLine(line);
             }
         }
     }
 
     public void WriteComment(CssComment comment)
     {
-        writer.Write("/* ");
-        writer.Write(comment.Text);
-        writer.WriteLine(" */");
+        _writer.Write("/* ");
+        _writer.Write(comment.Text);
+        _writer.WriteLine(" */");
     }
 
     public void WriteValue(CssNode value)
@@ -433,7 +433,7 @@ public sealed class CssWriter : IDisposable
             case NodeKind.Reference          : WriteReference((CssReference)value); break;
             case NodeKind.Sequence           : WriteSequence((CssSequence)value); break;
             case NodeKind.String             : WriteString((CssString)value); break;
-            case NodeKind.Undefined          : writer.Write(value.ToString()); break;
+            case NodeKind.Undefined          : _writer.Write(value.ToString()); break;
             default:
                 // TODO: Improve error handling
                 WriteUnitValue((CssUnitValue)value);
@@ -444,12 +444,12 @@ public sealed class CssWriter : IDisposable
 
     public void WriteUnitValue(CssUnitValue value)
     {
-        value.WriteTo(writer);
+        value.WriteTo(_writer);
     }
 
     public void WriteString(CssString value)
     {
-        writer.Write(value.Text);
+        _writer.Write(value.Text);
     }
 
     public void WriteValueList(CssValueList list)
@@ -467,11 +467,11 @@ public sealed class CssWriter : IDisposable
 
                 else if (list.Seperator is CssValueSeperator.Space)
                 {
-                    writer.Write(' ');
+                    _writer.Write(' ');
                 }
                 else
                 {
-                    writer.Write(", ");
+                    _writer.Write(", ");
                 }
             }
 
@@ -487,7 +487,7 @@ public sealed class CssWriter : IDisposable
 
         foreach (var token in trivia)
         {
-            writer.Write(token.Text);
+            _writer.Write(token.Text);
         }
     }
 
@@ -499,7 +499,7 @@ public sealed class CssWriter : IDisposable
         {
             CssValue[] args = GetArgs(function.Arguments).ToArray();
 
-            writer.Write(func(args));
+            _writer.Write(func(args));
 
             return;
         }
@@ -509,11 +509,11 @@ public sealed class CssWriter : IDisposable
             skipMath = true;
         }
 
-        writer.Write(function.Name);
+        _writer.Write(function.Name);
 
-        writer.Write('(');
+        _writer.Write('(');
         WriteValue(function.Arguments);
-        writer.Write(')');
+        _writer.Write(')');
 
         skipMath = false;
     }
@@ -523,7 +523,7 @@ public sealed class CssWriter : IDisposable
         switch (value.Kind)
         {
             case NodeKind.Variable:
-                yield return scope.GetValue(((CssVariable)value).Symbol);
+                yield return _scope.GetValue(((CssVariable)value).Symbol);
 
                 break;
 
@@ -558,7 +558,7 @@ public sealed class CssWriter : IDisposable
 
     public void WriteVariable(CssVariable variable)
     {
-        var value = scope.GetValue(variable.Symbol);
+        var value = _scope.GetValue(variable.Symbol);
 
         bool sm = skipMath;
 
@@ -576,7 +576,7 @@ public sealed class CssWriter : IDisposable
 
     public void WriteImportRule(ImportRule rule)
     {
-        rule.WriteTo(writer);
+        rule.WriteTo(_writer);
     }
 
     public void WriteRule(CssRule rule, int depth = 0)
@@ -587,7 +587,7 @@ public sealed class CssWriter : IDisposable
 
             foreach (var r in Rewrite(styleRule))
             {
-                if (i > 0) writer.WriteLine();
+                if (i > 0) _writer.WriteLine();
 
                 WriteRuleInternal(r, depth);
 
@@ -619,16 +619,16 @@ public sealed class CssWriter : IDisposable
 
     public void WriteAtRule(UnknownRule rule, int depth)
     {
-        writer.Write('@');
-        writer.Write(rule.Name);
+        _writer.Write('@');
+        _writer.Write(rule.Name);
 
         if (rule.Text is not null)
         {
-            writer.Write(' ');
-            rule.Text.WriteTo(writer);
+            _writer.Write(' ');
+            rule.Text.WriteTo(_writer);
         }
 
-        writer.Write(' ');
+        _writer.Write(' ');
 
         WriteBlock(rule, depth);
     }
@@ -637,7 +637,7 @@ public sealed class CssWriter : IDisposable
     {
         WriteSelector(rule.Selector);
 
-        writer.Write(' ');
+        _writer.Write(' ');
 
         WriteBlock(rule, depth);
     }
@@ -654,11 +654,11 @@ public sealed class CssWriter : IDisposable
             {
                 if (selector.Count is 1)
                 {
-                    writer.Write(", ");
+                    _writer.Write(", ");
                 }
                 else
                 {
-                    writer.WriteLine(',');
+                    _writer.WriteLine(',');
                 }
             }
 
@@ -672,7 +672,7 @@ public sealed class CssWriter : IDisposable
 
                 if ((item.Kind is NodeKind.Sequence || item.Trailing is not null) && !isLast)
                 {
-                    writer.Write(' ');
+                    _writer.Write(' ');
                 }
             }
         }
@@ -691,7 +691,7 @@ public sealed class CssWriter : IDisposable
             // Skip trailing trivia
             if (item.Trailing is not null && !isLast)
             {
-                writer.Write(' ');
+                _writer.Write(' ');
             }
         }
     }
@@ -713,78 +713,78 @@ public sealed class CssWriter : IDisposable
             // Skip trailing trivia
             if ((item.Kind is NodeKind.Sequence || item.Trailing is not null) && (i + 1) != value.Count)
             {
-                writer.Write(' ');
+                _writer.Write(' ');
             }
         }
     }
 
     public void WriteMediaRule(MediaRule rule, int depth)
     {
-        writer.Write("@media ");
+        _writer.Write("@media ");
 
-        rule.Queries.WriteTo(writer);
-        writer.Write(' ');
+        rule.Queries.WriteTo(_writer);
+        _writer.Write(' ');
 
         WriteBlock(rule, depth);
     }
 
     public void WriteFontFaceRule(FontFaceRule rule, int depth)
     {
-        writer.Write("@font-face ");
+        _writer.Write("@font-face ");
 
         WriteBlock(rule, depth);
     }
 
     public void WriteKeyframesRule(KeyframesRule rule, int depth)
     {
-        if (context.BrowserSupport is not null)
+        if (_context.BrowserSupport is not null)
         {
             // -moz-
-            if (context.Compatibility.Firefox > 0 && context.Compatibility.Firefox < 16)
+            if (_context.Compatibility.Firefox > 0 && _context.Compatibility.Firefox < 16)
             {
-                WritePrefixedKeyframesRule(BrowserInfo.Firefox(context.Compatibility.Firefox), rule, depth);
+                WritePrefixedKeyframesRule(BrowserInfo.Firefox(_context.Compatibility.Firefox), rule, depth);
 
-                writer.WriteLine();
+                _writer.WriteLine();
             }
 
             // -webkit- 
-            if (context.Compatibility.Safari > 0 && context.Compatibility.Safari < 9)
+            if (_context.Compatibility.Safari > 0 && _context.Compatibility.Safari < 9)
             {
-                WritePrefixedKeyframesRule(BrowserInfo.Safari(context.Compatibility.Safari), rule, depth);
+                WritePrefixedKeyframesRule(BrowserInfo.Safari(_context.Compatibility.Safari), rule, depth);
 
-                writer.WriteLine();
+                _writer.WriteLine();
             }
         }
 
-        writer.Write("@keyframes ");
-        writer.Write(rule.Name);
-        writer.Write(' ');
+        _writer.Write("@keyframes ");
+        _writer.Write(rule.Name);
+        _writer.Write(' ');
 
-        browserSupport = null;
+        _browserSupport = null;
 
         WriteBlock(rule, depth); // super standards
 
-        browserSupport = context.BrowserSupport;
+        _browserSupport = _context.BrowserSupport;
     }
 
     private void WritePrefixedKeyframesRule(BrowserInfo browser, KeyframesRule rule, int depth)
     {
-        browserSupport = new[] { browser };
+        _browserSupport = new[] { browser };
 
-        writer.Write('@');
-        writer.Write(browser.Prefix.Text);
-        writer.Write("keyframes ");
-        writer.Write(rule.Name);
-        writer.Write(' ');
+        _writer.Write('@');
+        _writer.Write(browser.Prefix.Text);
+        _writer.Write("keyframes ");
+        _writer.Write(rule.Name);
+        _writer.Write(' ');
 
         WriteBlock(rule, depth);
 
-        browserSupport = context.BrowserSupport;
+        _browserSupport = _context.BrowserSupport;
     }
 
     public void WriteBlock(CssBlock block, int depth)
     {
-        writer.Write('{'); // Block start
+        _writer.Write('{'); // Block start
 
         var condenced = false;
         var count = 0;
@@ -798,11 +798,11 @@ public sealed class CssWriter : IDisposable
                     node
                 };
 
-                scope = ExpandInclude((IncludeNode)node, b2);
+                _scope = ExpandInclude((IncludeNode)node, b2);
 
                 foreach (var rule in b2.OfType<CssRule>())
                 {
-                    writer.WriteLine();
+                    _writer.WriteLine();
 
                     WriteRule(rule, depth + 1);
 
@@ -813,24 +813,24 @@ public sealed class CssWriter : IDisposable
             {
                 var declaration = (CssDeclaration)node;
 
-                if (block.Children.Count is 1 && !declaration.Info.NeedsExpansion(declaration, browserSupport))
+                if (block.Children.Count is 1 && !declaration.Info.NeedsExpansion(declaration, _browserSupport))
                 {
                     condenced = true;
 
-                    writer.Write(' ');
+                    _writer.Write(' ');
 
                     WriteDeclaration(declaration, 0);
                 }
                 else
                 {
-                    if (count is 0) writer.WriteLine();
+                    if (count is 0) _writer.WriteLine();
 
                     WritePatchedDeclaration(declaration, depth + 1);
                 }
             }
             else if (node.Kind is NodeKind.Rule)  // Nested rule
             {
-                if (count is 0) writer.WriteLine();
+                if (count is 0) _writer.WriteLine();
 
                 var childRule = (CssRule)node;
 
@@ -846,7 +846,7 @@ public sealed class CssWriter : IDisposable
 
             if (!condenced)
             {
-                writer.WriteLine();
+                _writer.WriteLine();
             }
 
             count++;
@@ -855,37 +855,37 @@ public sealed class CssWriter : IDisposable
         // Limit to declaration
         if (condenced)
         {
-            writer.Write(' ');
+            _writer.Write(' ');
         }
         else
         {
             Indent(depth);
         }
 
-        writer.Write('}'); // Block end
+        _writer.Write('}'); // Block end
     }
 
     public void WriteDeclaration(CssDeclaration declaration, int level)
     {
         Indent(level);
 
-        writer.Write(declaration.Name);
-        writer.Write(": ");
+        _writer.Write(declaration.Name);
+        _writer.Write(": ");
         WriteValue(declaration.Value);
-        writer.Write(';');
+        _writer.Write(';');
     }
 
     public void WritePatchedDeclaration(CssDeclaration declaration, int level)
     {
         CssProperty prop = declaration.Info;
 
-        if (browserSupport is not null && prop.Compatibility.HasPatches)
+        if (_browserSupport is not null && prop.Compatibility.HasPatches)
         {
             BrowserPrefixKind prefixes = default;
 
-            for (int i = 0; i < browserSupport.Length; i++)
+            for (int i = 0; i < _browserSupport.Length; i++)
             {
-                ref BrowserInfo browser = ref browserSupport[i];
+                ref BrowserInfo browser = ref _browserSupport[i];
 
                 // Skip the prefix if we've already added it
                 if (prefixes.HasFlag(browser.Prefix.Kind)) continue;
@@ -896,12 +896,12 @@ public sealed class CssWriter : IDisposable
 
                 Indent(level);
 
-                writer.Write(patch.Name);
-                writer.Write(": ");
+                _writer.Write(patch.Name);
+                _writer.Write(": ");
                 WriteValue(patch.Value);
-                writer.Write(';');
+                _writer.Write(';');
 
-                writer.WriteLine();
+                _writer.WriteLine();
 
                 prefixes |= browser.Prefix.Kind;
             }
@@ -919,7 +919,7 @@ public sealed class CssWriter : IDisposable
         // Indent two characters for each level
         for (int i = 0; i < level; i++)
         {
-            writer.Write("  ");
+            _writer.Write("  ");
         }
     }
 
@@ -947,7 +947,7 @@ public sealed class CssWriter : IDisposable
         {
             foreach (var includeNode in clone.Children.OfType<IncludeNode>().ToList())
             {
-                scope = ExpandInclude(includeNode, clone);
+                _scope = ExpandInclude(includeNode, clone);
 
                 clone.Children.Remove(includeNode);
             }
@@ -1030,7 +1030,7 @@ public sealed class CssWriter : IDisposable
             throw new Exception("Exceded include limit of 1,000");
         }
 
-        if (!context.Mixins.TryGetValue(include.Name, out MixinNode? mixin))
+        if (!_context.Mixins.TryGetValue(include.Name, out MixinNode? mixin))
         {
             throw new Exception($"mixin '{include.Name}' not found");
         }
@@ -1077,7 +1077,7 @@ public sealed class CssWriter : IDisposable
             }
         }
 
-        CssScope child = scope.GetChildScope();
+        CssScope child = _scope.GetChildScope();
 
         for (int i = 0; i < paramaters.Count; i++)
         {
@@ -1228,7 +1228,7 @@ public sealed class CssWriter : IDisposable
 
     public void Dispose()
     {
-        writer.Dispose();
+        _writer.Dispose();
     }
 
     #endregion
