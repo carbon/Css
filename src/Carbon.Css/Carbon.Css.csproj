@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>0.53.0</Version>
+    <Version>0.54.0</Version>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>true</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -11,7 +11,7 @@
 	  
     <!-- Package Properties-->
     <Authors>iamcarbon</Authors>
-    <Description>Fast (S)CSS parser and auto-prefixer.</Description>
+    <Description>Fast (S)CSS parser and auto-prefixer</Description>
     <Copyright>© 2012-2022 Jason Nelson</Copyright>
     <PackageTags>css;scss;autoprefix</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
