@@ -7,17 +7,19 @@ public class CssCompatibility
 
     public CssCompatibility(
         CompatibilityTable prefixed = default,
-        CompatibilityTable standard = default)
+        CompatibilityTable standard = default,
+        bool patchValues = false)
     {
         Prefixed = prefixed;
         Standard = standard;
+        PatchValues = patchValues;
     }
-
-    public bool PatchValues { get; set; }
 
     public CompatibilityTable Prefixed { get; }
 
     public CompatibilityTable Standard { get; }
+
+    public bool PatchValues { get; }
 
     public virtual CssPatch GetPatch(CssDeclaration declaration, in BrowserInfo browser)
     {
@@ -26,7 +28,7 @@ public class CssCompatibility
             return PatchFactory.PrefixNameAndValue.Patch(browser, declaration);
         }
 
-        return PatchFactory.PrefixNameAndValue.Patch(browser, declaration);
+        return PatchFactory.PrefixName.Patch(browser, declaration);
     }
 
     public virtual bool HasPatch(CssDeclaration declaration, in BrowserInfo browser) => IsPrefixed(browser);
