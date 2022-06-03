@@ -1,39 +1,38 @@
 ﻿using System.Collections.Generic;
 
-namespace Carbon.Css.Parser
+namespace Carbon.Css.Parser;
+
+public struct LexicalModeContext
 {
-    public struct LexicalModeContext
+    private readonly Stack<LexicalMode> modes;
+    
+    public LexicalModeContext(LexicalMode start)
     {
-        private readonly Stack<LexicalMode> modes;
+        modes = new Stack<LexicalMode>(3);
 
-        public LexicalModeContext(LexicalMode start)
-        {
-            modes = new Stack<LexicalMode>(3);
+        Current = start;
 
-            this.Current = start;
-
-            modes.Push(start);
-        }
-
-        public void Enter(LexicalMode mode)
-        {
-            modes.Push(mode);
-
-            Current = mode;
-        }
-
-        public void Leave(LexicalMode mode, int position = 0)
-        {
-            if (Current != mode)
-            {
-                throw new UnexpectedModeChange(Current, mode, position);
-            }
-
-            modes.Pop();
-
-            Current = modes.Peek();
-        }
-
-        public LexicalMode Current { get; private set; }
+        modes.Push(start);
     }
+
+    public void Enter(LexicalMode mode)
+    {
+        modes.Push(mode);
+
+        Current = mode;
+    }
+
+    public void Leave(LexicalMode mode, int position = 0)
+    {
+        if (Current != mode)
+        {
+            throw new UnexpectedModeChange(Current, mode, position);
+        }
+
+        modes.Pop();
+
+        Current = modes.Peek();
+    }
+
+    public LexicalMode Current { get; private set; }
 }
