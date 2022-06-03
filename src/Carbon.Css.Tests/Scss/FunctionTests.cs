@@ -5,7 +5,8 @@ public class FunctionTests
     [Fact]
     public void LightenAndDarken()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             $red: #f00;
             $borderColor: $red;
 
@@ -14,7 +15,8 @@ public class FunctionTests
             """);
 
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             div { color: #c00; }
             div { color: #f66; }
             """, sheet.ToString());
@@ -23,7 +25,8 @@ public class FunctionTests
     [Fact]
     public void FuncInMixin()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             $red: #f00;
             $borderColor: $red;
 
@@ -48,7 +51,8 @@ public class FunctionTests
     [Fact]
     public void FuncNestedMixin()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             $red: #f00;
             $borderColor: $red;
 
@@ -67,7 +71,8 @@ public class FunctionTests
             }
             """);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             div {
               color: #c00;
               color: #f66;
@@ -82,18 +87,15 @@ public class FunctionTests
     [Fact]
     public void Test99()
     {
-        var ss = StyleSheet.Parse("""
+        var ss = StyleSheet.Parse(
+            """
             div {
               .text,
               .placeholderText {
-                position: relative;
                 display: block;
-                overflow: hidden;
                 padding: 0 50px 0 225px;
                 line-height: 60px;
                 font-size: 18px;
-                font-weight: 400;
-                color: #333;
                 text-overflow: ellipsis;
                  white-space: nowrap;
                 -webkit-font-smoothing: antialiased;
@@ -106,14 +108,10 @@ public class FunctionTests
             """
             div .text,
             div .placeholderText {
-              position: relative;
               display: block;
-              overflow: hidden;
               padding: 0 50px 0 225px;
               line-height: 60px;
               font-size: 18px;
-              font-weight: 400;
-              color: #333;
               text-overflow: ellipsis;
               white-space: nowrap;
               -webkit-font-smoothing: antialiased;
