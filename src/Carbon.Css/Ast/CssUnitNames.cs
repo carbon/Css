@@ -11,6 +11,7 @@ public static class CssUnitNames
     public static readonly string Em      = "em";
     public static readonly string Vw      = "vw";
     public static readonly string Vh      = "vh";
+    public static readonly string Vb      = "vb";
     public static readonly string Ex      = "ex";
     public static readonly string Deg     = "deg";
     public static readonly string Rem     = "rem";
@@ -24,6 +25,18 @@ public static class CssUnitNames
     public static readonly string Rad     = "rad";
     public static readonly string Rlh     = "rlh";
     public static readonly string Turn    = "turn";
+
+    public static readonly string Svw     = "svw"; // smallest viewport width
+    public static readonly string Svh     = "svh"; // smallest viewport height
+    public static readonly string Svi     = "svi";
+    public static readonly string Svb     = "svb";
+
+    public static readonly string Lvw     = "lvw"; // largest viewport width
+    public static readonly string Lvh     = "lvh"; // largest viewport height
+    public static readonly string Lvi     = "lvi";
+    public static readonly string Lvb     = "lvb";
+
+    // svb, svmin, svmax
 
     public static string Get(ReadOnlySpan<char> text)
     {
@@ -47,6 +60,8 @@ public static class CssUnitNames
                 case 'v':
                     switch (text[1])
                     {
+                        case 'b': return Vb;
+                        case 'i': return Vi;
                         case 'w': return Vw;
                         case 'h': return Vh;
                     }
@@ -56,31 +71,56 @@ public static class CssUnitNames
 
         else if (text.Length is 3)
         {
-            if (text[0] == 'd' && text[1] == 'e' && text[2] == 'g')
+            if (text[0] is 'd' && text[1] is 'e' && text[2] is 'g')
             {
                 return Deg;
             }
-            else if (text[0] == 'r')
+            else if (text[0] is 'l')
             {
-                if (text[1] == 'e' && text[2] == 'm')
+                if (text[1] is 'v')
+                {
+                    return text[2] switch
+                    {
+                        'b' => Lvb,
+                        'h' => Lvh,
+                        'i' => Lvi,
+                        'w' => Lvw,
+                        _ => text.ToString()
+                    };
+                }
+            }
+            else if (text[0] is 'r')
+            {
+                if (text[1] is 'e' && text[2] is 'm')
                 {
                     return Rem;
                 }
-                else if (text[1] == 'l' && text[2] == 'h')
+                else if (text[1] is 'l' && text[2] is 'h')
                 {
                     return Rlh;
                 }
             }
+            else if (text[0] is 's' && text[1] is 'v')
+            {                
+                return text[2] switch
+                {
+                    'b' => Svb,
+                    'h' => Svh,
+                    'i' => Svi,
+                    'w' => Svw,
+                    _   => text.ToString()
+                };
+            }
         }
         else if (text.Length is 4)
-        {
+        {    
             if (text[0] is 'v' && text[1] is 'm')
             {
-                if (text[2] == 'a' && text[3] == 'x')
+                if (text[2] is 'a' && text[3] is 'x')
                 {
                     return Vmax;
                 }
-                else if (text[2] == 'i' && text[3] == 'n')
+                else if (text[2] is 'i' && text[3] is 'n')
                 {
                     return Vmin;
                 }
