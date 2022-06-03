@@ -47,7 +47,7 @@ public sealed partial class CssParser : IDisposable
         return tokenizer.Consume();
     }
 
-    public bool ConsumeIf(TokenKind kind)
+    public bool ConsumeIf(CssTokenKind kind)
     {
         if (tokenizer.Current.Kind == kind)
         {
@@ -59,7 +59,7 @@ public sealed partial class CssParser : IDisposable
         return false;
     }
 
-    public CssToken Consume(TokenKind expect, LexicalMode mode)
+    public CssToken Consume(CssTokenKind expect, LexicalMode mode)
     {
         if (Current.Kind != expect)
         {
@@ -85,10 +85,10 @@ public sealed partial class CssParser : IDisposable
     {
         switch (Current.Kind)
         {
-            case TokenKind.Directive               : return ReadDirective();
-            case TokenKind.AtSymbol                : return ReadAtRule();
-            case TokenKind.Dollar                  : return ReadAssignment();
-            case TokenKind.InterpolatedStringStart : return ReadInterpolatedString();
+            case CssTokenKind.Directive               : return ReadDirective();
+            case CssTokenKind.AtSymbol                : return ReadAtRule();
+            case CssTokenKind.Dollar                  : return ReadAssignment();
+            case CssTokenKind.InterpolatedStringStart : return ReadInterpolatedString();
         }
 
         var selector = ReadSelector();
@@ -115,8 +115,8 @@ public sealed partial class CssParser : IDisposable
     {
         return Current.Kind switch
         {
-            TokenKind.Name     => ReadStyleRule(),
-            TokenKind.AtSymbol => ReadAtRule(),
+            CssTokenKind.Name     => ReadStyleRule(),
+            CssTokenKind.AtSymbol => ReadAtRule(),
             _                  => throw new UnexpectedTokenException(LexicalMode.Rule, Current),
         };
     }
@@ -131,7 +131,7 @@ public sealed partial class CssParser : IDisposable
         // @import "subs.css";
         // @media print {
 
-        Consume(TokenKind.AtSymbol, LexicalMode.Rule); // Read @
+        Consume(CssTokenKind.AtSymbol, LexicalMode.Rule); // Read @
 
         var atName = Consume();                        // read name
 
@@ -154,7 +154,7 @@ public sealed partial class CssParser : IDisposable
 
         TokenList? text = null;
 
-        if (Current.Kind is TokenKind.Name)
+        if (Current.Kind is CssTokenKind.Name)
         {
             text = ReadTokenSpan();
         }
@@ -163,8 +163,8 @@ public sealed partial class CssParser : IDisposable
 
         switch (Current.Kind)
         {
-            case TokenKind.BlockStart : ReadBlock(rule); break; // {
-            case TokenKind.Semicolon  : Consume();       break; // ;
+            case CssTokenKind.BlockStart : ReadBlock(rule); break; // {
+            case CssTokenKind.Semicolon  : Consume();       break; // ;
         }
 
         return rule;
@@ -179,8 +179,8 @@ public sealed partial class CssParser : IDisposable
 
         switch (Current.Kind)
         {
-            case TokenKind.BlockStart: ReadBlock(rule);  break; // {
-            case TokenKind.Semicolon : tokenizer.Consume(); break; // ;
+            case CssTokenKind.BlockStart: ReadBlock(rule);  break; // {
+            case CssTokenKind.Semicolon : tokenizer.Consume(); break; // ;
         }
 
         return rule;
@@ -198,7 +198,7 @@ public sealed partial class CssParser : IDisposable
 
         string? selectorText = null;
 
-        if (Current.Kind is TokenKind.Name)
+        if (Current.Kind is CssTokenKind.Name)
         {
             selectorText = ReadTokenSpan().ToString();
         }
@@ -212,7 +212,7 @@ public sealed partial class CssParser : IDisposable
         
         var span = new TokenList();
 
-        while (Current.Kind is not TokenKind.BlockStart && !IsEnd)
+        while (Current.Kind is not CssTokenKind.BlockStart && !IsEnd)
         {
             span.Add(Consume()); // Read the token
         }
@@ -230,7 +230,7 @@ public sealed partial class CssParser : IDisposable
 
         var span = new TokenList();
 
-        while (Current.Kind is not TokenKind.BlockStart && !IsEnd)
+        while (Current.Kind is not CssTokenKind.BlockStart && !IsEnd)
         {
             span.Add(Consume());
         }
@@ -246,7 +246,7 @@ public sealed partial class CssParser : IDisposable
     {
         // @font-face {
 
-        while (Current.Kind != TokenKind.BlockStart && !IsEnd)
+        while (Current.Kind != CssTokenKind.BlockStart && !IsEnd)
         {
             Consume();
         }
@@ -266,7 +266,7 @@ public sealed partial class CssParser : IDisposable
 
         var rule = new ImportRule(CssUrlValue.Parse(value.ToString().AsSpan()));
 
-        ConsumeIf(TokenKind.Semicolon); // ? ;
+        ConsumeIf(CssTokenKind.Semicolon); // ? ;
 
         rule.Trailing = ReadTrivia();
 
@@ -373,7 +373,7 @@ public sealed partial class CssParser : IDisposable
 
         CssValue first = CssValue.FromComponents(ReadComponents());
             
-        while (ConsumeIf(TokenKind.Comma)) // ? ,
+        while (ConsumeIf(CssTokenKind.Comma)) // ? ,
         {
             ReadTrivia(); // ? {trivia}
 
@@ -399,11 +399,11 @@ public sealed partial class CssParser : IDisposable
             yield return ReadExpression();
                 
             if (Current.Kind 
-                is TokenKind.BlockStart
-                or TokenKind.BlockEnd
-                or TokenKind.Semicolon
-                or TokenKind.Comma
-                or TokenKind.RightParenthesis)
+                is CssTokenKind.BlockStart
+                or CssTokenKind.BlockEnd
+                or CssTokenKind.Semicolon
+                or CssTokenKind.Comma
+                or CssTokenKind.RightParenthesis)
             {
                 break;
             }
@@ -420,9 +420,9 @@ public sealed partial class CssParser : IDisposable
 
         switch (Current.Kind)
         {
-            case TokenKind.Dollar                  : return ReadVariable();
-            case TokenKind.Number                  : return ReadNumberOrMeasurement();
-            case TokenKind.InterpolatedStringStart : return ReadInterpolatedString();
+            case CssTokenKind.Dollar                  : return ReadVariable();
+            case CssTokenKind.Number                  : return ReadNumberOrMeasurement();
+            case CssTokenKind.InterpolatedStringStart : return ReadInterpolatedString();
         }
 
         CssToken value = Consume();  // read string|number
@@ -434,7 +434,7 @@ public sealed partial class CssParser : IDisposable
         // White space is allowed, but optional, immediately inside the parentheses. 
         // If a function takes a list of arguments, the arguments are separated by a comma (‘,’) with optional whitespace before and after the comma.
 
-        if (Current.Kind == TokenKind.LeftParenthesis)
+        if (Current.Kind == CssTokenKind.LeftParenthesis)
         {
             return ReadFunctionCall(value);
         }
@@ -457,7 +457,7 @@ public sealed partial class CssParser : IDisposable
 
         var args = ReadValueList();
 
-        Consume(TokenKind.RightParenthesis, LexicalMode.Function); // )
+        Consume(CssTokenKind.RightParenthesis, LexicalMode.Function); // )
 
         if (name.Text is "url")
         {
@@ -475,7 +475,7 @@ public sealed partial class CssParser : IDisposable
     {
         double value = double.Parse(tokenizer.Consume().Text, CultureInfo.InvariantCulture);   // read number
 
-        if (Current.Kind == TokenKind.Unit)
+        if (Current.Kind == CssTokenKind.Unit)
         {
             var unit = tokenizer.Consume().Text;
 
@@ -493,9 +493,9 @@ public sealed partial class CssParser : IDisposable
 
     public CssVariable ReadVariable()
     {
-        Consume(TokenKind.Dollar, LexicalMode.Value);              // read $
+        Consume(CssTokenKind.Dollar, LexicalMode.Value);              // read $
 
-        var symbol = Consume(TokenKind.Name, LexicalMode.Value);   // read symbol
+        var symbol = Consume(CssTokenKind.Name, LexicalMode.Value);   // read symbol
 
         return new CssVariable(symbol) {
             Leading = ReadTrivia()
@@ -508,19 +508,19 @@ public sealed partial class CssParser : IDisposable
 
     public CssAssignment ReadAssignment()
     {
-        Consume(TokenKind.Dollar, LexicalMode.Assignment);            // ! $
+        Consume(CssTokenKind.Dollar, LexicalMode.Assignment);            // ! $
 
-        var name = Consume(TokenKind.Name, LexicalMode.Assignment);   // ! {name}
+        var name = Consume(CssTokenKind.Name, LexicalMode.Assignment);   // ! {name}
 
         ReadTrivia();
 
-        Consume(TokenKind.Colon, LexicalMode.Assignment);             // ! :
+        Consume(CssTokenKind.Colon, LexicalMode.Assignment);             // ! :
 
         ReadTrivia();                                                 // read trivia
 
         var value = ReadValueList();
 
-        ConsumeIf(TokenKind.Semicolon);                               // ? ;
+        ConsumeIf(CssTokenKind.Semicolon);                               // ? ;
 
         ReadTrivia();
 
@@ -536,7 +536,7 @@ public sealed partial class CssParser : IDisposable
         var span = ReadValueSpan();
 
         // Maybe a multi-selector
-        while (ConsumeIf(TokenKind.Comma)) // ? ,
+        while (ConsumeIf(CssTokenKind.Comma)) // ? ,
         {
             if (list is null)
             {
@@ -582,7 +582,7 @@ public sealed partial class CssParser : IDisposable
 
         ReadTrivia();
 
-        IReadOnlyList<CssParameter> parameters = Current.Kind is TokenKind.LeftParenthesis
+        IReadOnlyList<CssParameter> parameters = Current.Kind is CssTokenKind.LeftParenthesis
             ? ReadParameterList()
             : Array.Empty<CssParameter>();
             
@@ -601,9 +601,9 @@ public sealed partial class CssParser : IDisposable
 
         var list = new List<CssParameter>();
 
-        while (Current.Kind is not TokenKind.RightParenthesis && !IsEnd)
+        while (Current.Kind is not CssTokenKind.RightParenthesis && !IsEnd)
         {
-            Consume(TokenKind.Dollar, LexicalMode.Unknown);
+            Consume(CssTokenKind.Dollar, LexicalMode.Unknown);
 
             var name = Consume();
 
@@ -611,7 +611,7 @@ public sealed partial class CssParser : IDisposable
 
             ReadTrivia();
 
-            if (ConsumeIf(TokenKind.Colon)) // ? :
+            if (ConsumeIf(CssTokenKind.Colon)) // ? :
             {
                 ReadTrivia();               // ? {trivia}
 
@@ -620,7 +620,7 @@ public sealed partial class CssParser : IDisposable
 
             ReadTrivia();
 
-            if (ConsumeIf(TokenKind.Comma)) // ? ,
+            if (ConsumeIf(CssTokenKind.Comma)) // ? ,
             {
                 ReadTrivia();
             }
@@ -628,7 +628,7 @@ public sealed partial class CssParser : IDisposable
             list.Add(new CssParameter(name.Text, @default));
         }
 
-        Consume(TokenKind.RightParenthesis, LexicalMode.Unknown); // ! )
+        Consume(CssTokenKind.RightParenthesis, LexicalMode.Unknown); // ! )
 
         ReadTrivia();
 
@@ -637,7 +637,7 @@ public sealed partial class CssParser : IDisposable
 
     public IEnumerable<CssDeclaration> ReadDeclartions()
     {
-        while (Current.Kind is not TokenKind.BlockEnd && !IsEnd)
+        while (Current.Kind is not CssTokenKind.BlockEnd && !IsEnd)
         {
             yield return ReadDeclaration();
         }
@@ -655,16 +655,16 @@ public sealed partial class CssParser : IDisposable
 
         CssValue? args = null;
 
-        if (ConsumeIf(TokenKind.LeftParenthesis)) // ? (
+        if (ConsumeIf(CssTokenKind.LeftParenthesis)) // ? (
         {
             args = ReadValueList();
 
-            Consume(TokenKind.RightParenthesis, LexicalMode.Function); // ! )
+            Consume(CssTokenKind.RightParenthesis, LexicalMode.Function); // ! )
         }
 
         _ = ReadTrivia();
 
-        ConsumeIf(TokenKind.Semicolon); // ? ;
+        ConsumeIf(CssTokenKind.Semicolon); // ? ;
 
         return new IncludeNode(name.Text, args)
         {
@@ -690,17 +690,17 @@ public sealed partial class CssParser : IDisposable
     {
         depth++;
 
-        var blockStart = Consume(TokenKind.BlockStart, LexicalMode.Block); // ! {
+        var blockStart = Consume(CssTokenKind.BlockStart, LexicalMode.Block); // ! {
 
         ReadTrivia();
 
-        while (Current.Kind is not TokenKind.BlockEnd)
+        while (Current.Kind is not CssTokenKind.BlockEnd)
         {
             if (IsEnd) throw new UnbalancedBlock(blockStart);
 
             // A list of delarations or blocks
 
-            if (ConsumeIf(TokenKind.AtSymbol)) // ? @
+            if (ConsumeIf(CssTokenKind.AtSymbol)) // ? @
             {
                 var name = tokenizer.Consume(); // Name
 
@@ -718,7 +718,7 @@ public sealed partial class CssParser : IDisposable
                 }
             }
 
-            if (Current.Kind is TokenKind.Dollar)
+            if (Current.Kind is CssTokenKind.Dollar)
             {
                 block.Add(ReadAssignment());
 
@@ -730,7 +730,7 @@ public sealed partial class CssParser : IDisposable
 
             List<CssSequence>? spanList = null;
                 
-            while (ConsumeIf(TokenKind.Comma)) // ? ,
+            while (ConsumeIf(CssTokenKind.Comma)) // ? ,
             {
                 spanList ??= new List<CssSequence> { span };
                     
@@ -741,17 +741,17 @@ public sealed partial class CssParser : IDisposable
 
             switch (Current.Kind)
             {
-                case TokenKind.Colon: 
+                case CssTokenKind.Colon: 
                     block.Add(ReadDeclarationFromName(span[0].ToString()!));  break; // DeclarationName
-                case TokenKind.BlockStart:
+                case CssTokenKind.BlockStart:
                     block.Flags |= CssBlockFlags.HasChildBlocks;
                     block.Add(ReadRuleBlock(new CssSelector(spanList ?? (IReadOnlyList<CssSequence>) new[] { span }))); 
                     break;
-                case TokenKind.BlockEnd: 
+                case CssTokenKind.BlockEnd: 
                     break;
 
                 // TODO: Figure out where we missed reading the semicolon TEMP
-                case TokenKind.Semicolon    : tokenizer.Consume(); break;
+                case CssTokenKind.Semicolon    : tokenizer.Consume(); break;
 
                 default: throw new UnexpectedTokenException(LexicalMode.Block, Current);
             }
@@ -772,13 +772,13 @@ public sealed partial class CssParser : IDisposable
 
         ReadTrivia();                                       // ? trivia
 
-        Consume(TokenKind.Colon, LexicalMode.Declaration);  // ! :
+        Consume(CssTokenKind.Colon, LexicalMode.Declaration);  // ! :
 
         ReadTrivia();                                       // TODO: read as leading trivia
 
         var value = ReadValueList();                        // read value (value or valuelist)
 
-        ConsumeIf(TokenKind.Semicolon);                     // ? ;
+        ConsumeIf(CssTokenKind.Semicolon);                     // ? ;
 
 
         ReadTrivia();
@@ -788,13 +788,13 @@ public sealed partial class CssParser : IDisposable
 
     public CssDeclaration ReadDeclarationFromName(string name)
     {
-        Consume(TokenKind.Colon, LexicalMode.Declaration); // ! :
+        Consume(CssTokenKind.Colon, LexicalMode.Declaration); // ! :
             
         ReadTrivia();                                   // TODO: read as leading trivia
 
         var value = ReadValueList();                    // read value (value or cssvariable)
             
-        ConsumeIf(TokenKind.Semicolon);                 // ? ;
+        ConsumeIf(CssTokenKind.Semicolon);                 // ? ;
 
         ReadTrivia();
 
@@ -832,17 +832,17 @@ public sealed partial class CssParser : IDisposable
         var list = new CssSequence();
 
         while (!IsEnd
-            && !(Current.Kind is TokenKind.Colon
-                              or TokenKind.BlockStart
-                              or TokenKind.BlockEnd
-                              or TokenKind.Semicolon
-                              or TokenKind.Comma))
+            && !(Current.Kind is CssTokenKind.Colon
+                              or CssTokenKind.BlockStart
+                              or CssTokenKind.BlockEnd
+                              or CssTokenKind.Semicolon
+                              or CssTokenKind.Comma))
         {
-            if (Current.Kind is TokenKind.InterpolatedStringStart)
+            if (Current.Kind is CssTokenKind.InterpolatedStringStart)
             {
                 list.Add(ReadInterpolatedString());
             }
-            else if (Current.Kind == TokenKind.Ampersand)
+            else if (Current.Kind == CssTokenKind.Ampersand)
             {
                 var ambersand = Consume();
 
@@ -866,11 +866,11 @@ public sealed partial class CssParser : IDisposable
         var list = new TokenList();
 
         while (!IsEnd 
-            && !(Current.Kind is TokenKind.Colon 
-                              or TokenKind.BlockStart
-                              or TokenKind.BlockEnd
-                              or TokenKind.Semicolon
-                              or TokenKind.Comma))
+            && !(Current.Kind is CssTokenKind.Colon 
+                              or CssTokenKind.BlockStart
+                              or CssTokenKind.BlockEnd
+                              or CssTokenKind.Semicolon
+                              or CssTokenKind.Comma))
         {
             list.Add(Consume());
         }

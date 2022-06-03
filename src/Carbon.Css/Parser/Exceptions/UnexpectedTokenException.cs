@@ -8,7 +8,7 @@ public sealed class UnexpectedTokenException : SyntaxException
         Token = token;
     }
 
-    public UnexpectedTokenException(LexicalMode mode, TokenKind expectedKind, CssToken token)
+    public UnexpectedTokenException(LexicalMode mode, CssTokenKind expectedKind, CssToken token)
         : base($"Unexpected token at {token.Position} reading {mode}. Expected '{expectedKind}'. Was '{token.Kind}'", token.Position)
     {
         Token = token;
