@@ -47,12 +47,13 @@ public sealed class CssDeclaration : CssNode
     public void WriteTo(StringBuilder sb)
     {
         sb.Append(Info.Name);
-        sb.Append(": ");       
-        sb.Append(Value.ToString());        
+        sb.Append(": ");
+        Value.WriteTo(sb);
 
         if (Priority is not null)
         {
-            sb.Append(" !").Append(Priority);
+            sb.Append(" !");
+            sb.Append(Priority);
         }
     }
 

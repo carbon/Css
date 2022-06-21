@@ -41,7 +41,7 @@ public sealed class CssWriter : IDisposable
         nodeCount = 0;
         skipMath = false;
 
-        _browserSupport = this._context.BrowserSupport;
+        _browserSupport = _context.BrowserSupport;
     }
 
     public void WriteRoot(StyleSheet sheet)
@@ -345,7 +345,7 @@ public sealed class CssWriter : IDisposable
         }
 
         _writer.WriteLine();
-        _writer.WriteLine("/* " + absolutePath + " */");
+        _writer.WriteLine($"/* {absolutePath} */");
 
         var stream = _resolver.Open(absolutePath);
 

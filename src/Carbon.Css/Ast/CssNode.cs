@@ -25,6 +25,6 @@ public abstract class CssNode
 
     public virtual CssNode CloneNode()
     {
-        throw new NotImplementedException(GetType().Name + " does not implement Clone");
+        throw new NotImplementedException($"{GetType().Name} does not implement Clone");
     }
 }

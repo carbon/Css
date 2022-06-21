@@ -13,7 +13,7 @@ internal static class StringBuilderCache
 
         if (sb is null)
         {
-            return new StringBuilder(100);
+            return new StringBuilder(128);
         }
 
         sb.Length = 0;
