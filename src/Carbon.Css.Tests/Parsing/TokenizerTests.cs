@@ -178,9 +178,12 @@ div {
 
         var styles = "main { margin: 0.5in; width: calc(100% / 3 - 2 * 1em - 2 * 1px); }";
 
-        Assert.Equal(@"main {
-  margin: 0.5in;
-  width: calc(100% / 3 - 2 * 1em - 2 * 1px);
-}", StyleSheet.Parse(styles).ToString());
+        Assert.Equal(
+            """
+            main {
+              margin: 0.5in;
+              width: calc(100% / 3 - 2 * 1em - 2 * 1px);
+            }
+            """, StyleSheet.Parse(styles).ToString());
     }
 }

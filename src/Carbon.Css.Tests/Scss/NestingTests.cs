@@ -64,7 +64,7 @@ public class NestingTests
     [Fact]
     public void SelectorListWithNestedReference()
     {
-        var css = StyleSheet.Parse(@"div, span { .hide { display: none; } }");
+        var css = StyleSheet.Parse("div, span { .hide { display: none; } }");
 
         Assert.Equal(
             """

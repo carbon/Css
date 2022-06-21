@@ -5,7 +5,8 @@ public class MediaTests
     [Fact]
     public void Basic()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             @media (min-width: 700px) { 
                 div { 
                     width: 100px;
@@ -27,7 +28,8 @@ public class MediaTests
     [Fact]
     public void Nested()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             @media (min-width: 700px) { 
               div { 
                 width: 100px;
@@ -39,17 +41,21 @@ public class MediaTests
         Assert.Single(sheet.Children);
 
 
-        Assert.Equal(@"@media (min-width: 700px) {
-  div { width: 100px; }
-  div span { width: 50px; }
-}", sheet.ToString());
+        Assert.Equal(
+            """
+            @media (min-width: 700px) {
+              div { width: 100px; }
+              div span { width: 50px; }
+            }
+            """, sheet.ToString());
 
     }
 
     [Fact(Skip = "Not implemented yet")]
     public void Nested_2()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             div { 
                 @media (min-width: 700px) { 
                     span { width: 50px; }
@@ -60,37 +66,41 @@ public class MediaTests
         Assert.Single(sheet.Children);
 
 
-        Assert.Equal(@"@media (min-width: 700px) {
-  div { width: 100px; }
-  div span { width: 50px; }
-}", sheet.ToString());
+        Assert.Equal(
+            """
+            @media (min-width: 700px) {
+              div { width: 100px; }
+              div span { width: 50px; }
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
     public void MediaMixin1()
     {
-        var sheet = StyleSheet.Parse("""
-@mixin hi { 
-  color: red;
-}
+        var sheet = StyleSheet.Parse(
+            """
+            @mixin hi { 
+              color: red;
+            }
 
-@mixin blerg { 
-    a {
-        color: pink;
+            @mixin blerg { 
+                a {
+                    color: pink;
 
-        &:hover { color: #000; }
-    }
-}
+                    &:hover { color: #000; }
+                }
+            }
 
-@media (min-width: 700px) { 
-    @include blerg;
+            @media (min-width: 700px) { 
+                @include blerg;
 
-    div { 
-        background-color: $bgColor;
-        @include hi;
-    }
-}
-""");
+                div { 
+                    background-color: $bgColor;
+                    @include hi;
+                }
+            }
+            """);
 
         Assert.Equal(2, sheet.Context.Mixins.Count);
 
@@ -115,34 +125,34 @@ public class MediaTests
     [Fact]
     public void WithMixin()
     {
-        var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse("""
+            $bgColor: orange;
 
-$bgColor: orange;
+            @mixin hi { 
+                color: red;
+            }
 
-@mixin hi { 
-    color: red;
-}
+            @mixin blerg { 
+                a {
+                    color: pink;
 
-@mixin blerg { 
-    a {
-        color: pink;
+                    &:hover { color: #000; }
+                }
+            }
 
-        &:hover { color: #000; }
-    }
-}
+            @media (min-width: 700px) { 
+                @include blerg;
 
-@media (min-width: 700px) { 
-    @include blerg;
+                div { 
+                    background-color: $bgColor;
+                    @include hi;
+                }
+            }
 
-    div { 
-        background-color: $bgColor;
-        @include hi;
-    }
-}
-");
+            """);
 
-
-        Assert.Equal("""
+        Assert.Equal(
+            """
             @media (min-width: 700px) {
               a { color: pink; }
               a:hover { color: #000; }

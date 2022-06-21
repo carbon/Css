@@ -111,13 +111,15 @@ public class VariableTests
 
         // variable-exists
         var sheet = StyleSheet.Parse(
-@"@if $monster != undefined {
-    body { 
-      background-color: red;
-    }
-}");
+            """
+            @if $monster != undefined {
+                body { 
+                  background-color: red;
+                }
+            }
+            """);
 
-        Assert.Equal(@"body { background-color: red; }", sheet.ToString(dic));
+        Assert.Equal("body { background-color: red; }", sheet.ToString(dic));
 
         sheet = StyleSheet.Parse(
             """

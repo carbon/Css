@@ -128,7 +128,8 @@ public class OperatorTests
     [Fact]
     public void ExpressionTest2()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             $bgColor: #ffffff;
 
             @if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
@@ -144,18 +145,18 @@ public class OperatorTests
     [Fact]
     public void ExpressionTest5()
     {
-        var sheet = StyleSheet.Parse(@"
-$bgColor: #ffffff;
+        var sheet = StyleSheet.Parse(
+            """
+            $bgColor: #ffffff;
 
-@if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
-  $bgColor: purple;  
-}
+            @if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
+              $bgColor: purple;  
+            }
 
-div {
-  background-color: $bgColor;
-}
-
-");
+            div {
+              background-color: $bgColor;
+            }
+            """);
 
         Assert.Equal("div { background-color: purple; }", sheet.ToString());
     }
@@ -163,7 +164,7 @@ div {
     [Fact]
     public void IfTest7()
     {
-        var sheet = StyleSheet.Parse(@"div { color: if(red == red, purple, green) }");
+        var sheet = StyleSheet.Parse("div { color: if(red == red, purple, green) }");
 
         Assert.Equal("div { color: purple; }", sheet.ToString());
     }
@@ -171,7 +172,7 @@ div {
     [Fact]
     public void IfTest8()
     {
-        var sheet = StyleSheet.Parse(@"div { color: if(red == orange, purple, green) }");
+        var sheet = StyleSheet.Parse("div { color: if(red == orange, purple, green) }");
 
         Assert.Equal("div { color: green; }", sheet.ToString());
     }
@@ -179,20 +180,23 @@ div {
     [Fact]
     public void IfTest4()
     {
-        var sheet = StyleSheet.Parse(@"
-$bgColor: #ffffff;
+        var sheet = StyleSheet.Parse("""
+            $bgColor: #ffffff;
 
-@if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
-  div { color: red; display: none; }
-  div { background-color: orange; }
-}
-");
+            @if rgba($bgColor, 0.5) == rgba(255, 255, 255, 0.5) { 
+              div { color: red; display: none; }
+              div { background-color: orange; }
+            }
+
+            """);
 
         Assert.Equal(
-@"div {
-  color: red;
-  display: none;
-}
-div { background-color: orange; }", sheet.ToString());
+            """
+            div {
+              color: red;
+              display: none;
+            }
+            div { background-color: orange; }
+            """, sheet.ToString());
     }
 }
