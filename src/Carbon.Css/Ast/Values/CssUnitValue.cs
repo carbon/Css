@@ -44,7 +44,17 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanForm
 
     internal override void WriteTo(TextWriter writer)
     {
-        writer.Write(Value.ToString(CultureInfo.InvariantCulture));
+        Span<char> buffer = stackalloc char[16];
+
+        if (Value.TryFormat(buffer, out int charsWritten, provider: CultureInfo.InvariantCulture))
+        {
+            writer.Write(buffer[..charsWritten]);
+        }
+        else
+        {
+            writer.Write(Value.ToString(CultureInfo.InvariantCulture));
+        }
+
         writer.Write(Unit.Name);
     }
 
