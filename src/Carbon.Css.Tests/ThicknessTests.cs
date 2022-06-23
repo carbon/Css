@@ -60,6 +60,21 @@ public class ThicknessTests
     }
 
     [Fact]
+    public void ParseZero()
+    {
+        var value = Thickness.Parse("0");
+
+        Assert.Same(Thickness.Zero, value);
+
+        Assert.Same(CssUnitValue.Zero, value.Top);
+        Assert.Same(CssUnitValue.Zero, value.Left);
+        Assert.Same(CssUnitValue.Zero, value.Right);
+        Assert.Same(CssUnitValue.Zero, value.Bottom);
+
+        Assert.Equal("0", value.ToString());
+    }
+
+    [Fact]
     public void D()
     {
         var a = Thickness.Parse("10px");
@@ -75,16 +90,16 @@ public class ThicknessTests
     [Fact]
     public void E()
     {
-        var a = Thickness.Parse("10px 10px 10px 10px");
-
         var _10px = CssUnitValue.Parse("10px");
+
+        var a = Thickness.Parse("10px 10px 10px 10px");
 
         Assert.Equal(_10px, a.Top);
         Assert.Equal(_10px, a.Left);
         Assert.Equal(_10px, a.Bottom);
         Assert.Equal(_10px, a.Right);
 
-        Assert.Equal("10px", a.ToString());
+        Assert.Equal("10px", a.ToString());        
     }
 
     [Fact]

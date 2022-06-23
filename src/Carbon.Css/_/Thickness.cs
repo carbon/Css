@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -11,16 +12,29 @@ namespace Carbon.Css;
 [JsonConverter(typeof(ThinknessJsonConverter))]
 public sealed class Thickness
 {
-    public Thickness(CssUnitValue value!!)
+    public static readonly Thickness Zero = new(CssUnitValue.Zero);
+
+    public Thickness(CssUnitValue value)
     {
+        ArgumentNullException.ThrowIfNull(value);
+
         Top = value;
         Left = value;
         Bottom = value;
         Right = value;
     }
 
-    public Thickness(CssUnitValue top!!, CssUnitValue left!!, CssUnitValue bottom!!, CssUnitValue right!!)
+    public Thickness(
+        CssUnitValue top,
+        CssUnitValue left, 
+        CssUnitValue bottom, 
+        CssUnitValue right)
     {
+        ArgumentNullException.ThrowIfNull(top);
+        ArgumentNullException.ThrowIfNull(left);
+        ArgumentNullException.ThrowIfNull(bottom);
+        ArgumentNullException.ThrowIfNull(right);
+
         Top = top;
         Left = left;
         Bottom = bottom;
@@ -60,20 +74,28 @@ public sealed class Thickness
 
     public static Thickness Parse(string value)
     {
+        if (value is "0")
+        {
+            return Zero;
+        }
+
+        return Parse(value.AsSpan());
+    }
+
+    public static Thickness Parse(ReadOnlySpan<char> value)
+    {
+        var parts = Fixed4List.Parse(value.Trim());
+
         var top = CssUnitValue.Zero;
         var left = CssUnitValue.Zero;
         var bottom = CssUnitValue.Zero;
         var right = CssUnitValue.Zero;
 
-        value = value.Trim();
-
-        string[] parts = value.Split(' ');
-
         for (int i = 0; i < parts.Length; i++)
         {
             var part = CssUnitValue.Parse(parts[i]);
 
-            if (parts.Length == 1)
+            if (parts.Length is 1)
             {
                 top = part;
                 left = part;
