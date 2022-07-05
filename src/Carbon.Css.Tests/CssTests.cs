@@ -123,12 +123,11 @@ public class CssTests
     [Fact]
     public void ChainedColonSelector()
     {
-        var text = """
+        var sheet = StyleSheet.Parse(
+            """
             .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top,
             .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom { color: red; }
-            """;
-
-        var sheet = StyleSheet.Parse(text);
+            """);
 
         Assert.Equal(".card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top, .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom", (sheet.Children[0] as StyleRule).Selector.ToString());
     }
@@ -136,7 +135,8 @@ public class CssTests
     [Fact]
     public void A()
     {
-        var text = """
+        var sheet = StyleSheet.Parse(
+            """
             @media (min-width: 576px) {
               .card-group {
                 -ms-flex-flow: row wrap;
@@ -198,9 +198,7 @@ public class CssTests
                 border-radius: 0;
               }
             }
-            """;
-
-        var sheet = StyleSheet.Parse(text);
+            """);
 
         var rule = sheet.Children[0] as MediaRule;
 
@@ -210,13 +208,12 @@ public class CssTests
     [Fact]
     public void QuotedSvgUrl()
     {
-        var text = """
-.custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E");
-}
-""";
-
-        var sheet = StyleSheet.Parse(text);
+        var sheet = StyleSheet.Parse(
+            """
+            .custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+              background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E");
+            }
+            """);
 
         var rule = sheet.Children[0] as StyleRule;
 
@@ -228,7 +225,6 @@ public class CssTests
     {
         // https://github.com/carbon/Css/issues/1
         var text = File.ReadAllText(TestHelper.GetTestFile("bootstrap.css").FullName);
-
 
         var sheet = StyleSheet.Parse(text);
 
@@ -268,16 +264,15 @@ public class CssTests
     [Fact]
     public void MediaQuery()
     {
-        var text = """
+        var css = StyleSheet.Parse(
+            """
             @media only screen and (min-width : 1600px) {
               .projects { column-count: 3; }
               .main {   margin-left: 240px; }
               .projectDetails-bottom { display: none; }
               .contactForm { width: 760px; margin: 0 auto; }
             }
-            """;
-
-        var css = StyleSheet.Parse(text);
+            """);
 
         Assert.Equal(
             """
@@ -448,29 +443,29 @@ public class CssTests
     [Fact]
     public void CalcTest()
     {
-        var styles = "main { margin: 0.5in; width: calc(100%/3 - 2*1em - 2*1px); }";
+        var sheet = StyleSheet.Parse("main { margin: 0.5in; width: calc(100%/3 - 2*1em - 2*1px); }");
 
         Assert.Equal("""
             main {
               margin: 0.5in;
               width: calc(100% / 3 - 2 * 1em - 2 * 1px);
             }
-            """, StyleSheet.Parse(styles).ToString());
+            """, sheet.ToString());
     }
 
     [Fact]
     public void GitIssue2()
     {
-        var styles = 
+        var sheet = StyleSheet.Parse(
             """
             .someClass { font-size: 1.2em; }
             .someClass { font-size: 1.2rem; }
-            """;
+            """);
 
         Assert.Equal("""
             .someClass { font-size: 1.2em; }
             .someClass { font-size: 1.2rem; }
-            """, StyleSheet.Parse(styles).ToString());
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -516,7 +511,8 @@ public class CssTests
     [Fact]
     public void FontFace()
     {
-        var styles = """
+        var sheet = StyleSheet.Parse(
+            """
             @font-face {
               font-family: 'CMBilling';
               src: url('../fonts/cm-billing-webfont.eot');
@@ -525,9 +521,7 @@ public class CssTests
               font-weight: normal;
               font-style: normal;
             }
-            """;
-
-        var sheet = StyleSheet.Parse(styles);
+            """);
 
         var value = ((CssDeclaration)((CssRule)sheet.Children[0])[2]).Value;
 
@@ -1586,7 +1580,5 @@ public class CssTests
         {
             // Console.WriteLine(block);
         }
-
     }
-
 }

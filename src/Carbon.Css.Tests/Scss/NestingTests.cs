@@ -55,7 +55,8 @@ public class NestingTests
             }
             """);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             div input,
             div textarea { display: block; }
             """, css.ToString());

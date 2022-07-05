@@ -226,7 +226,7 @@ public class MixinTests
     [Fact]
     public void ParseMixin()
     {
-        var text = 
+        var ss = StyleSheet.Parse(
             """
             @mixin left($dist, $x: 1) {
                 margin-left: $dist;
@@ -237,9 +237,7 @@ public class MixinTests
             main { 
                 @include left(50px);
             }                                    
-            """;
-
-        var ss = StyleSheet.Parse(text);
+            """);
 
         Assert.Single(ss.Context.Mixins);
 
@@ -256,7 +254,7 @@ public class MixinTests
     [Fact]
     public void ParseMixin2()
     {
-        var text =
+        var ss = StyleSheet.Parse(
             """
             @mixin round($radius) {
               border-radius: $radius;
@@ -266,9 +264,7 @@ public class MixinTests
             main { 
               @include round(50px, 20px);
             }
-            """;
-
-        var ss = StyleSheet.Parse(text);
+            """);
 
         var rules = ss.Children.OfType<CssRule>().ToArray();
 
