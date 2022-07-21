@@ -30,6 +30,11 @@ public readonly struct CssPlacement : IEquatable<CssPlacement>
 
     public static CssPlacement Parse(string text)
     {
+        return Parse(text.AsSpan());
+    }
+
+    public static CssPlacement Parse(ReadOnlySpan<char> text)
+    {
         // center center
         // top left
         // start end
@@ -43,8 +48,8 @@ public readonly struct CssPlacement : IEquatable<CssPlacement>
             return new CssPlacement(value, value);
         }
 
-        string lhs = text.Substring(0, spaceIndex);
-        string rhs = text.Substring(spaceIndex + 1);
+        var lhs = text[..spaceIndex];
+        var rhs = text.Slice(spaceIndex + 1);
 
         CssBoxAlignment align = CssBoxAlignmentExtensions.Parse(lhs);
         CssBoxAlignment justify = CssBoxAlignmentExtensions.Parse(rhs);

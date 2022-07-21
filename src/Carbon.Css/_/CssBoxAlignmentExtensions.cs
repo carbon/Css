@@ -45,7 +45,7 @@ public static class CssBoxAlignmentExtensions
         _ => throw new Exception("Unexpected alignment:" + alignment)
     };
         
-    public static CssBoxAlignment Parse(string text) => text switch
+    public static CssBoxAlignment Parse(ReadOnlySpan<char> text) => text switch
     {
         "flex-start"     => CssBoxAlignment.Start,
         "flex-end"       => CssBoxAlignment.End,
