@@ -10,7 +10,7 @@ namespace Carbon.Css.Parser;
 public sealed partial class CssParser : IDisposable
 {
     private int depth = 1;
-    private readonly CssTokenizer tokenizer;
+    private readonly CssTokenizer _tokenizer;
 
     public CssParser(TextReader textReader)
         : this(new CssTokenizer(new SourceReader(textReader)))
@@ -22,7 +22,7 @@ public sealed partial class CssParser : IDisposable
 
     public CssParser(CssTokenizer tokenizer)
     {
-        this.tokenizer = tokenizer;
+        _tokenizer = tokenizer;
     }
 
     public IEnumerable<CssRule> ReadRules()
@@ -38,20 +38,20 @@ public sealed partial class CssParser : IDisposable
 
     #region Tokenizer Helpers
 
-    private CssToken Current => tokenizer.Current;
+    private CssToken Current => _tokenizer.Current;
 
-    private bool IsEnd => tokenizer.IsEnd;
+    private bool IsEnd => _tokenizer.IsEnd;
 
     public CssToken Consume()
     {
-        return tokenizer.Consume();
+        return _tokenizer.Consume();
     }
 
     public bool ConsumeIf(CssTokenKind kind)
     {
-        if (tokenizer.Current.Kind == kind)
+        if (_tokenizer.Current.Kind == kind)
         {
-            tokenizer.Consume();
+            _tokenizer.Consume();
 
             return true;
         }
@@ -106,7 +106,7 @@ public sealed partial class CssParser : IDisposable
         //= support Safari 5.1
 
         return new CssDirective(
-            name  : spaceIndex > 0 ? text.Slice(0, spaceIndex).Trim().ToString() : text.ToString(),
+            name  : spaceIndex > 0 ? text[0..spaceIndex].Trim().ToString() : text.ToString(),
             value : spaceIndex > 0 ? text.Slice(spaceIndex + 1).Trim().ToString() : null
         );
     }
@@ -117,7 +117,7 @@ public sealed partial class CssParser : IDisposable
         {
             CssTokenKind.Name     => ReadStyleRule(),
             CssTokenKind.AtSymbol => ReadAtRule(),
-            _                  => throw new UnexpectedTokenException(LexicalMode.Rule, Current),
+            _                     => throw new UnexpectedTokenException(LexicalMode.Rule, Current),
         };
     }
 
@@ -180,7 +180,7 @@ public sealed partial class CssParser : IDisposable
         switch (Current.Kind)
         {
             case CssTokenKind.BlockStart: ReadBlock(rule);  break; // {
-            case CssTokenKind.Semicolon : tokenizer.Consume(); break; // ;
+            case CssTokenKind.Semicolon : _tokenizer.Consume(); break; // ;
         }
 
         return rule;
@@ -207,9 +207,7 @@ public sealed partial class CssParser : IDisposable
     }
 
     public KeyframesRule ReadKeyframesRule()
-    {
-        // @media only screen and (min-width : 1600px) {
-        
+    {        
         var span = new TokenList();
 
         while (Current.Kind is not CssTokenKind.BlockStart && !IsEnd)
@@ -368,7 +366,6 @@ public sealed partial class CssParser : IDisposable
         // : $oranges
         // : url(file.css);
 
-
         List<CssValue>? values = null;
 
         CssValue first = CssValue.FromComponents(ReadComponents());
@@ -377,13 +374,10 @@ public sealed partial class CssParser : IDisposable
         {
             ReadTrivia(); // ? {trivia}
 
-            if (values is null)
-            {
-                values = new List<CssValue> {
-                    first
-                };
-            }
-
+            values ??= new List<CssValue> {
+                first
+            };
+            
             values.Add(CssValue.FromComponents(ReadComponents()));
         }
 
@@ -473,18 +467,18 @@ public sealed partial class CssParser : IDisposable
 
     public CssValue ReadNumberOrMeasurement()
     {
-        double value = double.Parse(tokenizer.Consume().Text, CultureInfo.InvariantCulture);   // read number
+        double value = double.Parse(_tokenizer.Consume().Text, CultureInfo.InvariantCulture);   // read number
 
         if (Current.Kind == CssTokenKind.Unit)
         {
-            var unit = tokenizer.Consume().Text;
+            var unit = _tokenizer.Consume().Text;
 
             return new CssUnitValue(value, unit) {
                 Trailing = ReadTrivia()
             };
         }
 
-        var result = CssUnitValue.Number(value);
+        var result = CssValue.Number(value);
 
         result.Trailing = ReadTrivia();
             
@@ -508,19 +502,19 @@ public sealed partial class CssParser : IDisposable
 
     public CssAssignment ReadAssignment()
     {
-        Consume(CssTokenKind.Dollar, LexicalMode.Assignment);            // ! $
+        Consume(CssTokenKind.Dollar, LexicalMode.Assignment);          // ! $
 
-        var name = Consume(CssTokenKind.Name, LexicalMode.Assignment);   // ! {name}
+        var name = Consume(CssTokenKind.Name, LexicalMode.Assignment); // ! {name}
 
         ReadTrivia();
 
-        Consume(CssTokenKind.Colon, LexicalMode.Assignment);             // ! :
+        Consume(CssTokenKind.Colon, LexicalMode.Assignment);           // ! :
 
-        ReadTrivia();                                                 // read trivia
+        ReadTrivia();                                                  // read trivia
 
         var value = ReadValueList();
 
-        ConsumeIf(CssTokenKind.Semicolon);                               // ? ;
+        ConsumeIf(CssTokenKind.Semicolon);                             // ? ;
 
         ReadTrivia();
 
@@ -538,12 +532,9 @@ public sealed partial class CssParser : IDisposable
         // Maybe a multi-selector
         while (ConsumeIf(CssTokenKind.Comma)) // ? ,
         {
-            if (list is null)
-            {
-                list = new List<CssSequence> {
-                    span
-                };
-            }
+            list ??= new List<CssSequence> {
+                span
+            };            
                 
             ReadTrivia(); // trailing whitespace
 
@@ -649,7 +640,7 @@ public sealed partial class CssParser : IDisposable
 
         ReadTrivia();
 
-        var name = tokenizer.Consume(); // ! {name}
+        var name = _tokenizer.Consume(); // ! {name}
 
         ReadTrivia();
 
@@ -702,7 +693,7 @@ public sealed partial class CssParser : IDisposable
 
             if (ConsumeIf(CssTokenKind.AtSymbol)) // ? @
             {
-                var name = tokenizer.Consume(); // Name
+                var name = _tokenizer.Consume(); // Name
 
                 switch (name.Text)
                 {
@@ -751,13 +742,13 @@ public sealed partial class CssParser : IDisposable
                     break;
 
                 // TODO: Figure out where we missed reading the semicolon TEMP
-                case CssTokenKind.Semicolon    : tokenizer.Consume(); break;
+                case CssTokenKind.Semicolon    : _tokenizer.Consume(); break;
 
                 default: throw new UnexpectedTokenException(LexicalMode.Block, Current);
             }
         }
 
-        tokenizer.Consume(); // read }
+        _tokenizer.Consume(); // read }
 
         block.Trailing = ReadTrivia();
 
@@ -790,11 +781,11 @@ public sealed partial class CssParser : IDisposable
     {
         Consume(CssTokenKind.Colon, LexicalMode.Declaration); // ! :
             
-        ReadTrivia();                                   // TODO: read as leading trivia
+        ReadTrivia();                                         // TODO: read as leading trivia
 
-        var value = ReadValueList();                    // read value (value or cssvariable)
+        var value = ReadValueList();                          // read value (value or cssvariable)
             
-        ConsumeIf(CssTokenKind.Semicolon);                 // ? ;
+        ConsumeIf(CssTokenKind.Semicolon);                    // ? ;
 
         ReadTrivia();
 
@@ -842,7 +833,7 @@ public sealed partial class CssParser : IDisposable
             {
                 list.Add(ReadInterpolatedString());
             }
-            else if (Current.Kind == CssTokenKind.Ampersand)
+            else if (Current.Kind is CssTokenKind.Ampersand)
             {
                 var ambersand = Consume();
 
@@ -852,7 +843,7 @@ public sealed partial class CssParser : IDisposable
             {
                 var text = Consume(); 
 
-                list.Add(new CssString(text) { Trailing = ReadTrivia() });
+                list.Add(new CssString(text, trailing: ReadTrivia()));
             }
         }
 
@@ -880,7 +871,7 @@ public sealed partial class CssParser : IDisposable
 
     public void Dispose()
     {
-        tokenizer.Dispose();
+        _tokenizer.Dispose();
     }
 }
 
