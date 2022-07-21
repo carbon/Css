@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Carbon.Css;
 
-public sealed class RewriterCollection : Collection<ICssRewriter>
+public sealed class RewriterCollection : List<ICssRewriter>
 {
     public IEnumerable<CssRule> Rewrite(CssRule rule, int index = 0)
     {

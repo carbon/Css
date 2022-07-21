@@ -1,13 +1,18 @@
-﻿using System.Collections.ObjectModel;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace Carbon.Css;
 
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
 using Parser;
 
-public sealed class TokenList : Collection<CssToken>
+public sealed class TokenList : List<CssToken>
 {
+    [SkipLocalsInit]
     public override string ToString()
     {
         if (Count == 1)
@@ -18,7 +23,7 @@ public sealed class TokenList : Collection<CssToken>
         }
         else
         {
-            var sb = new ValueStringBuilder(256);
+            var sb = new ValueStringBuilder(stackalloc char[64]);
 
             WriteTo(ref sb);
 
@@ -28,23 +33,16 @@ public sealed class TokenList : Collection<CssToken>
 
     private void WriteTo(ref ValueStringBuilder writer)
     {
-        if (Count == 1)
-        {
-            if (this[0].IsTrivia) return;
-
-            writer.Append(this[0].Text);
-
-            return;
-        }
+        var span = CollectionsMarshal.AsSpan(this);
 
         for (int i = 0; i < Count; i++)
         {
-            CssToken token = this[i];
+            ref readonly CssToken token = ref span[i];
 
             if (token.IsTrivia)
             {
                 // Skip leading and trailing trivia
-                if (i == 0 || i + 1 == Count) continue;
+                if (i is 0 || i + 1 == span.Length) continue;
 
                 writer.Append(' ');
 
@@ -53,6 +51,45 @@ public sealed class TokenList : Collection<CssToken>
 
             writer.Append(token.Text);
         }
+    }
+
+    public void WriteTo(TextWriter writer, CssScope scope)
+    {
+        var span = CollectionsMarshal.AsSpan(this);
+
+        for (int i = 0; i < span.Length; i++)
+        {
+            ref readonly CssToken token = ref span[i];
+            bool isEnd = i + 1 == span.Length;
+
+            if (token.Kind is CssTokenKind.Dollar && !isEnd)
+            {
+                string variableName = this[++i].Text;
+
+                if (scope.TryGetValue(variableName, out var value))
+                {
+                    value.WriteTo(writer);
+                }
+                else
+                {
+                    throw new Exception($"{variableName} not found");
+                }
+
+                continue;
+            }
+
+            if (token.IsTrivia)
+            {
+                // Skip leading and trailing trivia
+                if (i is 0 || isEnd) continue;
+
+                writer.Write(' ');
+
+                continue;
+            }
+
+            writer.Write(token.Text);
+        }        
     }
 
     public void WriteTo(TextWriter writer)
