@@ -93,14 +93,6 @@ public class CssTests
                 min-width: 992px !important;
               }
 
-              .container {
-                min-width: 992px !important;
-              }
-
-              .badge {
-                border: 1px solid #000;
-              }
-
               .table td,
               .table th {
                 background-color: #fff !important;
@@ -116,8 +108,7 @@ public class CssTests
 
         var mediaRule = sheet.Children[0] as MediaRule;
 
-        Assert.Equal(16, mediaRule.Children.Count);
-
+        Assert.Equal(14, mediaRule.Children.Count);
     }
 
     [Fact]

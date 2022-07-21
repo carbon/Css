@@ -3,6 +3,91 @@
 public class MediaTests
 {
     [Fact]
+    public void Variable1()
+    {
+        var sheet = StyleSheet.Parse(
+            """
+            $tabletBreak: 700px;
+
+            @media (min-width: $tabletBreak) { 
+                div { 
+                    width: 100px;
+                }
+            }
+            """);
+
+
+        Assert.Equal(
+            """
+            @media (min-width: 700px) {
+              div { width: 100px; }
+            }
+            """, sheet.ToString());
+    }
+
+    [Fact]
+    public void Variable2()
+    {
+        var sheet = StyleSheet.Parse(
+            """
+            $breakpoint1: 800px;
+
+            @media screen and (min-width: $breakpoint1) { 
+                div { 
+                    width: 100px;
+                }
+            }
+            """);
+
+
+        Assert.Equal(
+            """
+            @media screen and (min-width: 800px) {
+              div { width: 100px; }
+            }
+            """, sheet.ToString());
+    }
+
+    [Fact]
+    public void Css4RangeQuery1()
+    {
+        var sheet = StyleSheet.Parse(
+           """
+            @media (width <= 30em) { 
+                div { 
+                    width: 100px;
+                }
+            }
+            """);
+
+        Assert.Single(sheet.Children);
+
+        var mediaRule = (MediaRule)sheet.Children[0];
+
+        Assert.Equal("(width <= 30em)", mediaRule.Queries.ToString());
+    }
+
+
+    [Fact]
+    public void Css4RangeQuery2()
+    {
+        var sheet = StyleSheet.Parse(
+           """
+            @media (30em <= width <= 50em) { 
+                div { 
+                    width: 100px;
+                }
+            }
+            """);
+
+        Assert.Single(sheet.Children);
+
+        var mediaRule = (MediaRule)sheet.Children[0];
+
+        Assert.Equal("(30em <= width <= 50em)", mediaRule.Queries.ToString());
+    }
+
+    [Fact]
     public void Basic()
     {
         var sheet = StyleSheet.Parse(

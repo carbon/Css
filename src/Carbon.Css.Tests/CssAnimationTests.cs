@@ -16,71 +16,72 @@ public class CssAnimationTests
             """);
 
 
-        Assert.Equal("""
-@-webkit-keyframes domainProcessing {
-  0% {
-    -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6);
-    box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6);
-  }
-  50% {
-    -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2);
-    box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2);
-  }
-  100% {
-    -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2);
-    box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2);
-  }
-}
-@keyframes domainProcessing {
-  0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
-  50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-}
-""", ss.ToString());
+        Assert.Equal(
+            """
+            @-webkit-keyframes domainProcessing {
+              0% {
+                -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6);
+                box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6);
+              }
+              50% {
+                -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2);
+                box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2);
+              }
+              100% {
+                -webkit-box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2);
+                box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2);
+              }
+            }
+            @keyframes domainProcessing {
+              0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+              50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+              100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+            }
+            """, ss.ToString());
     }
 
     [Fact]
     public void Test2()
     {
         var ss = StyleSheet.Parse("""
-//= support Safari >= 6
+            //= support Safari >= 6
 
-@keyframes domainProcessing2 {
- 0% { border-color: rgba(248, 202, 92, 0.4); }
- 20% { border-color: rgba(248, 202, 92, 0.2); }
- 100% { border-color: rgba(248, 202, 92, 0.2); }
-}
+            @keyframes domainProcessing2 {
+             0% { border-color: rgba(248, 202, 92, 0.4); }
+             20% { border-color: rgba(248, 202, 92, 0.2); }
+             100% { border-color: rgba(248, 202, 92, 0.2); }
+            }
 
-@keyframes domainProcessing {
- 0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
- 50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
- 100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-}
-""");
+            @keyframes domainProcessing {
+             0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+             50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+             100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+            }
+            """);
 
         Assert.Equal(
-"""
-@-webkit-keyframes domainProcessing2 {
-  0% { border-color: rgba(248, 202, 92, 0.4); }
-  20% { border-color: rgba(248, 202, 92, 0.2); }
-  100% { border-color: rgba(248, 202, 92, 0.2); }
-}
-@keyframes domainProcessing2 {
-  0% { border-color: rgba(248, 202, 92, 0.4); }
-  20% { border-color: rgba(248, 202, 92, 0.2); }
-  100% { border-color: rgba(248, 202, 92, 0.2); }
-}
-@-webkit-keyframes domainProcessing {
-  0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
-  50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-}
-@keyframes domainProcessing {
-  0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
-  50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-  100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
-}
-""", ss.ToString());
+            """
+            @-webkit-keyframes domainProcessing2 {
+              0% { border-color: rgba(248, 202, 92, 0.4); }
+              20% { border-color: rgba(248, 202, 92, 0.2); }
+              100% { border-color: rgba(248, 202, 92, 0.2); }
+            }
+            @keyframes domainProcessing2 {
+              0% { border-color: rgba(248, 202, 92, 0.4); }
+              20% { border-color: rgba(248, 202, 92, 0.2); }
+              100% { border-color: rgba(248, 202, 92, 0.2); }
+            }
+            @-webkit-keyframes domainProcessing {
+              0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+              50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+              100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+            }
+            @keyframes domainProcessing {
+              0% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.6); }
+              50% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 0.4), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+              100% { box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2); }
+            }
+            """, ss.ToString());
     }
 
     [Fact]
@@ -99,31 +100,31 @@ public class CssAnimationTests
         for (var i = 0; i < 100; i++)
         {
             Assert.Equal("""
-@-moz-keyframes planet {
-  0% {
-    -moz-transform: translate(0, 0px) rotate(0deg);
-    transform: translate(0, 0px) rotate(0deg);
-  }
-  100% {
-    -moz-transform: translate(0, 0px) rotate(-360deg);
-    transform: translate(0, 0px) rotate(-360deg);
-  }
-}
-@-webkit-keyframes planet {
-  0% {
-    -webkit-transform: translate(0, 0px) rotate(0deg);
-    transform: translate(0, 0px) rotate(0deg);
-  }
-  100% {
-    -webkit-transform: translate(0, 0px) rotate(-360deg);
-    transform: translate(0, 0px) rotate(-360deg);
-  }
-}
-@keyframes planet {
-  0% { transform: translate(0, 0px) rotate(0deg); }
-  100% { transform: translate(0, 0px) rotate(-360deg); }
-}
-""", sheet.ToString());
+                @-moz-keyframes planet {
+                  0% {
+                    -moz-transform: translate(0, 0px) rotate(0deg);
+                    transform: translate(0, 0px) rotate(0deg);
+                  }
+                  100% {
+                    -moz-transform: translate(0, 0px) rotate(-360deg);
+                    transform: translate(0, 0px) rotate(-360deg);
+                  }
+                }
+                @-webkit-keyframes planet {
+                  0% {
+                    -webkit-transform: translate(0, 0px) rotate(0deg);
+                    transform: translate(0, 0px) rotate(0deg);
+                  }
+                  100% {
+                    -webkit-transform: translate(0, 0px) rotate(-360deg);
+                    transform: translate(0, 0px) rotate(-360deg);
+                  }
+                }
+                @keyframes planet {
+                  0% { transform: translate(0, 0px) rotate(0deg); }
+                  100% { transform: translate(0, 0px) rotate(-360deg); }
+                }
+                """, sheet.ToString());
         }
     }
 
@@ -131,22 +132,22 @@ public class CssAnimationTests
     public void KeyframesTest2()
     {
         var sheet = StyleSheet.Parse("""
-@keyframes flicker {
-  0%    { opacity: 1; }
-  30%   { opacity: .8; }
-  60%   { opacity: 1; }
-  100%  { opacity: .6; }
-}
-""");
+            @keyframes flicker {
+              0%    { opacity: 1; }
+              30%   { opacity: .8; }
+              60%   { opacity: 1; }
+              100%  { opacity: .6; }
+            }
+            """);
 
         Assert.Equal("""
-@keyframes flicker {
-  0% { opacity: 1; }
-  30% { opacity: 0.8; }
-  60% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-""", sheet.ToString());
+            @keyframes flicker {
+              0% { opacity: 1; }
+              30% { opacity: 0.8; }
+              60% { opacity: 1; }
+              100% { opacity: 0.6; }
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
