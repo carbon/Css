@@ -148,9 +148,9 @@ public sealed class StyleSheet : CssRoot, IStylesheet
             scope.Add(v.Key, v.Value);
         }
 
-        var writer = new CssWriter(textWriter, Context, scope, resolver);
+        var cssWriter = new CssWriter(textWriter, Context, scope, resolver);
 
-        writer.WriteRoot(this);
+        cssWriter.WriteRoot(this);
     }
 
     public string ToString(IEnumerable<KeyValuePair<string, CssValue>> variables)

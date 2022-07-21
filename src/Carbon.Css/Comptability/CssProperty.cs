@@ -198,7 +198,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
     public static readonly CssProperty BreakInside = new("break-inside");
 
     public static readonly CssProperty CaptionSide = new("caption-side");
-    public static readonly CssProperty Clear = new ("clear");
+    public static readonly CssProperty Clear       = new ("clear");
 
     // Clipping
     public static readonly CssProperty Clip = new("clip", CssModule.Masking_1);

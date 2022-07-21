@@ -155,19 +155,20 @@ public sealed class CssTokenizer : IDisposable
                 return new CssToken(CssTokenKind.Equals, reader.Read(2), reader.Position - 1);
 
             case '>': // >=
-                if (reader.Peek() == '=') return new CssToken(CssTokenKind.Gte, reader.Read(2), reader.Position - 1);
-                else return new CssToken(CssTokenKind.Gt, reader.Read(), reader.Position);
+                return (reader.Peek() is '=') 
+                    ? new CssToken(CssTokenKind.Gte, reader.Read(2), reader.Position - 1)
+                    : new CssToken(CssTokenKind.Gt, reader.Read(), reader.Position);
 
             case '<': // <=
-                if (reader.Peek() == '=') return new CssToken(CssTokenKind.Lte, reader.Read(2), reader.Position - 1);
+                if (reader.Peek() is '=') return new CssToken(CssTokenKind.Lte, reader.Read(2), reader.Position - 1);
                 else return new CssToken(CssTokenKind.Lt, reader.Read(), reader.Position);
 
-            case '#' when reader.Peek() == '{':
+            case '#' when reader.Peek() is '{':
                 mode.Enter(LexicalMode.InterpolatedString);
 
                 return new CssToken(CssTokenKind.InterpolatedStringStart, reader.Read(2), reader.Position - 1);
 
-            case '+' when reader.Peek() == ' ':
+            case '+' when reader.Peek() is ' ':
                 return new CssToken(CssTokenKind.Add, reader.Read(), reader.Position);
             case '*': return new CssToken(CssTokenKind.Multiply, reader.Read(), reader.Position);
 
