@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -33,9 +34,10 @@ public readonly struct LinearGradient : IGradient
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public readonly ColorStop[] Stops { get; }
 
+    [SkipLocalsInit]
     public readonly override string ToString()
     {
-        using var sb = new ValueStringBuilder(128);
+        using var sb = new ValueStringBuilder(stackalloc char[64]);
 
         Span<char> buffer = new char[12];
 
@@ -87,9 +89,31 @@ public readonly struct LinearGradient : IGradient
         return Parse(text.AsSpan());
     }
 
+    public static bool TryParse(ReadOnlySpan<char> text, out LinearGradient result)
+    {
+        if (text.Length is 0)
+        {
+            result = default;
+
+            return false;
+        }
+
+        try
+        {
+            result = Parse(text);
+
+            return true;
+        }
+        catch { }
+
+        result = default;
+
+        return false;
+    }
+
     public static LinearGradient Parse(ReadOnlySpan<char> text)
     {
-        if (text.StartsWith("linear-gradient("))
+        if (text.StartsWith("linear-gradient(", StringComparison.Ordinal))
         {
             text = text[16..^1];
         }
@@ -117,7 +141,7 @@ public readonly struct LinearGradient : IGradient
 
         while (text.Length > 0)
         {
-            if (text[0] == ',')
+            if (text[0] is ',')
             {
                 text = text[1..];
             }
