@@ -20,8 +20,7 @@ internal sealed class SourceReader : IDisposable
 
     public SourceReader(TextReader textReader)
     {
-        this._textReader = textReader;
-
+        _textReader = textReader;
         _position = 0;
         _current = '.';
         sb = new StringBuilder();
@@ -50,32 +49,43 @@ internal sealed class SourceReader : IDisposable
     {
         char c = _current;
 
-        Next();
+        Advance();
 
         return c;
+    }
+
+    /// <summary>
+    /// Returns the current character and advances to the next
+    /// </summary>
+    /// <returns></returns>
+    internal string ReadSymbol(string result)
+    {
+        Advance();
+
+        return result;
     }
 
     [SkipLocalsInit]
     public string Read(int count)
     {
-        Span<char> buffer = count <= 16
-            ? stackalloc char[16]
+        Span<char> buffer = count <= 8
+            ? stackalloc char[8]
             : new char[count];
 
         for (int i = 0; i < count; i++)
         {
             buffer[i] = _current;
 
-            Next();
+            Advance();
         }
 
-        return new string(buffer);
+        return new string(buffer[..2]);
     }
 
     /// <summary>
     /// Advances to the next character and returns it
     /// </summary>
-    public char Next()
+    public void Advance()
     {
         if (IsEof) throw new Exception("Cannot read past EOF.");
 
@@ -89,8 +99,6 @@ internal sealed class SourceReader : IDisposable
         _current = (charCode > 0) ? (char)charCode : EofChar;
 
         _position++;
-
-        return _current;
     }
 
     #region Mark

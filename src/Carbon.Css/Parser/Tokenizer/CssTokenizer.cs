@@ -6,13 +6,13 @@ namespace Carbon.Css.Parser;
 
 public sealed class CssTokenizer : IDisposable
 {
-    private readonly Stack<CssToken> stack;
+    private readonly Stack<CssToken> _stack;
 
     private CssToken current;
     private bool isEnd;
 
     // Don't make these RO
-    private LexicalModeContext mode;
+    private LexicalModeContext _mode;
     private readonly SourceReader reader;
 
     // Exposed for testing
@@ -23,11 +23,11 @@ public sealed class CssTokenizer : IDisposable
     {
         this.reader = reader;
 
-        this.reader.Next(); // Start the reader
+        this.reader.Advance(); // Start the reader
 
-        this.mode = new LexicalModeContext(mode);
+        _mode = new LexicalModeContext(mode);
 
-        this.stack = new Stack<CssToken>(3);
+        _stack = new Stack<CssToken>(3);
         current = default;
         isEnd = false;
 
@@ -68,9 +68,9 @@ public sealed class CssTokenizer : IDisposable
             throw new Exception($"Cannot read past EOF. Current: {current}.");
         }
 
-        if (stack.Count > 0)
+        if (_stack.Count > 0)
         {
-            return stack.Pop();
+            return _stack.Pop();
         }
 
         if (char.IsWhiteSpace(reader.Current) || reader.Current is '\uFEFF')
@@ -80,20 +80,20 @@ public sealed class CssTokenizer : IDisposable
 
         switch (reader.Current)
         {
-            case '@': return new CssToken(CssTokenKind.AtSymbol, reader.Read(), reader.Position);
-
+            case '@': 
+                return new CssToken(CssTokenKind.AtSymbol, reader.ReadSymbol("@"), reader.Position);
             case '$':
-                mode.Enter(LexicalMode.Symbol);
+                _mode.Enter(LexicalMode.Symbol);
 
-                return new CssToken(CssTokenKind.Dollar, reader.Read(), reader.Position);
+                return new CssToken(CssTokenKind.Dollar, reader.ReadSymbol("$"), reader.Position);
 
             case '/':
 
                 return reader.Peek() switch
                 {
                     '/' or '*' => ReadComment(),
-                    ' ' => new CssToken(CssTokenKind.Divide, reader.Read(), reader.Position),
-                    _ => new CssToken(CssTokenKind.String, reader.Read(), reader.Position)
+                    ' '        => new CssToken(CssTokenKind.Divide, reader.ReadSymbol("/"), reader.Position),
+                    _          => new CssToken(CssTokenKind.String, reader.Read(), reader.Position)
                 };
 
 
@@ -105,44 +105,44 @@ public sealed class CssTokenizer : IDisposable
                 }
                 else
                 {
-                    var colon = new CssToken(CssTokenKind.Colon, reader.Read(), reader.Position);
+                    var colon = new CssToken(CssTokenKind.Colon, reader.ReadSymbol(":"), reader.Position);
 
                     return MaybeColonOrPseudoClass(colon);
                 }
 
-            case ',': return new CssToken(CssTokenKind.Comma, reader.Read(), reader.Position);
+            case ',': 
+                return new CssToken(CssTokenKind.Comma, reader.ReadSymbol(","), reader.Position);
             case ';':
                 LeaveValueMode();
-                return new CssToken(CssTokenKind.Semicolon, reader.Read(), reader.Position);
+                return new CssToken(CssTokenKind.Semicolon, reader.ReadSymbol(";"), reader.Position);
             case '{':
-                mode.Enter(LexicalMode.Block);
+                _mode.Enter(LexicalMode.Block);
 
-                return new CssToken(CssTokenKind.BlockStart, reader.Read(), reader.Position);
+                return new CssToken(CssTokenKind.BlockStart, reader.ReadSymbol("{"), reader.Position);
             case '}':
 
                 LeaveValueMode();
 
-                if (mode.Current == LexicalMode.InterpolatedString)
+                if (_mode.Current is LexicalMode.InterpolatedString)
                 {
-                    mode.Leave(LexicalMode.InterpolatedString);
+                    _mode.Leave(LexicalMode.InterpolatedString);
 
-                    return new CssToken(CssTokenKind.InterpolatedStringEnd, reader.Read(), reader.Position);
+                    return new CssToken(CssTokenKind.InterpolatedStringEnd, reader.ReadSymbol("}"), reader.Position);
                 }
                 else
                 {
-                    mode.Leave(LexicalMode.Block, this.Current.Position);
+                    _mode.Leave(LexicalMode.Block, this.Current.Position);
 
-                    return new CssToken(CssTokenKind.BlockEnd, reader.Read(), reader.Position);
+                    return new CssToken(CssTokenKind.BlockEnd, reader.ReadSymbol("}"), reader.Position);
                 }
 
-            case '(': return new CssToken(CssTokenKind.LeftParenthesis, reader.Read(), reader.Position);
-            case ')': return new CssToken(CssTokenKind.RightParenthesis, reader.Read(), reader.Position);
+            case '(': return new CssToken(CssTokenKind.LeftParenthesis,  reader.ReadSymbol("("), reader.Position);
+            case ')': return new CssToken(CssTokenKind.RightParenthesis, reader.ReadSymbol(")"), reader.Position);
 
             case '&':
-                if (reader.Peek() is '&')
-                    return new CssToken(CssTokenKind.And, reader.Read(2), reader.Position - 1);
-                else
-                    return new CssToken(CssTokenKind.Ampersand, reader.Read(), reader.Position);
+                return reader.Peek() is '&'
+                    ? new CssToken(CssTokenKind.And, reader.Read(2), reader.Position - 1)
+                    : new CssToken(CssTokenKind.Ampersand, reader.ReadSymbol("&"), reader.Position);
 
             case '|' when (reader.Peek() is '|'): // ||
                 return new CssToken(CssTokenKind.Or, reader.Read(2), reader.Position - 1);
@@ -155,54 +155,43 @@ public sealed class CssTokenizer : IDisposable
                 return new CssToken(CssTokenKind.Equals, reader.Read(2), reader.Position - 1);
 
             case '>': // >=
-                return (reader.Peek() is '=') 
+                return reader.Peek() is '='
                     ? new CssToken(CssTokenKind.Gte, reader.Read(2), reader.Position - 1)
-                    : new CssToken(CssTokenKind.Gt, reader.Read(), reader.Position);
+                    : new CssToken(CssTokenKind.Gt, reader.ReadSymbol(">"), reader.Position);
 
             case '<': // <=
-                if (reader.Peek() is '=') return new CssToken(CssTokenKind.Lte, reader.Read(2), reader.Position - 1);
-                else return new CssToken(CssTokenKind.Lt, reader.Read(), reader.Position);
+                return reader.Peek() is '='
+                    ? new CssToken(CssTokenKind.Lte, reader.Read(2), reader.Position - 1)
+                    : new CssToken(CssTokenKind.Lt,  reader.ReadSymbol("<"), reader.Position);
 
             case '#' when reader.Peek() is '{':
-                mode.Enter(LexicalMode.InterpolatedString);
+                _mode.Enter(LexicalMode.InterpolatedString);
 
                 return new CssToken(CssTokenKind.InterpolatedStringStart, reader.Read(2), reader.Position - 1);
 
             case '+' when reader.Peek() is ' ':
-                return new CssToken(CssTokenKind.Add, reader.Read(), reader.Position);
-            case '*': return new CssToken(CssTokenKind.Multiply, reader.Read(), reader.Position);
-
+                return new CssToken(CssTokenKind.Add, reader.ReadSymbol("+"), reader.Position);
+            case '*': 
+                return new CssToken(CssTokenKind.Multiply, reader.ReadSymbol("*"), reader.Position);
             case '.' when char.IsDigit(reader.Peek()):
                 return ReadNumber();
 
             case '-':
                 if (char.IsDigit(reader.Peek()))
                     return ReadNumber();
-                else if (reader.Peek() == ' ')
-                    return new CssToken(CssTokenKind.Subtract, reader.Read(), reader.Position);
+                else if (reader.Peek() is ' ')
+                    return new CssToken(CssTokenKind.Subtract, reader.ReadSymbol("-"), reader.Position);
                 else
                     break;
 
-            case '\'':
-            case '"':
+            case '\'' or '"':
                 return ReadQuotedString(reader.Current);
-
-
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
+            case '0' or '1' or '2' or '3' or '4' or '5' or '6' or '7' or '8' or '9':
                 return ReadNumber();
 
         }
 
-        return mode.Current switch
+        return _mode.Current switch
         {
             LexicalMode.Symbol => ReadSymbol(),
             LexicalMode.Value => ReadValue(),
@@ -219,10 +208,10 @@ public sealed class CssTokenizer : IDisposable
         {
             if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Name");
 
-            reader.Next();
+            reader.Advance();
         }
 
-        mode.Leave(LexicalMode.Unit);
+        _mode.Leave(LexicalMode.Unit);
 
         return new CssToken(CssTokenKind.Unit, reader.Unmark(), reader.MarkStart);
     }
@@ -242,10 +231,10 @@ public sealed class CssTokenizer : IDisposable
         {
             if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Symbol");
 
-            reader.Next();
+            reader.Advance();
         }
 
-        mode.Leave(LexicalMode.Symbol);
+        _mode.Leave(LexicalMode.Symbol);
 
         return new CssToken(CssTokenKind.Name, reader.Unmark(), reader.MarkStart);
     }
@@ -270,7 +259,7 @@ public sealed class CssTokenizer : IDisposable
                 break;
             }
 
-            reader.Next();
+            reader.Advance();
         }
 
         return new CssToken(CssTokenKind.Name, reader.Unmark(), reader.MarkStart);
@@ -278,9 +267,9 @@ public sealed class CssTokenizer : IDisposable
 
     private void LeaveValueMode()
     {
-        if (mode.Current == LexicalMode.Value)
+        if (_mode.Current == LexicalMode.Value)
         {
-            mode.Leave(LexicalMode.Value, this.Current.Position);
+            _mode.Leave(LexicalMode.Value, this.Current.Position);
         }
     }
 
@@ -288,14 +277,14 @@ public sealed class CssTokenizer : IDisposable
     {
         reader.Mark();
 
-        reader.Next(); // "
+        reader.Advance(); // "
 
         while (reader.Current != quoteChar && !reader.IsEof)
         {
-            reader.Next();
+            reader.Advance();
         }
 
-        reader.Next(); // "
+        reader.Advance(); // "
 
         return new CssToken(CssTokenKind.String, reader.Unmark(), reader.MarkStart);
     }
@@ -304,7 +293,7 @@ public sealed class CssTokenizer : IDisposable
     {
         if (char.IsWhiteSpace(reader.Current))
         {
-            mode.Enter(LexicalMode.Value);
+            _mode.Enter(LexicalMode.Value);
 
             return colon;
         }
@@ -321,7 +310,7 @@ public sealed class CssTokenizer : IDisposable
             reader.Current != ':' &&
             !reader.IsEof)
         {
-            reader.Next();
+            reader.Advance();
         }
 
         var text = reader.Unmark();
@@ -335,9 +324,9 @@ public sealed class CssTokenizer : IDisposable
         {
             // We'll return this on the next read...
 
-            stack.Push(new CssToken(CssTokenKind.String, text, reader.MarkStart));
+            _stack.Push(new CssToken(CssTokenKind.String, text, reader.MarkStart));
 
-            mode.Enter(LexicalMode.Value);
+            _mode.Enter(LexicalMode.Value);
 
             return colon;
         }
@@ -356,7 +345,7 @@ public sealed class CssTokenizer : IDisposable
             reader.Current != ',' &&
             !reader.IsEof)
         {
-            reader.Next();
+            reader.Advance();
         }
 
         var text = reader.Unmark();
@@ -376,16 +365,16 @@ public sealed class CssTokenizer : IDisposable
         reader.Mark();
 
         // Read a leading '-'
-        if (reader.Current == '-') reader.Next();
+        if (reader.Current is '-') reader.Advance();
 
         while ((char.IsDigit(reader.Current) || reader.Current == '.') && !reader.IsEof)
         {
-            reader.Next();
+            reader.Advance();
         }
 
-        if (reader.Current == '%' || char.IsLetter(reader.Current))
+        if (reader.Current is '%' || char.IsLetter(reader.Current))
         {
-            mode.Enter(LexicalMode.Unit);
+            _mode.Enter(LexicalMode.Unit);
         }
 
         return new CssToken(CssTokenKind.Number, reader.Unmark(), reader.MarkStart);
@@ -399,7 +388,7 @@ public sealed class CssTokenizer : IDisposable
 
         while ((char.IsWhiteSpace(reader.Current) || reader.Current == '\uFEFF') && !reader.IsEof)
         {
-            reader.Next();
+            reader.Advance();
         }
 
         return new CssToken(CssTokenKind.Whitespace, reader.Unmark(), reader.MarkStart);
@@ -411,27 +400,27 @@ public sealed class CssTokenizer : IDisposable
 
         reader.Mark();
 
-        reader.Read();                  // read /
+        reader.Advance();                  // read /
 
-        if (reader.Current == '/')
+        if (reader.Current is '/')
         {
             return ReadLineComment();
         }
 
-        reader.Read();                  // read *
+        reader.Advance();                  // read *
 
         while (!reader.IsEof)
         {
-            if (reader.Current == '*' && reader.Peek() == '/')
+            if (reader.Current is '*' && reader.Peek() == '/')
             {
                 break;
             }
 
-            reader.Next();
+            reader.Advance();
         }
 
-        reader.Read(); // read *
-        reader.Read(); // read /
+        reader.Advance(); // read *
+        reader.Advance(); // read /
 
         return new CssToken(CssTokenKind.Comment, reader.Unmark(), reader.MarkStart);
     }
@@ -440,15 +429,15 @@ public sealed class CssTokenizer : IDisposable
     {
         // line comment
 
-        reader.Next(); // read /
+        reader.Advance(); // read /
 
-        bool isDirective = reader.Current == '=';
+        bool isDirective = reader.Current is '=';
 
-        while (reader.Current != '\n' && reader.Current != '\r')
+        while (!(reader.Current is '\n' or '\r'))
         {
             if (reader.IsEof) break;
 
-            reader.Next();
+            reader.Advance();
         }
 
         return new CssToken(isDirective ? CssTokenKind.Directive : CssTokenKind.Comment, reader.Unmark(), reader.MarkStart);
