@@ -12,6 +12,9 @@ public class CssUnitNamesTests
         Assert.Same(CssUnitNames.Vmax, CssUnitNames.Get("vmax"));
 
         // Safari 15+
+        Assert.Same(CssUnitNames.Dvh, CssUnitNames.Get("dvh"));
+        Assert.Same(CssUnitNames.Dvw, CssUnitNames.Get("dvw"));
+
         Assert.Same(CssUnitNames.Svw, CssUnitNames.Get("svw"));
         Assert.Same(CssUnitNames.Svh, CssUnitNames.Get("svh"));
         Assert.Same(CssUnitNames.Svi, CssUnitNames.Get("svi"));
@@ -27,6 +30,7 @@ public class CssUnitNamesTests
         Assert.Same(CssUnitNames.Vb, CssUnitNames.Get("vb"));
 
 
+        Assert.Same(CssUnitNames.Deg, CssUnitNames.Get("deg"));
 
         // svmin, svmax
     }

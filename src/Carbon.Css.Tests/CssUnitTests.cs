@@ -13,6 +13,8 @@ public class CssUnitTests
         Assert.Equal(CssUnitInfo.Deg, CssUnitInfo.Get("deg"));
         Assert.Equal(CssUnitInfo.Rlh, CssUnitInfo.Get("rlh"));
         Assert.Equal(CssUnitInfo.Rem, CssUnitInfo.Get("rem"));
+        Assert.Equal(CssUnitInfo.Dvw, CssUnitInfo.Get("dvw"));
+        Assert.Equal(CssUnitInfo.Dvh, CssUnitInfo.Get("dvh"));
     }
 
     [Fact]
@@ -23,10 +25,12 @@ public class CssUnitTests
     }
 
     [Theory]
-    [InlineData("px", NodeKind.Length)]
-    [InlineData("pt", NodeKind.Length)]
+    [InlineData("px",  NodeKind.Length)]
+    [InlineData("pt",  NodeKind.Length)]
     [InlineData("kHz", NodeKind.Frequency)]
-    [InlineData("s", NodeKind.Time)]
+    [InlineData("s",   NodeKind.Time)]
+    [InlineData("dvh", NodeKind.Length)]
+    [InlineData("dvw", NodeKind.Length)]
     public void KindIsCorrect(string text, NodeKind kind)
     {
         Assert.Equal(kind, CssUnitInfo.Get(text).Kind);
