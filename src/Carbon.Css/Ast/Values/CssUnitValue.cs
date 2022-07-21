@@ -36,12 +36,6 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanForm
         sb.Append(Unit.Name);
     }
 
-    internal override void WriteTo(StringBuilder sb)
-    {
-        sb.Append(CultureInfo.InvariantCulture, $"{Value}");
-        sb.Append(Unit.Name);
-    }
-
     internal override void WriteTo(TextWriter writer)
     {
         Span<char> buffer = stackalloc char[16];

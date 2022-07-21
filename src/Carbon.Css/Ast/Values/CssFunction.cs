@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Carbon.Css;
 
@@ -25,12 +27,21 @@ public class CssFunction : CssValue
         writer.Write(')');
     }
 
+    internal override void WriteTo(ref ValueStringBuilder sb)
+    {
+        sb.Append(Name);
+        sb.Append('(');
+        Arguments.WriteTo(ref sb);
+        sb.Append(')');
+    }
+
+    [SkipLocalsInit]
     public override string ToString()
     {
-        var writer = new StringWriter();
+        var sb = new ValueStringBuilder(stackalloc char[128]);
 
-        WriteTo(writer);
+        WriteTo(ref sb);
 
-        return writer.ToString();
+        return sb.ToString();
     }
 }

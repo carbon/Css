@@ -17,6 +17,11 @@ public abstract class CssValue : CssNode
 
     public static CssUnitValue Number(double value)
     {
+        if (value is 0)
+        {
+            return CssUnitValue.Zero;
+        }
+
         return new CssUnitValue(value, CssUnitInfo.Number);
     }
 
@@ -131,11 +136,6 @@ public abstract class CssValue : CssNode
     }
 
     internal virtual void WriteTo(ref ValueStringBuilder sb)
-    {
-        sb.Append(ToString());
-    }
-
-    internal virtual void WriteTo(StringBuilder sb)
     {
         sb.Append(ToString());
     }

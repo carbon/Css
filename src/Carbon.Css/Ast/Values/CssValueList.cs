@@ -51,7 +51,7 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
         }
     }
 
-    internal override void WriteTo(StringBuilder sb)
+    internal override void WriteTo(ref ValueStringBuilder sb)
     {
         string seperator = Seperator is CssValueSeperator.Space ? " " : ", ";
 
@@ -62,7 +62,7 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
                 sb.Append(seperator);
             }
 
-            _items[i].WriteTo(sb);
+            _items[i].WriteTo(ref sb);
         }
     }
 

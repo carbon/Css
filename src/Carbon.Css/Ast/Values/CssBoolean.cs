@@ -1,4 +1,6 @@
-﻿namespace Carbon.Css;
+﻿using System.Text;
+
+namespace Carbon.Css;
 
 public sealed class CssBoolean : CssValue
 {
@@ -16,6 +18,11 @@ public sealed class CssBoolean : CssValue
     public override CssBoolean CloneNode() => new(Value);
 
     public override string ToString() => Value ? "true" : "false";
+
+    internal override void WriteTo(ref ValueStringBuilder sb)
+    {
+        sb.Append(Value ? "true" : "false");
+    }
 
     internal static CssBoolean Get(bool value)
     {

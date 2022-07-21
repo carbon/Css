@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 
 using Carbon.Css.Parser;
 
@@ -25,6 +26,11 @@ public sealed class CssString : CssValue
     public string Text { get; }
 
     public override CssString CloneNode() => new(Text);
+
+    internal override void WriteTo(ref ValueStringBuilder sb)
+    {
+        sb.Append(Text);
+    }
 
     internal override void WriteTo(TextWriter writer)
     {
