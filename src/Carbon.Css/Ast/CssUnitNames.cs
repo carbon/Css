@@ -31,6 +31,8 @@ public static class CssUnitNames
     public static readonly string Svi     = "svi";
     public static readonly string Svb     = "svb";
 
+    public static readonly string Dvh     = "dvh";
+    public static readonly string Dvw     = "dvw"; 
     public static readonly string Lvw     = "lvw"; // largest viewport width
     public static readonly string Lvh     = "lvh"; // largest viewport height
     public static readonly string Lvi     = "lvi";
@@ -71,9 +73,24 @@ public static class CssUnitNames
 
         else if (text.Length is 3)
         {
-            if (text[0] is 'd' && text[1] is 'e' && text[2] is 'g')
+            if (text[0] is 'd')
             {
-                return Deg;
+                if (text[1] is 'e')
+                {
+                    if (text[2] is 'g')
+                    {
+                        return Deg;
+                    }
+                }
+                else if (text[1] is 'v')
+                {
+                    return text[2] switch
+                    {
+                        'h' => Dvh,
+                        'w' => Dvw,
+                        _ => text.ToString()
+                    };
+                }
             }
             else if (text[0] is 'l')
             {
@@ -101,14 +118,14 @@ public static class CssUnitNames
                 }
             }
             else if (text[0] is 's' && text[1] is 'v')
-            {                
+            {
                 return text[2] switch
                 {
                     'b' => Svb,
                     'h' => Svh,
                     'i' => Svi,
                     'w' => Svw,
-                    _   => text.ToString()
+                    _ => text.ToString()
                 };
             }
         }
