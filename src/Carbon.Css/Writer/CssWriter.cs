@@ -173,7 +173,6 @@ public sealed class CssWriter : IDisposable
     {
         var enumerable = (CssValueList)EvalulateExpression(block.Enumerable);
 
-
         _scope = _scope.GetChildScope();
 
         int a = 0;
@@ -722,7 +721,8 @@ public sealed class CssWriter : IDisposable
     {
         _writer.Write("@media ");
 
-        rule.Queries.WriteTo(_writer);
+        rule.Queries.WriteTo(_writer, _scope);
+
         _writer.Write(' ');
 
         WriteBlock(rule, depth);

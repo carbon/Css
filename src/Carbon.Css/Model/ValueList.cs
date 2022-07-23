@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Carbon.Css;
@@ -41,15 +42,30 @@ public sealed class CssSequence : CssValue, IEnumerable<CssValue>
 
     public CssValue this[int index] => _children[index];
 
+    [SkipLocalsInit]
     public override string ToString()
     {
-        var sb = StringBuilderCache.Aquire();
+        var sb = new ValueStringBuilder(stackalloc char[32]);
 
-        using var writer = new StringWriter(sb);
+        WriteTo(ref sb);
 
-        WriteTo(writer);
+        return sb.ToString();
+    }
 
-        return StringBuilderCache.ExtractAndRelease(sb);
+    internal override void WriteTo(ref ValueStringBuilder sb)
+    {
+        for (int i = 0; i < _children.Count; i++)
+        {
+            CssValue item = _children[i];
+
+            item.WriteTo(ref sb);
+
+            // Skip trailing trivia
+            if ((item.Trailing != null || item.Kind is NodeKind.Sequence) && (i + 1) != _children.Count)
+            {
+                sb.Append(' ');
+            }
+        }
     }
 
     internal override void WriteTo(TextWriter writer)
