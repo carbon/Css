@@ -2,7 +2,7 @@
 
 namespace Carbon.Css;
 
-internal ref struct Fixed4List
+internal ref struct Tuple4
 {
     public ReadOnlySpan<char> _0 { get; private set; }
 
@@ -29,9 +29,9 @@ internal ref struct Fixed4List
 
     public int Length { get; private set; }
 
-    public static Fixed4List Parse(ReadOnlySpan<char> d)
+    public static Tuple4 Parse(ReadOnlySpan<char> d)
     {
-        var result = new Fixed4List();
+        var result = new Tuple4();
 
         var splitter = new Splitter(d, ' ');
         

@@ -84,7 +84,7 @@ public sealed class Thickness
 
     public static Thickness Parse(ReadOnlySpan<char> value)
     {
-        var parts = Fixed4List.Parse(value.Trim());
+        var parts = Tuple4.Parse(value.Trim());
 
         var top = CssUnitValue.Zero;
         var left = CssUnitValue.Zero;
