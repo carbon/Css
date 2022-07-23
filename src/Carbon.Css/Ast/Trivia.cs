@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -6,7 +6,7 @@ using Carbon.Css.Parser;
 
 namespace Carbon.Css;
 
-public sealed class Trivia : Collection<CssToken>
+public sealed class Trivia : List<CssToken>
 {
     [SkipLocalsInit]
     public override string ToString()
