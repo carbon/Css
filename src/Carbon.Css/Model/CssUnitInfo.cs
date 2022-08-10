@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Text;
+
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Carbon.Css;
 
@@ -7,7 +11,7 @@ public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
 {
     public static readonly CssUnitInfo Number = new (string.Empty, NodeKind.Number);
 
-    // <length> (Relative) | em, ex, cm, ch, rem, vh, vw, vmin, vmax	                                  | relative to
+    // <length> (Relative) | em, ex, cm, ch, rem, vh, vw, vmin, vmax	                                         | relative to
     public static readonly CssUnitInfo Em   = new(CssUnitNames.Em,   NodeKind.Length, CssUnitFlags.Relative); // | font size of the element
     public static readonly CssUnitInfo Ex   = new(CssUnitNames.Ex,   NodeKind.Length, CssUnitFlags.Relative); // | x-height of the element’s font
     public static readonly CssUnitInfo Cap  = new("cap",             NodeKind.Length, CssUnitFlags.Relative); // | cap height (the nominal height of capital letters) of the element’s font
@@ -124,6 +128,21 @@ public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
     public NodeKind Kind { get; }
 
     public CssUnitFlags Flags { get; }
+
+    [SkipLocalsInit]
+    public static CssUnitInfo Get(ReadOnlySpan<byte> utf8Bytes)
+    {
+        if (utf8Bytes.Length > CssUnitNames.MaxLength)
+        {
+            return new CssUnitInfo(Encoding.UTF8.GetString(utf8Bytes), NodeKind.Unknown);
+        }
+
+        Span<char> buffer = stackalloc char[4];
+
+        var chars = buffer[0..Encoding.ASCII.GetChars(utf8Bytes, buffer)];
+
+        return Get(chars);
+    }
 
     public static CssUnitInfo Get(ReadOnlySpan<char> name)
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -59,7 +58,7 @@ public abstract class CssValue : CssNode
     // 60px
     // 6.5em
 
-    private static bool TryParseNumberOrMeasurement(string text, [NotNullWhen(true)] out CssUnitValue? value)
+    private static bool TryParseNumberOrMeasurement(ReadOnlySpan<char> text, [NotNullWhen(true)] out CssUnitValue? value)
     {
         int unitIndex = -1;
 
@@ -75,18 +74,18 @@ public abstract class CssValue : CssNode
                 return false;
             }
 
-            if (char.IsNumber(point) || point == '.')
+            if (char.IsNumber(point) || point is '.')
             {
             }
-            else if (unitIndex == -1)
+            else if (unitIndex is -1)
             {
                 unitIndex = i;
             }
         }
 
         value = (unitIndex > 0)
-            ? new CssUnitValue(double.Parse(text.AsSpan(0, unitIndex), provider: CultureInfo.InvariantCulture), CssUnitNames.Get(text.AsSpan(unitIndex)))
-            : new CssUnitValue(double.Parse(text, CultureInfo.InvariantCulture), CssUnitInfo.Number);
+            ? new CssUnitValue(double.Parse(text[..unitIndex], provider: CultureInfo.InvariantCulture), CssUnitNames.Get(text[unitIndex..]))
+            : new CssUnitValue(double.Parse(text, provider: CultureInfo.InvariantCulture), CssUnitInfo.Number);
 
         return true;
     }

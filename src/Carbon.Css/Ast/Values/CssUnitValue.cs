@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -61,7 +60,7 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanForm
 
     public static CssUnitValue Parse(ReadOnlySpan<char> text)
     {
-        double value = text.ReadNumber(out int read);
+        double value = NumberHelper.ReadNumber(text, out int read);
 
         if (read == text.Length)
         {
@@ -69,6 +68,20 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanForm
         }
 
         return new CssUnitValue(value, CssUnitInfo.Get(text[read..].Trim()));
+    }
+
+    public static CssUnitValue Parse(ReadOnlySpan<byte> utf8Bytes)
+    {
+        double value = NumberHelper.ReadNumber(utf8Bytes, out int read);
+
+        if (read == utf8Bytes.Length)
+        {
+            return Number(value);
+        }
+
+        var suffixBytes = utf8Bytes[read..].Trim((byte)' ');
+
+        return new CssUnitValue(value, CssUnitInfo.Get(suffixBytes));
     }
 
     #region Operators

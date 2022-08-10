@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace Carbon.Css;
+﻿namespace Carbon.Css;
 
 public static class CssUnitNames
 {
+    internal const int MaxLength = 4;
+
     public static readonly string Lh      = "lh";
     public static readonly string S       = "s";
     public static readonly string Ms      = "ms";
