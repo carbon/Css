@@ -19,7 +19,7 @@ public sealed class CssBoolean : CssValue
 
     public override string ToString() => Value ? "true" : "false";
 
-    internal override void WriteTo(ref ValueStringBuilder sb)
+    internal override void WriteTo(scoped ref ValueStringBuilder sb)
     {
         sb.Append(Value ? "true" : "false");
     }

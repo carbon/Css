@@ -1,7 +1,5 @@
 ﻿// Based on .NET Source code
 
-using System;
-
 namespace Carbon.Css;
 
 internal ref struct Splitter

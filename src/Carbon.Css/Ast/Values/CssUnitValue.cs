@@ -29,7 +29,7 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanForm
 
     public CssUnitInfo Unit { get; }
 
-    internal override void WriteTo(ref ValueStringBuilder sb)
+    internal override void WriteTo(scoped ref ValueStringBuilder sb)
     {
         sb.AppendInvariant(Value);
         sb.Append(Unit.Name);

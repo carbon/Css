@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Carbon.Css;
+﻿namespace Carbon.Css;
 
 public static class CssBoxAlignmentExtensions
 {
@@ -42,7 +40,7 @@ public static class CssBoxAlignmentExtensions
         CssBoxAlignment.SafeCenter    => "safe center",
         CssBoxAlignment.UnsafeCenter  => "unsafe center",
 
-        _ => throw new Exception("Unexpected alignment:" + alignment)
+        _ => throw new Exception($"Unexpected alignment. Was {alignment}")
     };
         
     public static CssBoxAlignment Parse(ReadOnlySpan<char> text) => text switch

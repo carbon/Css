@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -134,7 +133,7 @@ public abstract class CssValue : CssNode
         };
     }
 
-    internal virtual void WriteTo(ref ValueStringBuilder sb)
+    internal virtual void WriteTo(scoped ref ValueStringBuilder sb)
     {
         sb.Append(ToString());
     }

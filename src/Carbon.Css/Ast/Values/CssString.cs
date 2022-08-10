@@ -27,7 +27,7 @@ public sealed class CssString : CssValue
 
     public override CssString CloneNode() => new(Text);
 
-    internal override void WriteTo(ref ValueStringBuilder sb)
+    internal override void WriteTo(scoped ref ValueStringBuilder sb)
     {
         sb.Append(Text);
     }

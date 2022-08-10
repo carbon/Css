@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Carbon.Css;
+﻿namespace Carbon.Css;
 
 public sealed class CharsetRule : CssRule
 {

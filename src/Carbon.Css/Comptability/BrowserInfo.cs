@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Carbon.Css;
+﻿namespace Carbon.Css;
 
 public readonly struct BrowserInfo
 {
@@ -16,11 +14,11 @@ public readonly struct BrowserInfo
 
     public readonly BrowserPrefix Prefix => GetPrefix(Type);
 
-    public static BrowserInfo Chrome(float version)  => new (BrowserType.Chrome, version);
+    public static BrowserInfo Chrome(float version)  => new(BrowserType.Chrome, version);
     public static BrowserInfo Edge(float version)    => new(BrowserType.Edge, version);
 
-    public static BrowserInfo Firefox(float version) => new (BrowserType.Firefox, version);
-    public static BrowserInfo Safari(float version)  => new (BrowserType.Safari, version);
+    public static BrowserInfo Firefox(float version) => new(BrowserType.Firefox, version);
+    public static BrowserInfo Safari(float version)  => new(BrowserType.Safari, version);
 
     public static readonly BrowserInfo Chrome1   = Chrome(1);
     public static readonly BrowserInfo Chrome4   = Chrome(4);

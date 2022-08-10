@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -52,7 +51,7 @@ public sealed class CssSequence : CssValue, IEnumerable<CssValue>
         return sb.ToString();
     }
 
-    internal override void WriteTo(ref ValueStringBuilder sb)
+    internal override void WriteTo(scoped ref ValueStringBuilder sb)
     {
         for (int i = 0; i < _children.Count; i++)
         {

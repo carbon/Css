@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -51,7 +50,7 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
         }
     }
 
-    internal override void WriteTo(ref ValueStringBuilder sb)
+    internal override void WriteTo(scoped ref ValueStringBuilder sb)
     {
         string seperator = Seperator is CssValueSeperator.Space ? " " : ", ";
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Carbon.Css;
+﻿namespace Carbon.Css;
 
 internal readonly struct CssScale : IEquatable<CssScale>
 {

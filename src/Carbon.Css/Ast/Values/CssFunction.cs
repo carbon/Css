@@ -27,7 +27,7 @@ public class CssFunction : CssValue
         writer.Write(')');
     }
 
-    internal override void WriteTo(ref ValueStringBuilder sb)
+    internal override void WriteTo(scoped ref ValueStringBuilder sb)
     {
         sb.Append(Name);
         sb.Append('(');
