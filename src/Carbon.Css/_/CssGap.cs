@@ -1,14 +1,13 @@
 ﻿#pragma warning disable IDE0057 // Use range operator
 
-using System;
-using System.Text.Json.Serialization;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
-using Carbon.Css.Json;
+using Carbon.Css.Serialization;
 
 namespace Carbon.Css;
 
-[JsonConverter(typeof(CssGapJsonConverter))]
+[JsonConverter(typeof(CssGapConverter))]
 public readonly struct CssGap : IEquatable<CssGap>, ISpanFormattable
 {
     public CssGap(double value)
@@ -51,6 +50,21 @@ public readonly struct CssGap : IEquatable<CssGap>, ISpanFormattable
         }
 
         return new CssGap(CssUnitValue.Parse(text));
+    }
+
+    public static CssGap Parse(ReadOnlySpan<byte> utf8Text)
+    {
+        int spaceIndex = utf8Text.IndexOf((byte)' ');
+
+        if (spaceIndex > -1)
+        {
+            var x = utf8Text.Slice(0, spaceIndex);
+            var y = utf8Text.Slice(spaceIndex + 1);
+
+            return new CssGap(CssUnitValue.Parse(x), CssUnitValue.Parse(y));
+        }
+
+        return new CssGap(CssUnitValue.Parse(utf8Text));
     }
 
     public bool Equals(CssGap other)
