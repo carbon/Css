@@ -5,10 +5,12 @@ public class TokenizerTests
     [Fact]
     public void TokenizeAnd()
     {
-        var tokens = GetTokens(@"
-&:nth-child(odd) {
-background-color: red;
-};".Trim());
+        var tokens = GetTokens(
+            """
+            &:nth-child(odd) {
+            background-color: red;
+            };
+            """);
 
         Assert.Equal((CssTokenKind.Ampersand,        "&"),           tokens[0].AsTuple());
         Assert.Equal((CssTokenKind.Name,             ":nth-child"),  tokens[1].AsTuple());
@@ -20,26 +22,27 @@ background-color: red;
     [Fact]
     public void BackenizeBackToBackPseudoClasses()
     {
-        var tokens = GetTokens(@"
-&:last-child:after {
-background-color: rgba($bg-color, $shade);
-};".Trim());
+        var tokens = GetTokens(
+            """
+            &:last-child:after {
+            background-color: rgba($bg-color, $shade);
+            };
+            """);
 
         Assert.Equal((CssTokenKind.Ampersand, "&"),           tokens[0].AsTuple());
         Assert.Equal((CssTokenKind.Name,      ":last-child"), tokens[1].AsTuple());
         Assert.Equal((CssTokenKind.Name,      ":after"),      tokens[2].AsTuple());
-
     }
 
     [Fact]
     public void TokenizeSimpleMixin()
     {
-        var tokens = GetTokens("""
+        var tokens = GetTokens(
+            """
             @mixin hi { 
             color: red;
             }
             """);
-
 
         Assert.Equal((CssTokenKind.AtSymbol, "@"),   tokens[0].AsTuple());
         Assert.Equal((CssTokenKind.Name, "mixin"),   tokens[1].AsTuple());
@@ -60,15 +63,16 @@ background-color: rgba($bg-color, $shade);
     [Fact]
     public void TokenizeComplexMixin()
     {
-        var tokens = GetTokens(@"
-@mixin blerg { 
-a {
-	color: pink;
+        var tokens = GetTokens(
+            """
+            @mixin blerg { 
+            a {
+            	color: pink;
 
-	&:hover { color: #000; }
-}
-}".Trim());
-
+            	&:hover { color: #000; }
+            }
+            }
+            """);
 
         Assert.Equal((CssTokenKind.AtSymbol, "@"), tokens[0].AsTuple());
         Assert.Equal((CssTokenKind.Name, "mixin"), tokens[1].AsTuple());
@@ -107,16 +111,17 @@ a {
     [Fact]
     public void TokenizeMediaRule()
     {
-        var tokens = GetTokens(@"
-@media (min-width: 700px) { 
-@include blerg;
+        var tokens = GetTokens(
+            """
+            @media (min-width: 700px) { 
+            @include blerg;
 
-div { 
-	background-color: $bgColor;
-	@include hi;
-}
-}".Trim());
-
+            div { 
+            	background-color: $bgColor;
+            	@include hi;
+            }
+            }
+            """);
 
         Assert.Equal((CssTokenKind.AtSymbol, "@"),         tokens[0].AsTuple());
         Assert.Equal((CssTokenKind.Name, "media"),         tokens[1].AsTuple());
