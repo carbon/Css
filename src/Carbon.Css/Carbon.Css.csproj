@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>0.58.0</Version>
+    <Version>0.59.0</Version>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>true</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
