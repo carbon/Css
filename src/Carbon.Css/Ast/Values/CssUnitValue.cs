@@ -4,11 +4,11 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 using Carbon.Css.Helpers;
-using Carbon.Css.Json;
+using Carbon.Css.Serialization;
 
 namespace Carbon.Css;
 
-[JsonConverter(typeof(CssUnitValueJsonConverter))]
+[JsonConverter(typeof(CssUnitValueConverter))]
 public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanFormattable
 {
     public static readonly CssUnitValue Zero = new(0, CssUnitInfo.Number);

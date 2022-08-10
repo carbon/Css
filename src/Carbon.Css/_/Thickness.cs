@@ -1,15 +1,14 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 
-using Carbon.Css.Json;
+using Carbon.Css.Serialization;
 
 namespace Carbon.Css;
 
 // of the margin, border, or padding
-[JsonConverter(typeof(ThinknessJsonConverter))]
+[JsonConverter(typeof(ThinknessConverter))]
 public sealed class Thickness
 {
     public static readonly Thickness Zero = new(CssUnitValue.Zero);
