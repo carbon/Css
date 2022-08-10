@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Carbon.Css.Helpers;
+﻿using Carbon.Css.Helpers;
 
 namespace Carbon.Css.Parser;
 
