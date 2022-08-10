@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Carbon.Css.Parser;
+﻿namespace Carbon.Css.Parser;
 
 public struct LexicalModeContext
 {

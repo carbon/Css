@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Carbon.Css.Parser;
+﻿namespace Carbon.Css.Parser;
 
 public readonly struct CssToken: ISpanFormattable
 {

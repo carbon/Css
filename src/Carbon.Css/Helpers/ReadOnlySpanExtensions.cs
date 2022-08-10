@@ -1,6 +1,5 @@
 ﻿#pragma warning disable IDE0057 // Use range operator
 
-using System;
 using System.Globalization;
 
 using Carbon.Color;
@@ -45,24 +44,6 @@ internal static class ReadOnlySpanExtensions
         }
 
         return Rgba32.Parse(text.Slice(0, read));
-    }
-
-    public static double ReadNumber(this ReadOnlySpan<char> text, out int read)
-    {
-        read = 0;
-
-        // leading -
-        if (text[0] is '-')
-        {
-            read++;
-        }
-
-        while (text.Length > read && (char.IsDigit(text[read]) || text[read] == '.'))
-        {
-            read++;
-        }
-
-        return double.Parse(text.Slice(0, read), provider: CultureInfo.InvariantCulture);
     }
 
     public static bool TryReadWhitespace(this ReadOnlySpan<char> text, out int read)

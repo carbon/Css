@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Carbon.Css;
+﻿namespace Carbon.Css;
 
 public sealed class RewriterCollection : List<ICssRewriter>
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Carbon.Css.Gradients;
+﻿namespace Carbon.Css.Gradients;
 
 using static LinearGradientDirection;
 

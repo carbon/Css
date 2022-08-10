@@ -1,8 +1,6 @@
 ﻿#pragma warning disable IDE0066 // Convert switch statement to expression
 #pragma warning disable IDE0090 // Use 'new(...)'
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;

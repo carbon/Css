@@ -1,8 +1,4 @@
-﻿#pragma warning disable IDE0057 // Use range operator
-
-using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -65,7 +61,7 @@ public readonly struct LinearGradient : IGradient
             {
                 stop.Color.TryFormatHexString(buffer, out int c);
 
-                sb.Append(buffer.Slice(0, c));
+                sb.Append(buffer[..c]);
             }
             else
             {
@@ -151,7 +147,7 @@ public readonly struct LinearGradient : IGradient
                 text = text[read..];
             }
 
-            if (text[0] == ',')
+            if (text[0] is ',')
             {
                 text = text[1..];
             }
@@ -172,11 +168,9 @@ public readonly struct LinearGradient : IGradient
 
     private static double ReadAngle(ReadOnlySpan<char> text, out int read)
     {
-        double value = text.ReadNumber(out read);
+        double value = NumberHelper.ReadNumber(text, out read);
 
-        text = text[read..];
-
-        if (text.StartsWith("deg", StringComparison.Ordinal))
+        if (text[read..].StartsWith("deg", StringComparison.Ordinal))
         {
             read += 3;
         }
