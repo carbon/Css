@@ -21,11 +21,13 @@ public class VendorPrefixTests
     [Fact]
     public void DoubleList3()
     {
-        var sheet = StyleSheet.Parse(@"
+        var sheet = StyleSheet.Parse(
+            """
             //= support Safari >= 9
-            a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }");
+            a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }
+            """);
 
-        Assert.Equal(@"a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
+        Assert.Equal("a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
     }
 
     [Fact]
@@ -43,11 +45,12 @@ public class VendorPrefixTests
     [Fact]
     public void ParseWebkitPrefixedKeyframesRule()
     {
-        var sheet = StyleSheet.Parse(@"
-@-webkit-keyframes fade {
-    from {opacity: 1;}
-    to {opacity: 0.25;}
-}");
+        var sheet = StyleSheet.Parse("""
+            @-webkit-keyframes fade {
+                from {opacity: 1;}
+                to {opacity: 0.25;}
+            }
+            """);
 
         var atRule = (UnknownRule)sheet.Children[0];
 
@@ -94,7 +97,8 @@ public class VendorPrefixTests
 
         ss.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             #networkLinks .block .edit:before {
               font-family: 'carbonmade';
               font-size: 12px;

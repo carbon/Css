@@ -224,17 +224,17 @@ public class NestingTests
     [Fact]
     public void NestedMultiselector2()
     {
-        string text = @"
-#header { 
-  .inner {  
-    h1, ul {
-      display: table-cell;
-      vertical-align: middle;
-    }
-  }
-}";
-
-        var stylesheet = StyleSheet.Parse(text);
+        var stylesheet = StyleSheet.Parse(
+            """
+            #header { 
+              .inner {  
+                h1, ul {
+                  display: table-cell;
+                  vertical-align: middle;
+                }
+              }
+            }
+            """);
 
         var node = (StyleRule)stylesheet.Children[0];
 

@@ -357,7 +357,7 @@ public class CssTests
 
         /*
         Assert.Equal(
-            expected: @"div { transition: width: 5px; }", 
+            expected: "div { transition: width: 5px; }", 
             actual: sheet.ToString()
         );
         */
@@ -483,7 +483,6 @@ public class CssTests
             a {
             }
             """);
-
     }
 
     [Fact]
@@ -497,7 +496,6 @@ public class CssTests
         Assert.Equal("3px 3px rgba(50%, 50%, 50%, 50%), lemonchiffon 0 0 4px inset", value.ToString());
         Assert.Equal(@"""Gill Sans"", Futura, sans-serif", value2.ToString());
     }
-
 
     [Fact]
     public void FontFace()

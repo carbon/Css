@@ -15,6 +15,17 @@ public class CssGapTests
     }
 
     [Fact]
+    public void CanParseStack()
+    {
+        Span<char> buffer = stackalloc char[3] { '1', '0', '%' };
+
+        var gap = new CssGap(CssUnitValue.Parse(buffer));
+
+        Assert.Equal("10%", gap.X.ToString());
+        Assert.Equal("10%", gap.Y.ToString());
+    }
+
+    [Fact]
     public void ParseSingleValue()
     {
         var gap = CssGap.Parse("10px");
