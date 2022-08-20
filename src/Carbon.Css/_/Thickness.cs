@@ -101,7 +101,7 @@ public sealed class Thickness
                 bottom = part;
                 right = part;
             }
-            else if (parts.Length == 2)
+            else if (parts.Length is 2)
             {
                 // padding: 10px 20px;
                 // 10px = top & bottom

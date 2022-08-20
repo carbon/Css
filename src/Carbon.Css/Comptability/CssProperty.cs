@@ -106,7 +106,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
     public static readonly CssProperty BackdropFilter = new("backdrop-filter", CssModule.Transforms3, new CssCompatibility(
       prefixed: new(safari: 9),
-      standard: new(chrome: 76)
+      standard: new(chrome: 76, firefox: 103)
     ));
 
     public static readonly CssProperty BackfaceVisibility = new("backface-visibility", CssModule.Transforms3, new CssCompatibility(
@@ -302,7 +302,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
     public static readonly CssProperty InlineBoxAlign = new ("inline-box-align");
 
-    public static readonly CssProperty Left = new ("left", CssModule.Core1);
+    public static readonly CssProperty Left          = new ("left", CssModule.Core1);
     public static readonly CssProperty LetterSpacing = new ("letter-spacing");
 
     // Lines
@@ -454,9 +454,9 @@ public sealed class CssProperty : IEquatable<CssProperty>
     public static readonly CssProperty Top = new ("top", CssModule.Core1);
 
     // Transforms (Level 3) -------------------------------------------------------------------------------------------------------------------
-    public static readonly CssProperty Transform        = new("transform",        CssModule.Transforms3);
-    public static readonly CssProperty TransformOrigin  = new("transform-origin", CssModule.Transforms3);
-    public static readonly CssProperty TransformStyle   = new("transform-style",  CssModule.Transforms3);
+    public static readonly CssProperty Transform                = new("transform",        CssModule.Transforms3);
+    public static readonly CssProperty TransformOrigin          = new("transform-origin", CssModule.Transforms3);
+    public static readonly CssProperty TransformStyle           = new("transform-style",  CssModule.Transforms3);
 
     // - Transitions (Level 3 ) ---------------------------------------------------------------------------------------------------------------
 

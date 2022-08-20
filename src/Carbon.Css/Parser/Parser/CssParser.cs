@@ -321,7 +321,7 @@ public sealed partial class CssParser : IDisposable
 
         CssValue end = ReadExpression();
 
-        var rule = new ForBlock(variable, start, end, isInclusive: name.Equals("through", StringComparison.Ordinal));
+        var rule = new ForBlock(variable, start, end, isInclusive: name is "through");
 
         ReadBlock(rule);
 
@@ -426,7 +426,7 @@ public sealed partial class CssParser : IDisposable
         // White space is allowed, but optional, immediately inside the parentheses. 
         // If a function takes a list of arguments, the arguments are separated by a comma (‘,’) with optional whitespace before and after the comma.
 
-        if (Current.Kind == CssTokenKind.LeftParenthesis)
+        if (Current.Kind is CssTokenKind.LeftParenthesis)
         {
             return ReadFunctionCall(value);
         }
@@ -467,7 +467,7 @@ public sealed partial class CssParser : IDisposable
     {
         double value = double.Parse(_tokenizer.Consume().Text, CultureInfo.InvariantCulture);   // read number
 
-        if (Current.Kind == CssTokenKind.Unit)
+        if (Current.Kind is CssTokenKind.Unit)
         {
             var unit = _tokenizer.Consume().Text;
 
