@@ -262,21 +262,21 @@ public sealed class CssWriter : IDisposable
 
         switch (expression.Operator)
         {
-            case BinaryOperator.Divide: return ((CssUnitValue)lhs).Divide(rhs);
-            case BinaryOperator.Multiply: return ((CssUnitValue)lhs).Multiply(rhs);
-            case BinaryOperator.Add: return ((CssUnitValue)lhs).Add(rhs);
-            case BinaryOperator.Subtract: return ((CssUnitValue)lhs).Subtract(rhs);
+            case BinaryOperator.Divide    : return ((CssUnitValue)lhs).Divide(rhs);
+            case BinaryOperator.Multiply  : return ((CssUnitValue)lhs).Multiply(rhs);
+            case BinaryOperator.Add       : return ((CssUnitValue)lhs).Add(rhs);
+            case BinaryOperator.Subtract  : return ((CssUnitValue)lhs).Subtract(rhs);
         }
 
         return expression.Operator switch
         {
-            BinaryOperator.Eq => CssBoolean.Get(AreEqual(lhs, rhs)),
+            BinaryOperator.Eq        => CssBoolean.Get(AreEqual(lhs, rhs)),
             BinaryOperator.NotEquals => CssBoolean.Get(!AreEqual(lhs, rhs)),
-            BinaryOperator.Gt => CssBoolean.Get(ToDouble(lhs) > ToDouble(rhs)),
-            BinaryOperator.Gte => CssBoolean.Get(ToDouble(lhs) >= ToDouble(rhs)),
-            BinaryOperator.Lt => CssBoolean.Get(ToDouble(lhs) < ToDouble(rhs)),
-            BinaryOperator.Lte => CssBoolean.Get(ToDouble(lhs) <= ToDouble(rhs)),
-            _ => new CssBoolean(true)
+            BinaryOperator.Gt        => CssBoolean.Get(ToDouble(lhs) > ToDouble(rhs)),
+            BinaryOperator.Gte       => CssBoolean.Get(ToDouble(lhs) >= ToDouble(rhs)),
+            BinaryOperator.Lt        => CssBoolean.Get(ToDouble(lhs) < ToDouble(rhs)),
+            BinaryOperator.Lte       => CssBoolean.Get(ToDouble(lhs) <= ToDouble(rhs)),
+            _                        => CssBoolean.True
         };
     }
 
