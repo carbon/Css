@@ -1,5 +1,4 @@
 ﻿#pragma warning disable IDE0066 // Convert switch statement to expression
-#pragma warning disable IDE0090 // Use 'new(...)'
 
 using System.Globalization;
 using System.IO;

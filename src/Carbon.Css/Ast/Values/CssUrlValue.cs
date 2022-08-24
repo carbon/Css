@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0057 // Use range operator
-
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace Carbon.Css;

@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0057 // Use range operator
-
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 
 namespace Carbon.Css.Parser;

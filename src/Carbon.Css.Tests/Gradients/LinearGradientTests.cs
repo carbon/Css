@@ -1,5 +1,4 @@
-﻿#pragma warning disable IDE0057 // Use range operator
-#pragma warning disable IDE0018 // Inline variable declaration
+﻿#pragma warning disable IDE0018 // Inline variable declaration
 
 using Carbon.Color;
 

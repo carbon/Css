@@ -41,7 +41,7 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanForm
 
         if (Value.TryFormat(buffer, out int charsWritten, provider: CultureInfo.InvariantCulture))
         {
-            writer.Write(buffer[..charsWritten]);
+            writer.Write(buffer.Slice(0, charsWritten));
         }
         else
         {

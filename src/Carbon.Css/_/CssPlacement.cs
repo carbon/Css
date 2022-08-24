@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0057 // Use range operator
-
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Carbon.Css;
 
@@ -47,7 +45,7 @@ public readonly struct CssPlacement : IEquatable<CssPlacement>
             return new CssPlacement(value, value);
         }
 
-        var lhs = text[..spaceIndex];
+        var lhs = text.Slice(0, spaceIndex);
         var rhs = text.Slice(spaceIndex + 1);
 
         CssBoxAlignment align = CssBoxAlignmentExtensions.Parse(lhs);
