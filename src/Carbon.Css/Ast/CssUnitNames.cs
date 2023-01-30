@@ -38,6 +38,14 @@ public static class CssUnitNames
     public static readonly string Lvi     = "lvi";
     public static readonly string Lvb     = "lvb";
 
+
+    public static readonly string Cqw   = "cqw";
+    public static readonly string Cqh   = "cqh";  
+    public static readonly string Cqi   = "cqi";  
+    public static readonly string Cqb   = "cqb";
+    public static readonly string Cqmin = "cqmin";
+    public static readonly string Cqmax = "cqmax";
+
     // svb, svmin, svmax
 
     public static string Get(ReadOnlySpan<char> text)
@@ -73,7 +81,30 @@ public static class CssUnitNames
 
         else if (text.Length is 3)
         {
-            if (text[0] is 'd')
+            if (text[0] is 'c')
+            {
+                if (text[1] is 'q')
+                {
+                    if (text[2] is 'b')
+                    {
+                        return Cqb;
+                    }
+                    if (text[2] is 'h')
+                    {
+                        return Cqh;
+                    }
+                    if (text[2] is 'i')
+                    {
+                        return Cqi;
+                    }
+                    else if (text[2] is 'w')
+                    {
+                        return Cqw;
+                    }
+                }
+              
+            }
+            else if (text[0] is 'd')
             {
                 if (text[1] is 'e')
                 {

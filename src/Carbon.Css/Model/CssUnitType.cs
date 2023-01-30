@@ -32,6 +32,13 @@ public enum CssUnitType
     Vmin    = 22, // 1% of viewport’s smaller dimension
     Vmax    = 23, // 1% of viewport’s larger dimension
 
+    Cqw     = 24, // 1% of a query container's width
+    Cqh     = 25, // 1% of a query container's height
+    Cqi     = 26, // 1% of a query container's inline size
+    Cqb     = 27, // 1% of a query container's block size
+    Cqmin   = 28, // The smaller value of either cqi or cqb
+    Cqmax   = 29, // The larger value of either cqi or cqb
+
     // Angle
     Deg     = 30,
     Grad    = 31,

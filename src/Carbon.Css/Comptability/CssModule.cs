@@ -57,16 +57,18 @@ public sealed class CssModule : CssCompatibility
 
     #endregion
 
-    #region Columns
-
     // Columns (Level 3)
     public static readonly CssModule Columns3 = new (CssModuleType.Columns, 3,
         prefixed: new CompatibilityTable(chrome: 10,           firefox: 9, safari: 7),
         standard: new CompatibilityTable(chrome: 50, edge: 10, firefox: 52, safari: 9)
     );
 
-
-    #endregion
+    // CSS Containment (Level 1)
+    public static readonly CssModule Containment1 = new(
+       type     : CssModuleType.Containment,
+       level    : 1,
+       standard : new CompatibilityTable(chrome: 105, edge: 105, firefox: 111, safari: 16)
+   );
 
     #region Flexbox
 

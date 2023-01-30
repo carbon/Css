@@ -106,21 +106,21 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
     public static readonly CssProperty BackdropFilter = new("backdrop-filter", CssModule.Transforms3, new CssCompatibility(
       prefixed: new(safari: 9),
-      standard: new(chrome: 76, firefox: 103)
+      standard: new(chrome: 76, edge: 79, firefox: 103)
     ));
 
     public static readonly CssProperty BackfaceVisibility = new("backface-visibility", CssModule.Transforms3, new CssCompatibility(
         prefixed: new (chrome: 12, firefox: 10, safari: 5.1f),
-        standard: new (chrome: 16, firefox: 36, safari: 15.4f)
+        standard: new (chrome: 16, edge: 12, firefox: 36, safari: 15.4f)
     ));
 
     // Backgrounds
     public static readonly CssProperty Background           = new("background", CssModule.Core1);
     public static readonly CssProperty BackgroundAttachment = new("background-attachment", CssModule.Core1);
 
-    public static readonly CssProperty BackgroundClip = new ("background-clip", CssModule.BackgroundsAndBorders3, new CssCompatibility(
-        prefixed: new (chrome : 4,  firefox: 4, safari: 4),
-        standard: new (chrome : 15, firefox: 4, edge: 9, safari: 7)
+    public static readonly CssProperty BackgroundClip = new("background-clip", CssModule.BackgroundsAndBorders3, new CssCompatibility(
+        prefixed: new (chrome : 4,            firefox: 4, safari: 4),
+        standard: new (chrome : 15, edge: 15, firefox: 4, safari: 7)
     ));
 
     public static readonly CssProperty BackgroundColor = new("background-color", CssModule.Core1);
@@ -221,9 +221,15 @@ public sealed class CssProperty : IEquatable<CssProperty>
     public static readonly CssProperty ColumnWidth      = new("column-width",       CssModule.Columns3);
     public static readonly CssProperty Columns          = new("columns",            CssModule.Columns3);
 
-    public static readonly CssProperty Content = new("content", CssModule.Core2_1);
+    // Containment -
+    public static readonly CssProperty Contain       = new("contain",        CssModule.Containment1);
+    public static readonly CssProperty Container     = new("container",      CssModule.Containment1);
+    public static readonly CssProperty ContainerName = new("container-name", CssModule.Containment1);
+    public static readonly CssProperty ContainerType = new("container-type", CssModule.Containment1);
 
-    // Counters ---------------------------------------------------------------------------------------
+    public static readonly CssProperty Content       = new("content", CssModule.Core2_1);
+
+    // Counters -
     public static readonly CssProperty CounterIncrement = new("counter-increment");
     public static readonly CssProperty CounterReset     = new("counter-reset");
 
@@ -258,7 +264,6 @@ public sealed class CssProperty : IEquatable<CssProperty>
     public static readonly CssProperty FlexWrap      = new("flex-wrap",      CssModule.Flexbox1);
 
     public static readonly CssProperty Float         = new("float", CssModule.Core1);
-    public static readonly CssProperty FloatOffset   = new("float-offset");
 
     // Fonts -------------------------------------------------------------------------------------------
     public static readonly CssProperty Font           = new("font",           CssModule.Core1);
@@ -360,7 +365,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
     public static readonly CssProperty Order   = new ("order");
 
     public static readonly CssProperty Orphans = new ("orphans", new CssModule(CssModuleType.Core, 2.1f), new CssCompatibility(
-        standard: new (edge: 8)
+        standard: new (chrome: 25, edge: 8, safari: 3.1f)
     ));
 
     // Outlines -------------------------------------------------------------------------------
@@ -476,10 +481,10 @@ public sealed class CssProperty : IEquatable<CssProperty>
     ));
 
     public static readonly CssProperty VerticalAlign = new("vertical-align", CssModule.Core1);
-    public static readonly CssProperty Visibility    = new("visibility", CssModule.Core1);
-    public static readonly CssProperty WhiteSpace    = new("white-space");
-    public static readonly CssProperty Widows        = new("widows", CssModule.Core2_1);
-    public static readonly CssProperty Width         = new("width", CssModule.Core1);
+    public static readonly CssProperty Visibility    = new("visibility",     CssModule.Core1);
+    public static readonly CssProperty WhiteSpace    = new("white-space",    CssModule.Text3);
+    public static readonly CssProperty Widows        = new("widows",         CssModule.Core2_1);
+    public static readonly CssProperty Width         = new("width",          CssModule.Core1);
 
     // Words
     public static readonly CssProperty WordBreak     = new("word-break",   CssModule.Text3);
@@ -562,36 +567,42 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "clear",                      Clear },
                                         
         // Clipping                     
-        { "clip",                       Clip },
-        { "clip-path",                  ClipPath },
-        { "clip-rule",                  ClipRule },
-                                        
-        { "color",                      Color },
+        { "clip",                   Clip },
+        { "clip-path",              ClipPath },
+        { "clip-rule",              ClipRule },
+                                    
+        { "color",                  Color },
 
         // Column
-        { "column-count",               ColumnCount },
-        { "column-fill",                ColumnFill },
-        { "column-gap",                 ColumnGap },
-        { "column-rule",                ColumnRule },
-        { "column-rule-color",          ColumnRuleColor },
-        { "column-rule-style",          ColumnRuleStyle },
-        { "column-rule-width",          ColumnRuleWidth },
-        { "column-span",                ColumnSpan },
-        { "column-width",               ColumnWidth },
-                                        
-        { "columns",                    Columns },
-        { "content",                    Content },
-        { "counter-increment",          CounterIncrement },
-        { "counter-reset",              CounterReset },
-        { "cursor",                     Cursor },
-        { "direction",                  Direction },
-        { "display",                    Display },
-        { "empty-cells",                EmptyCells },
-        { "fill",                       Fill },
-        { "fill-opacity",               FillOpacity },
-        { "filter",                     Filter },
-        { "fit",                        Fit },
-        { "fit-position",               FitPosition },
+        { "column-count",           ColumnCount },
+        { "column-fill",            ColumnFill },
+        { "column-gap",             ColumnGap },
+        { "column-rule",            ColumnRule },
+        { "column-rule-color",      ColumnRuleColor },
+        { "column-rule-style",      ColumnRuleStyle },
+        { "column-rule-width",      ColumnRuleWidth },
+        { "column-span",            ColumnSpan },
+        { "column-width",           ColumnWidth },
+                                    
+        { "columns",                Columns },
+        { "content",                Content },
+        { "counter-increment",      CounterIncrement },
+        { "counter-reset",          CounterReset },
+        { "cursor",                 Cursor },
+        { "direction",              Direction },
+        { "display",                Display },
+        { "empty-cells",            EmptyCells },
+        { "fill",                   Fill },
+        { "fill-opacity",           FillOpacity },
+        { "filter",                 Filter },
+        { "fit",                    Fit },
+        { "fit-position",           FitPosition },
+
+        // Containment
+        { "contain",                Contain },
+        { "container",              Container },
+        { "container-name",         ContainerName },
+        { "container-type",         ContainerType },
 
         // Flexbox
         { "flex",                   Flex },
@@ -603,7 +614,6 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "flex-wrap",              FlexWrap },
                                         
         { "float",                  Float },
-        { "float-offset",           FloatOffset },
 
         // Font
         { "font",                   Font },
