@@ -8,14 +8,17 @@ namespace Carbon.Css.Gradients;
 
 public readonly struct ColorStop
 {
+    [JsonConstructor]
     public ColorStop(Rgba32 color, double? position)
     {
         Color = color;
         Position = position;
     }
 
+    [JsonPropertyName("color")]
     public readonly Rgba32 Color { get; }
 
+    [JsonPropertyName("position")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public readonly double? Position { get; }
 
@@ -26,7 +29,7 @@ public readonly struct ColorStop
 
     public static ColorStop Read(ReadOnlySpan<char> text, out int read)
     {
-        if (text.Length == 0)
+        if (text.Length is 0)
         {
             throw new ArgumentException("May not be empty", nameof(text));
         }

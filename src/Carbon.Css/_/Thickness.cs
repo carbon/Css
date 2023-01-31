@@ -8,8 +8,8 @@ using Carbon.Css.Serialization;
 namespace Carbon.Css;
 
 // of the margin, border, or padding
-[JsonConverter(typeof(ThinknessConverter))]
-public sealed class Thickness
+[JsonConverter(typeof(ThicknessJsonConverter))]
+public sealed class Thickness : IEquatable<Thickness>
 {
     public static readonly Thickness Zero = new(CssUnitValue.Zero);
 
@@ -174,5 +174,25 @@ public sealed class Thickness
         }
 
         return sb.ToString();
+    }
+
+    public bool Equals(Thickness? other)
+    {
+        if (other is null) return this is null;
+
+        return Top.Equals(other.Top)
+            && Left.Equals(other.Left)
+            && Bottom.Equals(other.Bottom)
+            && Right.Equals(other.Right);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Top, Left, Bottom, Right);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Thickness other && Equals(other);
     }
 }

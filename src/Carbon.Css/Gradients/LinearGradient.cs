@@ -122,7 +122,7 @@ public readonly struct LinearGradient : IGradient
         double? angle = null;
         LinearGradientDirection direction = default;
 
-        if (char.IsDigit(text[0]) || text[0] is '-')
+        if (char.IsAsciiDigit(text[0]) || text[0] is '-')
         {
             angle = ReadAngle(text, out int read);
 

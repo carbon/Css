@@ -23,13 +23,13 @@ internal static class ReadOnlySpanExtensions
 
             if (isFunction)
             {
-                if (current == ')')
+                if (current is ')')
                 {
                     read++;
                     break;
                 }
             }
-            else if (current == '(')
+            else if (current is '(')
             {
                 isFunction = true;
             }

@@ -6,7 +6,7 @@ namespace Carbon.Css;
 
 public sealed class CssSelector : IEnumerable<CssSequence>
 {
-    private readonly IReadOnlyList<CssSequence> _items; // comma seperated
+    private readonly IReadOnlyList<CssSequence> _items; // comma separated
 
     public CssSelector(IReadOnlyList<CssSequence> items)
     {

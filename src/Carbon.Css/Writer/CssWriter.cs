@@ -50,7 +50,7 @@ public sealed class CssWriter : IDisposable
             throw new Exception("Exceded importCount of 200");
         }
 
-        int i = 0;
+        uint i = 0;
 
         foreach (var node in sheet.Children)
         {
@@ -112,7 +112,7 @@ public sealed class CssWriter : IDisposable
 
     #region Expressions
 
-    public void EvaluateIf(IfBlock block, int level = 0, int i = 0)
+    public void EvaluateIf(IfBlock block, int level = 0, uint i = 0)
     {
         CssValue result = EvalulateExpression(block.Condition);
 
@@ -224,7 +224,7 @@ public sealed class CssWriter : IDisposable
         switch (expression.Kind)
         {
             case NodeKind.Variable   : return _scope.GetValue(((CssVariable)expression).Symbol);
-            case NodeKind.Expression : return EvalBinaryExpression((BinaryExpression)expression);
+            case NodeKind.Expression : return EvaluateBinaryExpression((BinaryExpression)expression);
             case NodeKind.Function:
 
                 var function = (CssFunction)expression;
@@ -244,7 +244,7 @@ public sealed class CssWriter : IDisposable
         return name is "attr" or "calc" or "cubic-bezier" or "var";
     }
 
-    public CssValue EvalBinaryExpression(BinaryExpression expression)
+    public CssValue EvaluateBinaryExpression(BinaryExpression expression)
     {
         CssValue lhs = EvalulateExpression(expression.Left);
         CssValue rhs = EvalulateExpression(expression.Right);
@@ -540,7 +540,7 @@ public sealed class CssWriter : IDisposable
                 break;
 
             case NodeKind.Expression:
-                yield return EvalBinaryExpression((BinaryExpression)value);
+                yield return EvaluateBinaryExpression((BinaryExpression)value);
 
                 break;
 
@@ -579,7 +579,7 @@ public sealed class CssWriter : IDisposable
     {
         if (rule.IsComplex && rule is StyleRule styleRule)
         {
-            int i = 0;
+            uint i = 0;
 
             foreach (var r in Rewrite(styleRule))
             {
@@ -880,7 +880,7 @@ public sealed class CssWriter : IDisposable
         {
             BrowserPrefixKind prefixes = default;
 
-            for (int i = 0; i < _browserSupport.Length; i++)
+            for (uint i = 0; i < (uint)_browserSupport.Length; i++)
             {
                 ref BrowserInfo browser = ref _browserSupport[i];
 
@@ -1024,7 +1024,7 @@ public sealed class CssWriter : IDisposable
 
         if (includeCount > 1_000)
         {
-            throw new Exception("Exceded include limit of 1,000");
+            throw new Exception("Exceeded include limit of 1,000");
         }
 
         if (!_context.Mixins.TryGetValue(include.Name, out MixinNode? mixin))

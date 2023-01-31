@@ -1,9 +1,12 @@
-﻿using Carbon.Color;
+﻿using System.Text.Json.Serialization;
+
+using Carbon.Color;
 
 namespace Carbon.Css.Gradients;
 
 public readonly struct AngularColorStop
 {
+    [JsonConstructor]
     public AngularColorStop(Rgba32 color, double position, double angle = 0)
     {
         Color = color;
@@ -11,9 +14,12 @@ public readonly struct AngularColorStop
         Angle = angle;
     }
 
-    public readonly Rgba32 Color { get; }
+    [JsonPropertyName("color")]
+    public Rgba32 Color { get; }
 
-    public readonly double Position { get; }
+    [JsonPropertyName("position")]
+    public double Position { get; }
 
-    public readonly double Angle { get; }
+    [JsonPropertyName("angle")]
+    public double Angle { get; }
 }
