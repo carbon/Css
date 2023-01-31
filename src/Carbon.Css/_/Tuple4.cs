@@ -31,7 +31,7 @@ internal ref struct Tuple4
     {
         var result = new Tuple4();
 
-        var splitter = new Splitter(d, ' ');
+        var splitter = new StringSplitter(d, ' ');
         
         while (splitter.TryGetNext(out var component))
         {
