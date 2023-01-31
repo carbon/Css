@@ -28,9 +28,9 @@ public static class CssFunctions
     // hsla
     // hue
 
-    public static bool TryGet(string name, [NotNullWhen(true)] out Func<CssValue[], CssValue>? func)
+    public static bool TryGet(string name, [NotNullWhen(true)] out Func<CssValue[], CssValue>? function)
     {
-        return dic.TryGetValue(name, out func);
+        return dic.TryGetValue(name, out function);
     }
 
     // if($condition, $if-true, $if-false)
@@ -48,9 +48,9 @@ public static class CssFunctions
 
     public static CssValue Mix(CssValue[] args)
     {
-        Rgba32 color1 = GetColor(args[0]);
-        Rgba32 color2 = GetColor(args[1]);
-            
+        var color1 = GetColor(args[0]).ToRgba32();
+        var color2 = GetColor(args[1]).ToRgba32();
+
         double amount = args.Length == 3 ? GetAmount(args[2]) : 0.5;
 
         return new CssColor(color1.BlendWith(color2, (float)amount));
@@ -58,57 +58,63 @@ public static class CssFunctions
 
     public static CssValue Saturate(CssValue[] args)
     {
-        Rgba32 color = GetColor(args[0]);
+        Hsla color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
 
-        return new CssColor(color.Saturate((float)amount));
+        return new CssColor(color.AdjustSaturation((float)amount));
     }
 
     public static CssValue Desaturate(CssValue[] args)
     {
-        Rgba32 color = GetColor(args[0]);
+        Hsla color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
 
-        return new CssColor(color.Desaturate((float)amount));
+        return new CssColor(color.AdjustSaturation(-(float)amount));
     }
 
     public static CssValue Lighten(CssValue[] args)
     {
-        Rgba32 color = GetColor(args[0]);
+        Hsla color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
 
-        return new CssColor(color.Lighten((float)amount));
+        return new CssColor(color.AdjustLightness((float)amount));
     }
 
     public static CssValue Darken(CssValue[] args)
     {
-        Rgba32 color = GetColor(args[0]);
+        var color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
 
-        return new CssColor(color.Darken((float)amount));
+        return new CssColor(color.AdjustLightness(-(float)amount));
     }
 
     public static CssValue AdjustHue(CssValue[] args)
     {
-        Rgba32 color = GetColor(args[0]);
+        Hsla color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
 
-        return new CssColor(color.ToHsla().RotateHue((float)amount * 360).ToRgba32());
+        return new CssColor(color.RotateHue((float)amount * 360).ToRgba32());
     }
 
     public static CssValue Rgba(CssValue[] args)
     {
-        if (args.Length == 4)
+        if (args.Length is 2 && args[1] is CssUnitValue opacity)
+        {
+            var color = Rgba32.Parse(args[0].ToString()!);
+
+            double o = opacity.Value;
+
+            if (opacity.Kind is NodeKind.Percentage)
+            {
+                o /= 100d;
+            }
+
+            return CssColor.FromRgb(color.R, color.G, color.B, (float)o);
+        }
+        else
         {
             return new CssFunction("rgba", new CssValueList(args));
         }
-
-        string arg_0 = args[0].ToString()!;
-        string arg_1 = args[1].ToString()!;
-
-        var color = Rgba32.Parse(arg_0);
-            
-        return CssColor.FromRgba(color.R, color.G, color.B, float.Parse(arg_1, CultureInfo.InvariantCulture));
     }
 
     #region Helpers
@@ -123,14 +129,14 @@ public static class CssFunctions
         return string.Equals(value.ToString()!, "true", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static Rgba32 GetColor(CssValue value)
+    private static Rgba128f GetColor(CssValue value)
     {
-        if (value is CssColor { Rgba32Value: Rgba32 rgba32 })
+        if (value is CssColor { Value: Rgba128f v })
         {
-            return rgba32;
+            return v;
         }
 
-        return Rgba32.Parse(value.ToString()!);
+        return Rgba128f.FromRgba32(Rgba32.Parse(value.ToString()!));
     }
 
     private static double ParseDouble(ReadOnlySpan<char> text)
@@ -148,7 +154,7 @@ public static class CssFunctions
         NodeKind.Angle      => (ParseDouble(value.ToString().AsSpan()) % 360) / 360,
         NodeKind.Percentage => (((CssUnitValue)value).Value / 100d),
         NodeKind.Number     => ((CssUnitValue)value).Value,
-        _                   => throw new Exception($"Unknown numeric value: {value.Kind}:{value}")
+        _                   => throw new Exception($"Unknown numeric value. Was {value.Kind}:{value}")
     };
         
 #endregion
