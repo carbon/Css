@@ -1,4 +1,6 @@
-﻿namespace Carbon.Css.Tests;
+﻿using System.Text.Json;
+
+namespace Carbon.Css.Tests;
 
 public class ThicknessTests
 {
@@ -13,8 +15,9 @@ public class ThicknessTests
         Assert.Equal("200px", edge.Right.ToString());
 
         Assert.Equal("100px 200px", edge.ToString());
-
         Assert.Equal("100px 200px", $"{edge}");
+
+        Assert.Equal(edge, JsonSerializer.Deserialize<Thickness>("\"100px 200px\""));
     }
 
     [Fact]

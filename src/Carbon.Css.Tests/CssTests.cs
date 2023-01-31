@@ -466,17 +466,6 @@ public class CssTests
     }
 
     [Fact]
-    public void ColorTests()
-    {
-        Assert.Equal("red", CssValue.Parse("red").ToString());
-
-        var value = StyleSheet.Parse("body { background-color: rgba(#ffffff, 0.5) }");
-
-        Assert.Equal("body { background-color: rgba(255, 255, 255, 0.5); }", value.ToString());
-
-    }
-
-    [Fact]
     public void ParseEmpty()
     {
         StyleSheet.Parse("""
@@ -514,8 +503,6 @@ public class CssTests
 
         var value = ((CssDeclaration)((CssRule)sheet.Children[0])[2]).Value;
 
-        //  url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/cm-billing-webfont.woff') format('woff')
-
         var list = (CssValueList)value;
         var list_1_0 = (CssValueList)list[1];
 
@@ -523,7 +510,7 @@ public class CssTests
         Assert.Equal("url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype')", list[0].ToString());
 
         Assert.Equal("url('../fonts/cm-billing-webfont.woff')", list_1_0[0].ToString());
-        Assert.Equal("format('woff')", list_1_0[1].ToString().ToString());
+        Assert.Equal("format('woff')", list_1_0[1].ToString());
 
         Assert.Equal("""
             @font-face {

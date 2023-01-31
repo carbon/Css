@@ -8,7 +8,7 @@ public class CalcTests
         var css = StyleSheet.Parse(
             """
             div { 
-                width: calc(100vw - 380px - var(--cover-block-padding) * 2) 
+              width: calc(100vw - 380px - var(--cover-block-padding) * 2) 
             }
             """);
 
@@ -22,7 +22,7 @@ public class CalcTests
             """
             $containerWidth: 50px;
             div { 
-                width: calc(100vw - 380px - $containerWidth * 2) 
+              width: calc(100vw - 380px - $containerWidth * 2) 
             }
             """);
 
