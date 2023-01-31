@@ -35,12 +35,9 @@ public abstract class CssValue : CssNode
 
     public static CssValue Parse(string text)
     {
-        if (text.Length is 0)
-        {
-            throw new ArgumentException("Must not be empty", nameof(text));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(text);
 
-        if (char.IsDigit(text[0]) && TryParseNumberOrMeasurement(text, out CssUnitValue? value))
+        if (char.IsAsciiDigit(text[0]) && TryParseNumberOrMeasurement(text, out CssUnitValue? value))
         {
             return value;
         }
@@ -73,7 +70,7 @@ public abstract class CssValue : CssNode
                 return false;
             }
 
-            if (char.IsNumber(point) || point is '.')
+            if (char.IsAsciiDigit(point) || point is '.')
             {
             }
             else if (unitIndex is -1)
@@ -128,7 +125,7 @@ public abstract class CssValue : CssNode
                     left.Kind == right.Kind ||
                     left.Kind is NodeKind.Percentage or NodeKind.Number ||
                     right.Kind is NodeKind.Percentage or NodeKind.Number,
-            BinaryOperator.Mod => right.Kind == NodeKind.Number,
+            BinaryOperator.Mod => right.Kind is NodeKind.Number,
             _ => true
         };
     }

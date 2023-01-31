@@ -15,7 +15,7 @@ internal static class NumberHelper
             read++;
         }
 
-        while (text.Length > read && (char.IsDigit(text[read]) || text[read] is '.'))
+        while (text.Length > read && (char.IsAsciiDigit(text[read]) || text[read] is '.'))
         {
             read++;
         }

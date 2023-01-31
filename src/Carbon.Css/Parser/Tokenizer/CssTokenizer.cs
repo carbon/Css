@@ -171,11 +171,11 @@ public sealed class CssTokenizer : IDisposable
                 return new CssToken(CssTokenKind.Add, reader.ReadSymbol("+"), reader.Position);
             case '*': 
                 return new CssToken(CssTokenKind.Multiply, reader.ReadSymbol("*"), reader.Position);
-            case '.' when char.IsDigit(reader.Peek()):
+            case '.' when char.IsAsciiDigit(reader.Peek()):
                 return ReadNumber();
 
             case '-':
-                if (char.IsDigit(reader.Peek()))
+                if (char.IsAsciiDigit(reader.Peek()))
                     return ReadNumber();
                 else if (reader.Peek() is ' ')
                     return new CssToken(CssTokenKind.Subtract, reader.ReadSymbol("-"), reader.Position);
@@ -202,7 +202,7 @@ public sealed class CssTokenizer : IDisposable
     {
         reader.Mark();
 
-        while (char.IsLetter(reader.Current) || reader.Current == '%')
+        while (char.IsAsciiLetter(reader.Current) || reader.Current is '%')
         {
             if (reader.IsEof) throw SyntaxException.UnexpectedEOF("Name");
 
@@ -252,7 +252,7 @@ public sealed class CssTokenizer : IDisposable
         {
             if (reader.IsEof) break;
 
-            if (reader.Current == '#' && reader.Peek() == '{')
+            if (reader.Current is '#' && reader.Peek() is '{')
             {
                 break;
             }
@@ -265,7 +265,7 @@ public sealed class CssTokenizer : IDisposable
 
     private void LeaveValueMode()
     {
-        if (_mode.Current == LexicalMode.Value)
+        if (_mode.Current is LexicalMode.Value)
         {
             _mode.Leave(LexicalMode.Value, this.Current.Position);
         }
@@ -365,12 +365,12 @@ public sealed class CssTokenizer : IDisposable
         // Read a leading '-'
         if (reader.Current is '-') reader.Advance();
 
-        while ((char.IsDigit(reader.Current) || reader.Current == '.') && !reader.IsEof)
+        while ((char.IsAsciiDigit(reader.Current) || reader.Current is '.') && !reader.IsEof)
         {
             reader.Advance();
         }
 
-        if (reader.Current is '%' || char.IsLetter(reader.Current))
+        if (reader.Current is '%' || char.IsAsciiLetter(reader.Current))
         {
             _mode.Enter(LexicalMode.Unit);
         }
@@ -384,7 +384,7 @@ public sealed class CssTokenizer : IDisposable
 
         // \uFEFF : zero with non-breaking space
 
-        while ((char.IsWhiteSpace(reader.Current) || reader.Current == '\uFEFF') && !reader.IsEof)
+        while ((char.IsWhiteSpace(reader.Current) || reader.Current is '\uFEFF') && !reader.IsEof)
         {
             reader.Advance();
         }
@@ -409,7 +409,7 @@ public sealed class CssTokenizer : IDisposable
 
         while (!reader.IsEof)
         {
-            if (reader.Current is '*' && reader.Peek() == '/')
+            if (reader.Current is '*' && reader.Peek() is '/')
             {
                 break;
             }
