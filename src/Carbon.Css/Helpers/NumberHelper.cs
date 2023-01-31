@@ -5,6 +5,25 @@ namespace Carbon.Css.Helpers;
 
 internal static class NumberHelper
 {
+    public static float ParseCssNumberAsF32(ReadOnlySpan<char> text)
+    {
+        bool isPercentage = text[^1] is '%';
+
+        if (isPercentage)
+        {
+            text = text[0..^1];
+        }
+
+        var result = float.Parse(text, NumberStyles.Float, CultureInfo.InvariantCulture);
+
+        if (isPercentage)
+        {
+            result /= 100f;
+        }
+
+        return result;
+    }
+
     public static double ReadNumber(ReadOnlySpan<char> text, out int read)
     {
         read = 0;

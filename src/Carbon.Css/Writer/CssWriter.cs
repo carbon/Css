@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
+using Carbon.Color;
 using Carbon.Css.Parser;
 
 namespace Carbon.Css;
@@ -285,6 +286,20 @@ public sealed class CssWriter : IDisposable
         if (lhs.Kind is NodeKind.Undefined)
         {
             return rhs.Kind is NodeKind.Undefined || rhs is CssString { Text: "undefined" };
+        }
+
+        if (lhs is CssColor { Value: Rgba128f lhsColor })
+        {
+            if (rhs is CssColor { Value: Rgba128f rhsColor })
+            {
+                return lhsColor.Equals(rhsColor);
+            }
+            else
+            {
+                rhsColor = CssColor.Parse(rhs.ToString()!).Value!.Value;
+
+                return lhsColor.Equals(rhsColor);
+            }
         }
 
         if (lhs is CssUnitValue lv && rhs is CssUnitValue rv)

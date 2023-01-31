@@ -1,17 +1,22 @@
 ﻿// Based on .NET Source code
 
+using System.Globalization;
+using System.Numerics;
+
+using Carbon.Css.Helpers;
+
 namespace Carbon.Css;
 
-internal ref struct Splitter
+internal ref struct StringSplitter
 {
     private readonly ReadOnlySpan<char> _text;
     private readonly char _seperator;
     private int _position;
 
-    public Splitter(ReadOnlySpan<char> text, char seperator)
+    public StringSplitter(ReadOnlySpan<char> text, char separator)
     {
         _text = text;
-        _seperator = seperator;
+        _seperator = separator;
         _position = 0;
     }
 
@@ -26,13 +31,13 @@ internal ref struct Splitter
 
         int start = _position;
 
-        int seperatorIndex = _text[_position..].IndexOf(_seperator);
+        int separatorIndex = _text[_position..].IndexOf(_seperator);
 
-        if (seperatorIndex > -1)
+        if (separatorIndex > -1)
         {
-            _position += seperatorIndex + 1;
+            _position += separatorIndex + 1;
 
-            result = _text.Slice(start, seperatorIndex);
+            result = _text.Slice(start, separatorIndex);
         }
         else
         {
@@ -44,11 +49,44 @@ internal ref struct Splitter
         return true;
     }
 
+    public bool TryGetNextF32(out float result)
+    {
+        if (IsEof)
+        {
+            result = default;
+
+            return false;
+        }
+
+        int start = _position;
+
+        int separatorIndex = _text[_position..].IndexOf(_seperator);
+
+        ReadOnlySpan<char> segment;
+
+        if (separatorIndex > -1)
+        {
+            _position += separatorIndex + 1;
+
+            segment = _text.Slice(start, separatorIndex);
+        }
+        else
+        {
+            _position = _text.Length;
+
+            segment = _text[start..];
+        }
+
+        result = NumberHelper.ParseCssNumberAsF32(segment);
+       
+        return true;
+    }
+
     public char Current => _text[_position];
 
     public void ReadWhitespace()
     {
-        while (_position < _text.Length && Current == ' ')
+        while (_position < _text.Length && Current is ' ')
         {
             _position++;
         }

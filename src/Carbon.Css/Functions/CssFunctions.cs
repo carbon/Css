@@ -100,16 +100,16 @@ public static class CssFunctions
     {
         if (args.Length is 2 && args[1] is CssUnitValue opacity)
         {
-            var color = Rgba32.Parse(args[0].ToString()!);
+            var color = CssColor.Parse(args[0].ToString()).Value.Value;
 
-            double o = opacity.Value;
+            double alpha = opacity.Value;
 
             if (opacity.Kind is NodeKind.Percentage)
             {
-                o /= 100d;
+                alpha /= 100d;
             }
 
-            return CssColor.FromRgb(color.R, color.G, color.B, (float)o);
+            return new CssColor(new Rgba128f(color.R, color.G, color.B, (float)alpha));
         }
         else
         {
