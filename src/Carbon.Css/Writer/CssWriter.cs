@@ -296,7 +296,7 @@ public sealed class CssWriter : IDisposable
             }
             else
             {
-                rhsColor = CssColor.Parse(rhs.ToString()!).Value!.Value;
+                rhsColor = CssColor.Parse(rhs.ToString()!).Value;
 
                 return lhsColor.Equals(rhsColor);
             }

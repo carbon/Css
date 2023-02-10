@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 
 using Carbon.Color;
 using Carbon.Css.Helpers;
@@ -7,11 +9,11 @@ namespace Carbon.Css;
 
 public sealed class CssColor : CssValue
 {
-    // | color(rec2020 0.42053 0.979780 0.00579)
-
-    // private readonly CssColorType type;
-    private readonly Rgba128f? _value; // Vector4
+    private readonly CssColorType _type = default;
+    private readonly Vector4 _value; // Vector4
     private readonly string? _text;
+
+    // Notation | Hex | Functional | ...
 
     public CssColor(string value)
         : base(NodeKind.Color)
@@ -22,22 +24,45 @@ public sealed class CssColor : CssValue
     public CssColor(Rgba32 value)
         : base(NodeKind.Color)
     {
-        _value = Rgba128f.FromRgba32(value);
+        var rgb = Rgba128f.FromRgba32(value);
+
+        _value = Unsafe.As<Rgba128f, Vector4>(ref rgb);
+        _type = CssColorType.Rgb;
     }
 
     public CssColor(Hsla value)
         : base(NodeKind.Color)
     {
-        _value = value.ToRgba128f();
+        _value = Unsafe.As<Hsla, Vector4>(ref value);
+        _type = CssColorType.Hsl;
     }
 
     public CssColor(Rgba128f value)
         : base(NodeKind.Color)
     {
+        _type = CssColorType.Rgb;
+        _value = Unsafe.As<Rgba128f, Vector4>(ref value);
+    }
+
+    private CssColor(CssColorType type, Vector4 value)
+        : base(NodeKind.Color)
+    {
+        _type = type;
         _value = value;
     }
 
-    public Rgba128f? Value => _value;
+    public Rgba128f Value
+    {
+        get
+        {
+            if (_type is CssColorType.Hsl)
+            {
+                return new Hsla(_value).ToRgba();
+            }
+
+            return new Rgba128f(_value);
+        }
+    }
 
     internal override void WriteTo(TextWriter writer)
     {
@@ -48,21 +73,21 @@ public sealed class CssColor : CssValue
     {
         if (_text != null) return _text;
 
-        if (_value is null) return null!;
+        if (_type == default) return null!;
 
-        var rgba32 = _value.Value.ToRgba32();
+        var rgba32 = Value.ToRgba32();
 
         if (rgba32.IsOpaque)
         {
             return rgba32.ToString();
         }
 
-        return rgba32.ToCssString();
+        return rgba32.ToString();
     }
 
-    public static CssColor FromRgb(byte r, byte g, byte b, float a = 1)
+    public static CssColor FromRgb(byte r, byte g, byte b, float alpha = 1)
     {
-        return new CssColor(new Rgba128f(r / 255f, g / 255f, b / 255f, a));
+        return new CssColor(new Rgba128f(r / 255f, g / 255f, b / 255f, alpha));
     }
 
     public static new CssColor Parse(ReadOnlySpan<char> text)
@@ -75,18 +100,20 @@ public sealed class CssColor : CssValue
             var values = text[(pIndex + 1)..^1];
 
             float w = 1; // alpha
-
-            int slashIndex = values.IndexOf('/');
-
-            if (slashIndex > -1)
-            {
-                w = NumberHelper.ParseCssNumberAsF32(values[(slashIndex + 1)..].Trim());
-
-                values = values[0..slashIndex];
-
-            }
-
+            
             char separator = values.Contains(',') ? ',' : ' ';
+
+            if (separator is ' ')
+            {
+                int slashIndex = values.IndexOf('/');
+
+                if (slashIndex > -1)
+                {
+                    w = NumberHelper.ParseCssNumberAsF32(values[(slashIndex + 1)..].Trim());
+
+                    values = values[0..slashIndex];
+                }
+            }
 
             var splitter = new StringSplitter(values, separator);
 
@@ -102,7 +129,7 @@ public sealed class CssColor : CssValue
             return name switch
             {
                 "rgb" or "rgba" => new CssColor(new Rgba128f(x / 255f, y / 255f, z / 255f, w)),
-                // "hls" or "hsla":
+                "hsl" or "hsla" => new CssColor(new Hsla(x, y, z, w)),
                 // "hwb":
                 // "lab":
                 // "lch":
@@ -113,26 +140,30 @@ public sealed class CssColor : CssValue
             };
         }
 
-        // | rgb(146.064 107.457 131.223)
-        // | rgba
-        // | hsl
-        // | hsla
-        // | hwb
-        // | lab(29.69% 44.888% -29.04%)
-        // | lch(60.2345 59.2 95.2)
-        // | oklab(40.101% 0.1147 0.0453)
-        // | oklch(78.3% 0.108 326.5)
-
         return new CssColor(Rgba32.Parse(text));
     }
 
     public override CssColor CloneNode()
     {
-        return _value.HasValue
-            ? new CssColor(_value.Value)
+        return _type != default
+            ? new CssColor(_type, _value)
             : new CssColor(_text!);
     }
 }
+
+
+
+// <rgb()>    |
+// <rgba()>   |
+// <hsl()>    |
+// <hsla()>   |
+// <hwb()>    |
+// <lab()>    |
+// <lch()>    |
+// <oklab()>  |
+// <oklch()>  |
+// <color()>  
+
 
 // hsl
 // rgba

@@ -100,7 +100,7 @@ public static class CssFunctions
     {
         if (args.Length is 2 && args[1] is CssUnitValue opacity)
         {
-            var color = CssColor.Parse(args[0].ToString()).Value.Value;
+            var color = CssColor.Parse(args[0].ToString()).Value;
 
             double alpha = opacity.Value;
 

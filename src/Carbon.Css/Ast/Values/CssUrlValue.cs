@@ -60,12 +60,12 @@ public readonly struct CssUrlValue
         }
 
         // Already absolute
-        if (Value[0] == '/')
+        if (Value[0] is '/')
         {
             return Value.ToString();
         }
 
-        if (basePath[0] == '/')
+        if (basePath[0] is '/')
         {
             basePath = basePath[1..];
         }
