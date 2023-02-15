@@ -12,7 +12,7 @@ public class VariableTests
             div { color: rgba($borderColor, 0.5); }
             """);
 
-        Assert.Equal("div { color: rgb(255 0 0 / 50%); }", css.ToString());
+        Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", css.ToString());
     }
 
     [Fact]

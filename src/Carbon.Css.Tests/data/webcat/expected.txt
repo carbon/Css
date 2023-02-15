@@ -1,4 +1,4 @@
-﻿
+
 /* base/variables.scss */
 
 
@@ -431,9 +431,9 @@ carbon-waveform { bottom: 20px; }
 }
 .collapsed carbon-player.audio .playToggle { bottom: 5px; }
 .collapsed carbon-player.audio carbon-scrubber { bottom: 0px; }
-carbon-player.audio .control { background: rgb(32 185 235 / 80%); }
+carbon-player.audio .control { background: rgba(32, 185, 235, 0.8); }
 carbon-player.audio .control:hover { background: #20b9eb; }
-carbon-player.audio.loading .control:hover { background: rgb(32 185 235 / 80%); }
+carbon-player.audio.loading .control:hover { background: rgba(32, 185, 235, 0.8); }
 carbon-waveform > .bar.fill { background: #20b9eb; }
 carbon-player.audio.played time.current { color: #20b9eb; }
 carbon-player.audio.ended time.total { color: #20b9eb; }
@@ -494,7 +494,7 @@ a {
   color: #333;
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
-a:hover { border-bottom-color: rgb(0 0 0 / 10%); }
+a:hover { border-bottom-color: rgba(0, 0, 0, 0.1); }
 a:hover,
 a:hover b,
 a:hover i { color: #20b9eb !important; }
@@ -551,7 +551,7 @@ input:focus,
 textarea:focus { outline: none; }
 input:focus,
 textarea:focus,
-.field.focused input { border-bottom: 1px solid rgb(32 185 235 / 50%) !important; }
+.field.focused input { border-bottom: 1px solid rgba(32, 185, 235, 0.5) !important; }
 textarea { resize: none; }
 button {
   display: inline-block;
@@ -568,8 +568,8 @@ button {
   -webkit-transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
   transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
   cursor: pointer;
-  -webkit-box-shadow: inset 0 0 0 1px rgb(32 185 235 / 30%);
-  box-shadow: inset 0 0 0 1px rgb(32 185 235 / 30%);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(32, 185, 235, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(32, 185, 235, 0.3);
   -webkit-font-smoothing: antialiased;
 }
 button:focus { outline: none; }
@@ -711,8 +711,8 @@ a.back:hover:before,
 a.back:hover:after { background: #20b9eb !important; }
 a.back:hover {
   color: #20b9eb !important;
-  -webkit-box-shadow: 0 0 0 1px rgb(32 185 235 / 50%) !important;
-  box-shadow: 0 0 0 1px rgb(32 185 235 / 50%) !important;
+  -webkit-box-shadow: 0 0 0 1px rgba(32, 185, 235, 0.5) !important;
+  box-shadow: 0 0 0 1px rgba(32, 185, 235, 0.5) !important;
 }
 
 /* parts/nav.scss */
@@ -721,8 +721,8 @@ nav {
   margin: 0 -5px;
 }
 nav > ul > li > a:hover {
-  -webkit-box-shadow: 0 0 0 1px rgb(32 185 235 / 50%) !important;
-  box-shadow: 0 0 0 1px rgb(32 185 235 / 50%) !important;
+  -webkit-box-shadow: 0 0 0 1px rgba(32, 185, 235, 0.5) !important;
+  box-shadow: 0 0 0 1px rgba(32, 185, 235, 0.5) !important;
 }
 nav > ul > li > a {
   display: inline-block;
@@ -1330,7 +1330,7 @@ a.etsy:hover { color: #CF5619 !important; }
   color: inherit !important;
   -webkit-transition: background-color 0.4s ease-in-out;
   transition: background-color 0.4s ease-in-out;
-  background-color: rgb(32 185 235 / 5%);
+  background-color: rgba(32, 185, 235, 0.05);
 }
 #projects .item .innerWrapper {
   max-width: 1060px;
@@ -1373,7 +1373,7 @@ a.etsy:hover { color: #CF5619 !important; }
   height: 8px;
   margin: 0 4px 0 0;
   border-radius: 40px;
-  background-color: rgb(51 51 51 / 10%);
+  background-color: rgba(51, 51, 51, 0.1);
 }
 #projects .item .dots {
   position: absolute;
@@ -1426,8 +1426,8 @@ a.etsy:hover { color: #CF5619 !important; }
   line-height: 47px;
   font-size: 14px;
   color: #20b9eb;
-  -webkit-box-shadow: inset 0 0 0 1px rgb(32 185 235 / 30%);
-  box-shadow: inset 0 0 0 1px rgb(32 185 235 / 30%);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(32, 185, 235, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(32, 185, 235, 0.3);
   text-transform: uppercase;
   background-color: transparent;
   -webkit-transition: all 0.4s ease-in-out;
@@ -1578,7 +1578,7 @@ section.project > .pieces { padding: 0 30px; }
 .projectDetails > .description .lineTitle {
   display: block;
   margin-right: 10px;
-  color: rgb(51 51 51 / 50%);
+  color: rgba(51, 51, 51, 0.5);
 }
 .projectDetails > .description span.lines {
   display: block;
