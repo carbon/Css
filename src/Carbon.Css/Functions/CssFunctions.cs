@@ -109,7 +109,7 @@ public static class CssFunctions
                 alpha /= 100d;
             }
 
-            return new CssColor(new Rgba128f(color.R, color.G, color.B, (float)alpha));
+            return new CssColor(new SRgb(color.R, color.G, color.B, (float)alpha));
         }
         else
         {
@@ -129,14 +129,14 @@ public static class CssFunctions
         return string.Equals(value.ToString()!, "true", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static Rgba128f GetColor(CssValue value)
+    private static SRgb GetColor(CssValue value)
     {
-        if (value is CssColor { Value: Rgba128f v })
+        if (value is CssColor { Value: SRgb v })
         {
             return v;
         }
 
-        return Rgba128f.FromRgba32(Rgba32.Parse(value.ToString()!));
+        return SRgb.FromRgba32(Rgba32.Parse(value.ToString()!));
     }
 
     private static double ParseDouble(ReadOnlySpan<char> text)

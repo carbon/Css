@@ -24,9 +24,9 @@ public sealed class CssColor : CssValue
     public CssColor(Rgba32 value)
         : base(NodeKind.Color)
     {
-        var rgb = Rgba128f.FromRgba32(value);
+        var rgb = SRgb.FromRgba32(value);
 
-        _value = Unsafe.As<Rgba128f, Vector4>(ref rgb);
+        _value = Unsafe.As<SRgb, Vector4>(ref rgb);
         _type = CssColorType.Rgb;
     }
 
@@ -37,11 +37,11 @@ public sealed class CssColor : CssValue
         _type = CssColorType.Hsl;
     }
 
-    public CssColor(Rgba128f value)
+    public CssColor(SRgb value)
         : base(NodeKind.Color)
     {
         _type = CssColorType.Rgb;
-        _value = Unsafe.As<Rgba128f, Vector4>(ref value);
+        _value = Unsafe.As<SRgb, Vector4>(ref value);
     }
 
     private CssColor(CssColorType type, Vector4 value)
@@ -51,16 +51,16 @@ public sealed class CssColor : CssValue
         _value = value;
     }
 
-    public Rgba128f Value
+    public SRgb Value
     {
         get
         {
             if (_type is CssColorType.Hsl)
             {
-                return new Hsla(_value).ToRgba();
+                return new Hsla(_value).ToSRgb();
             }
 
-            return new Rgba128f(_value);
+            return new SRgb(_value);
         }
     }
 
@@ -87,10 +87,10 @@ public sealed class CssColor : CssValue
 
     public static CssColor FromRgb(byte r, byte g, byte b, float alpha = 1)
     {
-        return new CssColor(new Rgba128f(r / 255f, g / 255f, b / 255f, alpha));
+        return new CssColor(new SRgb(r / 255f, g / 255f, b / 255f, alpha));
     }
 
-    public static new CssColor Parse(ReadOnlySpan<char> text)
+    public static CssColor Parse(ReadOnlySpan<char> text)
     {
         int pIndex = text.IndexOf('(');
 
@@ -128,7 +128,7 @@ public sealed class CssColor : CssValue
 
             return name switch
             {
-                "rgb" or "rgba" => new CssColor(new Rgba128f(x / 255f, y / 255f, z / 255f, w)),
+                "rgb" or "rgba" => new CssColor(new SRgb(x / 255f, y / 255f, z / 255f, w)),
                 "hsl" or "hsla" => new CssColor(new Hsla(x, y, z, w)),
                 // "hwb":
                 // "lab":
