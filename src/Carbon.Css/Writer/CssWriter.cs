@@ -48,7 +48,7 @@ public sealed class CssWriter : IDisposable
 
         if (importCount > 200)
         {
-            throw new Exception("Exceded importCount of 200");
+            throw new Exception("Exceeded importCount of 200");
         }
 
         uint i = 0;
@@ -115,7 +115,7 @@ public sealed class CssWriter : IDisposable
 
     public void EvaluateIf(IfBlock block, int level = 0, uint i = 0)
     {
-        CssValue result = EvalulateExpression(block.Condition);
+        CssValue result = EvaluateExpression(block.Condition);
 
         if (ToBoolean(result))
         {
@@ -130,8 +130,8 @@ public sealed class CssWriter : IDisposable
 
     public void EvaluateFor(ForBlock block, int level = 0)
     {
-        int start = (int)((CssUnitValue)EvalulateExpression(block.Start)).Value;
-        int end = (int)((CssUnitValue)EvalulateExpression(block.End)).Value;
+        int start = (int)((CssUnitValue)EvaluateExpression(block.Start)).Value;
+        int end = (int)((CssUnitValue)EvaluateExpression(block.End)).Value;
 
         if (!block.IsInclusive) // through
         {
@@ -169,7 +169,7 @@ public sealed class CssWriter : IDisposable
 
     public void EvaluateEach(EachBlock block, int level = 0)
     {
-        var enumerable = (CssValueList)EvalulateExpression(block.Enumerable);
+        var enumerable = (CssValueList)EvaluateExpression(block.Enumerable);
 
         _scope = _scope.GetChildScope();
 
@@ -220,7 +220,7 @@ public sealed class CssWriter : IDisposable
 
     private static bool ToBoolean(object value) => value is CssBoolean { Value: true };
 
-    public CssValue EvalulateExpression(CssValue expression)
+    public CssValue EvaluateExpression(CssValue expression)
     {
         switch (expression.Kind)
         {
@@ -247,8 +247,8 @@ public sealed class CssWriter : IDisposable
 
     public CssValue EvaluateBinaryExpression(BinaryExpression expression)
     {
-        CssValue lhs = EvalulateExpression(expression.Left);
-        CssValue rhs = EvalulateExpression(expression.Right);
+        CssValue lhs = EvaluateExpression(expression.Left);
+        CssValue rhs = EvaluateExpression(expression.Right);
 
         if (skipMath || !CssValue.AreCompatible(lhs, rhs, expression.Operator))
         {
@@ -288,9 +288,9 @@ public sealed class CssWriter : IDisposable
             return rhs.Kind is NodeKind.Undefined || rhs is CssString { Text: "undefined" };
         }
 
-        if (lhs is CssColor { Value: Rgba128f lhsColor })
+        if (lhs is CssColor { Value: SRgb lhsColor })
         {
-            if (rhs is CssColor { Value: Rgba128f rhsColor })
+            if (rhs is CssColor { Value: SRgb rhsColor })
             {
                 return lhsColor.Equals(rhsColor);
             }
@@ -439,7 +439,7 @@ public sealed class CssWriter : IDisposable
             case NodeKind.Variable           : WriteVariable((CssVariable)value); break;
             case NodeKind.ValueList          : WriteValueList((CssValueList)value); break;
             case NodeKind.Function           : WriteFunction((CssFunction)value); break;
-            case NodeKind.Expression         : WriteValue(EvalulateExpression((CssValue)value)); break;
+            case NodeKind.Expression         : WriteValue(EvaluateExpression((CssValue)value)); break;
             case NodeKind.InterpolatedString : WriteInterpolatedString((CssInterpolatedString)value); break;
             case NodeKind.Reference          : WriteReference((CssReference)value); break;
             case NodeKind.Sequence           : WriteSequence((CssSequence)value); break;
@@ -541,9 +541,12 @@ public sealed class CssWriter : IDisposable
             case NodeKind.ValueList:
                 var list = (CssValueList)value;
 
-                if (list.Seperator is CssValueSeperator.Space) yield return list;
+                if (list.Seperator is CssValueSeperator.Space)
+                {
+                    yield return list;
+                }
 
-                // Break out comma seperated values
+                // Break out comma separated values
                 foreach (var v in list)
                 {
                     foreach (var item in GetArgs(v))
@@ -620,6 +623,7 @@ public sealed class CssWriter : IDisposable
             case ImportRule importRule      : WriteImportRule(importRule);             break;
             case MediaRule mediaRule        : WriteMediaRule(mediaRule, depth);        break;
             case StyleRule styleRule        : WriteStyleRule(styleRule, depth);        break;
+            case SupportsRule supportsRule  : WriteSupportsRule(supportsRule, depth);  break;
             case FontFaceRule fontFaceRule  : WriteFontFaceRule(fontFaceRule, depth);  break;
             case KeyframesRule keyFrameRule : WriteKeyframesRule(keyFrameRule, depth); break;
             case UnknownRule atRule         : WriteAtRule(atRule, depth);              break;
@@ -740,6 +744,17 @@ public sealed class CssWriter : IDisposable
         WriteBlock(rule, depth);
     }
 
+    public void WriteSupportsRule(SupportsRule rule, int depth)
+    {
+        _writer.Write("@supports ");
+
+        rule.Queries.WriteTo(_writer, _scope);
+
+        _writer.Write(' ');
+
+        WriteBlock(rule, depth);
+    }
+
     public void WriteFontFaceRule(FontFaceRule rule, int depth)
     {
         _writer.Write("@font-face ");
@@ -798,7 +813,7 @@ public sealed class CssWriter : IDisposable
     {
         _writer.Write('{'); // Block start
 
-        var condenced = false;
+        var condensed = false;
         var count = 0;
 
         // Write the declarations
@@ -827,7 +842,7 @@ public sealed class CssWriter : IDisposable
 
                 if (block.Children.Count is 1 && !declaration.Info.NeedsExpansion(declaration, _browserSupport))
                 {
-                    condenced = true;
+                    condensed = true;
 
                     _writer.Write(' ');
 
@@ -856,7 +871,7 @@ public sealed class CssWriter : IDisposable
             {
             }
 
-            if (!condenced)
+            if (!condensed)
             {
                 _writer.WriteLine();
             }
@@ -865,7 +880,7 @@ public sealed class CssWriter : IDisposable
         }
 
         // Limit to declaration
-        if (condenced)
+        if (condensed)
         {
             _writer.Write(' ');
         }
@@ -1070,7 +1085,7 @@ public sealed class CssWriter : IDisposable
         return childScope;
     }
 
-    public CssScope GetScope(IReadOnlyList<CssParameter> paramaters, CssValue? args)
+    public CssScope GetScope(IReadOnlyList<CssParameter> parameters, CssValue? args)
     {
         CssValue[]? list = null;
 
@@ -1091,9 +1106,9 @@ public sealed class CssWriter : IDisposable
 
         CssScope child = _scope.GetChildScope();
 
-        for (int i = 0; i < paramaters.Count; i++)
+        for (int i = 0; i < parameters.Count; i++)
         {
-            var p = paramaters[i];
+            var p = parameters[i];
 
             CssValue? val = (list is not null && list.Length >= i + 1) ? list[i] : p.DefaultValue;
 

@@ -140,6 +140,7 @@ public sealed partial class CssParser : IDisposable
             case "font-face" : return ReadFontFaceRule();
             case "media"     : return ReadMediaRule();
             case "page"      : return ReadPageRule();
+            case "supports"  : return ReadSupportsRule();
             case "keyframes" : return ReadKeyframesRule();
             case "mixin"     : return ReadMixinBody();
             case "if"        : return ReadIfRule();
@@ -230,6 +231,24 @@ public sealed partial class CssParser : IDisposable
         }
 
         var rule = new MediaRule(span);
+
+        ReadBlock(rule);
+
+        return rule;
+    }
+
+    public CssRule ReadSupportsRule()
+    {
+        // @supports {
+
+        var span = new TokenList();
+
+        while (Current.Kind is not CssTokenKind.BlockStart && !IsEnd)
+        {
+            span.Add(Consume());
+        }
+
+        var rule = new SupportsRule(span);
 
         ReadBlock(rule);
 
