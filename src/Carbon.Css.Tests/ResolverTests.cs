@@ -5,8 +5,8 @@ public class ResolverTests
     [Fact]
     public void A()
     {
-        var text = TestHelper.GetTestFile("webcat/all.scss").OpenText().ReadToEnd();
-        var expected = TestHelper.GetTestFile("webcat/expected.txt").OpenText().ReadToEnd();
+        var text = File.ReadAllText(TestHelper.GetTestFile("webcat/all.scss").FullName);
+        var expected = File.ReadAllText(TestHelper.GetTestFile("webcat/expected.txt").FullName);
 
         var sheet = StyleSheet.Parse(text, new CssContext());
 

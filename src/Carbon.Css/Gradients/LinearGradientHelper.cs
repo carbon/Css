@@ -1,12 +1,11 @@
-﻿namespace Carbon.Css.Gradients
+﻿namespace Carbon.Css.Gradients;
+
+/*
+internal static class LinearGradientHelper
 {
-    /*
-    internal static class LinearGradientHelper
-    {
-       
-    } 
-    */
-}
+   
+} 
+*/
 
 /*
 background: -webkit-linear-gradient(left,rgba(255,0,0,0),rgba(255,0,0,1)); // Safari 5.1-6

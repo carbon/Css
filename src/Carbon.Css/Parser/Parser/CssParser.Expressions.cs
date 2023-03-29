@@ -25,14 +25,6 @@ public sealed partial class CssParser : IDisposable
 }
 
 /*
-public struct CssOperator
-{
-    // Leading
-    // ...
-}
-*/
-
-/*
 // https://en.wikipedia.org/wiki/Shunting-yard_algorithm
 
  1: Multiplicative : *, /, %
