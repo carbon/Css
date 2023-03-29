@@ -120,7 +120,7 @@ public abstract class CssValue : CssNode
         return operation switch
         {
             BinaryOperator.Divide => false,
-            BinaryOperator.Add or BinaryOperator.Subtract => left.Kind == right.Kind,
+            BinaryOperator.Add or BinaryOperator.Subtract => HaveSameUnit(left, right),
             BinaryOperator.Multiply =>
                     left.Kind == right.Kind ||
                     left.Kind is NodeKind.Percentage or NodeKind.Number ||
@@ -128,6 +128,16 @@ public abstract class CssValue : CssNode
             BinaryOperator.Mod => right.Kind is NodeKind.Number,
             _ => true
         };
+    }
+
+    internal static bool HaveSameUnit(CssValue left, CssValue right)
+    {
+        if (left is CssUnitValue l && right is CssUnitValue r)
+        {
+            return ReferenceEquals(l.Unit, r.Unit);
+        }
+
+        return false;
     }
 
     internal virtual void WriteTo(scoped ref ValueStringBuilder sb)
