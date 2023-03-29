@@ -327,15 +327,21 @@ public sealed partial class CssParser : IDisposable
     // @each $shape in $shapes
     public EachBlock ReadEachRule()
     {
-        ReadTrivia();
+        var variables = new List<CssVariable>();
 
-        var variable = ReadVariable();
+        do
+        {
+            ReadTrivia();
+
+            variables.Add(ReadVariable());
+
+        } while (ConsumeIf(CssTokenKind.Comma));
 
         ReadName(); // ! in
 
         var enumerable = ReadExpression();
 
-        var rule = new EachBlock(variable, enumerable);
+        var rule = new EachBlock(variables, enumerable);
 
         ReadBlock(rule);
 
@@ -546,13 +552,49 @@ public sealed partial class CssParser : IDisposable
 
         ReadTrivia();                                                  // read trivia
 
-        var value = ReadValueList();
+
+        CssValue value = _tokenizer.Current.Kind switch {
+            CssTokenKind.LeftParenthesis => ReadMap(),
+            _                            => ReadValueList()
+        };
 
         ConsumeIf(CssTokenKind.Semicolon);                             // ? ;
 
         ReadTrivia();
 
         return new CssAssignment(name, value);
+    }
+
+
+    public CssMap ReadMap()
+    {
+        // ("regular": 400, "medium": 500, "bold": 700);
+
+        var map = new CssMap();
+
+        Consume(CssTokenKind.LeftParenthesis, LexicalMode.Value); // (
+
+        while (_tokenizer.Current.Kind != CssTokenKind.RightParenthesis)
+        {
+            var key = Consume();            
+
+            Consume(CssTokenKind.Colon, LexicalMode.Value);
+
+            ReadTrivia();
+
+            var value = CssValue.FromComponents(ReadComponents());
+
+            ConsumeIf(CssTokenKind.Comma);
+
+            ReadTrivia();
+
+            map.Add(key.Text.Trim('"'), value);
+        }
+
+        Consume(CssTokenKind.RightParenthesis, LexicalMode.Value); // )
+
+        return map;
+
     }
 
     #endregion

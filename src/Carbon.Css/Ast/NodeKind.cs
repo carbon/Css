@@ -42,13 +42,14 @@ public enum NodeKind
     // Extensions
     Directive,
 
-    // Sass
+    // SCSS
     Mixin,
     Include,
     If,
     For,
     Each,
-    While
+    While,
+    Map
 }
 
 /*

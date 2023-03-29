@@ -2,14 +2,14 @@
 
 public sealed class EachBlock : CssBlock
 {
-    public EachBlock(CssVariable variable, CssValue enumerable)
+    public EachBlock(IReadOnlyList<CssVariable> variables, CssValue enumerable)
         : base(NodeKind.Each)
     {
-        Variable = variable;
+        Variables = variables;
         Enumerable = enumerable;
     }
 
-    public CssVariable Variable { get; }
+    public IReadOnlyList<CssVariable> Variables { get; }
 
     public CssValue Enumerable { get; }
 }
