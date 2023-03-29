@@ -565,10 +565,9 @@ public sealed partial class CssParser : IDisposable
         return new CssAssignment(name, value);
     }
 
-
     public CssMap ReadMap()
     {
-        // ("regular": 400, "medium": 500, "bold": 700);
+        // ("regular": 400, "medium": 500, "bold": 700)
 
         var map = new CssMap();
 
@@ -576,6 +575,8 @@ public sealed partial class CssParser : IDisposable
 
         while (_tokenizer.Current.Kind != CssTokenKind.RightParenthesis)
         {
+            ReadTrivia();
+
             var key = Consume();            
 
             Consume(CssTokenKind.Colon, LexicalMode.Value);
@@ -584,17 +585,14 @@ public sealed partial class CssParser : IDisposable
 
             var value = CssValue.FromComponents(ReadComponents());
 
-            ConsumeIf(CssTokenKind.Comma);
-
-            ReadTrivia();
-
             map.Add(key.Text.Trim('"'), value);
+
+            _ = ConsumeIf(CssTokenKind.Comma);
         }
 
         Consume(CssTokenKind.RightParenthesis, LexicalMode.Value); // )
 
         return map;
-
     }
 
     #endregion

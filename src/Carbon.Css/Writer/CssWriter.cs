@@ -14,9 +14,9 @@ public sealed class CssWriter : IDisposable
     private readonly TextWriter _writer;
     private readonly CssContext _context;
     private readonly ICssResolver? _resolver;
-    private int includeCount;
-    private int importCount;
-    private int nodeCount;
+    private uint includeCount;
+    private uint importCount;
+    private uint nodeCount;
     private bool skipMath;
 
     private BrowserInfo[]? _browserSupport;
@@ -151,7 +151,7 @@ public sealed class CssWriter : IDisposable
 
         _scope = _scope.GetChildScope();
 
-        int a = 0;
+        uint a = 0;
 
         for (int i = start; i <= end; i++)
         {
@@ -169,21 +169,43 @@ public sealed class CssWriter : IDisposable
 
     public void EvaluateEach(EachBlock block, int level = 0)
     {
-        var enumerable = (CssValueList)EvaluateExpression(block.Enumerable);
+        var enumerable = EvaluateExpression(block.Enumerable);
 
-        _scope = _scope.GetChildScope();
-
-        int a = 0;
-
-        foreach (var value in enumerable)
+        if (enumerable is CssValueList list)
         {
-            if (a > 0) _writer.WriteLine();
+            _scope = _scope.GetChildScope();
 
-            _scope[block.Variable.Symbol] = value;
+            uint a = 0;
 
-            WriteBlockBody(block, level);
+            foreach (var value in list)
+            {
+                if (a > 0) _writer.WriteLine();
 
-            a++;
+                _scope[block.Variables[0].Symbol] = value;
+
+                WriteBlockBody(block, level);
+
+                a++;
+            }
+        }
+
+        else if (enumerable is CssMap map)
+        {
+            _scope = _scope.GetChildScope();
+
+            uint a = 0;
+
+            foreach (var (key, value) in map)
+            {
+                if (a > 0) _writer.WriteLine();
+
+                _scope[block.Variables[0].Symbol] = new CssString(key);
+                _scope[block.Variables[1].Symbol] = value;
+
+                WriteBlockBody(block, level);
+
+                a++;
+            }
         }
 
         _scope = _scope.Parent!;
@@ -191,7 +213,7 @@ public sealed class CssWriter : IDisposable
 
     private void WriteBlockBody(CssBlock block, int level = 0)
     {
-        int i = 0;
+        uint i = 0;
 
         foreach (CssNode child in block.Children)
         {
@@ -1064,7 +1086,7 @@ public sealed class CssWriter : IDisposable
     {
         includeCount++;
 
-        if (includeCount > 1_000)
+        if (includeCount > 1_000u)
         {
             throw new Exception("Exceeded include limit of 1,000");
         }
