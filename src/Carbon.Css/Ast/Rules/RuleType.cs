@@ -21,4 +21,5 @@ public enum RuleType
 	FontFeatureValues	= 14,
 	Viewport			= 15,
 	Region				= 16,
+	Container			= 17
 }

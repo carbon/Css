@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css.Tests;
 
-public class SupportsTests
+public class SupportRuleTests
 {
     [Fact]
     public void A()

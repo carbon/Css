@@ -620,13 +620,14 @@ public sealed class CssWriter : IDisposable
 
         switch (rule)
         {   
-            case ImportRule importRule      : WriteImportRule(importRule);             break;
-            case MediaRule mediaRule        : WriteMediaRule(mediaRule, depth);        break;
-            case StyleRule styleRule        : WriteStyleRule(styleRule, depth);        break;
-            case SupportsRule supportsRule  : WriteSupportsRule(supportsRule, depth);  break;
-            case FontFaceRule fontFaceRule  : WriteFontFaceRule(fontFaceRule, depth);  break;
-            case KeyframesRule keyFrameRule : WriteKeyframesRule(keyFrameRule, depth); break;
-            case UnknownRule atRule         : WriteAtRule(atRule, depth);              break;
+            case ImportRule importRule       : WriteImportRule(importRule);              break;
+            case MediaRule mediaRule         : WriteMediaRule(mediaRule, depth);         break;
+            case ContainerRule containerRule : WriteContainerRule(containerRule, depth); break;
+            case StyleRule styleRule         : WriteStyleRule(styleRule, depth);         break;
+            case SupportsRule supportsRule   : WriteSupportsRule(supportsRule, depth);   break;
+            case FontFaceRule fontFaceRule   : WriteFontFaceRule(fontFaceRule, depth);   break;
+            case KeyframesRule keyFrameRule  : WriteKeyframesRule(keyFrameRule, depth);  break;
+            case UnknownRule atRule          : WriteAtRule(atRule, depth);               break;
             default:
                 throw new Exception($"Unhandled rule. Was {rule.GetType().Name}");
         }
@@ -736,6 +737,17 @@ public sealed class CssWriter : IDisposable
     public void WriteMediaRule(MediaRule rule, int depth)
     {
         _writer.Write("@media ");
+
+        rule.Queries.WriteTo(_writer, _scope);
+
+        _writer.Write(' ');
+
+        WriteBlock(rule, depth);
+    }
+
+    public void WriteContainerRule(ContainerRule rule, int depth)
+    {
+        _writer.Write("@container ");
 
         rule.Queries.WriteTo(_writer, _scope);
 

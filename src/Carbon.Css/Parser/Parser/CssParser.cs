@@ -141,6 +141,7 @@ public sealed partial class CssParser : IDisposable
             case "media"     : return ReadMediaRule();
             case "page"      : return ReadPageRule();
             case "supports"  : return ReadSupportsRule();
+            case "container" : return ReadContainerRule(); 
             case "keyframes" : return ReadKeyframesRule();
             case "mixin"     : return ReadMixinBody();
             case "if"        : return ReadIfRule();
@@ -219,7 +220,7 @@ public sealed partial class CssParser : IDisposable
         return rule;
     }
 
-    public CssRule ReadMediaRule()
+    public MediaRule ReadMediaRule()
     {
         // @media {
 
@@ -237,7 +238,25 @@ public sealed partial class CssParser : IDisposable
         return rule;
     }
 
-    public CssRule ReadSupportsRule()
+    public ContainerRule ReadContainerRule()
+    {
+        // @container {
+
+        var span = new TokenList();
+
+        while (Current.Kind is not CssTokenKind.BlockStart && !IsEnd)
+        {
+            span.Add(Consume());
+        }
+
+        var rule = new ContainerRule(span);
+
+        ReadBlock(rule);
+
+        return rule;
+    }
+
+    public SupportsRule ReadSupportsRule()
     {
         // @supports {
 
@@ -255,7 +274,7 @@ public sealed partial class CssParser : IDisposable
         return rule;
     }
 
-    public CssRule ReadFontFaceRule()
+    public FontFaceRule ReadFontFaceRule()
     {
         // @font-face {
 
@@ -273,7 +292,7 @@ public sealed partial class CssParser : IDisposable
         return rule;
     }
 
-    public CssRule ReadImportRule()
+    public ImportRule ReadImportRule()
     {
         var value = ReadValueList();
 
