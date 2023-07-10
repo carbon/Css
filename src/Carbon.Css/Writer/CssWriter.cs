@@ -3,6 +3,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 using Carbon.Color;
 using Carbon.Css.Parser;
@@ -518,7 +519,7 @@ public sealed class CssWriter : IDisposable
     {
         if (trivia is null) return;
 
-        foreach (var token in trivia)
+        foreach (ref readonly CssToken token in CollectionsMarshal.AsSpan(trivia))
         {
             _writer.Write(token.Text);
         }
@@ -1159,8 +1160,8 @@ public sealed class CssWriter : IDisposable
     public static CssSelector ExpandSelector(StyleRule rule)
     {
         var ancestors = new List<CssSelector>(rule.Depth) {
-                rule.Selector
-            };
+            rule.Selector
+        };
 
         StyleRule? current = rule;
 

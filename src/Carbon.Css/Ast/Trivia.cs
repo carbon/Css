@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using Carbon.Css.Parser;
@@ -13,7 +13,7 @@ public sealed class Trivia : List<CssToken>
     {
         var sb = new ValueStringBuilder(stackalloc char[32]);
 
-        foreach (var token in this)
+        foreach (ref readonly CssToken token in CollectionsMarshal.AsSpan(this))
         {
             sb.Append(token.Text);
         }
