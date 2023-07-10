@@ -9,7 +9,7 @@ using Carbon.Css.Serialization;
 namespace Carbon.Css;
 
 [JsonConverter(typeof(CssUnitValueConverter))]
-public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ISpanFormattable
+public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ICssNumericValue, ISpanFormattable
 {
     public static readonly CssUnitValue Zero = new(0, CssUnitInfo.Number);
 
