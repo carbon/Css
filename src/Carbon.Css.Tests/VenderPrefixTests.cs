@@ -5,12 +5,14 @@ public class VendorPrefixTests
     [Fact]
     public void DoubleList2()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             //= support Safari >= 5
             a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }
             """);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             a {
               -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
               transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
@@ -33,7 +35,8 @@ public class VendorPrefixTests
     [Fact]
     public void UnsupportedBrowser()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             //= support Safari >= 9
             //= support IE >= 10
             a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }
@@ -45,7 +48,8 @@ public class VendorPrefixTests
     [Fact]
     public void ParseWebkitPrefixedKeyframesRule()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             @-webkit-keyframes fade {
                 from {opacity: 1;}
                 to {opacity: 0.25;}
@@ -172,7 +176,8 @@ public class VendorPrefixTests
     [Fact]
     public void Transform()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             body { 
               transform: rotate(90);
             }
@@ -180,7 +185,8 @@ public class VendorPrefixTests
 
         sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari1, BrowserInfo.Firefox1);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             body {
               -moz-transform: rotate(90);
               -webkit-transform: rotate(90);
@@ -193,7 +199,8 @@ public class VendorPrefixTests
     [Fact]
     public void BackdropFilter()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             body { 
               backdrop-filter: blur(10px);
             }
@@ -201,7 +208,8 @@ public class VendorPrefixTests
 
         sheet.Context.SetCompatibility(BrowserInfo.Chrome1, BrowserInfo.Safari10);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             body {
               -webkit-backdrop-filter: blur(10px);
               backdrop-filter: blur(10px);

@@ -5,7 +5,8 @@ public class DirectiveTests
     [Fact]
     public void ParsePartial()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             //= partial
             div { color: blue; }
 

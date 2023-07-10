@@ -24,13 +24,15 @@ public class ForRuleTests
     [Fact]
     public void A()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             @for $i from 1 through 5 { 
               div { width: #{$i}px }
             }
             """);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             div { width: 1px; }
             div { width: 2px; }
             div { width: 3px; }

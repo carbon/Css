@@ -210,7 +210,8 @@ public class MediaTests
     [Fact]
     public void WithMixin()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             $bgColor: orange;
 
             @mixin hi { 

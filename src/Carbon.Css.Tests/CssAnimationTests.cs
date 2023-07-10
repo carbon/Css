@@ -3,9 +3,10 @@
 public class CssAnimationTests
 {
     [Fact]
-    public void KetframesExpansition1()
+    public void KeyframesExpansion1()
     {
-        var ss = StyleSheet.Parse("""
+        var ss = StyleSheet.Parse(
+            """
             //= support Safari >= 5
 
             @keyframes domainProcessing {
@@ -43,7 +44,8 @@ public class CssAnimationTests
     [Fact]
     public void Test2()
     {
-        var ss = StyleSheet.Parse("""
+        var ss = StyleSheet.Parse(
+            """
             //= support Safari >= 6
 
             @keyframes domainProcessing2 {
@@ -87,7 +89,8 @@ public class CssAnimationTests
     [Fact]
     public void KeyframesTest3()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             //= support Firefox 3+
             //= support Safari 5+
 
@@ -99,7 +102,8 @@ public class CssAnimationTests
 
         for (var i = 0; i < 100; i++)
         {
-            Assert.Equal("""
+            Assert.Equal(
+                """
                 @-moz-keyframes planet {
                   0% {
                     -moz-transform: translate(0, 0px) rotate(0deg);
@@ -131,7 +135,8 @@ public class CssAnimationTests
     [Fact]
     public void KeyframesTest2()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             @keyframes flicker {
               0%    { opacity: 1; }
               30%   { opacity: .8; }
@@ -140,7 +145,8 @@ public class CssAnimationTests
             }
             """);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             @keyframes flicker {
               0% { opacity: 1; }
               30% { opacity: 0.8; }
@@ -153,7 +159,8 @@ public class CssAnimationTests
     [Fact]
     public void KeyframesTest()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             @keyframes flicker {
               0%    { opacity: 1; }
               30%   { opacity: .8; }
@@ -174,7 +181,8 @@ public class CssAnimationTests
         Assert.Equal("60%",  ((StyleRule)rule.Children[2]).Selector.ToString());
         Assert.Equal("100%", ((StyleRule)rule.Children[3]).Selector.ToString());
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             @keyframes flicker {
               0% { opacity: 1; }
               30% { opacity: 0.8; }

@@ -436,7 +436,8 @@ public class CssTests
     {
         var sheet = StyleSheet.Parse("main { margin: 0.5in; width: calc(100%/3 - 2*1em - 2*1px); }");
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             main {
               margin: 0.5in;
               width: calc(100% / 3 - 2 * 1em - 2 * 1px);
@@ -453,7 +454,8 @@ public class CssTests
             .someClass { font-size: 1.2rem; }
             """);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             .someClass { font-size: 1.2em; }
             .someClass { font-size: 1.2rem; }
             """, sheet.ToString());
@@ -468,7 +470,8 @@ public class CssTests
     [Fact]
     public void ParseEmpty()
     {
-        StyleSheet.Parse("""
+        StyleSheet.Parse(
+            """
             a {
             }
             """);
@@ -512,7 +515,8 @@ public class CssTests
         Assert.Equal("url('../fonts/cm-billing-webfont.woff')", list_1_0[0].ToString());
         Assert.Equal("format('woff')", list_1_0[1].ToString());
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             @font-face {
               font-family: 'CMBilling';
               src: url('../fonts/cm-billing-webfont.eot');
@@ -523,66 +527,55 @@ public class CssTests
             """, sheet.ToString());
 
         // Test 2
-        StyleSheet.Parse("""
+        StyleSheet.Parse(
+            """
+            /*	Font -------------------------------------------------*/
 
-/*	Font -------------------------------------------------*/
+            @font-face {
+                font-family: 'CMBilling';
+                src: url('../fonts/cm-billing-webfont.eot');
+                src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),
+                     url('../fonts/cm-billing-webfont.woff') format('woff');
+                font-weight: normal;
+                font-style: normal;
+            }
 
-@font-face {
-    font-family: 'CMBilling';
-    src: url('../fonts/cm-billing-webfont.eot');
-    src: url('../fonts/cm-billing-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/cm-billing-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
+            @font-face {
+                font-family: 'Colfax-Thin';
+                src: url('../fonts/ColfaxWebThinSub.eot');
+                src: url('../fonts/ColfaxWebThinSub.eot?#iefix') format('embedded-opentype'),
+                     url('../fonts/ColfaxWebThinSub.woff') format('woff');
+                font-weight: 100;
+                font-style: normal;
+            }
 
+            @font-face {
+                font-family: 'Colfax-Thin-Italic';
+                src: url('../fonts/ColfaxWebThinItalicSub.eot');
+                src: url('../fonts/ColfaxWebThinItalicSub.eot?#iefix') format('embedded-opentype'),
+                     url('../fonts/ColfaxWebThinItalicSub.woff') format('woff');
+                font-weight: 100;
+                font-style: italic;
+            }
 
-@font-face {
-    font-family: 'Colfax-Thin';
-    src: url('../fonts/ColfaxWebThinSub.eot');
-    src: url('../fonts/ColfaxWebThinSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebThinSub.woff') format('woff');
-    font-weight: 100;
-    font-style: normal;
-}
+            @font-face {
+                font-family: 'Colfax-Light';
+                src: url('../fonts/ColfaxWebLightSub.eot');
+                src: url('../fonts/ColfaxWebLightSub.eot?#iefix') format('embedded-opentype'),
+                     url('../fonts/ColfaxWebLightSub.woff') format('woff');
+                font-weight: 200;
+                font-style: normal;
+            }
 
-@font-face {
-    font-family: 'Colfax-Thin-Italic';
-    src: url('../fonts/ColfaxWebThinItalicSub.eot');
-    src: url('../fonts/ColfaxWebThinItalicSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebThinItalicSub.woff') format('woff');
-    font-weight: 100;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Colfax-Light';
-    src: url('../fonts/ColfaxWebLightSub.eot');
-    src: url('../fonts/ColfaxWebLightSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebLightSub.woff') format('woff');
-    font-weight: 200;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Colfax-Light-Italic';
-    src: url('../fonts/ColfaxWebLightItalicSub.eot');
-    src: url('../fonts/ColfaxWebLightItalicSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebLightItalicSub.woff') format('woff');
-    font-weight: 200;
-    font-style: italic;
-}
-
-
-@font-face {
-    font-family: 'Colfax';
-    src: url('../fonts/ColfaxWebRegularSub.eot');
-    src: url('../fonts/ColfaxWebRegularSub.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/ColfaxWebRegularSub.woff') format('woff');
-    font-weight: 300;
-    font-style: normal;
-}
-""");
+            @font-face {
+                font-family: 'Colfax';
+                src: url('../fonts/ColfaxWebRegularSub.eot');
+                src: url('../fonts/ColfaxWebRegularSub.eot?#iefix') format('embedded-opentype'),
+                     url('../fonts/ColfaxWebRegularSub.woff') format('woff');
+                font-weight: 300;
+                font-style: normal;
+            }
+            """);
     }
 
     [Fact]
@@ -1550,7 +1543,6 @@ public class CssTests
             """;
 
         var parser = new CssParser(styleSheet);
-
 
         foreach (var block in parser.ReadRules())
         {
