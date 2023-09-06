@@ -1,14 +1,9 @@
 ﻿namespace Carbon.Css;
 
-public sealed class CssUndefined : CssValue
+public sealed class CssUndefined(string variableName) 
+    : CssValue(NodeKind.Undefined)
 {
-    public CssUndefined(string variableName)
-        : base(NodeKind.Undefined)
-    {
-        VariableName = variableName;
-    }
-
-    public string VariableName { get; }
+    public string VariableName { get; } = variableName;
 
     public override CssUndefined CloneNode() => new(VariableName);
 

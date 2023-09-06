@@ -816,7 +816,7 @@ public sealed partial class CssParser : IDisposable
                     break;
 
                 // TODO: Figure out where we missed reading the semicolon TEMP
-                case CssTokenKind.Semicolon    : _tokenizer.Consume(); break;
+                case CssTokenKind.Semicolon: _tokenizer.Consume(); break;
 
                 default: throw new UnexpectedTokenException(LexicalMode.Block, Current);
             }

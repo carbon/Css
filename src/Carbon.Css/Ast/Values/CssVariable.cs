@@ -2,19 +2,13 @@
 
 using Parser;
 
-public sealed class CssVariable : CssValue
+public sealed class CssVariable(string text) : CssValue(NodeKind.Variable)
 {
     public CssVariable(CssToken token)
         : this(token.Text)
     { }
 
-    public CssVariable(string text)
-        : base(NodeKind.Variable)
-    {
-        Symbol = text;
-    }
-
-    public string Symbol { get; }
+    public string Symbol { get; } = text;
 
     public override CssVariable CloneNode() => new(Symbol);
 

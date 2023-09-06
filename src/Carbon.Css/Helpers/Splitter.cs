@@ -60,7 +60,7 @@ internal ref struct StringSplitter
         }
     }
 
-    public char Current => _text[_position];
+    public readonly char Current => _text[_position];
 
     public void ReadWhitespace()
     {

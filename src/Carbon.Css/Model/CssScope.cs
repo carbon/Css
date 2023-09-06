@@ -41,7 +41,7 @@ public sealed class CssScope
     {
         if (counter > 50)
         {
-            throw new Exception($"recussion detected: {counter}");
+            throw new Exception($"recession detected: {counter}");
         }
 
         if (_items.TryGetValue(name, out CssValue? value))

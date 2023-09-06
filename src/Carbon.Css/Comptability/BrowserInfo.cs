@@ -1,16 +1,10 @@
 ﻿namespace Carbon.Css;
 
-public readonly struct BrowserInfo
+public readonly struct BrowserInfo(BrowserType type, float version)
 {
-    public BrowserInfo(BrowserType type, float version)
-    {
-        Type = type;
-        Version = version;
-    }
+    public BrowserType Type { get; } = type;
 
-    public BrowserType Type { get; }
-
-    public float Version { get; }
+    public float Version { get; } = version;
 
     public readonly BrowserPrefix Prefix => GetPrefix(Type);
 

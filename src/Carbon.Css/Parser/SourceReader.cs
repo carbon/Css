@@ -4,28 +4,18 @@ using System.Text;
 
 namespace Carbon.Css.Parser;
 
-internal sealed class SourceReader : IDisposable
+internal sealed class SourceReader(TextReader textReader) : IDisposable
 {
     private const char EofChar = '\0';
 
-    private readonly TextReader _textReader;
-    private char _current;
-    private int _position;
+    private readonly TextReader _textReader = textReader;
+    private char _current = '.';
+    private int _position = 0;
 
-    private readonly StringBuilder sb;
+    private readonly StringBuilder sb = new();
 
-    private int _markStart;
-    private int _marked;
-
-    public SourceReader(TextReader textReader)
-    {
-        _textReader = textReader;
-        _position = 0;
-        _current = '.';
-        sb = new StringBuilder();
-        _markStart = -1;
-        _marked = -1;
-    }
+    private int _markStart = -1;
+    private int _marked = -1;
 
     public char Current => _current;
 

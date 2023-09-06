@@ -1,17 +1,12 @@
 ﻿namespace Carbon.Css;
 
-public sealed class IncludeNode : CssNode
+public sealed class IncludeNode(
+    string name,
+    CssValue? args) : CssNode(NodeKind.Include)
 {
-    public IncludeNode(string name, CssValue? args)
-        : base(NodeKind.Include)
-    {
-        Name = name;
-        Args = args;
-    }
+    public string Name { get; } = name;
 
-    public string Name { get; }
-
-    public CssValue? Args { get; }
+    public CssValue? Args { get; } = args;
 
     public override IncludeNode CloneNode() => new(Name, Args);
 }

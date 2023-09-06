@@ -10,14 +10,15 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
 {
     private readonly IList<CssValue> _items;
 
-    public CssValueList(IList<CssValue> values, CssValueSeperator seperator = CssValueSeperator.Comma)
-       : base(NodeKind.ValueList)
+    public CssValueList(
+        IList<CssValue> values,
+        CssValueSeperator separator = CssValueSeperator.Comma) : base(NodeKind.ValueList)
     {
         _items = values;
-        Seperator = seperator;
+        Separator = separator;
     }
 
-    public CssValueSeperator Seperator { get; }
+    public CssValueSeperator Separator { get; }
 
     public CssValue this[int index] => _items[index];
 
@@ -32,18 +33,18 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
             clonedValues[i] = (CssValue)_items[i].CloneNode();
         }
 
-        return new CssValueList(clonedValues, Seperator);
+        return new CssValueList(clonedValues, Separator);
     }
 
     internal override void WriteTo(TextWriter writer)
     {
-        string seperator = Seperator is CssValueSeperator.Space ? " " : ", ";
+        string separator = Separator is CssValueSeperator.Space ? " " : ", ";
 
         for (int i = 0; i < _items.Count; i++)
         {
             if (i > 0)
             {
-                writer.Write(seperator);
+                writer.Write(separator);
             }
 
             _items[i].WriteTo(writer);
@@ -52,13 +53,13 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
 
     internal override void WriteTo(scoped ref ValueStringBuilder sb)
     {
-        string seperator = Seperator is CssValueSeperator.Space ? " " : ", ";
+        string separator = Separator is CssValueSeperator.Space ? " " : ", ";
 
         for (int i = 0; i < _items.Count; i++)
         {
             if (i > 0)
             {
-                sb.Append(seperator);
+                sb.Append(separator);
             }
 
             _items[i].WriteTo(ref sb);
@@ -67,7 +68,7 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
 
     public override string ToString()
     {
-        return string.Join(Seperator is CssValueSeperator.Space ? " " : ", ", _items);
+        return string.Join(Separator is CssValueSeperator.Space ? " " : ", ", _items);
     }
 
     #region IEnumerator

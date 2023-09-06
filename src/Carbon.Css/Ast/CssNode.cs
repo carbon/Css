@@ -2,19 +2,13 @@
 
 namespace Carbon.Css;
 
-public abstract class CssNode
+public abstract class CssNode(NodeKind kind, CssNode? parent = null)
 {
-    public CssNode(NodeKind kind, CssNode? parent = null)
-    {
-        Kind = kind;
-        Parent = parent;
-    }
+    [JsonIgnore]
+    public NodeKind Kind { get; } = kind;
 
     [JsonIgnore]
-    public NodeKind Kind { get; }
-
-    [JsonIgnore]
-    public CssNode? Parent { get; set; }
+    public CssNode? Parent { get; set; } = parent;
 
     [JsonIgnore]
     internal Trivia? Leading { get; init; }

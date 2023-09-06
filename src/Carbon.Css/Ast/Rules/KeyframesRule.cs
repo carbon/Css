@@ -1,15 +1,10 @@
 ﻿namespace Carbon.Css;
 
-public sealed class KeyframesRule : CssRule
+public sealed class KeyframesRule(string name) : CssRule
 {
-    public KeyframesRule(string name)
-    {
-        Name = name;
-    }
-
     public override RuleType Type => RuleType.Keyframes;
 
-    public string Name { get; }
+    public string Name { get; } = name;
 
     // TODO: Keyframes
 

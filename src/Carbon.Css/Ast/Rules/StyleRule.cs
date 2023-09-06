@@ -1,16 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace Carbon.Css;
 
-public sealed class StyleRule : CssRule
+public sealed class StyleRule(CssSelector selector) : CssRule
 {
-    public StyleRule(CssSelector selector)
-    {
-        Selector = selector;
-    }
-
     public StyleRule(string selectorText)
         : this(CssSelector.Parse(selectorText)) { }
 
@@ -27,15 +21,16 @@ public sealed class StyleRule : CssRule
 
     public override RuleType Type => RuleType.Style;
 
-    public CssSelector Selector { get; }
+    public CssSelector Selector { get; } = selector;
 
     public int Depth { get; set; }
 
     public override StyleRule CloneNode()
     {
-        var clone = new StyleRule(Selector) { Depth = Depth };
-
-        clone.Flags = Flags;
+        var clone = new StyleRule(Selector) {
+            Depth = Depth,
+            Flags = Flags
+        };
 
         foreach (var child in Children)
         {
@@ -47,7 +42,7 @@ public sealed class StyleRule : CssRule
 
     public override string ToString()
     {
-        var sb = StringBuilderCache.Aquire();
+        var sb = StringBuilderCache.Acquire();
 
         using var sw = new StringWriter(sb);
 

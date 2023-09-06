@@ -1,13 +1,7 @@
 ﻿namespace Carbon.Css;
 
-public sealed class WhileBlock : CssBlock
+public sealed class WhileBlock(CssValue condition) 
+    : CssBlock(NodeKind.While)
 {
-    public WhileBlock(CssValue condition)
-        : base(NodeKind.While)
-    {
-
-        Condition = condition;
-    }
-
-    public CssValue Condition { get; }
+    public CssValue Condition { get; } = condition;
 }

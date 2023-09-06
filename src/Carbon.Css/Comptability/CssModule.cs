@@ -2,23 +2,16 @@
 
 namespace Carbon.Css;
 
-public sealed class CssModule : CssCompatibility
+public sealed class CssModule(
+    CssModuleType type,
+    float level,
+    CompatibilityTable prefixed = new(),
+    CompatibilityTable standard = new(),
+    bool patchValues = false) : CssCompatibility(prefixed, standard, patchValues)
 {
-    public CssModule(
-        CssModuleType type, 
-        float level,
-        CompatibilityTable prefixed = new (),
-        CompatibilityTable standard = new (),
-        bool patchValues = false)
-        : base(prefixed, standard, patchValues)
-    {
-        Type = type;
-        Level = level;
-    }
+    public CssModuleType Type { get; } = type;
 
-    public CssModuleType Type { get; }
-
-    public float Level { get; }
+    public float Level { get; } = level;
 
     public override string ToString() => string.Create(CultureInfo.InvariantCulture, $"{Type} Level {Level}");
 

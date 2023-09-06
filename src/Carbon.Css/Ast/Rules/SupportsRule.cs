@@ -1,17 +1,12 @@
 ﻿namespace Carbon.Css;
 
-public sealed class SupportsRule : CssRule
+public sealed class SupportsRule(TokenList queryList) : CssRule
 {
-    public SupportsRule(TokenList queryList)
-    {
-        Queries = queryList;
-    }
-
     public override RuleType Type => RuleType.Supports;
 
     // | font-format()
     // | font-tech()
     // | selector
 
-    public TokenList Queries { get; }
+    public TokenList Queries { get; } = queryList;
 }

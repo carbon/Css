@@ -32,6 +32,6 @@ internal static class PatchFactory
             }
         }
 
-        return new CssValueList(list, valueList.Seperator);
+        return new CssValueList(list, valueList.Separator);
     }
 }

@@ -1,24 +1,19 @@
 ﻿namespace Carbon.Css;
 
-public sealed class ForBlock : CssBlock
+public sealed class ForBlock(
+    CssVariable variable,
+    CssValue start,
+    CssValue end,
+    bool isInclusive = true) : CssBlock(NodeKind.For)
 {
-    public ForBlock(CssVariable variable, CssValue start, CssValue end, bool isInclusive = true)
-        : base(NodeKind.For)
-    {
-        Variable = variable;
-        Start = start;
-        End = end;
-        IsInclusive = isInclusive;
-    }
+    public CssVariable Variable { get; } = variable;
 
-    public CssVariable Variable { get; }
+    public CssValue Start { get; } = start;
 
-    public CssValue Start { get; }
-
-    public CssValue End { get; }
+    public CssValue End { get; } = end;
 
     // If through
-    public bool IsInclusive { get; }
+    public bool IsInclusive { get; } = isInclusive;
 }
 
 // @for $var from <start> through <end> 

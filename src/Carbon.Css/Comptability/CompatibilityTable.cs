@@ -1,26 +1,18 @@
 ﻿namespace Carbon.Css;
 
-public readonly struct CompatibilityTable
+public readonly struct CompatibilityTable(
+    float chrome = 0,
+    float edge = 0,
+    float firefox = 0,
+    float safari = 0)
 {
-    public CompatibilityTable(
-        float chrome = 0,
-        float edge = 0, 
-        float firefox = 0,
-        float safari = 0)
-    {
-        Chrome = chrome;
-        Edge = edge;
-        Firefox = firefox;
-        Safari = safari;
-    }
+    public float Chrome { get; } = chrome;
 
-    public readonly float Chrome { get; }
+    public float Edge { get; } = edge;
 
-    public readonly float Edge { get; }
+    public float Firefox { get; } = firefox;
 
-    public readonly float Firefox { get; }
+    public float Safari { get; } = safari;
 
-    public readonly float Safari { get; }
-
-    public readonly bool IsDefined => Chrome > 0 || Firefox > 0 || Edge > 0 || Safari > 0;
+    public bool IsDefined => Chrome > 0 || Firefox > 0 || Edge > 0 || Safari > 0;
 }

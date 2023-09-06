@@ -6,21 +6,15 @@ using Carbon.Css.Helpers;
 
 namespace Carbon.Css.Gradients;
 
-public readonly struct ColorStop
+[method: JsonConstructor]
+public readonly struct ColorStop(Rgba32 color, double? position)
 {
-    [JsonConstructor]
-    public ColorStop(Rgba32 color, double? position)
-    {
-        Color = color;
-        Position = position;
-    }
-
     [JsonPropertyName("color")]
-    public readonly Rgba32 Color { get; }
+    public readonly Rgba32 Color { get; } = color;
 
     [JsonPropertyName("position")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public readonly double? Position { get; }
+    public readonly double? Position { get; } = position;
 
     public static ColorStop Parse(ReadOnlySpan<char> text)
     {

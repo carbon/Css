@@ -1,25 +1,18 @@
 ﻿namespace Carbon.Css;
 
-public class CssCompatibility
+public class CssCompatibility(
+    CompatibilityTable prefixed = default,
+    CompatibilityTable standard = default,
+    bool patchValues = false)
 {
     public static readonly CssCompatibility All     = new ();
     public static readonly CssCompatibility Default = new ();
 
-    public CssCompatibility(
-        CompatibilityTable prefixed = default,
-        CompatibilityTable standard = default,
-        bool patchValues = false)
-    {
-        Prefixed = prefixed;
-        Standard = standard;
-        PatchValues = patchValues;
-    }
+    public CompatibilityTable Prefixed { get; } = prefixed;
 
-    public CompatibilityTable Prefixed { get; }
+    public CompatibilityTable Standard { get; } = standard;
 
-    public CompatibilityTable Standard { get; }
-
-    public bool PatchValues { get; }
+    public bool PatchValues { get; } = patchValues;
 
     public virtual CssPatch GetPatch(CssDeclaration declaration, in BrowserInfo browser)
     {

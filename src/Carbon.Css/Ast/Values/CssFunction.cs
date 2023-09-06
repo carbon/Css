@@ -4,18 +4,12 @@ using System.Text;
 
 namespace Carbon.Css;
 
-public class CssFunction : CssValue
+public class CssFunction(string name, CssValue arguments) 
+    : CssValue(NodeKind.Function)
 {
-    public CssFunction(string name, CssValue arguments)
-        : base(NodeKind.Function)
-    {
-        Name = name;
-        Arguments = arguments;
-    }
+    public string Name { get; } = name;
 
-    public string Name { get; }
-
-    public CssValue Arguments { get; }
+    public CssValue Arguments { get; } = arguments;
 
     public override CssFunction CloneNode() => new(Name, Arguments);
 

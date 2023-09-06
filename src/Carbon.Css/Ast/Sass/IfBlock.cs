@@ -1,14 +1,8 @@
 ﻿namespace Carbon.Css;
 
-public sealed class IfBlock : CssBlock
+public sealed class IfBlock(CssValue condition) : CssBlock(NodeKind.If)
 {
-    public IfBlock(CssValue condition)
-        : base(NodeKind.If)
-    {
-        Condition = condition;
-    }
-
-    public CssValue Condition { get; }
+    public CssValue Condition { get; } = condition;
 
     public override IfBlock CloneNode()
     {

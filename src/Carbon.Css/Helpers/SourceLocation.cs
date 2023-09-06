@@ -2,23 +2,17 @@
 
 namespace Carbon.Css.Helpers;
 
-public readonly struct SourceLocation
+public readonly struct SourceLocation(int position, int line, int column)
 {
-    public SourceLocation(int position, int line, int column)
-    {
-        Position = position;
-        Line = line;
-        Column = column;
-    }
 
     // 0 based
-    public int Position { get; }
+    public int Position { get; } = position;
 
     // 1 based
-    public int Line { get; }
+    public int Line { get; } = line;
 
     // 1 based
-    public int Column { get; }
+    public int Column { get; } = column;
 
     public readonly override string ToString() => string.Create(CultureInfo.InvariantCulture, $"({Line},{Column})");
 }

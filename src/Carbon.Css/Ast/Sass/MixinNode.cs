@@ -1,19 +1,12 @@
-﻿using System.Collections.Generic;
+﻿namespace Carbon.Css;
 
-namespace Carbon.Css;
-
-public sealed class MixinNode : CssBlock
+public sealed class MixinNode(
+    string name,
+    IReadOnlyList<CssParameter> parameters) : CssBlock(NodeKind.Mixin)
 {
-    public MixinNode(string name, IReadOnlyList<CssParameter> parameters)
-        : base(NodeKind.Mixin)
-    {
-        Name = name;
-        Parameters = parameters;
-    }
+    public string Name { get; } = name;
 
-    public string Name { get; }
-
-    public IReadOnlyList<CssParameter> Parameters { get; }
+    public IReadOnlyList<CssParameter> Parameters { get; } = parameters;
 }
 
 /*

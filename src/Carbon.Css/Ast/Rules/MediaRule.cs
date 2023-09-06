@@ -1,15 +1,10 @@
 ﻿namespace Carbon.Css;
 
-public sealed class MediaRule : CssRule
+public sealed class MediaRule(TokenList queryList) : CssRule
 {
-    public MediaRule(TokenList queryList)
-    {
-        Queries = queryList;
-    }
-
     public override RuleType Type => RuleType.Media;
 
     // QueryList?
 
-    public TokenList Queries { get; }
+    public TokenList Queries { get; } = queryList;
 }

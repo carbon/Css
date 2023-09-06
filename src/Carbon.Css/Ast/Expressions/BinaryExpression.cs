@@ -2,26 +2,21 @@
 
 namespace Carbon.Css;
 
-public sealed class BinaryExpression : CssValue
+public sealed class BinaryExpression(
+    CssValue left,
+    CssToken op,
+    CssValue right) : CssValue(NodeKind.Expression)
 {
-    // ||, &&, ==, !=
-    // +, -, *, /, %
+    public CssValue Left { get; } = left;
 
-    public BinaryExpression(CssValue left, CssToken op, CssValue right)
-        : base(NodeKind.Expression)
-    {
-        Left = left;
-        OperatorToken = op;
-        Right = right;
-    }
+    public CssValue Right { get; } = right;
 
-    public CssValue Left { get; }
-
-    public CssValue Right { get; }
-
-    public CssToken OperatorToken { get; }
+    public CssToken OperatorToken { get; } = op;
 
     public BinaryOperator Operator => (BinaryOperator)OperatorToken.Kind;
 
     public override BinaryExpression CloneNode() => new(Left, OperatorToken, Right);
 }
+
+// ||, &&, ==, !=
+// +, -, *, /, %

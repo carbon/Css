@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-using Carbon.Color;
+﻿using Carbon.Color;
 
 namespace Carbon.Css.Helpers;
 

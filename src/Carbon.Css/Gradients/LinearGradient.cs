@@ -7,28 +7,22 @@ using Carbon.Css.Helpers;
 
 namespace Carbon.Css.Gradients;
 
-public readonly struct LinearGradient : IGradient
+public readonly struct LinearGradient(
+    LinearGradientDirection direction,
+    double? angle,
+    ColorStop[] colorStops) : IGradient
 {
-    public LinearGradient(
-        LinearGradientDirection direction,
-        double? angle,
-        ColorStop[] colorStops)
-    {
-        Direction = direction;
-        Angle = angle;
-        Stops = colorStops;
-    }
-
     [JsonPropertyName("direction")]
-    public readonly LinearGradientDirection Direction { get; }
+    public readonly LinearGradientDirection Direction { get; } = direction;
 
     [JsonPropertyName("angle")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public readonly double? Angle { get; }
+    public readonly double? Angle { get; } = angle;
 
     // [ <linear-color-stop> [, <linear-color-hint>]? ]# , <linear-color-stop>
+    [JsonPropertyName("stops")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public readonly ColorStop[] Stops { get; }
+    public readonly ColorStop[] Stops { get; } = colorStops;
 
     [SkipLocalsInit]
     public readonly override string ToString()

@@ -1,13 +1,8 @@
 ﻿namespace Carbon.Css;
 
 // #{$name}
-public sealed class CssInterpolatedString : CssValue
+public sealed class CssInterpolatedString(CssValue expression) 
+    : CssValue(NodeKind.InterpolatedString)
 {
-    public CssInterpolatedString(CssValue expression)
-        : base(NodeKind.InterpolatedString)
-    {
-        Expression = expression;
-    }
-
-    public CssValue Expression { get; }
+    public CssValue Expression { get; } = expression;
 }

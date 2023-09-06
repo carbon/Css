@@ -2,16 +2,11 @@
 
 namespace Carbon.Css;
 
-public sealed class ImportRule : CssRule
+public sealed class ImportRule(CssUrlValue url) : CssRule
 {
-    public ImportRule(CssUrlValue url)
-    {
-        Url = url;
-    }
-
     public override RuleType Type => RuleType.Import;
 
-    public CssUrlValue Url { get; }
+    public CssUrlValue Url { get; } = url;
 
     public void WriteTo(TextWriter writer)
     {

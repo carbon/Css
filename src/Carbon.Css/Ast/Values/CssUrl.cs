@@ -2,9 +2,7 @@
 
 using Parser;
 
-public sealed class CssUrl : CssFunction
+public sealed class CssUrl(CssToken name, CssValue value) 
+    : CssFunction(name.Text, value)
 {
-    public CssUrl(CssToken name, CssValue value)
-        : base(name.Text, value)
-    { }
 }

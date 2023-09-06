@@ -7,7 +7,7 @@ internal static class StringBuilderCache
     [ThreadStatic]
     static StringBuilder? cachedInstance;
 
-    public static StringBuilder Aquire()
+    public static StringBuilder Acquire()
     {
         var sb = cachedInstance;
 

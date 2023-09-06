@@ -276,10 +276,10 @@ public sealed class CssWriter : IDisposable
         if (skipMath || !CssValue.AreCompatible(lhs, rhs, expression.Operator))
         {
             var values = new CssValue[] {
-                    lhs,
-                    new CssString(expression.OperatorToken),
-                    rhs
-                };
+                lhs,
+                new CssString(expression.OperatorToken),
+                rhs
+            };
 
             return new CssValueList(values, CssValueSeperator.Space);
         }
@@ -499,7 +499,7 @@ public sealed class CssWriter : IDisposable
                     WriteTrivia(last.Trailing);
                 }
 
-                else if (list.Seperator is CssValueSeperator.Space)
+                else if (list.Separator is CssValueSeperator.Space)
                 {
                     _writer.Write(' ');
                 }
@@ -564,7 +564,7 @@ public sealed class CssWriter : IDisposable
             case NodeKind.ValueList:
                 var list = (CssValueList)value;
 
-                if (list.Seperator is CssValueSeperator.Space)
+                if (list.Separator is CssValueSeperator.Space)
                 {
                     yield return list;
                 }
@@ -831,7 +831,7 @@ public sealed class CssWriter : IDisposable
 
     private void WritePrefixedKeyframesRule(BrowserInfo browser, KeyframesRule rule, int depth)
     {
-        _browserSupport = new[] { browser };
+        _browserSupport = [ browser ];
 
         _writer.Write('@');
         _writer.Write(browser.Prefix.Text);
@@ -1128,14 +1128,14 @@ public sealed class CssWriter : IDisposable
         {
             if (args is CssValueList valueList)
             {
-                if (valueList.Seperator is CssValueSeperator.Comma)
+                if (valueList.Separator is CssValueSeperator.Comma)
                 {
                     list = valueList.OfType<CssValue>().ToArray();
                 }
             }
             else
             {
-                list = new[] { args }; // Single Value
+                list = [ args ]; // Single Value
             }
         }
 

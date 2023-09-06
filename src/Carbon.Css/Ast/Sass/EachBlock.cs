@@ -1,15 +1,8 @@
 ﻿namespace Carbon.Css;
 
-public sealed class EachBlock : CssBlock
+public sealed class EachBlock(IReadOnlyList<CssVariable> variables, CssValue enumerable) : CssBlock(NodeKind.Each)
 {
-    public EachBlock(IReadOnlyList<CssVariable> variables, CssValue enumerable)
-        : base(NodeKind.Each)
-    {
-        Variables = variables;
-        Enumerable = enumerable;
-    }
+    public IReadOnlyList<CssVariable> Variables { get; } = variables;
 
-    public IReadOnlyList<CssVariable> Variables { get; }
-
-    public CssValue Enumerable { get; }
+    public CssValue Enumerable { get; } = enumerable;
 }
