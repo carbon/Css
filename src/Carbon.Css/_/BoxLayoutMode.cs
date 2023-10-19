@@ -37,7 +37,6 @@ public enum BoxLayoutMode
     RubyBaseContainer = 1 << 25,
     RubyTextContainer = 1 << 26,
 
-
     // <display-box>
     Contents    = 1 << 30,
     None        = 1 << 31,

@@ -157,7 +157,7 @@ public readonly struct LinearGradient(
 
         // // [ <angle> | to [top | bottom] || [left | right] ],]? <color-stop>[, <color-stop>]+);
 
-        return new LinearGradient(direction, angle, colorStops.ToArray());
+        return new LinearGradient(direction, angle, [.. colorStops]);
     }
 
     private static double ReadAngle(ReadOnlySpan<char> text, out int read)

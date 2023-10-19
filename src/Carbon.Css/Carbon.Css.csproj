@@ -8,7 +8,7 @@
     <WarningsAsErrors>true</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>IDE0057,IDE0090</NoWarn>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>12</LangVersion>
 
     <!-- Package Properties-->
     <Authors>iamcarbon</Authors>

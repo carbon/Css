@@ -12,7 +12,7 @@ public sealed class CssSequence : CssValue, IEnumerable<CssValue>
     public CssSequence()
         : base(NodeKind.Sequence)
     {
-        _children = new List<CssValue>();
+        _children = [];
     }
 
     public CssSequence(int capacity)

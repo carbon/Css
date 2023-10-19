@@ -2,8 +2,8 @@
 
 internal static class PatchFactory
 {
-    public static readonly PrefixNamePatcher PrefixName                 = new ();
-    public static readonly PrefixNameAndValuePatcher PrefixNameAndValue = new ();
+    public static readonly PrefixNamePatcher PrefixName                 = new();
+    public static readonly PrefixNameAndValuePatcher PrefixNameAndValue = new();
 
     // transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
     // -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
@@ -18,7 +18,7 @@ internal static class PatchFactory
 
         foreach (var node in valueList)
         {
-            if (node.Kind is NodeKind.ValueList) // For comma seperated componented lists
+            if (node.Kind is NodeKind.ValueList) // For comma separated componented lists
             {
                 list.Add(PatchValue(node, browser));
             }

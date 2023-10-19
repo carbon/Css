@@ -2,7 +2,7 @@
 
 namespace Carbon.Css;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<CssBoxAlignment>))]
 public enum CssBoxAlignment
 {
     Unknown       = 0,

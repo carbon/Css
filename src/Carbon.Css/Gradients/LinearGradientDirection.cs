@@ -2,7 +2,7 @@
 
 namespace Carbon.Css.Gradients;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<LinearGradientDirection>))]
 public enum LinearGradientDirection
 {
     None        = 0,

@@ -9,12 +9,14 @@ public sealed class CssContext
     private BrowserInfo[]? browserSupport = null;
     private Dictionary<string, MixinNode>? _mixins;
 
-    public Dictionary<string, MixinNode> Mixins
-    {
-        get => _mixins ??= new Dictionary<string, MixinNode>();
-    }
-
+    public Dictionary<string, MixinNode> Mixins => _mixins ??= new();
+    
     public BrowserInfo[]? BrowserSupport => browserSupport;
+
+    // Firefox 117
+    // Safar 17.?
+
+    public bool SupportsNesting { get; set; }
 
     internal bool TryGetBrowser(BrowserType type, out BrowserInfo browser)
     {
@@ -44,7 +46,9 @@ public sealed class CssContext
     {
         if (browserSupport is not null) return;
 
-        browserSupport = targets.OrderBy(t => t.Prefix.Text).ToArray();
+        browserSupport = targets;
+
+        Array.Sort(browserSupport, static (a, b) => a.Prefix.Text.CompareTo(b.Prefix.Text));
 
         float chrome = 0;
         float firefox = 0;

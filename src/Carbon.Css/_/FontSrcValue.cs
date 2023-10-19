@@ -1,16 +1,10 @@
 ﻿namespace Carbon.Css;
 
-internal readonly struct FontSrcValue
+internal readonly struct FontSrcValue(string url, string format)
 {
-    public FontSrcValue(string url, string format)
-    {
-        Url = url;
-        Format = format;
-    }
+    public readonly string Url { get; } = url;
 
-    public readonly string Url { get; }
-
-    public readonly string Format { get; }
+    public readonly string Format { get; } = format;
 
     public readonly override string ToString() => $"url('{Url}') format('{Format}')";
 }

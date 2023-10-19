@@ -1,20 +1,13 @@
 ﻿namespace Carbon.Css;
 
-internal readonly struct CssScale : IEquatable<CssScale>
+internal readonly struct CssScale(CssValue x, CssValue y, CssValue z) : IEquatable<CssScale>
 {
-    public CssScale(CssValue x, CssValue y, CssValue z)
-    {
-        X = x;
-        Y = y;
-        Z = z;
-    }
-
     // e.g. 100px
-    public CssValue X { get; }
+    public CssValue X { get; } = x;
 
-    public CssValue Y { get; }
+    public CssValue Y { get; } = y;
 
-    public CssValue Z { get; }
+    public CssValue Z { get; } = z;
 
     public bool Equals(CssScale other)
     {

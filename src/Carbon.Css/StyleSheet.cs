@@ -34,13 +34,13 @@ public sealed class StyleSheet : CssRoot, IStylesheet
         return Parse(new StringReader(text), context);
     }
 
-    private static readonly char[] trimBrowserChars = { ' ', '+' };
+    private static ReadOnlySpan<char> TrimBrowserChars => [' ', '+'];
 
     public static StyleSheet Parse(TextReader reader, CssContext? context = null)
     {
         var sheet = new StyleSheet(context ?? new CssContext());
 
-        IList<BrowserInfo>? browsers = null;
+        List<BrowserInfo>? browsers = null;
 
         using (var parser = new CssParser(reader))
         {
@@ -64,7 +64,7 @@ public sealed class StyleSheet : CssRoot, IStylesheet
                         {
                             browsers ??= new List<BrowserInfo>(2);
 
-                            float browserVersion = float.Parse(parts[^1].AsSpan().Trim(trimBrowserChars), provider: CultureInfo.InvariantCulture);
+                            float browserVersion = float.Parse(parts[^1].AsSpan().Trim(TrimBrowserChars), provider: CultureInfo.InvariantCulture);
 
                             browsers.Add(new BrowserInfo(browserType, browserVersion));
                         }
@@ -78,7 +78,7 @@ public sealed class StyleSheet : CssRoot, IStylesheet
 
             if (browsers != null)
             {
-                sheet.Context!.SetCompatibility(browsers.ToArray());
+                sheet.Context!.SetCompatibility([.. browsers]);
             }
         }
 

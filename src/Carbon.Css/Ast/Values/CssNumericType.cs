@@ -2,7 +2,7 @@
 
 namespace Carbon.Css.Ast.Values;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<CssNumericType>))]
 public enum CssNumericType
 {
     Length = 1,

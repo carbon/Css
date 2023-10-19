@@ -6,7 +6,7 @@ namespace Carbon.Css.Parser;
 
 internal sealed class SourceReader(TextReader textReader) : IDisposable
 {
-    private const char EofChar = '\0';
+    public const char EofChar = '\0';
 
     private readonly TextReader _textReader = textReader;
     private char _current = '.';

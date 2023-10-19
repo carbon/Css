@@ -5,8 +5,8 @@ public class CssCompatibility(
     CompatibilityTable standard = default,
     bool patchValues = false)
 {
-    public static readonly CssCompatibility All     = new ();
-    public static readonly CssCompatibility Default = new ();
+    public static readonly CssCompatibility All     = new();
+    public static readonly CssCompatibility Default = new();
 
     public CompatibilityTable Prefixed { get; } = prefixed;
 

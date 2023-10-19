@@ -1,4 +1,5 @@
-﻿using System.Buffers.Text;
+﻿using System.Buffers;
+using System.Buffers.Text;
 using System.Globalization;
 
 namespace Carbon.Css.Helpers;
@@ -46,7 +47,6 @@ internal static class NumberHelper
 
         // 0 - 6
 
-
         return degrees / 60f;       
     }
 
@@ -65,7 +65,7 @@ internal static class NumberHelper
             read++;
         }
 
-        return double.Parse(text[..read], provider: CultureInfo.InvariantCulture);
+        return double.Parse(text[..read], CultureInfo.InvariantCulture);
     }
 
     public static double ReadNumber(ReadOnlySpan<byte> text, out int read)

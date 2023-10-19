@@ -2,7 +2,7 @@
 
 namespace Carbon.Css;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<CssTextTransform>))]
 public enum CssTextTransform
 {
     None         = 0,

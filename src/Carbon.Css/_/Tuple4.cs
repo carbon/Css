@@ -10,20 +10,14 @@ internal ref struct Tuple4
 
     public ReadOnlySpan<char> _3 { get; private set; }
 
-    public ReadOnlySpan<char> this[int i]
+    public readonly ReadOnlySpan<char> this[int i] => i switch
     {
-        get
-        {
-            return i switch
-            {
-                0 => _0,
-                1 => _1,
-                2 => _2,
-                3 => _3,
-                _ => throw new IndexOutOfRangeException()
-            };
-        }
-    }
+        0 => _0,
+        1 => _1,
+        2 => _2,
+        3 => _3,
+        _ => throw new IndexOutOfRangeException()
+    };     
 
     public int Length { get; private set; }
 

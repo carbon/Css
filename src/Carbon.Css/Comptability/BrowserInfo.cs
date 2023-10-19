@@ -43,6 +43,7 @@ public readonly struct BrowserInfo(BrowserType type, float version)
     public static readonly BrowserInfo Safari10  = Safari(10);
     public static readonly BrowserInfo Safari13  = Safari(13);
     public static readonly BrowserInfo Safari15  = Safari(15);
+    public static readonly BrowserInfo Safari17  = Safari(17);
 
     public static BrowserPrefix GetPrefix(BrowserType type) => type switch
     {

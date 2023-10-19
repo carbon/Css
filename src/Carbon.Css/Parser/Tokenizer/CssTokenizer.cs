@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Buffers;
+using System.IO;
 
 namespace Carbon.Css.Parser;
 
@@ -78,7 +79,7 @@ public sealed class CssTokenizer : IDisposable
 
         switch (reader.Current)
         {
-            case '@': 
+            case '@':
                 return new CssToken(CssTokenKind.AtSymbol, reader.ReadSymbol("@"), reader.Position);
             case '$':
                 _mode.Enter(LexicalMode.Symbol);
@@ -87,17 +88,21 @@ public sealed class CssTokenizer : IDisposable
 
             case '/':
 
-                return reader.Peek() switch
-                {
+                return reader.Peek() switch {
                     '/' or '*' => ReadComment(),
-                    ' '        => new CssToken(CssTokenKind.Divide, reader.ReadSymbol("/"), reader.Position),
-                    _          => new CssToken(CssTokenKind.String, reader.Read(), reader.Position)
+                    ' ' => new CssToken(CssTokenKind.Divide, reader.ReadSymbol("/"), reader.Position),
+                    _ => new CssToken(CssTokenKind.String, reader.Read(), reader.Position)
                 };
 
 
             case ':':
+                char peek = reader.Peek();
                 // Pseudo-elements
-                if (reader.Peek() is ':' or '-')
+                if (peek is ':')
+                {
+                    return ReadPseudoElementName();
+                }
+                else if (peek is '-')
                 {
                     return ReadValue();
                 }
@@ -108,7 +113,7 @@ public sealed class CssTokenizer : IDisposable
                     return MaybeColonOrPseudoClass(colon);
                 }
 
-            case ',': 
+            case ',':
                 return new CssToken(CssTokenKind.Comma, reader.ReadSymbol(","), reader.Position);
             case ';':
                 LeaveValueMode();
@@ -134,7 +139,7 @@ public sealed class CssTokenizer : IDisposable
                     return new CssToken(CssTokenKind.BlockEnd, reader.ReadSymbol("}"), reader.Position);
                 }
 
-            case '(': return new CssToken(CssTokenKind.LeftParenthesis,  reader.ReadSymbol("("), reader.Position);
+            case '(': return new CssToken(CssTokenKind.LeftParenthesis, reader.ReadSymbol("("), reader.Position);
             case ')': return new CssToken(CssTokenKind.RightParenthesis, reader.ReadSymbol(")"), reader.Position);
 
             case '&':
@@ -160,7 +165,7 @@ public sealed class CssTokenizer : IDisposable
             case '<': // <=
                 return reader.Peek() is '='
                     ? new CssToken(CssTokenKind.Lte, reader.Read(2), reader.Position - 1)
-                    : new CssToken(CssTokenKind.Lt,  reader.ReadSymbol("<"), reader.Position);
+                    : new CssToken(CssTokenKind.Lt, reader.ReadSymbol("<"), reader.Position);
 
             case '#' when reader.Peek() is '{':
                 _mode.Enter(LexicalMode.InterpolatedString);
@@ -169,7 +174,7 @@ public sealed class CssTokenizer : IDisposable
 
             case '+' when reader.Peek() is ' ':
                 return new CssToken(CssTokenKind.Add, reader.ReadSymbol("+"), reader.Position);
-            case '*': 
+            case '*':
                 return new CssToken(CssTokenKind.Multiply, reader.ReadSymbol("*"), reader.Position);
             case '.' when char.IsAsciiDigit(reader.Peek()):
                 return ReadNumber();
@@ -189,8 +194,7 @@ public sealed class CssTokenizer : IDisposable
 
         }
 
-        return _mode.Current switch
-        {
+        return _mode.Current switch {
             LexicalMode.Symbol => ReadSymbol(),
             LexicalMode.Value => ReadValue(),
             LexicalMode.Unit => ReadUnit(),
@@ -263,6 +267,18 @@ public sealed class CssTokenizer : IDisposable
         return new CssToken(CssTokenKind.Name, reader.Unmark(), reader.MarkStart);
     }
 
+    private CssToken ReadPseudoElementName()
+    {
+        reader.Mark();
+
+        while (reader.Current is ':' || char.IsAsciiLetter(reader.Current))
+        {
+            reader.Advance();
+        }
+
+        return new CssToken(CssTokenKind.Name, reader.Unmark(), reader.MarkStart);
+    }
+
     private void LeaveValueMode()
     {
         if (_mode.Current is LexicalMode.Value)
@@ -313,7 +329,7 @@ public sealed class CssTokenizer : IDisposable
 
         var text = reader.Unmark();
 
-        if (reader.Current == '(' || PseudoClassNames.Contains(text))
+        if (reader.Current is '(' || PseudoClassNames.Contains(text) || PseudoElementNames.Contains(text))
         {
             return new CssToken(CssTokenKind.Name, ":" + text, reader.MarkStart);
         }
@@ -330,28 +346,21 @@ public sealed class CssTokenizer : IDisposable
         }
     }
 
+    private static readonly SearchValues<char> BreakChars = SearchValues.Create(['{', '}', '(', ')', ';', ',', SourceReader.EofChar]);
+
     private CssToken ReadValue()
     {
         reader.Mark();
 
-        while (!char.IsWhiteSpace(reader.Current) &&
-            reader.Current != '{' &&
-            reader.Current != '}' &&
-            reader.Current != ')' &&
-            reader.Current != '(' &&
-            reader.Current != ';' &&
-            reader.Current != ',' &&
-            !reader.IsEof)
+        while (!char.IsWhiteSpace(reader.Current) && !BreakChars.Contains(reader.Current))
         {
             reader.Advance();
         }
 
         var text = reader.Unmark();
 
-        if (PseudoClassNames.Contains(text))
+        if (PseudoClassNames.Contains(text) || PseudoElementNames.Contains(text))
         {
-            // LeaveValueMode();
-
             return new CssToken(CssTokenKind.Name, text, reader.MarkStart);
         }
 

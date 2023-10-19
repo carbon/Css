@@ -2,7 +2,7 @@
 
 namespace Carbon.Css;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<NodeKind>))]
 public enum NodeKind
 {
     Unknown = 0,

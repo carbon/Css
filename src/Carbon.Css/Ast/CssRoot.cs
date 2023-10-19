@@ -5,7 +5,7 @@ public class CssRoot : CssNode
     protected readonly List<CssNode> _children;
 
     public CssRoot()
-        : this(new List<CssNode>())
+        : this([])
     { }
 
     public CssRoot(List<CssNode> children)

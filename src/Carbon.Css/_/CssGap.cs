@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Globalization;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 using Carbon.Css.Serialization;
@@ -6,7 +7,7 @@ using Carbon.Css.Serialization;
 namespace Carbon.Css;
 
 [JsonConverter(typeof(CssGapConverter))]
-public readonly struct CssGap : IEquatable<CssGap>, ISpanFormattable
+public readonly struct CssGap : IEquatable<CssGap>, ISpanFormattable, ISpanParsable<CssGap>
 {
     public CssGap(double value)
         : this(new CssUnitValue(value, CssUnitInfo.Px)) { }
@@ -108,7 +109,48 @@ public readonly struct CssGap : IEquatable<CssGap>, ISpanFormattable
             return X.ToString();
         }
 
-        return $"{X} {Y}";
+        return string.Format(CultureInfo.InvariantCulture, $"{X} {Y}");
+    }
+
+    static CssGap ISpanParsable<CssGap>.Parse(ReadOnlySpan<char> s, IFormatProvider? provider)
+    {
+        return Parse(s);
+    }
+
+    public static bool TryParse(ReadOnlySpan<char> s, out CssGap result)
+    {
+        if (s.IsEmpty)
+        {
+            result = default;
+            return false;
+        }
+
+        try
+        {
+            result = Parse(s);
+
+            return true;
+        }
+        catch { }
+
+        result = default;
+
+        return false;
+    }
+
+    static bool ISpanParsable<CssGap>.TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out CssGap result)
+    {
+        return TryParse(s, out result);
+    }
+
+    static CssGap IParsable<CssGap>.Parse(string s, IFormatProvider? provider)
+    {
+        return Parse(s);
+    }
+
+    static bool IParsable<CssGap>.TryParse(string? s, IFormatProvider? provider, out CssGap result)
+    {
+        return TryParse(s, out result);
     }
 
     public static bool operator ==(CssGap left, CssGap right)

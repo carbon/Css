@@ -4,7 +4,6 @@ namespace Carbon.Css.Helpers;
 
 public readonly struct SourceLocation(int position, int line, int column)
 {
-
     // 0 based
     public int Position { get; } = position;
 

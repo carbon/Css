@@ -7,12 +7,8 @@ using Carbon.Css.Parser;
 
 namespace Carbon.Css;
 
-public abstract class CssValue : CssNode
+public abstract class CssValue(NodeKind kind) : CssNode(kind)
 {
-    public CssValue(NodeKind kind)
-        : base(kind)
-    { }
-
     public static CssUnitValue Number(double value)
     {
         if (value is 0)
@@ -89,7 +85,7 @@ public abstract class CssValue : CssNode
     public static CssValue FromComponents(IEnumerable<CssValue> components)
     {
         // A property value can have one or more components.
-        // Components are seperated by a space & may include functions, literals, dimensions, etc
+        // Components are separated by a space & may include functions, literals, dimensions, etc
 
         var enumerator = components.GetEnumerator();
 
@@ -112,7 +108,7 @@ public abstract class CssValue : CssNode
             values.Add(enumerator.Current);
         }
 
-        return new CssValueList(values, CssValueSeperator.Space);
+        return new CssValueList(values, CssValueSeparator.Space);
     }
 
     public static bool AreCompatible(CssValue left, CssValue right, BinaryOperator operation)

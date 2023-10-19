@@ -9,8 +9,7 @@ public class CssBlock : CssNode, IEnumerable<CssNode>
     public CssBlock(NodeKind kind)
         : base(kind)
     {
-        _children = new List<CssNode>();
-
+        _children = [];
     }
 
     public CssBlock(NodeKind kind, List<CssNode> children)

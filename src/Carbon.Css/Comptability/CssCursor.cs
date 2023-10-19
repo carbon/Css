@@ -4,17 +4,17 @@
 
 public static class CssCursor
 {
-    private static readonly CssCompatibility grabCursor = new (
+    private static readonly CssCompatibility s_grabCursor = new(
         prefixed: new (firefox: 1.5f, safari: 4f),
         standard: new (chrome: 68, firefox: 27, edge: 15, safari: 11)
     );
 
-    private static readonly CssCompatibility zoomCursor = new (
+    private static readonly CssCompatibility s_zoomCursor = new(
         prefixed: new (safari: 3),
         standard: new (chrome: 37, edge: 12, firefox: 24, safari: 9)
     );
 
-    private static readonly Dictionary<string, CssCompatibility> table = new ()
+    private static readonly Dictionary<string, CssCompatibility> s_table = new ()
     {
         ["auto"]      = CssCompatibility.All,
         ["alias"]     = CssCompatibility.All,
@@ -23,8 +23,8 @@ public static class CssCursor
 
         ["default"]  = CssCompatibility.All,
         ["e-resize"] = CssCompatibility.All,
-        ["grab"]     = grabCursor,
-        ["grabbing"] = grabCursor,
+        ["grab"]     = s_grabCursor,
+        ["grabbing"] = s_grabCursor,
 
         ["help"] = CssCompatibility.All,
 
@@ -43,13 +43,13 @@ public static class CssCursor
         ["wait"]    = CssCompatibility.All,
         ["w-resize"] = CssCompatibility.All,
 
-        ["zoom-in"]  = zoomCursor,
-        ["zoom-out"] = zoomCursor
+        ["zoom-in"]  = s_zoomCursor,
+        ["zoom-out"] = s_zoomCursor
     };
         
     public static bool NeedsPatch(string value, BrowserInfo browser)
     {
-        if (table.TryGetValue(value, out CssCompatibility? c))
+        if (s_table.TryGetValue(value, out CssCompatibility? c))
         {
             if (c.IsPrefixed(browser))
             {

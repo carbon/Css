@@ -2,7 +2,7 @@
 
 namespace Carbon.Css;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<RuleType>))]
 public enum RuleType
 {
 	Unknown				= 0,
@@ -21,5 +21,6 @@ public enum RuleType
 	FontFeatureValues	= 14,
 	Viewport			= 15,
 	Region				= 16,
-	Container			= 17
+	Container			= 17,
+	StartingStyle       = 18
 }

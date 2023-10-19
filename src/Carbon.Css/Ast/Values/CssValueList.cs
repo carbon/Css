@@ -6,19 +6,13 @@ namespace Carbon.Css;
 
 // A list of component values 
 
-public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
+public sealed class CssValueList(
+    IList<CssValue> values,
+    CssValueSeparator separator = CssValueSeparator.Comma) : CssValue(NodeKind.ValueList), IReadOnlyList<CssValue>
 {
-    private readonly IList<CssValue> _items;
+    private readonly IList<CssValue> _items = values;
 
-    public CssValueList(
-        IList<CssValue> values,
-        CssValueSeperator separator = CssValueSeperator.Comma) : base(NodeKind.ValueList)
-    {
-        _items = values;
-        Separator = separator;
-    }
-
-    public CssValueSeperator Separator { get; }
+    public CssValueSeparator Separator { get; } = separator;
 
     public CssValue this[int index] => _items[index];
 
@@ -38,7 +32,7 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
 
     internal override void WriteTo(TextWriter writer)
     {
-        string separator = Separator is CssValueSeperator.Space ? " " : ", ";
+        string separator = Separator is CssValueSeparator.Space ? " " : ", ";
 
         for (int i = 0; i < _items.Count; i++)
         {
@@ -53,7 +47,7 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
 
     internal override void WriteTo(scoped ref ValueStringBuilder sb)
     {
-        string separator = Separator is CssValueSeperator.Space ? " " : ", ";
+        string separator = Separator is CssValueSeparator.Space ? " " : ", ";
 
         for (int i = 0; i < _items.Count; i++)
         {
@@ -68,7 +62,7 @@ public sealed class CssValueList : CssValue, IReadOnlyList<CssValue>
 
     public override string ToString()
     {
-        return string.Join(Separator is CssValueSeperator.Space ? " " : ", ", _items);
+        return string.Join(Separator is CssValueSeparator.Space ? " " : ", ", _items);
     }
 
     #region IEnumerator

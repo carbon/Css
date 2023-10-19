@@ -79,7 +79,7 @@ public readonly struct CssUrlValue
         return new Uri(baseUri, relativeUri: Value).AbsolutePath;
     }
 
-    private static readonly char[] trimChars = { '\'', '\"', '(', ')' };
+    private static readonly char[] trimChars = ['\'', '\"', '(', ')'];
 
     public static CssUrlValue Parse(ReadOnlySpan<char> text)
     {

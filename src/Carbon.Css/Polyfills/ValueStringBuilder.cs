@@ -30,16 +30,7 @@ namespace System.Text
             _pos = 0;
         }
 
-        public int Length
-        {
-            get => _pos;
-            set
-            {
-                Debug.Assert(value >= 0);
-                Debug.Assert(value <= _chars.Length);
-                _pos = value;
-            }
-        }
+        public int Length => _pos;
 
         public int Capacity => _chars.Length;
 
@@ -49,7 +40,6 @@ namespace System.Text
             Dispose();
             return s;
         }
-
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Append(char c)
@@ -65,7 +55,6 @@ namespace System.Text
                 GrowAndAppend(c);
             }
         }
-
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AppendInvariant(double value)
