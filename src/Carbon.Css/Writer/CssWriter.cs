@@ -258,7 +258,7 @@ public sealed class CssWriter : IDisposable
                     return function;
                 }
 
-                return EvalFunction(function);
+                return EvaluateFunction(function);
             default: return expression;
         }
     }
@@ -275,13 +275,13 @@ public sealed class CssWriter : IDisposable
 
         if (skipMath || !CssValue.AreCompatible(lhs, rhs, expression.Operator))
         {
-            var values = new CssValue[] {
+            CssValue[] values = [
                 lhs,
                 new CssString(expression.OperatorToken),
                 rhs
-            };
+            ];
 
-            return new CssValueList(values, CssValueSeperator.Space);
+            return new CssValueList(values, CssValueSeparator.Space);
         }
 
         switch (expression.Operator)
@@ -343,7 +343,7 @@ public sealed class CssWriter : IDisposable
         return double.Parse(value.ToString()!, CultureInfo.InvariantCulture);
     }
 
-    public CssValue EvalFunction(CssFunction function)
+    public CssValue EvaluateFunction(CssFunction function)
     {
         if (CssFunctions.TryGet(function.Name, out var func))
         {
@@ -499,7 +499,7 @@ public sealed class CssWriter : IDisposable
                     WriteTrivia(last.Trailing);
                 }
 
-                else if (list.Separator is CssValueSeperator.Space)
+                else if (list.Separator is CssValueSeparator.Space)
                 {
                     _writer.Write(' ');
                 }
@@ -564,7 +564,7 @@ public sealed class CssWriter : IDisposable
             case NodeKind.ValueList:
                 var list = (CssValueList)value;
 
-                if (list.Separator is CssValueSeperator.Space)
+                if (list.Separator is CssValueSeparator.Space)
                 {
                     yield return list;
                 }
@@ -643,14 +643,15 @@ public sealed class CssWriter : IDisposable
 
         switch (rule)
         {   
-            case ImportRule importRule       : WriteImportRule(importRule);              break;
-            case MediaRule mediaRule         : WriteMediaRule(mediaRule, depth);         break;
-            case ContainerRule containerRule : WriteContainerRule(containerRule, depth); break;
-            case StyleRule styleRule         : WriteStyleRule(styleRule, depth);         break;
-            case SupportsRule supportsRule   : WriteSupportsRule(supportsRule, depth);   break;
-            case FontFaceRule fontFaceRule   : WriteFontFaceRule(fontFaceRule, depth);   break;
-            case KeyframesRule keyFrameRule  : WriteKeyframesRule(keyFrameRule, depth);  break;
-            case UnknownRule atRule          : WriteAtRule(atRule, depth);               break;
+            case ImportRule importRule               : WriteImportRule(importRule);                      break;
+            case MediaRule mediaRule                 : WriteMediaRule(mediaRule, depth);                 break;
+            case ContainerRule containerRule         : WriteContainerRule(containerRule, depth);         break;
+            case StyleRule styleRule                 : WriteStyleRule(styleRule, depth);                 break;
+            case SupportsRule supportsRule           : WriteSupportsRule(supportsRule, depth);           break;
+            case StartingStyleRule startingStyleRule : WriteStartingStyleRule(startingStyleRule, depth); break;
+            case FontFaceRule fontFaceRule           : WriteFontFaceRule(fontFaceRule, depth);           break;
+            case KeyframesRule keyFrameRule          : WriteKeyframesRule(keyFrameRule, depth);          break;
+            case UnknownRule atRule                  : WriteAtRule(atRule, depth);                       break;
             default:
                 throw new Exception($"Unhandled rule. Was {rule.GetType().Name}");
         }
@@ -764,6 +765,13 @@ public sealed class CssWriter : IDisposable
         rule.Queries.WriteTo(_writer, _scope);
 
         _writer.Write(' ');
+
+        WriteBlock(rule, depth);
+    }
+
+    public void WriteStartingStyleRule(StartingStyleRule rule, int depth)
+    {
+        _writer.Write("@starting-style ");
 
         WriteBlock(rule, depth);
     }
@@ -998,12 +1006,12 @@ public sealed class CssWriter : IDisposable
             yield break;
         }
 
-        if (rule.Flags.HasFlag(CssBlockFlags.HasChildMedia))
-        {
-            throw new Exception("Nested @media rules are not supported yet");
-        }
+        var clone = rule.CloneNode();
 
-        var clone = rule.CloneNode(); // TODO: Eliminate
+        if (rule.Flags.HasFlag(CssBlockFlags.HasNestedAtRule) && !_context.SupportsNesting)
+        {
+            throw new Exception("nested @ rules are not supported");
+        }
 
         if (rule.Flags.HasFlag(CssBlockFlags.HasIncludes)) // Expand the includes
         {
@@ -1016,8 +1024,8 @@ public sealed class CssWriter : IDisposable
         }
 
         var root = new List<CssRule> {
-                clone
-            };
+            clone
+        };
 
         foreach (var nestedRule in clone.Children.OfType<StyleRule>().ToList())
         {
@@ -1037,15 +1045,15 @@ public sealed class CssWriter : IDisposable
         }
     }
 
-    private IEnumerable<CssRule> ExpandStyleRule(StyleRule rule, CssRule parent)
+    private static IEnumerable<CssRule> ExpandStyleRule(StyleRule rule, CssRule parent)
     {
         var newRule = new StyleRule(ExpandSelector(rule));
 
         bool hasNestedRules = false;
 
-        for (var i = 0; i < rule.Children.Count; i++)
+        foreach (var child in rule.Children)
         {
-            if (rule.Children[i] is StyleRule)
+            if (child is StyleRule)
             {
                 hasNestedRules = true;
 
@@ -1083,7 +1091,7 @@ public sealed class CssWriter : IDisposable
         }
     }
 
-    public CssScope ExpandInclude(IncludeNode include, CssBlock rule)
+    public CssScope ExpandInclude(IncludeNode include, CssBlock parent)
     {
         includeCount++;
 
@@ -1107,12 +1115,12 @@ public sealed class CssWriter : IDisposable
 
             if (node is IncludeNode includeNode)
             {
-                ExpandInclude(includeNode, rule);
+                ExpandInclude(includeNode, parent);
 
                 mixin.Children.Remove(node);
             }
 
-            rule.Insert(i + 1, node.CloneNode());
+            parent.Insert(i + 1, node.CloneNode());
 
             i++;
         }
@@ -1128,7 +1136,7 @@ public sealed class CssWriter : IDisposable
         {
             if (args is CssValueList valueList)
             {
-                if (valueList.Separator is CssValueSeperator.Comma)
+                if (valueList.Separator is CssValueSeparator.Comma)
                 {
                     list = valueList.OfType<CssValue>().ToArray();
                 }
@@ -1159,7 +1167,7 @@ public sealed class CssWriter : IDisposable
 
     public static CssSelector ExpandSelector(StyleRule rule)
     {
-        var ancestors = new List<CssSelector>(rule.Depth) {
+        var ancestors = new List<CssSelector>(rule.Depth + 1) {
             rule.Selector
         };
 
@@ -1183,7 +1191,7 @@ public sealed class CssWriter : IDisposable
 
         // { &.open { } }
 
-        CssSequence? span = new CssSequence();
+        CssSequence? span = new();
 
         for (int i = 0; i < ancestors.Count; i++)
         {
@@ -1193,7 +1201,7 @@ public sealed class CssWriter : IDisposable
             {
                 var prev = span;
 
-                span = new CssSequence();
+                span = new();
 
                 foreach (var a in ancestor)
                 {
@@ -1213,7 +1221,7 @@ public sealed class CssWriter : IDisposable
 
             if (ancestor.Count > 1)
             {
-                // The node is a muliselector
+                // The node is a multi-selector
                 // e.g. h1, h2, h3
 
                 var parentSelector = span;

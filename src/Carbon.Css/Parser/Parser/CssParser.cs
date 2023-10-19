@@ -127,27 +127,28 @@ public sealed partial class CssParser : IDisposable
         // @import "subs.css";
         // @media print {
 
-        Consume(CssTokenKind.AtSymbol, LexicalMode.Rule); // Read @
+        Consume(CssTokenKind.AtSymbol, LexicalMode.Rule); // ! @
 
-        var atName = Consume();                        // read name
+        var atName = Consume(); // ! name
 
         ReadTrivia();
 
         switch (atName.Text)
         {
-            case "charset"   : return ReadCharsetRule();
-            case "import"    : return ReadImportRule();
-            case "font-face" : return ReadFontFaceRule();
-            case "media"     : return ReadMediaRule();
-            case "page"      : return ReadPageRule();
-            case "supports"  : return ReadSupportsRule();
-            case "container" : return ReadContainerRule(); 
-            case "keyframes" : return ReadKeyframesRule();
-            case "mixin"     : return ReadMixinBody();
-            case "if"        : return ReadIfRule();
-            case "for"       : return ReadForRule();
-            case "each"      : return ReadEachRule();
-            case "while"     : return ReadWhileRule();
+            case "charset"        : return ReadCharsetRule();
+            case "import"         : return ReadImportRule();
+            case "font-face"      : return ReadFontFaceRule();
+            case "media"          : return ReadMediaRule();
+            case "page"           : return ReadPageRule();
+            case "supports"       : return ReadSupportsRule();
+            case "starting-style" : return ReadStartingStyleRule();
+            case "container"      : return ReadContainerRule(); 
+            case "keyframes"      : return ReadKeyframesRule();
+            case "mixin"          : return ReadMixinBody();
+            case "if"             : return ReadIfRule();
+            case "for"            : return ReadForRule();
+            case "each"           : return ReadEachRule();
+            case "while"          : return ReadWhileRule();
         }
 
         TokenList? text = null;
@@ -237,6 +238,29 @@ public sealed partial class CssParser : IDisposable
 
         return rule;
     }
+
+    public StartingStyleRule ReadStartingStyleRule()
+    {
+        ReadTrivia();
+
+        var rule = new StartingStyleRule();
+
+        if (Current.Kind is CssTokenKind.BlockStart) // ? {
+        {
+            ReadBlock(rule);
+        }
+
+        return rule;
+
+        /*
+        @starting-style {
+          h1 {
+            background-color: transparent;
+          }
+        }
+        */
+    }
+
 
     public ContainerRule ReadContainerRule()
     {
@@ -398,7 +422,7 @@ public sealed partial class CssParser : IDisposable
 
     #region Values
 
-    // Read comma seperated values
+    // Read comma separated values
 
     public CssValue ReadValueList()
     {
@@ -414,16 +438,16 @@ public sealed partial class CssParser : IDisposable
         {
             ReadTrivia(); // ? {trivia}
 
-            values ??= new List<CssValue> {
+            values ??= [
                 first
-            };
+            ];
             
             values.Add(CssValue.FromComponents(ReadComponents()));
         }
 
         if (values is null) return first;
 
-        return new CssValueList(values, CssValueSeperator.Comma);
+        return new CssValueList(values, CssValueSeparator.Comma);
     }
 
     public IEnumerable<CssValue> ReadComponents()
@@ -606,9 +630,7 @@ public sealed partial class CssParser : IDisposable
         // Maybe a multi-selector
         while (ConsumeIf(CssTokenKind.Comma)) // ? ,
         {
-            list ??= new List<CssSequence> {
-                span
-            };            
+            list ??= [span];            
                 
             ReadTrivia(); // trailing whitespace
 
@@ -617,7 +639,7 @@ public sealed partial class CssParser : IDisposable
 
         // #id.hello { } 
 
-        return new CssSelector(list ?? (IReadOnlyList<CssSequence>) new[] { span });
+        return new CssSelector(list ?? [span]);
     }
 
     public StyleRule ReadStyleRule()
@@ -700,7 +722,7 @@ public sealed partial class CssParser : IDisposable
         return list;
     }
 
-    public IEnumerable<CssDeclaration> ReadDeclartions()
+    public IEnumerable<CssDeclaration> ReadDeclarations()
     {
         while (Current.Kind is not CssTokenKind.BlockEnd && !IsEnd)
         {
@@ -763,7 +785,7 @@ public sealed partial class CssParser : IDisposable
         {
             if (IsEnd) throw new UnbalancedBlock(blockStart);
 
-            // A list of delarations or blocks
+            // A list of declarations or blocks
 
             if (ConsumeIf(CssTokenKind.AtSymbol)) // ? @
             {
@@ -774,12 +796,21 @@ public sealed partial class CssParser : IDisposable
                     case "include" :
                         block.Flags |= CssBlockFlags.HasIncludes;
                         block.Add(ReadInclude()); continue;
-                    case "if"      : block.Add(ReadIfRule());  continue;
-                    case "page"    : block.Add(ReadPageRule()); continue;
-                    case "media"   : 
-                        block.Flags |= CssBlockFlags.HasChildMedia;
-                        block.Add(ReadMediaRule()); continue;
-                    default        : throw new Exception($"Unexpected rule reading block. Was {name.Text}");
+                    case "if": 
+                        block.Add(ReadIfRule());  continue;
+                    case "page": 
+                        block.Add(ReadPageRule()); 
+                        continue;
+                    case "media":
+                        block.Flags |= CssBlockFlags.HasNestedAtRule;
+                        block.Add(ReadMediaRule()); 
+                        continue;
+                    case "starting-style":
+                        block.Flags |= CssBlockFlags.HasNestedAtRule;
+                        block.Add(ReadStartingStyleRule());
+                        continue;
+                    default: 
+                        throw new Exception($"Unexpected rule reading block. Was {name.Text}");
                 }
             }
 
@@ -797,7 +828,7 @@ public sealed partial class CssParser : IDisposable
                 
             while (ConsumeIf(CssTokenKind.Comma)) // ? ,
             {
-                spanList ??= new List<CssSequence> { span };
+                spanList ??= [span];
                     
                 ReadTrivia(); // ? {trivia}
 
@@ -810,7 +841,7 @@ public sealed partial class CssParser : IDisposable
                     block.Add(ReadDeclarationFromName(span[0].ToString()!));  break; // DeclarationName
                 case CssTokenKind.BlockStart:
                     block.Flags |= CssBlockFlags.HasChildBlocks;
-                    block.Add(ReadRuleBlock(new CssSelector(spanList ?? (IReadOnlyList<CssSequence>) new[] { span }))); 
+                    block.Add(ReadRuleBlock(new CssSelector(spanList ?? [span]))); 
                     break;
                 case CssTokenKind.BlockEnd: 
                     break;
@@ -909,9 +940,9 @@ public sealed partial class CssParser : IDisposable
             }
             else if (Current.Kind is CssTokenKind.Ampersand)
             {
-                var ambersand = Consume();
+                var ampersand = Consume();
 
-                list.Add(new CssReference(ambersand) { Trailing = ReadTrivia() });
+                list.Add(new CssReference(ampersand) { Trailing = ReadTrivia() });
             }
             else
             {
