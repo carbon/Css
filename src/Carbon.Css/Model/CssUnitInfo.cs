@@ -1,9 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Frozen;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Carbon.Css;
 
-public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
+public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags = default) : IEquatable<CssUnitInfo>
 {
     public static readonly CssUnitInfo Number = new (string.Empty, NodeKind.Number);
 
@@ -22,7 +23,7 @@ public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
     public static readonly CssUnitInfo Vb    = new(CssUnitNames.Vb,   NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s size in the root element’s block axis
     public static readonly CssUnitInfo Vmin  = new(CssUnitNames.Vmin, NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s smaller dimension
     public static readonly CssUnitInfo Vmax  = new(CssUnitNames.Vmax, NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s larger dimension
-                                             
+
     public static readonly CssUnitInfo Cqw   = new(CssUnitNames.Cqw,   NodeKind.Length, CssUnitFlags.Relative); // 1% of a query container's width
     public static readonly CssUnitInfo Cqh   = new(CssUnitNames.Cqh,   NodeKind.Length, CssUnitFlags.Relative); // 1% of a query container's height
     public static readonly CssUnitInfo Cqi   = new(CssUnitNames.Cqi,   NodeKind.Length, CssUnitFlags.Relative); // 1% of a query container's inline size
@@ -65,76 +66,69 @@ public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
     public static readonly CssUnitInfo Dppx = new("dppx",         NodeKind.Resolution);
     public static readonly CssUnitInfo X    = new(CssUnitNames.X, NodeKind.Resolution);
 
-    public static readonly Dictionary<string, CssUnitInfo> items = new () {
+    public static readonly FrozenDictionary<string, CssUnitInfo> s_items = FrozenDictionary.ToFrozenDictionary((KeyValuePair<string, CssUnitInfo>[])[
         // <length> : relative
-        { CssUnitNames.Em    , Em },
-        { CssUnitNames.Ex    , Ex },
-        { "cap"              , Cap },
-        { "ch"               , Ch },
-        { "ic"               , Ic },
-        { CssUnitNames.Rem   , Rem },
-        { CssUnitNames.Lh    , Lh },
-        { CssUnitNames.Rlh   , Rlh },
-        { CssUnitNames.Cqw   , Cqw },
-        { CssUnitNames.Cqh   , Cqh },
-        { CssUnitNames.Cqi   , Cqi },
-        { CssUnitNames.Cqb   , Cqb },
-        { CssUnitNames.Cqmin , Cqmin },
-        { CssUnitNames.Cqmax , Cqmax },
-        { CssUnitNames.Dvw   , Dvw },
-        { CssUnitNames.Dvh   , Dvh },
-        { CssUnitNames.Vw    , Vw },
-        { CssUnitNames.Vh    , Vh },
-        { CssUnitNames.Vi    , Vi },
-        { CssUnitNames.Vb    , Vb },
-        { CssUnitNames.Vmin  , Vmin },
-        { CssUnitNames.Vmax  , Vmax },
+        new(CssUnitNames.Em    , Em),
+        new(CssUnitNames.Ex    , Ex),
+        new("cap"              , Cap),
+        new("ch"               , Ch),
+        new("ic"               , Ic),
+        new(CssUnitNames.Rem   , Rem),
+        new(CssUnitNames.Lh    , Lh),
+        new(CssUnitNames.Rlh   , Rlh),
+        new(CssUnitNames.Cqw   , Cqw),
+        new(CssUnitNames.Cqh   , Cqh),
+        new(CssUnitNames.Cqi   , Cqi),
+        new(CssUnitNames.Cqb   , Cqb),
+        new(CssUnitNames.Cqmin , Cqmin),
+        new(CssUnitNames.Cqmax , Cqmax),
+        new(CssUnitNames.Dvw   , Dvw),
+        new(CssUnitNames.Dvh   , Dvh),
+        new(CssUnitNames.Vw    , Vw),
+        new(CssUnitNames.Vh    , Vh),
+        new(CssUnitNames.Vi    , Vi),
+        new(CssUnitNames.Vb    , Vb),
+        new(CssUnitNames.Vmin  , Vmin),
+        new(CssUnitNames.Vmax  , Vmax),
 
         // <length> 
-        { "cm"              , Cm },
-        { "mm"              , Mm },
-        { "q"               , Q },
-        { "in"              , In },
-        { "pc"              , Pc },
-        { "pt"              , Pt },
-        { CssUnitNames.Px   , Px },
+        new("cm"              , Cm),
+        new("mm"              , Mm),
+        new("q"               , Q),
+        new("in"              , In),
+        new("pc"              , Pc),
+        new("pt"              , Pt),
+        new(CssUnitNames.Px   , Px),
             
         // <percentage>
-        { CssUnitNames.Percent, Percentage },
+        new(CssUnitNames.Percent, Percentage),
 
         // <angle>
-        { CssUnitNames.Deg  , Deg },
-        { CssUnitNames.Grad , Grad },
-        { CssUnitNames.Rad  , Rad },
-        { CssUnitNames.Turn , Turn },
+        new(CssUnitNames.Deg  , Deg),
+        new(CssUnitNames.Grad , Grad),
+        new(CssUnitNames.Rad  , Rad),
+        new(CssUnitNames.Turn , Turn),
 
         // <time>
-        { CssUnitNames.S    , S },
-        { CssUnitNames.Ms   , Ms },
+        new(CssUnitNames.S    , S),
+        new(CssUnitNames.Ms   , Ms),
 
         // <frequency>
-        { CssUnitNames.Hz   , Hz },
-        { "kHz"             , Khz },
+        new(CssUnitNames.Hz   , Hz),
+        new("kHz"             , Khz),
 
         // <resolution>
-        { "dpi"             , Dpi },
-        { "dpcm"            , Dpcm },
-        { "dppx"            , Dppx },
-        { CssUnitNames.X    , X },
-    };
+        new("dpi"             , Dpi),
+        new("dpcm"            , Dpcm),
+        new("dppx"            , Dppx),
+        new(CssUnitNames.X    , X)
+    ]);
 
-    internal CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags = default)
-    {
-        Name = name;
-        Kind = kind;
-        Flags = flags;
-    }
+    public string Name { get; } = name;
 
-    public string Name { get; }
+    public NodeKind Kind { get; } = kind;
 
-    public NodeKind Kind { get; }
-
-    public CssUnitFlags Flags { get; }
+    public CssUnitFlags Flags { get; } = flags;
 
     [SkipLocalsInit]
     public static CssUnitInfo Get(ReadOnlySpan<byte> utf8Bytes)
@@ -146,9 +140,9 @@ public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
 
         Span<char> buffer = stackalloc char[4];
 
-        var chars = buffer[0..Encoding.ASCII.GetChars(utf8Bytes, buffer)];
+        Ascii.ToUtf16(utf8Bytes, buffer, out int length);
 
-        return Get(chars);
+        return Get(buffer[0..length]);
     }
 
     public static CssUnitInfo Get(ReadOnlySpan<char> name)
@@ -164,12 +158,14 @@ public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
         }
         else if (name.Length is 2)
         {
-            switch ((name[0], name[1]))
+            switch (name)
             {
-                case ('p', 'x'): return Px;
-                case ('e', 'm'): return Em;
-                case ('v', 'h'): return Vh;
-                case ('v', 'w'): return Vw;
+                case "px": return Px;
+                case "em": return Em;
+                case "lh": return Lh;
+                case "ms": return Ms;
+                case "vh": return Vh;
+                case "vw": return Vw;
             }
         }
         else if (name.Length is 3)
@@ -187,6 +183,14 @@ public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
                 case "rlh": return Rlh;
             }
         }
+        else if (name.Length is 4)
+        {
+            switch (name)
+            {
+                case "vmax": return Vmax;
+                case "vmin": return Vmin;
+            }
+        }
         else if (name.Length is 5)
         {
             switch (name)
@@ -198,7 +202,7 @@ public sealed class CssUnitInfo : IEquatable<CssUnitInfo>
 
         string text = name.ToString();
 
-        if (items.TryGetValue(text, out var unit))
+        if (s_items.TryGetValue(text, out var unit))
         {
             return unit;
         }
