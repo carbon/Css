@@ -14,7 +14,6 @@ public class ContainerRuleTests
 
         Assert.True(sheet.Children[0] is ContainerRule);
 
-
         Assert.Equal(
             """
             @container (width > 150px) {
@@ -57,7 +56,6 @@ public class ContainerRuleTests
               }
             }
             """);
-
 
         Assert.Equal(
             """

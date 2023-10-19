@@ -20,18 +20,33 @@ public class TokenizerTests
     }
 
     [Fact]
-    public void BackenizeBackToBackPseudoClasses()
+    public void CanParsePseudoClasses1()
     {
         var tokens = GetTokens(
             """
             &:last-child:after {
-            background-color: rgba($bg-color, $shade);
+              background-color: rgba($bg-color, $shade);
             };
             """);
 
         Assert.Equal((CssTokenKind.Ampersand, "&"),           tokens[0].AsTuple());
         Assert.Equal((CssTokenKind.Name,      ":last-child"), tokens[1].AsTuple());
         Assert.Equal((CssTokenKind.Name,      ":after"),      tokens[2].AsTuple());
+    }
+
+    [Fact]
+    public void CanParsePseudoClasses2()
+    {
+        var tokens = GetTokens(
+            """
+            &:last-child::after {
+              background-color: #000;
+            };
+            """);
+
+        Assert.Equal((CssTokenKind.Ampersand, "&"),      tokens[0].AsTuple());
+        Assert.Equal((CssTokenKind.Name, ":last-child"), tokens[1].AsTuple());
+        Assert.Equal((CssTokenKind.Name, "::after"),     tokens[2].AsTuple());
     }
 
     [Fact]

@@ -123,6 +123,7 @@ public class MediaTests
               }
             }
             """);
+
         Assert.Single(sheet.Children);
 
 

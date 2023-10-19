@@ -64,7 +64,7 @@ public class ForRuleTests
     {
         var dic = new Dictionary<string, CssValue> {
             ["columnCount"] = CssValue.Parse("5"),
-            ["columnWidth"] = CssUnitValue.Number(100 / 5d),
+            ["columnWidth"] = CssValue.Number(100 / 5d),
             ["gap"] = CssValue.Parse("10px")
         };
 

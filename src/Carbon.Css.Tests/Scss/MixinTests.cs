@@ -278,7 +278,7 @@ public class MixinTests
         Assert.Equal("50px", args[0].ToString());
         Assert.Equal("20px", args[1].ToString());
 
-        Assert.Equal(CssValueSeperator.Comma, args.Separator);
+        Assert.Equal(CssValueSeparator.Comma, args.Separator);
 
         Assert.Single(ss.Context.Mixins);
 

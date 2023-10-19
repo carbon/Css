@@ -104,8 +104,7 @@ public class VariableTests
     [Fact]
     public void DefinedTests()
     {
-        var dic = new Dictionary<string, CssValue>
-        {
+        var dic = new Dictionary<string, CssValue> {
             ["monster"] = CssValue.Parse("purple")
         };
 
@@ -132,7 +131,8 @@ public class VariableTests
 
         Assert.Equal("", sheet.ToString(dic));
 
-        sheet = StyleSheet.Parse("""
+        sheet = StyleSheet.Parse(
+            """
             @if $bananas == undefined {
                 body { 
                   background-color: red;
@@ -146,8 +146,7 @@ public class VariableTests
     [Fact]
     public void VariableTest4()
     {
-        var dic = new Dictionary<string, CssValue>
-        {
+        var dic = new Dictionary<string, CssValue> {
             ["monster"] = CssValue.Parse("purple")
         };
 
