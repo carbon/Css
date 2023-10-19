@@ -4,9 +4,8 @@
 public enum BrowserType
 {
     Unknown = 0,
-    Edge    = 1,
-    Firefox = 2,
-    Safari  = 4,
-    Chrome  = 8,
-    Opera   = 16
+    Chrome  = 1,
+    Edge    = 2,
+    Firefox = 4, // -moz
+    Safari  = 8  // -webkit
 }
