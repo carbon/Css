@@ -808,14 +808,6 @@ public sealed class CssWriter : IDisposable
     {
         if (_context.BrowserSupport is not null)
         {
-            // -moz-
-            if (_context.Compatibility.Firefox > 0 && _context.Compatibility.Firefox < 16)
-            {
-                WritePrefixedKeyframesRule(BrowserInfo.Firefox(_context.Compatibility.Firefox), rule, depth);
-
-                _writer.WriteLine();
-            }
-
             // -webkit- 
             if (_context.Compatibility.Safari > 0 && _context.Compatibility.Safari < 9)
             {

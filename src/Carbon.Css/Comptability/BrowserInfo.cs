@@ -6,7 +6,7 @@ public readonly struct BrowserInfo(BrowserType type, float version)
 
     public float Version { get; } = version;
 
-    public readonly BrowserPrefix Prefix => GetPrefix(Type);
+    public BrowserPrefix Prefix => GetPrefix(Type);
 
     public static BrowserInfo Chrome(float version)  => new(BrowserType.Chrome, version);
     public static BrowserInfo Edge(float version)    => new(BrowserType.Edge, version);

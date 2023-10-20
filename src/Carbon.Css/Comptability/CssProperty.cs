@@ -33,16 +33,17 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
     public CssCompatibility Compatibility => _compatibility ?? CssCompatibility.Default;
 
-    public bool NeedsExpansion(CssDeclaration declaration, in BrowserInfo[]? browsers)
+    public bool NeedsExpansion(CssDeclaration declaration, ReadOnlySpan<BrowserInfo> browsers)
     {
-        if (browsers is null || browsers.Length == 0) return false;
+        if (browsers.IsEmpty)
+        {
+            return false;
+        }
 
         if (!Compatibility.HasPatches) return false;
 
-        for (int i = 0; i < browsers.Length; i++)
-        {
-            ref BrowserInfo browser = ref browsers[i];
-          
+        foreach(ref readonly BrowserInfo browser in browsers)
+        {          
             if (Compatibility.HasPatch(declaration, browser)) return true;
         }
 

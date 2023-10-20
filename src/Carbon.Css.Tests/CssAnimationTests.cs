@@ -120,7 +120,6 @@ public class CssAnimationTests
     {
         var sheet = StyleSheet.Parse(
             """
-            //= support Firefox 3+
             //= support Safari 5+
 
             @keyframes planet {
@@ -137,16 +136,6 @@ public class CssAnimationTests
         {
             Assert.Equal(
                 """
-                @-moz-keyframes planet {
-                  0% {
-                    -moz-transform: translate(0, 0px) rotate(0deg);
-                    transform: translate(0, 0px) rotate(0deg);
-                  }
-                  100% {
-                    -moz-transform: translate(0, 0px) rotate(-360deg);
-                    transform: translate(0, 0px) rotate(-360deg);
-                  }
-                }
                 @-webkit-keyframes planet {
                   0% {
                     -webkit-transform: translate(0, 0px) rotate(0deg);
