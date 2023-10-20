@@ -138,7 +138,7 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
             return new CssUnitInfo(Encoding.UTF8.GetString(utf8Bytes), NodeKind.Unknown);
         }
 
-        Span<char> buffer = stackalloc char[4];
+        Span<char> buffer = stackalloc char[CssUnitNames.MaxLength];
 
         Ascii.ToUtf16(utf8Bytes, buffer, out int length);
 

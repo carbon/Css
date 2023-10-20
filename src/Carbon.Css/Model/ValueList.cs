@@ -44,7 +44,7 @@ public sealed class CssSequence : CssValue, IEnumerable<CssValue>
     [SkipLocalsInit]
     public override string ToString()
     {
-        var sb = new ValueStringBuilder(stackalloc char[32]);
+        var sb = new ValueStringBuilder(stackalloc char[64]);
 
         WriteTo(ref sb);
 

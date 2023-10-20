@@ -2,14 +2,9 @@
 
 namespace Carbon.Css.Resolver;
 
-internal readonly struct Include
+internal readonly struct Include(FileInfo file)
 {
-    private readonly FileInfo _file;
-
-    public Include(FileInfo file)
-    {
-        _file = file;
-    }
+    private readonly FileInfo _file = file;
 
     public DateTime Modified => _file.LastWriteTime;
 

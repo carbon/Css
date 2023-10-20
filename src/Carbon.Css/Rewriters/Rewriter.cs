@@ -4,7 +4,7 @@ public sealed class RewriterCollection : List<ICssRewriter>
 {
     public IEnumerable<CssRule> Rewrite(CssRule rule, int index = 0)
     {
-        if (Count == 0)
+        if (Count is 0)
         {
             yield return rule;
 

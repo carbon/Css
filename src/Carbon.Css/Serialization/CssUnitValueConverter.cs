@@ -13,7 +13,7 @@ public sealed class CssUnitValueConverter : JsonConverter<CssUnitValue>
             ? checked((int)reader.ValueSequence.Length)
             : reader.ValueSpan.Length;
 
-        scoped Span<byte> buffer = length < 32
+        scoped Span<byte> buffer = length <= 32
             ? stackalloc byte[32]
             : new byte[length];
 

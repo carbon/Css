@@ -61,7 +61,7 @@ public sealed class CssDeclaration : CssNode
     {
         // color: red !important
 
-        var sb = new ValueStringBuilder(stackalloc char[32]);
+        var sb = new ValueStringBuilder(stackalloc char[64]);
 
         sb.Append(Info.Name);
 

@@ -2,16 +2,10 @@
 
 namespace Carbon.Css.Parser;
 
-public class SyntaxException : Exception
+public class SyntaxException(string message, int position = 0) 
+    : Exception(message)
 {
-    public SyntaxException(string message, int position = 0)
-        : base(message)
-    {
-
-        Position = position;
-    }
-
-    public int Position { get; }
+    public int Position { get; } = position;
 
     public SourceLocation Location { get; set; }
 

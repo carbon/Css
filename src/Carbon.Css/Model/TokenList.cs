@@ -12,11 +12,9 @@ public sealed class TokenList : List<CssToken>
     [SkipLocalsInit]
     public override string ToString()
     {
-        if (Count == 1)
+        if (Count is 1)
         {
-            return this[0].IsTrivia
-                ? string.Empty
-                : this[0].Text;
+            return this[0].IsTrivia ? string.Empty : this[0].Text;
         }
         else
         {
@@ -91,7 +89,7 @@ public sealed class TokenList : List<CssToken>
 
     public void WriteTo(TextWriter writer)
     {
-        if (Count == 1)
+        if (Count is 1)
         {
             if (this[0].IsTrivia) return;
 
@@ -107,7 +105,7 @@ public sealed class TokenList : List<CssToken>
             if (token.IsTrivia)
             {
                 // Skip leading and trailing trivia
-                if (i == 0 || i + 1 == Count) continue;
+                if (i is 0 || i + 1 == Count) continue;
 
                 writer.Write(' ');
 

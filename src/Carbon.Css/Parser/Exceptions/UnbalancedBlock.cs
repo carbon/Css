@@ -1,8 +1,6 @@
 ﻿namespace Carbon.Css.Parser;
 
-public sealed class UnbalancedBlock : SyntaxException
+public sealed class UnbalancedBlock(CssToken startToken) 
+    : SyntaxException("The block is unclosed, '}' expected", startToken.Position)
 {
-    public UnbalancedBlock(CssToken startToken)
-        : base("The block is unclosed, '}' expected", startToken.Position)
-    { }
 }

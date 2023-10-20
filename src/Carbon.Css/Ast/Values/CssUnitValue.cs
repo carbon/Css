@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 using Carbon.Css.Ast;
@@ -9,25 +10,17 @@ using Carbon.Css.Serialization;
 namespace Carbon.Css;
 
 [JsonConverter(typeof(CssUnitValueConverter))]
-public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ICssNumericValue, ISpanFormattable
+public sealed class CssUnitValue(double value, CssUnitInfo unit) 
+    : CssValue(unit.Kind), IEquatable<CssUnitValue>, ICssNumericValue, ISpanFormattable
 {
     public static readonly CssUnitValue Zero = new(0, CssUnitInfo.Number);
 
     public CssUnitValue(double value, string unitName)
-        : this(value, CssUnitInfo.Get(unitName))
-    {
-    }
+        : this(value, CssUnitInfo.Get(unitName)) { }
 
-    public CssUnitValue(double value, CssUnitInfo unit)
-        : base(unit.Kind)
-    {
-        Value = value;
-        Unit = unit;
-    }
+    public double Value { get; } = value;
 
-    public double Value { get; }
-
-    public CssUnitInfo Unit { get; }
+    public CssUnitInfo Unit { get; } = unit;
 
     internal override void WriteTo(scoped ref ValueStringBuilder sb)
     {
@@ -35,6 +28,7 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ICssNumer
         sb.Append(Unit.Name);
     }
 
+    [SkipLocalsInit]
     internal override void WriteTo(TextWriter writer)
     {
         Span<char> buffer = stackalloc char[16];
@@ -58,7 +52,7 @@ public sealed class CssUnitValue : CssValue, IEquatable<CssUnitValue>, ICssNumer
         return Parse(text.AsSpan());
     }
 
-    public static CssUnitValue Parse(ReadOnlySpan<char> text)
+    public static CssUnitValue Parse(scoped ReadOnlySpan<char> text)
     {
         double value = NumberHelper.ReadNumber(text, out int read);
 
