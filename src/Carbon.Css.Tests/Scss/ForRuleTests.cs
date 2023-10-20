@@ -14,10 +14,18 @@ public class ForRuleTests
 
         Assert.Equal(
             """
-            div { width: 1px; }
-            div { width: 2px; }
-            div { width: 3px; }
-            div { width: 4px; }
+            div {
+              width: 1px;
+            }
+            div {
+              width: 2px;
+            }
+            div {
+              width: 3px;
+            }
+            div {
+              width: 4px;
+            }
             """, sheet.ToString());
     }
 
@@ -32,12 +40,22 @@ public class ForRuleTests
             """);
 
         Assert.Equal(
-            """
-            div { width: 1px; }
-            div { width: 2px; }
-            div { width: 3px; }
-            div { width: 4px; }
-            div { width: 5px; }
+             """
+            div {
+              width: 1px;
+            }
+            div {
+              width: 2px;
+            }
+            div {
+              width: 3px;
+            }
+            div {
+              width: 4px;
+            }
+            div {
+              width: 5px;
+            }
             """, sheet.ToString());
     }
 
@@ -51,11 +69,21 @@ public class ForRuleTests
             """);
 
         Assert.Equal("""
-            .col-1 { width: 1px; }
-            .col-2 { width: 2px; }
-            .col-3 { width: 3px; }
-            .col-4 { width: 4px; }
-            .col-5 { width: 5px; }
+            .col-1 {
+              width: 1px;
+            }
+            .col-2 {
+              width: 2px;
+            }
+            .col-3 {
+              width: 3px;
+            }
+            .col-4 {
+              width: 4px;
+            }
+            .col-5 {
+              width: 5px;
+            }
             """, sheet.ToString());
     }
 

@@ -17,7 +17,9 @@ public class ContainerRuleTests
         Assert.Equal(
             """
             @container (width > 150px) {
-              div { background: red; }
+              div {
+                background: red;
+              }
             }
             """, sheet.ToString());
     }
@@ -40,7 +42,9 @@ public class ContainerRuleTests
         Assert.Equal(
             """
             @container sidebar (min-width: 700px) {
-              .card { font-size: max(1.5em, 1.23em + 2cqi); }
+              .card {
+                font-size: max(1.5em, 1.23em + 2cqi);
+              }
             }
             """, sheet.ToString());
     }
@@ -60,7 +64,9 @@ public class ContainerRuleTests
         Assert.Equal(
             """
             @container sidebar (min-width: 700px) {
-              .card { font-size: 15px; }
+              .card {
+                font-size: 15px;
+              }
             }
             """, sheet.ToString());
     }

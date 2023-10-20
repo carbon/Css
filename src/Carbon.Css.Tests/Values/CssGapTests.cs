@@ -6,7 +6,7 @@ namespace Carbon.Css.Tests;
 public class CssGapTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var gap = new CssGap(CssUnitValue.Parse("10%"));
 
@@ -15,11 +15,9 @@ public class CssGapTests
     }
 
     [Fact]
-    public void CanParseStack()
+    public void CanParseSpan()
     {
-        Span<char> buffer = stackalloc char[3] { '1', '0', '%' };
-
-        var gap = new CssGap(CssUnitValue.Parse(buffer));
+        var gap = new CssGap(CssUnitValue.Parse(['1', '0', '%']));
 
         Assert.Equal("10%", gap.X.ToString());
         Assert.Equal("10%", gap.Y.ToString());

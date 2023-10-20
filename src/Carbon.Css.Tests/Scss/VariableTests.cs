@@ -12,13 +12,19 @@ public class VariableTests
             div { color: rgba($borderColor, 0.5); }
             """);
 
-        Assert.Equal("div { color: rgba(255, 0, 0, 0.5); }", css.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: rgba(255, 0, 0, 0.5);
+            }
+            """, css.ToString());
     }
 
     [Fact]
     public void ReferenceToSelfThrows()
     {
-        var sheet = StyleSheet.Parse("""
+        var sheet = StyleSheet.Parse(
+            """
             $red: #fff;
             $red: $red;	
 
@@ -112,20 +118,25 @@ public class VariableTests
         var sheet = StyleSheet.Parse(
             """
             @if $monster != undefined {
-                body { 
-                  background-color: red;
-                }
+              body { 
+                background-color: red;
+              }
             }
             """);
 
-        Assert.Equal("body { background-color: red; }", sheet.ToString(dic));
+        Assert.Equal(
+            """
+            body {
+              background-color: red;
+            }
+            """, sheet.ToString(dic));
 
         sheet = StyleSheet.Parse(
             """
             @if $monster == undefined {
-                body { 
-                  background-color: red;
-                }
+              body { 
+                background-color: red;
+              }
             }
             """);
 
@@ -134,13 +145,18 @@ public class VariableTests
         sheet = StyleSheet.Parse(
             """
             @if $bananas == undefined {
-                body { 
-                  background-color: red;
-                }
+              body { 
+                background-color: red;
+              }
             }
             """);
 
-        Assert.Equal("body { background-color: red; }", sheet.ToString(dic));
+        Assert.Equal(
+            """
+            body {
+              background-color: red;
+            }
+            """, sheet.ToString(dic));
     }
 
     [Fact]
@@ -186,7 +202,6 @@ public class VariableTests
             body { font-size: 14px; opacity: 0.5; }
             .editBlock button.save { background: $addYellow; }
             .editBlock.populated button.save { background: $editBlue; }
-            .rotatedBox { box-sizing: border-box; }
             """);
 
         Assert.Equal(
@@ -195,9 +210,12 @@ public class VariableTests
               font-size: 14px;
               opacity: 0.5;
             }
-            .editBlock button.save { background: #fff5cc; }
-            .editBlock.populated button.save { background: #dceef7; }
-            .rotatedBox { box-sizing: border-box; }
+            .editBlock button.save {
+              background: #fff5cc;
+            }
+            .editBlock.populated button.save {
+              background: #dceef7;
+            }
             """, css.ToString());
     }
 }

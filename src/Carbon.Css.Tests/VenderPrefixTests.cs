@@ -29,7 +29,12 @@ public class VendorPrefixTests
             a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }
             """);
 
-        Assert.Equal("a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
+        Assert.Equal(
+            """
+            a {
+              transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -42,7 +47,12 @@ public class VendorPrefixTests
             a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }
             """);
 
-        Assert.Equal("a { transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear; }", sheet.ToString());
+        Assert.Equal(
+            """
+            a {
+              transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -51,8 +61,8 @@ public class VendorPrefixTests
         var sheet = StyleSheet.Parse(
             """
             @-webkit-keyframes fade {
-                from {opacity: 1;}
-                to {opacity: 0.25;}
+              from {opacity: 1;}
+              to {opacity: 0.25;}
             }
             """);
 
@@ -64,8 +74,12 @@ public class VendorPrefixTests
         Assert.Equal(
             """
             @-webkit-keyframes fade {
-              from { opacity: 1; }
-              to { opacity: 0.25; }
+              from {
+                opacity: 1;
+              }
+              to {
+                opacity: 0.25;
+              }
             }
             """, sheet.ToString());
     }
@@ -134,7 +148,9 @@ public class VendorPrefixTests
               color: rgba(0, 0, 0, 0.1);
               text-align: center;
             }
-            #networkLinks .block .destroy:hover:before { color: rgba(0, 0, 0, 0.25); }
+            #networkLinks .block .destroy:hover:before {
+              color: rgba(0, 0, 0, 0.25);
+            }
             #networkLinks .block .destroy {
               display: none;
               position: absolute;
@@ -167,10 +183,10 @@ public class VendorPrefixTests
               cursor: default;
               z-index: 100;
             }
-            #networkLinks .block .controls { padding: 5px 0 10px 210px; }
+            #networkLinks .block .controls {
+              padding: 5px 0 10px 210px;
+            }
             """, ss.ToString());
-
-
     }
 
     [Fact]

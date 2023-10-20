@@ -20,7 +20,8 @@ public class MixinTests
             }
             """);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             h1, h2, h3, h4, h5, h6 {
               font-family: 'Merriweather', serif;
               font-weight: 300;
@@ -93,6 +94,7 @@ public class MixinTests
             }
 
             """);
+
         Assert.Single(ss.Context.Mixins);
 
         Assert.Equal("dl-horizontal", ss.Context.Mixins["dl-horizontal"].Name);
@@ -110,7 +112,9 @@ public class MixinTests
               width: 3.75em;
             }
             .left .awards dl dd,
-            .left .exhibitions dl dd { padding-left: 3.75em; }
+            .left .exhibitions dl dd {
+              padding-left: 3.75em;
+            }
             """, ss.ToString());
     }
 
@@ -152,7 +156,9 @@ public class MixinTests
               display: inline;
               padding-left: 0;
             }
-            .happy li { padding-bottom: 1em; }
+            .happy li {
+              padding-bottom: 1em;
+            }
             """, ss.ToString());
     }
 
@@ -166,14 +172,16 @@ public class MixinTests
         var ss = StyleSheet.Parse(
             """
             .happy {
-                @include dl-horizontal;
-                font-size: 15px;
+              @include dl-horizontal;
+              font-size: 15px;
             } 
             """, mixins.Context);
 
         Assert.Equal(
             """
-            .happy { font-size: 15px; }
+            .happy {
+              font-size: 15px;
+            }
             .happy dt {
               text-align: left;
               overflow: hidden;
@@ -182,7 +190,9 @@ public class MixinTests
               float: left;
               width: 7.5em;
             }
-            .happy dd { padding-left: 8.125em; }
+            .happy dd {
+              padding-left: 8.125em;
+            }
             """, ss.ToString());
     }
 
@@ -219,7 +229,9 @@ public class MixinTests
               display: inline;
               padding-left: 0;
             }
-            .happy li { padding-bottom: 1em; }
+            .happy li {
+              padding-bottom: 1em;
+            }
             """, ss.ToString());
     }
 

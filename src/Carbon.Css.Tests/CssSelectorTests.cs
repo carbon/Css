@@ -22,8 +22,8 @@ public class CssSelectorTests
 
         var selector = style.Selector;
 
-        var a = (selector[0][0] as CssString);
-        var b = (selector[0][1] as CssString);
+        var a = (CssString)selector[0][0];
+        var b = (CssString)selector[0][1];
 
         Assert.Equal("div", a.Text);
         Assert.Equal(" ", a.Trailing[0].Text);
@@ -41,7 +41,12 @@ public class CssSelectorTests
 
         Assert.Equal("width", x.Name.ToString());
         Assert.Equal("100px", x.Value.ToString());
-        Assert.Equal("div > h1 { width: 100px; }", sheet.ToString());
+        Assert.Equal(
+            """
+            div > h1 {
+              width: 100px;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -58,7 +63,7 @@ public class CssSelectorTests
     }
 
     [Fact]
-    public void Multiselector()
+    public void MultiSelector()
     {
         var selector = CssSelector.Parse("h1, h2, h3");
 

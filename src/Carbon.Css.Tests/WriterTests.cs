@@ -18,6 +18,11 @@ public class WriterTests
             pieceStyle.WriteTo(output);
         }
 
-        Assert.Equal("#piece_1 { max-width: 960px; }", sb.ToString());
+        Assert.Equal(
+            """
+            #piece_1 {
+              max-width: 960px;
+            }
+            """, sb.ToString());
     }
 }

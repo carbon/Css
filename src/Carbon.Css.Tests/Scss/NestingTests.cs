@@ -7,7 +7,12 @@ public class NestingTests
     {
         var css = StyleSheet.Parse("div { &.hide { display: none; } }");
 
-        Assert.Equal("div.hide { display: none; }", css.ToString());
+        Assert.Equal(
+            """
+            div.hide {
+              display: none;
+            }
+            """, css.ToString());
     }
 
     [Fact]
@@ -37,8 +42,12 @@ public class NestingTests
 
         Assert.Equal(
             """
-            #networkLinks .block .edit:before { font-family: 'carbon'; }
-            #networkLinks .block .edit { opacity: 0; }
+            #networkLinks .block .edit:before {
+              font-family: 'carbon';
+            }
+            #networkLinks .block .edit {
+              opacity: 0;
+            }
             """, css.ToString());
     }
 
@@ -58,7 +67,9 @@ public class NestingTests
         Assert.Equal(
             """
             div input,
-            div textarea { display: block; }
+            div textarea {
+              display: block;
+            }
             """, css.ToString());
     }
 
@@ -70,7 +81,9 @@ public class NestingTests
         Assert.Equal(
             """
             div .hide,
-            span .hide { display: none; }
+            span .hide {
+              display: none;
+            }
             """, css.ToString());
     }
 
@@ -82,7 +95,9 @@ public class NestingTests
         Assert.Equal(
             """
             div.hide,
-            div.hidden { display: none; }
+            div.hidden {
+              display: none;
+            }
             """, css.ToString());
     }
 
@@ -91,7 +106,12 @@ public class NestingTests
     {
         var css = StyleSheet.Parse(".hide { body & { display: none; } }");
 
-        Assert.Equal("body .hide { display: none; }", css.ToString());
+        Assert.Equal(
+            """
+            body .hide {
+              display: none;
+            }
+            """, css.ToString());
     }
 
     [Fact]
@@ -119,14 +139,22 @@ public class NestingTests
 
 
         Assert.Equal("""
-            .details { max-width: 60rem; }
-            .details .description ul { list-style: disc; }
+            .details {
+              max-width: 60rem;
+            }
+            .details .description ul {
+              list-style: disc;
+            }
             .details .description p:last-child,
             .details .description ul:last-child,
-            .details .description ol:last-child { margin-bottom: 0; }
+            .details .description ol:last-child {
+              margin-bottom: 0;
+            }
             .details .description p,
             .details .description ul,
-            .details .description ol { font-size: 1.2em; }
+            .details .description ol {
+              font-size: 1.2em;
+            }
             """, css.ToString());
     }
 
@@ -154,13 +182,17 @@ public class NestingTests
 
         Assert.Equal(
             """
-            nav { display: block; }
+            nav {
+              display: block;
+            }
             nav ul {
               margin: 0;
               padding: 0;
               list-style: none;
             }
-            nav li { display: inline-block; }
+            nav li {
+              display: inline-block;
+            }
             nav a {
               display: block;
               padding: 6px 12px;
@@ -171,9 +203,10 @@ public class NestingTests
 
 
     [Fact]
-    public void NestedMultiselector()
+    public void NestedMultiSelector()
     {
-        string text = """
+        string text = 
+            """
             #header { 
               min-height: 80px; 
 
@@ -182,7 +215,7 @@ public class NestingTests
               }
 
               header a {
-                  color: #fcfcfc;
+                color: #fcfcfc;
               }
 
               .inner {
@@ -209,20 +242,36 @@ public class NestingTests
 
         Assert.Equal(
             """
-            #header { min-height: 80px; }
-            #header a { color: rgba(255, 255, 255, 0.6); }
-            #header header a { color: #fcfcfc; }
+            #header {
+              min-height: 80px;
+            }
+            #header a {
+              color: rgba(255, 255, 255, 0.6);
+            }
+            #header header a {
+              color: #fcfcfc;
+            }
             #header .inner h1,
-            #header .inner ul { display: table-cell; }
-            #header .inner h1 { font-size: 16px; }
-            #header .inner ul li { display: inline-block; }
-            #header .inner ul { padding-left: 20px; }
-            #header .inner { display: table; }
+            #header .inner ul {
+              display: table-cell;
+            }
+            #header .inner h1 {
+              font-size: 16px;
+            }
+            #header .inner ul li {
+              display: inline-block;
+            }
+            #header .inner ul {
+              padding-left: 20px;
+            }
+            #header .inner {
+              display: table;
+            }
             """, StyleSheet.Parse(text).ToString());
     }
 
     [Fact]
-    public void NestedMultiselector2()
+    public void NestedMultiSelector2()
     {
         var stylesheet = StyleSheet.Parse(
             """

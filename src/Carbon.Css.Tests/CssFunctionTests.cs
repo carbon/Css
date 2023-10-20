@@ -12,7 +12,12 @@ public class CssFunctionTests
           div { padding: unquote($t1) }     
           """);
 
-        Assert.Equal("div { padding: calc((100% - 600px) / 2); }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              padding: calc((100% - 600px) / 2);
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -20,6 +25,11 @@ public class CssFunctionTests
     {
         var sheet = StyleSheet.Parse("div { background-color: rgba( 42, 45, 53, 0.7); }");
 
-        Assert.Equal("div { background-color: rgba(42, 45, 53, 0.7); }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              background-color: rgba(42, 45, 53, 0.7);
+            }
+            """, sheet.ToString());
     }
 }

@@ -45,7 +45,9 @@ public class PseudoElementTests
 
         Assert.Equal(
             """
-            .block::after { content: ''; }
+            .block::after {
+              content: '';
+            }
             """, ss.ToString());
     }
 }

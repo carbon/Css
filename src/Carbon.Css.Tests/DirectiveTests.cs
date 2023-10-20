@@ -12,6 +12,11 @@ public class DirectiveTests
 
             """); // Prevents standalone compilation
 
-        Assert.Equal("div { color: blue; }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: blue;
+            }
+            """, sheet.ToString());
     }
 }

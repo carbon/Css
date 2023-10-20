@@ -26,20 +26,15 @@ public class ResolverTests
 
         writer.Flush();
 
-        Assert.Equal(expected, writer.ToString());
+        var output = writer.ToString();
+
+        Assert.Equal(expected, output);
     }
 }
 
-public sealed class CssResolver : ICssResolver
+public sealed class CssResolver(string basePath) : ICssResolver
 {
-    private readonly string basePath;
-
-    public CssResolver(string basePath)
-    {
-        this.basePath = basePath;
-    }
-
-    public string ScopedPath => basePath;
+    public string ScopedPath { get; } = basePath;
 
     public Stream Open(string absolutePath)
     {

@@ -12,7 +12,12 @@ public class CalcTests
             }
             """);
 
-        Assert.Equal("div { width: calc(100vw - 380px - var(--cover-block-padding) * 2); }", css.ToString());
+        Assert.Equal(
+            """
+            div {
+              width: calc(100vw - 380px - var(--cover-block-padding) * 2);
+            }
+            """, css.ToString());
     }
 
     [Fact]
@@ -26,7 +31,12 @@ public class CalcTests
             }
             """);
 
-        Assert.Equal("div { width: calc(100vw - 380px - 50px * 2); }", css.ToString());
+        Assert.Equal(
+            """
+            div {
+              width: calc(100vw - 380px - 50px * 2);
+            }
+            """, css.ToString());
     }
 
     [Fact]
@@ -38,7 +48,12 @@ public class CalcTests
             div { width: calc(380px - var($varName) * 2); }
             """);
 
-        Assert.Equal("div { width: calc(380px - var(--containerWidth) * 2); }", css.ToString());
+        Assert.Equal(
+            """
+            div {
+              width: calc(380px - var(--containerWidth) * 2);
+            }
+            """, css.ToString());
     }
 
     [Fact]
@@ -50,7 +65,12 @@ public class CalcTests
             div { width: calc(380px - 50px); }
             """);
 
-        Assert.Equal("div { width: calc(380px - 50px); }", css.ToString());
+        Assert.Equal(
+            """
+            div {
+              width: calc(380px - 50px);
+            }
+            """, css.ToString());
     }
 
     [Fact]
@@ -61,7 +81,12 @@ public class CalcTests
             div { width: 50px + 100px; } 
             """);
 
-        Assert.Equal("div { width: 150px; }", css.ToString());
+        Assert.Equal(
+            """
+            div {
+              width: 150px;
+            }
+            """, css.ToString());
     }
 
     [Fact]
@@ -72,7 +97,12 @@ public class CalcTests
             div { width: 50px * 2; } 
             """);
 
-        Assert.Equal("div { width: 100px; }", css.ToString());
+        Assert.Equal(
+            """
+            div {
+              width: 100px;
+            }
+            """, css.ToString());
     }
 
     [Fact]
@@ -84,6 +114,11 @@ public class CalcTests
             div { width: calc($width); } 
             """);
 
-        Assert.Equal("div { width: calc(100px); }", css.ToString());
+        Assert.Equal(
+            """
+            div {
+              width: calc(100px);
+            }
+            """, css.ToString());
     }
 }

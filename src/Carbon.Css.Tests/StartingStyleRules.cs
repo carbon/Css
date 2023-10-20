@@ -19,7 +19,9 @@ public class StartingStyleRules
         Assert.Equal(
             """
             @starting-style {
-              h1 { background-color: transparent; }
+              h1 {
+                background-color: transparent;
+              }
             }
             """, sheet.ToString());
     }

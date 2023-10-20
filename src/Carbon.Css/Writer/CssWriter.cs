@@ -177,12 +177,13 @@ public sealed class CssWriter : IDisposable
             _scope = _scope.GetChildScope();
 
             uint a = 0;
+            var symbol = block.Variables[0].Symbol;
 
             foreach (var value in list)
             {
                 if (a > 0) _writer.WriteLine();
 
-                _scope[block.Variables[0].Symbol] = value;
+                _scope[symbol] = value;
 
                 WriteBlockBody(block, level);
 
@@ -195,13 +196,15 @@ public sealed class CssWriter : IDisposable
             _scope = _scope.GetChildScope();
 
             uint a = 0;
+            var s0 = block.Variables[0].Symbol; // keyName
+            var s1 = block.Variables[1].Symbol; // keyValue
 
             foreach (var (key, value) in map)
             {
                 if (a > 0) _writer.WriteLine();
 
-                _scope[block.Variables[0].Symbol] = new CssString(key);
-                _scope[block.Variables[1].Symbol] = value;
+                _scope[s0] = new CssString(key);
+                _scope[s1] = value;
 
                 WriteBlockBody(block, level);
 
@@ -247,13 +250,14 @@ public sealed class CssWriter : IDisposable
     {
         switch (expression.Kind)
         {
-            case NodeKind.Variable   : return _scope.GetValue(((CssVariable)expression).Symbol);
-            case NodeKind.Expression : return EvaluateBinaryExpression((BinaryExpression)expression);
+            case NodeKind.Variable: 
+                return _scope.GetValue(((CssVariable)expression).Symbol);
+            case NodeKind.Expression:
+                return EvaluateBinaryExpression((BinaryExpression)expression);
             case NodeKind.Function:
-
                 var function = (CssFunction)expression;
 
-                if (IsCssFunction(function.Name))
+                if (CssFunctionNames.Contains(function.Name))
                 {
                     return function;
                 }
@@ -261,11 +265,6 @@ public sealed class CssWriter : IDisposable
                 return EvaluateFunction(function);
             default: return expression;
         }
-    }
-
-    private static bool IsCssFunction(string name)
-    {
-        return name is "attr" or "calc" or "cubic-bezier" or "var";
     }
 
     public CssValue EvaluateBinaryExpression(BinaryExpression expression)
@@ -856,7 +855,6 @@ public sealed class CssWriter : IDisposable
     {
         _writer.Write('{'); // Block start
 
-        var condensed = false;
         var count = 0;
 
         // Write the declarations
@@ -885,11 +883,9 @@ public sealed class CssWriter : IDisposable
 
                 if (block.Children.Count is 1 && !declaration.Info.NeedsExpansion(declaration, _browserSupport))
                 {
-                    condensed = true;
+                    if (count is 0) _writer.WriteLine();
 
-                    _writer.Write(' ');
-
-                    WriteDeclaration(declaration, 0);
+                    WriteDeclaration(declaration, depth + 1);
                 }
                 else
                 {
@@ -914,24 +910,15 @@ public sealed class CssWriter : IDisposable
             {
             }
 
-            if (!condensed)
-            {
+           
                 _writer.WriteLine();
-            }
+            
 
             count++;
         }
 
-        // Limit to declaration
-        if (condensed)
-        {
-            _writer.Write(' ');
-        }
-        else
-        {
             Indent(depth);
-        }
-
+  
         _writer.Write('}'); // Block end
     }
 

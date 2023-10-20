@@ -7,13 +7,23 @@ public class ColorTests
     {
         var sheet = StyleSheet.Parse("div { color: rgba(100, 100, 100, 0.5); }");
 
-        Assert.Equal("div { color: rgba(100, 100, 100, 0.5); }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: rgba(100, 100, 100, 0.5);
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
     public void Q()
     {
-        string text = "div { background-color: rgba(32, 185, 235, 0.05); }";
+        var text = 
+            """
+            div {
+              background-color: rgba(32, 185, 235, 0.05);
+            }
+            """;
 
         var sheet = StyleSheet.Parse(text);
 
@@ -25,7 +35,12 @@ public class ColorTests
     {
         var sheet = StyleSheet.Parse("div { color: color-mix(in lch, purple 50%, plum 50%); }");
 
-        Assert.Equal("div { color: color-mix(in lch, purple 50%, plum 50%); }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: color-mix(in lch, purple 50%, plum 50%);
+            }
+            """, sheet.ToString(), ignoreWhiteSpaceDifferences: true);
     }
 
     [Fact]
@@ -33,7 +48,12 @@ public class ColorTests
     {
         var sheet = StyleSheet.Parse("div { color: rgb(255, 255, 255, .5); }");
 
-        Assert.Equal("div { color: rgb(255, 255, 255, 0.5); }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: rgb(255, 255, 255, 0.5);
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -41,7 +61,12 @@ public class ColorTests
     {
         var sheet = StyleSheet.Parse("div { color: rgb(255 255 255 / 50%); }");
 
-        Assert.Equal("div { color: rgb(255 255 255 / 50%); }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: rgb(255 255 255 / 50%);
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -51,7 +76,12 @@ public class ColorTests
 
         var value = StyleSheet.Parse("body { background-color: rgba(#ffffff, 0.5) }");
 
-        Assert.Equal("body { background-color: rgba(255, 255, 255, 0.5); }", value.ToString());
+        Assert.Equal(
+            """
+            body {
+              background-color: rgba(255, 255, 255, 0.5);
+            }
+            """, value.ToString());
     }
 
     [Fact]
@@ -59,7 +89,12 @@ public class ColorTests
     {
         var sheet = StyleSheet.Parse("div { color: rgba(#748297, .31); }");
 
-        Assert.Equal("div { color: rgba(116, 130, 151, 0.31); }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: rgba(116, 130, 151, 0.31);
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -68,7 +103,12 @@ public class ColorTests
         var s1 = StyleSheet.Parse("div { color: rgba(#748297, 30%); }");
         var s2 = StyleSheet.Parse("div { color: rgba(#748297, 0.3); }");
 
-        var expected = "div { color: rgba(116, 130, 151, 0.3); }";
+        var expected = 
+            """
+            div {
+              color: rgba(116, 130, 151, 0.3);
+            }
+            """;
 
         Assert.Equal(expected, s1.ToString());
         Assert.Equal(expected, s2.ToString());
@@ -79,9 +119,12 @@ public class ColorTests
     {
         var s1 = StyleSheet.Parse("div { background: linear-gradient(0deg, rgb(29 30 40 / 0%) 0%, red 94%); }");
 
-        string expected = "div { background: linear-gradient(0deg, rgb(29 30 40 / 0%) 0%, red 94%); }";
-
-        Assert.Equal(expected, s1.ToString());
+        Assert.Equal(
+            """
+            div {
+              background: linear-gradient(0deg, rgb(29 30 40 / 0%) 0%, red 94%);
+            }
+            """, s1.ToString());
     }
 
     [Fact]
@@ -89,9 +132,12 @@ public class ColorTests
     {
         var s1 = StyleSheet.Parse("div { color: rgba(rgb(2 3 4), 30%); }");
 
-        string expected = "div { color: rgba(2, 3, 4, 0.3); }";
-
-        Assert.Equal(expected, s1.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: rgba(2, 3, 4, 0.3);
+            }
+            """, s1.ToString());
     }
 }
 

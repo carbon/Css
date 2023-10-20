@@ -10,17 +10,18 @@ public class MediaTests
             $tabletBreak: 700px;
 
             @media (min-width: $tabletBreak) { 
-                div { 
-                    width: 100px;
-                }
+              div { 
+                width: 100px;
+              }
             }
             """);
-
 
         Assert.Equal(
             """
             @media (min-width: 700px) {
-              div { width: 100px; }
+              div {
+                width: 100px;
+              }
             }
             """, sheet.ToString());
     }
@@ -33,17 +34,18 @@ public class MediaTests
             $breakpoint1: 800px;
 
             @media screen and (min-width: $breakpoint1) { 
-                div { 
-                    width: 100px;
-                }
+              div { 
+                width: 100px;
+              }
             }
             """);
-
 
         Assert.Equal(
             """
             @media screen and (min-width: 800px) {
-              div { width: 100px; }
+              div {
+                width: 100px;
+              }
             }
             """, sheet.ToString());
     }
@@ -54,9 +56,9 @@ public class MediaTests
         var sheet = StyleSheet.Parse(
            """
             @media (width <= 30em) { 
-                div { 
-                    width: 100px;
-                }
+              div { 
+                width: 100px;
+              }
             }
             """);
 
@@ -66,7 +68,6 @@ public class MediaTests
 
         Assert.Equal("(width <= 30em)", mediaRule.Queries.ToString());
     }
-
 
     [Fact]
     public void Css4RangeQuery2()
@@ -126,15 +127,17 @@ public class MediaTests
 
         Assert.Single(sheet.Children);
 
-
         Assert.Equal(
             """
             @media (min-width: 700px) {
-              div { width: 100px; }
-              div span { width: 50px; }
+              div {
+                width: 100px;
+              }
+              div span {
+                width: 50px;
+              }
             }
             """, sheet.ToString());
-
     }
 
     [Fact(Skip = "Not implemented yet")]
@@ -143,20 +146,23 @@ public class MediaTests
         var sheet = StyleSheet.Parse(
             """
             div { 
-                @media (min-width: 700px) { 
-                    span { width: 50px; }
-                }
+              @media (min-width: 700px) { 
+                span { width: 50px; }
+              }
             }
             """);
 
         Assert.Single(sheet.Children);
 
-
         Assert.Equal(
             """
             @media (min-width: 700px) {
-              div { width: 100px; }
-              div span { width: 50px; }
+              div {
+                width: 100px;
+              }
+              div span {
+                width: 50px;
+              }
             }
             """, sheet.ToString());
     }
@@ -171,20 +177,19 @@ public class MediaTests
             }
 
             @mixin blerg { 
-                a {
-                    color: pink;
-
-                    &:hover { color: #000; }
-                }
+              a {
+                color: pink;
+                &:hover { color: #000; }
+              }
             }
 
             @media (min-width: 700px) { 
-                @include blerg;
+              @include blerg;
 
-                div { 
-                    background-color: $bgColor;
-                    @include hi;
-                }
+              div { 
+                background-color: $bgColor;
+                @include hi;
+              }
             }
             """);
 
@@ -202,7 +207,6 @@ public class MediaTests
 
         Assert.Equal("(min-width: 700px)", rule.Queries.ToString());
 
-
         var include = rule.Children[0] as IncludeNode;
 
         Assert.Equal("blerg", include.Name);
@@ -216,33 +220,35 @@ public class MediaTests
             $bgColor: orange;
 
             @mixin hi { 
-                color: red;
+              color: red;
             }
 
             @mixin blerg { 
-                a {
-                    color: pink;
-
-                    &:hover { color: #000; }
-                }
+              a {
+                color: pink;
+                &:hover { color: #000; }
+              }
             }
 
             @media (min-width: 700px) { 
-                @include blerg;
+              @include blerg;
 
-                div { 
-                    background-color: $bgColor;
-                    @include hi;
-                }
+              div { 
+                background-color: $bgColor;
+                @include hi;
+              }
             }
-
             """);
 
         Assert.Equal(
             """
             @media (min-width: 700px) {
-              a { color: pink; }
-              a:hover { color: #000; }
+              a {
+                color: pink;
+              }
+              a:hover {
+                color: #000;
+              }
               div {
                 background-color: orange;
                 color: red;

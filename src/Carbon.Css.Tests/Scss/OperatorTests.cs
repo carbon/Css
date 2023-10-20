@@ -55,21 +55,26 @@ public class OperatorTests
         // https://stackoverflow.com/questions/4988944/how-to-prevent-division-when-using-variables-separated-by-a-slash-in-css-propert
 
         // font-size/line-height
-        var css = StyleSheet.Parse("""
+        var css = StyleSheet.Parse(
+            """
             div {
-                font: italic small-caps normal 13px/150% Arial, Helvetica, sans-serif;
+              font: italic small-caps normal 13px/150% Arial, Helvetica, sans-serif;
             }
             """);
 
-        Assert.Equal("""
-            div { font: italic small-caps normal 13px / 150% Arial, Helvetica, sans-serif; }
+        Assert.Equal(
+            """
+            div {
+              font: italic small-caps normal 13px / 150% Arial, Helvetica, sans-serif;
+            }
             """, css.ToString());
     }
 
     [Fact]
     public void A()
     {
-        var css = StyleSheet.Parse("""
+        var css = StyleSheet.Parse(
+            """
             div {
                 width: 10px / 2;
             }
@@ -122,7 +127,12 @@ public class OperatorTests
             }
             """);
 
-        Assert.Equal("div { background-color: orange; }", sheet.ToString().Trim());
+        Assert.Equal(
+            """
+            div {
+              background-color: orange;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -139,7 +149,12 @@ public class OperatorTests
             }
             """);
 
-        Assert.Equal("div { background-color: #ffffff; }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              background-color: #ffffff;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -158,7 +173,12 @@ public class OperatorTests
             }
             """);
 
-        Assert.Equal("div { background-color: purple; }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              background-color: purple;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -166,7 +186,12 @@ public class OperatorTests
     {
         var sheet = StyleSheet.Parse("div { color: if(red == red, purple, green) }");
 
-        Assert.Equal("div { color: purple; }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: purple;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -174,7 +199,12 @@ public class OperatorTests
     {
         var sheet = StyleSheet.Parse("div { color: if(red == orange, purple, green) }");
 
-        Assert.Equal("div { color: green; }", sheet.ToString());
+        Assert.Equal(
+            """
+            div {
+              color: green;
+            }
+            """, sheet.ToString());
     }
 
     [Fact]
@@ -196,7 +226,9 @@ public class OperatorTests
               color: red;
               display: none;
             }
-            div { background-color: orange; }
+            div {
+              background-color: orange;
+            }
             """, sheet.ToString());
     }
 }

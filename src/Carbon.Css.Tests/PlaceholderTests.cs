@@ -20,7 +20,9 @@ public class PlaceholderTests
                 color: rgba(0, 0, 0, 0.2);
                 -webkit-font-smoothing: antialiased;
               }
-              :-ms-input-placeholder { color: red; }
+              :-ms-input-placeholder {
+                color: red;
+              }
             }
             """, ss.ToString());
     }

@@ -14,14 +14,20 @@ public class EachTests
             }
             """);
 
-        Assert.Equal("""
-            .icon-40px { font-size: 40px; }
-            .icon-50px { font-size: 50px; }
-            .icon-80px { font-size: 80px; }
+        Assert.Equal(
+            """
+            .icon-40px {
+              font-size: 40px;
+            }
+            .icon-50px {
+              font-size: 50px;
+            }
+            .icon-80px {
+              font-size: 80px;
+            }
             """, sheet.ToString());
     }
-
-    
+        
     [Fact]
     public void EachMap()
     {
@@ -42,9 +48,15 @@ public class EachTests
 
         Assert.Equal(
             """
-            .font-regular { font-weight: 400; }
-            .font-medium { font-weight: 500; }
-            .font-bold { font-weight: 700; }
+            .font-regular {
+              font-weight: 400;
+            }
+            .font-medium {
+              font-weight: 500;
+            }
+            .font-bold {
+              font-weight: 700;
+            }
             """, sheet.ToString());
     }
     
