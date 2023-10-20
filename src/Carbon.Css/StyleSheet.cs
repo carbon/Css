@@ -110,9 +110,8 @@ public sealed class StyleSheet : CssRoot, IStylesheet
         }
         catch (SyntaxException ex)
         {
-            ex.Location = TextHelper.GetLocation(text, ex.Position);
-
-            ex.Lines = TextHelper.GetLinesAround(text, ex.Location.Line, 3).ToList();
+            ex.Location = SourceHelper.GetLocation(text, ex.Position);
+            ex.Lines = SourceHelper.GetLinesAround(text, ex.Location.Line, 3);
 
             throw;
         }
