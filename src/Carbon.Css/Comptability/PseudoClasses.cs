@@ -10,7 +10,7 @@ public static class PseudoClassNames
         "checked", "current",
         "default", "dir", "disabled", 
         "empty", "enabled",
-        "first", "first-line", "first-child", "first-of-type", "fullscreen", "focus", "focus-within",
+        "first", "first-line", "first-child", "first-of-type", "fullscreen", "focus", "focus-visible", "focus-within",
         "has", "host", "hover",
         "indeterminate", "in-range", "invalid", "is",
         "lang", "last-child", "last-of-type", "left", "link", "local-link",

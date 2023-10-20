@@ -98,7 +98,6 @@ public sealed class CssProperty : IEquatable<CssProperty>
     ));
 
     public static readonly CssProperty AspectRatio = new("aspect-ratio", new CssCompatibility(
-        prefixed: new(),
         standard: new(chrome: 88, edge: 88, firefox: 89, safari: 15)
     ));
 
@@ -119,8 +118,8 @@ public sealed class CssProperty : IEquatable<CssProperty>
     public static readonly CssProperty BackgroundAttachment = new("background-attachment", CssModule.Core1);
 
     public static readonly CssProperty BackgroundClip = new("background-clip", CssModule.BackgroundsAndBorders3, new CssCompatibility(
-        prefixed: new (chrome : 4,            firefox: 4, safari: 4),
-        standard: new (chrome : 15, edge: 15, firefox: 4, safari: 7)
+        prefixed: new(chrome : 4,            firefox: 4, safari: 4),
+        standard: new(chrome : 15, edge: 15, firefox: 4, safari: 7)
     ));
 
     public static readonly CssProperty BackgroundColor = new("background-color", CssModule.Core1);
@@ -209,6 +208,10 @@ public sealed class CssProperty : IEquatable<CssProperty>
     public static readonly CssProperty ClipRule = new ("clip-rule", CssModule.Masking_1);
 
     public static readonly CssProperty Color = new("color", CssModule.Core1);
+
+    public static readonly CssProperty ColorMix = new("color-mix", new CssCompatibility(
+        standard: new(chrome: 111, edge: 111, firefox: 113, safari: 16.2f)
+    ));
 
     public static readonly CssProperty ColumnCount      = new("column-count",       CssModule.Columns3);
     public static readonly CssProperty ColumnFill       = new("column-fill",        CssModule.Columns3);
@@ -327,13 +330,6 @@ public sealed class CssProperty : IEquatable<CssProperty>
     public static readonly CssProperty MarginRight       = new ("margin-right",  CssModule.Core1);
     public static readonly CssProperty MarginTop         = new ("margin-top",    CssModule.Core1);
 
-    // Marquee -----------------------------------------------------------------------------------------
-    public static readonly CssProperty MarqueeDirection  = new ("marquee-direction");
-    public static readonly CssProperty MarqueeLoop       = new ("marquee-loop");
-    public static readonly CssProperty MarqueePlayCount  = new ("marquee-play-count");
-    public static readonly CssProperty MarqueeSpeed      = new ("marquee-speed");
-    public static readonly CssProperty MarqueeStyle      = new ("marquee-style");
-
     // Masking -----------------------------------------------------------------------------------------
     public static readonly CssProperty Mask             = new ("mask",               CssModule.Masking_1);
     public static readonly CssProperty MaskBorder       = new ("mask-border",        CssModule.Masking_1);
@@ -406,18 +402,25 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
       
     public static readonly CssProperty Quotes = new ("quotes");
-    public static readonly CssProperty Resize = new ("resize");
+    public static readonly CssProperty Resize = new ("resize", CssModule.UI(4), new CssCompatibility(
+        standard: new(chrome: 1, edge: 79, firefox: 4, safari: 3)   
+    ));
+
     public static readonly CssProperty Right  = new ("right", CssModule.Core1);
+
+    public static readonly CssProperty Rotate = new("rotate", new CssCompatibility(
+        standard: new(chrome: 104, edge: 104, firefox: 72, safari: 14.1f)   
+    ));
 
     // Ruby (Level 3) ------------------------------------------------------------------------------------
 
-    public static readonly CssProperty RubyAlign    = new ("ruby-align",    CssModule.Ruby3);
-    public static readonly CssProperty RubyOverhang = new ("ruby-overhang", CssModule.Ruby3);
-    public static readonly CssProperty RubyPosition = new ("ruby-position", CssModule.Ruby3);
-    public static readonly CssProperty RubySpan     = new ("ruby-span",     CssModule.Ruby3);
+    public static readonly CssProperty RubyAlign    = new("ruby-align",    CssModule.Ruby3);
+    public static readonly CssProperty RubyOverhang = new("ruby-overhang", CssModule.Ruby3);
+    public static readonly CssProperty RubyPosition = new("ruby-position", CssModule.Ruby3);
+    public static readonly CssProperty RubySpan     = new("ruby-span",     CssModule.Ruby3);
 
-    public static readonly CssProperty Size  = new ("size");
-    public static readonly CssProperty Speak = new ("speak");
+    public static readonly CssProperty Size  = new("size");
+    public static readonly CssProperty Speak = new("speak");
 
     public static readonly CssProperty TableLayout = new ("table-layout", CssModule.Core2_1);
 
@@ -572,7 +575,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "clip-rule",              ClipRule },
                                     
         { "color",                  Color },
-
+        { "color-mix",              ColorMix },
         // Column
         { "column-count",           ColumnCount },
         { "column-fill",            ColumnFill },
@@ -658,11 +661,6 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "margin-left",            MarginLeft },
         { "margin-right",           MarginRight },
         { "margin-top",             MarginTop },
-        { "marquee-direction",      MarqueeDirection },
-        { "marquee-loop",           MarqueeLoop },
-        { "marquee-play-count",     MarqueePlayCount },
-        { "marquee-speed",          MarqueeSpeed },
-        { "marquee-style",          MarqueeStyle },
 
         // Masking
         { "mask",               Mask },
@@ -726,6 +724,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "quotes",               Quotes },
         { "resize",               Resize },
         { "right",                Right },
+        { "rotate",               Rotate },
 
         // Ruby
         { "ruby-align",    RubyAlign },

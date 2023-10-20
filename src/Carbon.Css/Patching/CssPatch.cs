@@ -1,14 +1,8 @@
 ﻿namespace Carbon.Css;
 
-public readonly struct CssPatch
+public readonly struct CssPatch(string name, CssValue value)
 {
-    public CssPatch(string name, CssValue value)
-    {
-        Name = name;
-        Value = value;
-    }
+    public readonly string Name { get; } = name;
 
-    public readonly string Name { get; }
-
-    public readonly CssValue Value { get; }
+    public readonly CssValue Value { get; } = value;
 }

@@ -6,7 +6,7 @@ public static class PseudoElementNames
 {
     private static readonly FrozenSet<string> s_items = FrozenSet.ToFrozenSet([
         "after",
-        "backdrop",
+        "backdrop",  // Safari 15.4
         "before",
         "cue",
         "cue-region",
