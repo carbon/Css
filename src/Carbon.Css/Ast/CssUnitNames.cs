@@ -38,6 +38,8 @@ public static class CssUnitNames
     public static readonly string Lvi     = "lvi";
     public static readonly string Lvb     = "lvb";
 
+    public static readonly string Dpi = "dpi";
+
 
     public static readonly string Cqw   = "cqw";
     public static readonly string Cqh   = "cqh";  

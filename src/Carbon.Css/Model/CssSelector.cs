@@ -4,14 +4,9 @@ using Carbon.Css.Parser;
 
 namespace Carbon.Css;
 
-public sealed class CssSelector : IEnumerable<CssSequence>
+public sealed class CssSelector(IReadOnlyList<CssSequence> items) : IEnumerable<CssSequence>
 {
-    private readonly IReadOnlyList<CssSequence> _items; // comma separated
-
-    public CssSelector(IReadOnlyList<CssSequence> items)
-    {
-        _items = items;
-    }
+    private readonly IReadOnlyList<CssSequence> _items = items; // comma separated
 
     public int Count => _items.Count;
 
@@ -48,4 +43,4 @@ public sealed class CssSelector : IEnumerable<CssSequence>
 // a:hover
 // #id
 // .className
-// .className, .anotherName			(Multiselector or group)
+// .className, .anotherName (multi-selector or group)

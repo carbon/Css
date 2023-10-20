@@ -1,14 +1,10 @@
 ﻿namespace Carbon.Css;
 
-public readonly struct CssParameter
+public readonly struct CssParameter(
+    string name,
+    CssValue? defaultValue = null)
 {
-    public CssParameter(string name, CssValue? defaultValue = null)
-    {
-        Name = name;
-        DefaultValue = defaultValue;
-    }
+    public string Name { get; } = name;
 
-    public readonly string Name { get; }
-
-    public readonly CssValue? DefaultValue { get; }
+    public CssValue? DefaultValue { get; } = defaultValue;
 }

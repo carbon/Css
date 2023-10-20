@@ -2,18 +2,11 @@
 
 namespace Carbon.Css;
 
-internal ref struct StringSplitter
+internal ref struct StringSplitter(ReadOnlySpan<char> text, char separator)
 {
-    private readonly ReadOnlySpan<char> _text;
-    private readonly char _separator;
-    private int _position;
-
-    public StringSplitter(ReadOnlySpan<char> text, char separator)
-    {
-        _text = text;
-        _separator = separator;
-        _position = 0;
-    }
+    private readonly ReadOnlySpan<char> _text = text;
+    private readonly char _separator = separator;
+    private int _position = 0;
 
     public bool TryGetNext(out ReadOnlySpan<char> result)
     {
@@ -70,5 +63,5 @@ internal ref struct StringSplitter
         }
     }
 
-    public bool IsEof => _position >= _text.Length;
+    public readonly bool IsEof => _position >= _text.Length;
 }

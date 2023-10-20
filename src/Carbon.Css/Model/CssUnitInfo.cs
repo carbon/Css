@@ -61,10 +61,10 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
     public static readonly CssUnitInfo Khz  = new("khz",           NodeKind.Frequency);
 
     // <resolution> | dpi, dpcm, dppx, x
-    public static readonly CssUnitInfo Dpi  = new("dpi",          NodeKind.Resolution);
-    public static readonly CssUnitInfo Dpcm = new("dpcm",         NodeKind.Resolution);
-    public static readonly CssUnitInfo Dppx = new("dppx",         NodeKind.Resolution);
-    public static readonly CssUnitInfo X    = new(CssUnitNames.X, NodeKind.Resolution);
+    public static readonly CssUnitInfo Dpi  = new(CssUnitNames.Dpi, NodeKind.Resolution);
+    public static readonly CssUnitInfo Dpcm = new("dpcm",           NodeKind.Resolution);
+    public static readonly CssUnitInfo Dppx = new("dppx",           NodeKind.Resolution);
+    public static readonly CssUnitInfo X    = new(CssUnitNames.X,   NodeKind.Resolution);
 
     public static readonly FrozenDictionary<string, CssUnitInfo> s_items = FrozenDictionary.ToFrozenDictionary((KeyValuePair<string, CssUnitInfo>[])[
         // <length> : relative
@@ -118,7 +118,7 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
         new("kHz"             , Khz),
 
         // <resolution>
-        new("dpi"             , Dpi),
+        new(CssUnitNames.Dpi  , Dpi),
         new("dpcm"            , Dpcm),
         new("dppx"            , Dppx),
         new(CssUnitNames.X    , X)
