@@ -280,8 +280,8 @@ public class MixinTests
 
         var rules = ss.Children.OfType<CssRule>().ToArray();
 
-        var include = rules[0].Children[0] as IncludeNode;
-        var args = include.Args as CssValueList;
+        var include = (IncludeNode)rules[0].Children[0];
+        var args    = (CssValueList)include.Args;
 
         Assert.Equal(2, args.Count);
         Assert.Equal("50px, 20px", args.ToString());
