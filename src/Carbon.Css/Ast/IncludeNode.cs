@@ -4,7 +4,7 @@ public sealed class IncludeNode(
     string name,
     CssValue? args) : CssNode(NodeKind.Include)
 {
-    public string Name { get; } = name;
+    public string Name { get; } = name ?? throw new ArgumentNullException(nameof(name));
 
     public CssValue? Args { get; } = args;
 

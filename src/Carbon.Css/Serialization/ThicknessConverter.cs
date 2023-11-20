@@ -13,7 +13,7 @@ public sealed class ThicknessJsonConverter : JsonConverter<Thickness>
             ? checked((int)reader.ValueSequence.Length)
             : reader.ValueSpan.Length;
 
-        Span<char> buffer = length <= 32
+        scoped Span<char> buffer = length <= 32
             ? stackalloc char[32]
             : new char[length];
 

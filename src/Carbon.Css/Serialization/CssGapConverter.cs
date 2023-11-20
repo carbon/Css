@@ -10,8 +10,8 @@ public sealed class CssGapConverter : JsonConverter<CssGap>
     public override CssGap Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         int length = reader.HasValueSequence
-           ? checked((int)reader.ValueSequence.Length)
-           : reader.ValueSpan.Length;
+            ? checked((int)reader.ValueSequence.Length)
+            : reader.ValueSpan.Length;
 
         scoped Span<byte> buffer = length <= 32
             ? stackalloc byte[32]

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Carbon.Css;
+﻿namespace Carbon.Css;
 
 public sealed class CssContext
 {

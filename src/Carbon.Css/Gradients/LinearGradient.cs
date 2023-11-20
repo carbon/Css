@@ -81,7 +81,7 @@ public readonly struct LinearGradient(
 
     public static bool TryParse(ReadOnlySpan<char> text, out LinearGradient result)
     {
-        if (text.Length is 0)
+        if (text.IsEmpty)
         {
             result = default;
 
@@ -108,7 +108,7 @@ public readonly struct LinearGradient(
             text = text[16..^1];
         }
 
-        if (text.Length is 0)
+        if (text.IsEmpty)
         {
             throw new ArgumentException("May not be empty", nameof(text));
         }

@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+using Carbon.Css.Helpers;
+
 namespace Carbon.Css;
 
 public sealed class CssScope
@@ -41,7 +43,7 @@ public sealed class CssScope
     {
         if (counter > 50)
         {
-            throw new Exception($"recession detected: {counter}");
+            ThrowHelper.RecursionDetected();
         }
 
         if (_items.TryGetValue(name, out CssValue? value))
@@ -50,7 +52,10 @@ public sealed class CssScope
             {
                 var variable = (CssVariable)value;
 
-                if (variable.Symbol == name) throw new Exception("Self referencing");
+                if (variable.Symbol == name)
+                {
+                    ThrowHelper.SelfReferencing();
+                }
 
                 return GetValue(variable.Symbol, counter + 1);
             }

@@ -149,7 +149,6 @@ public sealed class CssWriter : IDisposable
             throw new Exception("Must be less than 10,000");
         }
 
-
         _scope = _scope.GetChildScope();
 
         uint a = 0;
@@ -687,11 +686,11 @@ public sealed class CssWriter : IDisposable
 
         for (int selectorIndex = 0; selectorIndex < selectorList.Count; selectorIndex++)
         {
-            var selector = selectorList[selectorIndex];
+            var segment = selectorList[selectorIndex];
 
             if (selectorIndex > 0)
             {
-                if (selector.Count is 1)
+                if (segment.Count is 1)
                 {
                     _writer.Write(", ");
                 }
@@ -701,13 +700,13 @@ public sealed class CssWriter : IDisposable
                 }
             }
 
-            for (int childIndex = 0; childIndex < selector.Count; childIndex++)
+            for (int childIndex = 0; childIndex < segment.Count; childIndex++)
             {
-                var item = selector[childIndex];
+                var item = segment[childIndex];
 
                 WriteValue(item);
 
-                bool isLast = (childIndex + 1) == selector.Count;
+                bool isLast = (childIndex + 1) == segment.Count;
 
                 if ((item.Kind is NodeKind.Sequence || item.Trailing is not null) && !isLast)
                 {
@@ -901,15 +900,13 @@ public sealed class CssWriter : IDisposable
             else if (node.Kind is NodeKind.For)
             {
             }
-
-           
-                _writer.WriteLine();
             
-
+             _writer.WriteLine();
+            
             count++;
         }
 
-            Indent(depth);
+        Indent(depth);
   
         _writer.Write('}'); // Block end
     }

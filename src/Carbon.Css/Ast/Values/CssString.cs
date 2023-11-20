@@ -5,7 +5,7 @@ using Carbon.Css.Parser;
 
 namespace Carbon.Css;
 
-public sealed class CssString : CssValue
+public sealed class CssString(string text) : CssValue(NodeKind.String)
 {
     public CssString(CssToken token)
         : this(token.Text)
@@ -17,13 +17,7 @@ public sealed class CssString : CssValue
         Trailing = trailing;
     }
 
-    public CssString(string text)
-        : base(NodeKind.String)
-    {
-        Text = text;
-    }
-
-    public string Text { get; }
+    public string Text { get; } = text;
 
     public override CssString CloneNode() => new(Text);
 

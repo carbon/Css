@@ -5,26 +5,31 @@ namespace Carbon.Css;
 internal static class CssFunctionNames
 {
     private static readonly FrozenSet<string> s_items = FrozenSet.ToFrozenSet([
+        "abs",
         "attr",
-        "calc",
-        "cubic-bezier",
-        "var",
-        "round",
-        "mod",
-        "rem", 
-        "sin",
-        "cos",
-        "tag",
         "asin",
         "acos",
         "atan",
         "atan2",
-        "sqrt",
-        "hypot",
-        "log",
+        "calc",
+        "cross-fade",
+        "cos",
+        "cubic-bezier",
+        "env",
         "exp",
-        "abs",
-        "sign"
+        "hypot",
+        "var",
+        "round",
+        "log",
+        "max",
+        "min",
+        "mod",
+        "pow",
+        "rem",
+        "sign",
+        "sin",
+        "sqrt",
+        "tan"
     ]);
 
     public static bool Contains(string name) => s_items.Contains(name);

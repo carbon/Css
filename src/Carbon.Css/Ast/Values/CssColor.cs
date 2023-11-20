@@ -151,8 +151,6 @@ public sealed class CssColor : CssValue
     }
 }
 
-
-
 // <rgb()>    |
 // <rgba()>   |
 // <hsl()>    |
@@ -163,7 +161,6 @@ public sealed class CssColor : CssValue
 // <oklab()>  |
 // <oklch()>  |
 // <color()>  
-
 
 // hsl
 // rgba

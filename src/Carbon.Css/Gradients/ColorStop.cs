@@ -23,7 +23,7 @@ public readonly struct ColorStop(Rgba32 color, double? position)
 
     public static ColorStop Read(ReadOnlySpan<char> text, out int read)
     {
-        if (text.Length is 0)
+        if (text.IsEmpty)
         {
             throw new ArgumentException("May not be empty", nameof(text));
         }

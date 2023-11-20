@@ -5,13 +5,13 @@
 public static class CssCursor
 {
     private static readonly CssCompatibility s_grabCursor = new(
-        prefixed: new (firefox: 1.5f, safari: 4f),
-        standard: new (chrome: 68, firefox: 27, edge: 15, safari: 11)
+        prefixed: new(firefox: 1.5f, safari: 4f),
+        standard: new(chrome: 68, firefox: 27, edge: 15, safari: 11)
     );
 
     private static readonly CssCompatibility s_zoomCursor = new(
-        prefixed: new (safari: 3),
-        standard: new (chrome: 37, edge: 12, firefox: 24, safari: 9)
+        prefixed: new(safari: 3),
+        standard: new(chrome: 37, edge: 12, firefox: 24, safari: 9)
     );
 
     private static readonly Dictionary<string, CssCompatibility> s_table = new ()

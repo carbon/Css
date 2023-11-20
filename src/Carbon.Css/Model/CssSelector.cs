@@ -4,9 +4,9 @@ using Carbon.Css.Parser;
 
 namespace Carbon.Css;
 
-public sealed class CssSelector(IReadOnlyList<CssSequence> items) : IEnumerable<CssSequence>
+public sealed class CssSelector(List<CssSequence> items) : IEnumerable<CssSequence>
 {
-    private readonly IReadOnlyList<CssSequence> _items = items; // comma separated
+    private readonly List<CssSequence> _items = items; // comma separated
 
     public int Count => _items.Count;
 
