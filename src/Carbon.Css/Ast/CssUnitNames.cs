@@ -2,12 +2,13 @@
 
 public static class CssUnitNames
 {
-    internal const int MaxLength = 4;
+    internal const int MaxLength = 5;
 
     public static readonly string Lh      = "lh";
     public static readonly string S       = "s";
     public static readonly string Ms      = "ms";
     public static readonly string Px      = "px";
+    public static readonly string Cap     = "cap";
     public static readonly string Em      = "em";
     public static readonly string Vw      = "vw";
     public static readonly string Vh      = "vh";
@@ -37,9 +38,8 @@ public static class CssUnitNames
     public static readonly string Lvh     = "lvh"; // largest viewport height
     public static readonly string Lvi     = "lvi";
     public static readonly string Lvb     = "lvb";
-
+    
     public static readonly string Dpi = "dpi";
-
 
     public static readonly string Cqw   = "cqw";
     public static readonly string Cqh   = "cqh";  
@@ -47,6 +47,12 @@ public static class CssUnitNames
     public static readonly string Cqb   = "cqb";
     public static readonly string Cqmin = "cqmin";
     public static readonly string Cqmax = "cqmax";
+
+    // rex, rch, ric, rlh
+    public static readonly string Rcap = "rcap";
+    public static readonly string Rex  = "rex";
+    public static readonly string Rch  = "rch";
+    public static readonly string Ric  = "ric";
 
     // svb, svmin, svmax
 
@@ -85,7 +91,14 @@ public static class CssUnitNames
         {
             if (text[0] is 'c')
             {
-                if (text[1] is 'q')
+                if (text[1] is 'a')
+                {
+                    if (text[2] is 'p')
+                    {
+                        return Cap;
+                    }
+                }
+                else if (text[1] is 'q')
                 {
                     if (text[2] is 'b')
                     {

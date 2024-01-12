@@ -34,6 +34,12 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
     public static readonly CssUnitInfo Dvh   = new(CssUnitNames.Dvh,  NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s dynamic height
     public static readonly CssUnitInfo Dvw   = new(CssUnitNames.Dvw,  NodeKind.Length, CssUnitFlags.Relative); // | 1% of viewport’s dynamic width
 
+    public static readonly CssUnitInfo Rcap  = new(CssUnitNames.Rcap, NodeKind.Length, CssUnitFlags.Relative); // | 1cap = height of a root element capital letter
+    public static readonly CssUnitInfo Rex   = new(CssUnitNames.Rex,  NodeKind.Length, CssUnitFlags.Relative); // equal to the value of the ex unit on the root element.
+    public static readonly CssUnitInfo Rch   = new(CssUnitNames.Rch,  NodeKind.Length, CssUnitFlags.Relative); // equal to the value of the ch unit on the root element
+    public static readonly CssUnitInfo Ric   = new(CssUnitNames.Ric,  NodeKind.Length, CssUnitFlags.Relative); // equal to the value of the ic unit on the root element.
+
+
     // <length> | px, mm, cm, in, pt, pc
     public static readonly CssUnitInfo Cm    = new("cm",            NodeKind.Length); // centimeters	        1cm = 96px/2.54
     public static readonly CssUnitInfo Mm    = new("mm",            NodeKind.Length); // millimeters	        1mm = 1/10th of 1cm
@@ -66,11 +72,11 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
     public static readonly CssUnitInfo Dppx = new("dppx",           NodeKind.Resolution);
     public static readonly CssUnitInfo X    = new(CssUnitNames.X,   NodeKind.Resolution);
 
-    public static readonly FrozenDictionary<string, CssUnitInfo> s_items = FrozenDictionary.ToFrozenDictionary((KeyValuePair<string, CssUnitInfo>[])[
+    public static readonly FrozenDictionary<string, CssUnitInfo> s_items = ((KeyValuePair<string, CssUnitInfo>[])[
         // <length> : relative
+        new(CssUnitNames.Cap   , Cap),
         new(CssUnitNames.Em    , Em),
         new(CssUnitNames.Ex    , Ex),
-        new("cap"              , Cap),
         new("ch"               , Ch),
         new("ic"               , Ic),
         new(CssUnitNames.Rem   , Rem),
@@ -84,6 +90,7 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
         new(CssUnitNames.Cqmax , Cqmax),
         new(CssUnitNames.Dvw   , Dvw),
         new(CssUnitNames.Dvh   , Dvh),
+        new(CssUnitNames.Rcap  , Rcap),
         new(CssUnitNames.Vw    , Vw),
         new(CssUnitNames.Vh    , Vh),
         new(CssUnitNames.Vi    , Vi),
@@ -122,7 +129,7 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
         new("dpcm"            , Dpcm),
         new("dppx"            , Dppx),
         new(CssUnitNames.X    , X)
-    ]);
+    ]).ToFrozenDictionary();
 
     public string Name { get; } = name;
 
@@ -161,6 +168,7 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
             switch (name)
             {
                 case "px": return Px;
+                case "pt": return Pt;
                 case "em": return Em;
                 case "lh": return Lh;
                 case "ms": return Ms;
@@ -181,12 +189,15 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
                 case "dvw": return Dvw;
                 case "rem": return Rem;
                 case "rlh": return Rlh;
+                case "rch": return Rch;
+                case "rex": return Rex;
             }
         }
         else if (name.Length is 4)
         {
             switch (name)
             {
+                case "rcap": return Rcap;
                 case "vmax": return Vmax;
                 case "vmin": return Vmin;
             }
