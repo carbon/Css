@@ -87,7 +87,7 @@ public sealed class CssModule(
     // https://caniuse.com/#feat=css-masks
     public static readonly CssModule Masking_1 = new(CssModuleType.Masking, 1,
         prefixed : new CompatibilityTable(chrome: 4,   safari: 4),
-        standard : new CompatibilityTable(firefox: 53, safari: 15.4f)
+        standard : new CompatibilityTable(chrome: 120, firefox: 53, safari: 15.4f)
     );
 
     #endregion
