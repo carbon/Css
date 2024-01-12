@@ -8,6 +8,7 @@ public class CssUnitTests
     [Fact]
     public void Lookup()
     {
+        
         Assert.Equal(CssUnitInfo.Px, CssUnitInfo.Get("px"));
         Assert.Equal(CssUnitInfo.Pt, CssUnitInfo.Get("pt"));
         Assert.Equal(CssUnitInfo.Deg, CssUnitInfo.Get("deg"));
@@ -15,6 +16,28 @@ public class CssUnitTests
         Assert.Equal(CssUnitInfo.Rem, CssUnitInfo.Get("rem"));
         Assert.Equal(CssUnitInfo.Dvw, CssUnitInfo.Get("dvw"));
         Assert.Equal(CssUnitInfo.Dvh, CssUnitInfo.Get("dvh"));
+        
+
+        // 511ms
+        for (int i = 0; i < 1_000_000; i++)
+        {
+            CssUnitInfo.Get("px");
+            CssUnitInfo.Get("pt");
+            CssUnitInfo.Get("deg");
+            CssUnitInfo.Get("rlh");
+            CssUnitInfo.Get("rem");
+            CssUnitInfo.Get("dvw");
+            CssUnitInfo.Get("dvh");
+        }
+    }
+
+    [Fact]
+    public void RootElementTests()
+    {
+        Assert.Equal(CssUnitInfo.Rcap, CssUnitInfo.Get("rcap"));
+        Assert.Equal(CssUnitInfo.Rex,  CssUnitInfo.Get("rex"));
+        Assert.Equal(CssUnitInfo.Rcap, CssUnitInfo.Get("rcap"));
+        Assert.Equal(CssUnitInfo.Rch,  CssUnitInfo.Get("rch"));
     }
 
     [Fact]

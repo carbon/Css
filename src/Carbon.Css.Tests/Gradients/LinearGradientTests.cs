@@ -1,13 +1,11 @@
-﻿#pragma warning disable IDE0018 // Inline variable declaration
-
-using Carbon.Color;
+﻿using Carbon.Color;
 
 namespace Carbon.Css.Gradients.Tests;
 
 public class LinearGradientTests
 {
     [Fact]
-    public void NegitiveAngle()
+    public void NegativeAngle()
     {
         var gradient = LinearGradient.Parse("linear-gradient(-30deg, rgb(153, 116, 186) 0%, rgb(194, 234, 9) 20%, rgb(0, 203, 227) 80%, rgb(47, 84, 176) 100%)");
 
@@ -113,7 +111,6 @@ public class LinearGradientTests
 
         Assert.Null(result.Angle);
         Assert.Equal(LinearGradientDirection.TopLeft, result.Direction);
-
 
         Assert.Equal("000000ff", result.Stops[0].Color.ToHex8());
         Assert.Equal("00000000", result.Stops[1].Color.ToHex8());

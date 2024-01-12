@@ -25,10 +25,8 @@ public class CssUnitNamesTests
         Assert.Same(CssUnitNames.Lvi, CssUnitNames.Get("lvi"));
         Assert.Same(CssUnitNames.Lvb, CssUnitNames.Get("lvb"));
 
-
         Assert.Same(CssUnitNames.Vi, CssUnitNames.Get("vi"));
         Assert.Same(CssUnitNames.Vb, CssUnitNames.Get("vb"));
-
 
         Assert.Same(CssUnitNames.Deg, CssUnitNames.Get("deg"));
 

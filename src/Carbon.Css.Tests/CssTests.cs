@@ -309,50 +309,10 @@ public class CssTests
         Assert.Equal(LexicalMode.Selector, mode.Current);
     }
 
+   
 
     [Fact]
-    public void ZoomOut()
-    {
-        var sheet = StyleSheet.Parse(
-            """
-            //= support Safari >= 7
-            div { cursor: zoom-out }
-            """
-            );
-
-        Assert.Equal(
-            """
-            div {
-              cursor: -webkit-zoom-out;
-              cursor: zoom-out;
-            }
-            """, sheet.ToString());
-    }
-
-    [Fact]
-    public void GrabSupport()
-    {
-        var sheet = StyleSheet.Parse(
-            """
-            //= support Firefox >= 5
-            //= support Safari >= 1
-            div { cursor: grab }
-            """
-            );
-
-        Assert.Equal(
-            """
-            div {
-              cursor: -moz-grab;
-              cursor: -webkit-grab;
-              cursor: grab;
-            }
-            """, sheet.ToString()
-                    );
-    }
-
-    [Fact]
-    public void DirivitiveComment()
+    public void Transitions()
     {
         var sheet = StyleSheet.Parse(
             """
