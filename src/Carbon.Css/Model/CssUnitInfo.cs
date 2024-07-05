@@ -163,51 +163,38 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
                 case 'x': return X;
             }
         }
-        else if (name.Length is 2)
+        else
         {
             switch (name)
             {
-                case "px": return Px;
-                case "pt": return Pt;
-                case "em": return Em;
-                case "lh": return Lh;
-                case "ms": return Ms;
-                case "vh": return Vh;
-                case "vw": return Vw;
-            }
-        }
-        else if (name.Length is 3)
-        {
-            switch (name)
-            {
-                case "cqb": return Cqb;
-                case "cqh": return Cqh;
-                case "cqi": return Cqi;
-                case "cqw": return Cqw;
-                case "deg": return Deg;
-                case "dvh": return Dvh;
-                case "dvw": return Dvw;
-                case "rem": return Rem;
-                case "rlh": return Rlh;
-                case "rch": return Rch;
-                case "rex": return Rex;
-            }
-        }
-        else if (name.Length is 4)
-        {
-            switch (name)
-            {
-                case "rcap": return Rcap;
-                case "vmax": return Vmax;
-                case "vmin": return Vmin;
-            }
-        }
-        else if (name.Length is 5)
-        {
-            switch (name)
-            {
+                case "cap"  : return Cap;
+                case "cqb"  : return Cqb;
+                case "cqh"  : return Cqh;
+                case "cqi"  : return Cqi;
+                case "cqw"  : return Cqw;
                 case "cqmax": return Cqmin;
                 case "cqmin": return Cqmax;
+                case "deg"  : return Deg;
+                case "dvh"  : return Dvh;
+                case "dvw"  : return Dvw;
+                case "em"   : return Em;
+                case "Hz"   : return Hz;
+                case "kHz"  : return Khz;
+                case "lh"   : return Lh;
+                case "px"   : return Px;
+                case "pt"   : return Pt;
+                case "ms"   : return Ms;
+                case "rad"  : return Rad;
+                case "rem"  : return Rem;
+                case "rlh"  : return Rlh;
+                case "rch"  : return Rch;
+                case "rex"  : return Rex;
+                case "rcap" : return Rcap;
+                case "turn" : return Turn;
+                case "vmax" : return Vmax;
+                case "vmin" : return Vmin;
+                case "vh"   : return Vh;
+                case "vw"   : return Vw;
             }
         }
 
