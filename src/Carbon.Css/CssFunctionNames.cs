@@ -12,6 +12,7 @@ internal static class CssFunctionNames
         "atan",
         "atan2",
         "calc",
+        "clamp",
         "cross-fade",
         "cos",
         "cubic-bezier",
@@ -29,7 +30,12 @@ internal static class CssFunctionNames
         "sign",
         "sin",
         "sqrt",
-        "tan"
+        "tan",
+
+        // color functions
+        "color-mix",
+        "color-contrast",
+        "light-dark",
     ]);
 
     public static bool Contains(string name) => s_items.Contains(name);
