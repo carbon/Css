@@ -12,8 +12,9 @@ public enum CssModuleType
     Fonts                 = 8, // http://dev.w3.org/csswg/css3-fonts/
     Masking               = 9, // http://dev.w3.org/fxtf/masking/
     Ruby                  = 10,
-    UI                    = 11,
-    Text                  = 12,
-    Transitions           = 13,
-    Transforms            = 14
+    Scrollbars            = 11, // https://www.w3.org/TR/css-scrollbars-1/
+    UI                    = 12,
+    Text                  = 13,
+    Transitions           = 14,
+    Transforms            = 15
 }

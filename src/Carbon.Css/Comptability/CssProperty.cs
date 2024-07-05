@@ -1,4 +1,6 @@
-﻿namespace Carbon.Css;
+﻿using System.Collections.Frozen;
+
+namespace Carbon.Css;
 
 public sealed class CssProperty : IEquatable<CssProperty>
 {
@@ -118,6 +120,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
     public static readonly CssProperty Background           = new("background", CssModule.Core1);
     public static readonly CssProperty BackgroundAttachment = new("background-attachment", CssModule.Core1);
 
+    // note: background-clip: text is prefixed for Safari & Chrome as of v128
     public static readonly CssProperty BackgroundClip = new("background-clip", CssModule.BackgroundsAndBorders3, new CssCompatibility(
         prefixed: new(chrome : 4,            firefox: 4, safari: 4),
         standard: new(chrome : 15, edge: 15, firefox: 4, safari: 7)
@@ -425,6 +428,11 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
     public static readonly CssProperty TableLayout = new ("table-layout", CssModule.Core2_1);
 
+    // Scrollbars
+    public static readonly CssProperty ScrollbarColor  = new("scrollbar-color", CssModule.Scrollbars1); // auto | <color>{2}
+    public static readonly CssProperty ScrollbarGutter = new("scrollbar-gutter");
+    public static readonly CssProperty ScrollbarWidth  = new("scrollbar-width", CssModule.Scrollbars1);
+
     // Stroke (SVG) ------------------------------------------------------------------------
     public static readonly CssProperty Stroke               = new("stroke");
     public static readonly CssProperty StrokeDashArray      = new("stroke-dasharray");
@@ -497,7 +505,7 @@ public sealed class CssProperty : IEquatable<CssProperty>
 
     public static readonly CssProperty ZIndex        = new("z-index", CssModule.Core1);            
 
-    public static readonly Dictionary<string, CssProperty> Map = new() {
+    public static readonly FrozenDictionary<string, CssProperty> Map = new Dictionary<string, CssProperty>() {
         // Animations
         { "animation",                  Animation },
         { "animation-delay",            AnimationDelay },
@@ -728,13 +736,18 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "rotate",               Rotate },
 
         // Ruby
-        { "ruby-align",    RubyAlign },
-        { "ruby-overhang", RubyOverhang },
-        { "ruby-position", RubyPosition },
-        { "ruby-span",     RubySpan },
+        { "ruby-align",           RubyAlign },
+        { "ruby-overhang",        RubyOverhang },
+        { "ruby-position",        RubyPosition },
+        { "ruby-span",            RubySpan },
 
         { "size",  Size },
         { "speak", Speak },
+
+        // Scrollbars
+        { "scrollbar-color",   ScrollbarColor },
+        { "scrollbar-gutter",  ScrollbarGutter },
+        { "scrollbar-width",   ScrollbarWidth },
 
         // Strokes
         { "stroke",                  Stroke },
@@ -794,5 +807,5 @@ public sealed class CssProperty : IEquatable<CssProperty>
         { "word-spacing",               WordSpacing },
         { "word-wrap",                  WordWrap },
         { "z-index",                    ZIndex }
-    };
+    }.ToFrozenDictionary();
 }

@@ -85,26 +85,23 @@ public sealed class CssModule(
 
     // https://www.w3.org/TR/css-masking-1/
     // https://caniuse.com/#feat=css-masks
-    public static readonly CssModule Masking_1 = new(CssModuleType.Masking, 1,
+    public static readonly CssModule Masking_1 = new(
+        type     : CssModuleType.Masking, 
+        level    : 1,
         prefixed : new CompatibilityTable(chrome: 4,   safari: 4),
         standard : new CompatibilityTable(chrome: 120, firefox: 53, safari: 15.4f)
     );
 
     #endregion
 
-    #region Ruby
-
-    public static CssModule Ruby(float level) => new(CssModuleType.Ruby, level);
-
+    // Ruby
     public static readonly CssModule Ruby3 = new(CssModuleType.Ruby, 3);
 
-    #endregion
+    // Scrollbars
+    public static readonly CssModule Scrollbars1 = new(CssModuleType.Scrollbars, 1);
 
-    #region Text
-
+    // Text
     public static readonly CssModule Text3 = new(CssModuleType.Text, 3);
-
-    #endregion
 
     #region Transforms
 
