@@ -13,8 +13,6 @@ public sealed class CssColor : CssValue
     private readonly Vector4 _value; // Vector4
     private readonly string? _text;
 
-    // Notation | Hex | Functional | ...
-
     public CssColor(string value)
         : base(NodeKind.Color)
     {
@@ -57,7 +55,7 @@ public sealed class CssColor : CssValue
         {
             if (_type is CssColorType.Hsl)
             {
-                return new Hsla(_value).ToSRgb();
+                return Unsafe.BitCast<Vector4, Hsla>(_value).ToSRgb();
             }
 
             return new SRgb(_value);
@@ -126,17 +124,16 @@ public sealed class CssColor : CssValue
                 splitter.TryGetNextF32(out w);
             }
 
-            return name switch
-            {
+            return name switch {
                 "rgb" or "rgba" => new CssColor(new SRgb(x / 255f, y / 255f, z / 255f, w)),
                 "hsl" or "hsla" => new CssColor(new Hsla(x, y, z, w)),
-                // "hwb":
-                // "lab":
-                // "lch":
-                // "oklab":
-                // "oklch":
-                //     throw new Exception("unsupported color type");
-                _ => throw new Exception($"unsupported color type {name}")
+                "hwb"   => new CssColor(CssColorType.Hwb, new(x, y, z, w)),
+                "lab"   => new CssColor(CssColorType.Lab,   new(x, y, z, w)),
+                "lch"   => new CssColor(CssColorType.Lch,   new(x, y, z, w)),
+                "oklab" => new CssColor(CssColorType.OkLab, new(x, y, z, w)),
+                "oklch" => new CssColor(CssColorType.OkLch, new(x, y, z, w)),
+
+                _ => throw new Exception($"unsupported color space. was {name}")
             };
         }
 
@@ -167,3 +164,5 @@ public sealed class CssColor : CssValue
 // hsla
 // #hex
 // named (purple, yellow, orange)
+
+// Notation | Hex | Functional
