@@ -184,7 +184,7 @@ public readonly struct LinearGradient(
 
 // https://medium.com/@patrickbrosset/do-you-really-understand-css-linear-gradients-631d9a895caf
 
-// if the angle is omited, defaults to bottom (180deg)
+// if the angle is omitted, defaults to bottom (180deg)
 
 // A linear gradient is defined by an axis—the gradient line—and two or more color-stop points. 
 

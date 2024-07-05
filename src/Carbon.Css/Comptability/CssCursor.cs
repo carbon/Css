@@ -1,4 +1,6 @@
-﻿namespace Carbon.Css;
+﻿using System.Collections.Frozen;
+
+namespace Carbon.Css;
 
 // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
 
@@ -14,7 +16,7 @@ public static class CssCursor
         standard: new(chrome: 37, edge: 12, firefox: 24, safari: 9)
     );
 
-    private static readonly Dictionary<string, CssCompatibility> s_table = new ()
+    private static readonly FrozenDictionary<string, CssCompatibility> s_table = new Dictionary<string, CssCompatibility>()
     {
         ["auto"]      = CssCompatibility.All,
         ["alias"]     = CssCompatibility.All,
@@ -45,7 +47,7 @@ public static class CssCursor
 
         ["zoom-in"]  = s_zoomCursor,
         ["zoom-out"] = s_zoomCursor
-    };
+    }.ToFrozenDictionary();
         
     public static bool NeedsPatch(string value, BrowserInfo browser)
     {

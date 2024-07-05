@@ -1177,7 +1177,7 @@ public sealed class CssWriter : IDisposable
             {
                 var prev = span;
 
-                span = new();
+                span = [];
 
                 foreach (var a in ancestor)
                 {

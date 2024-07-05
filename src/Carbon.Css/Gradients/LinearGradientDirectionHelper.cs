@@ -100,6 +100,6 @@ public static class LinearGradientDirectionHelper
         Top         => "top",
         TopLeft     => "top left",
         TopRight    => "top right",
-        _           => throw new Exception("Unexpected direction:" + value.ToString())
+        _           => throw new Exception($"Unexpected direction: {value}")
     };
 }

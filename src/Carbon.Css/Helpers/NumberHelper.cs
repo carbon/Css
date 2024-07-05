@@ -1,5 +1,4 @@
-﻿using System.Buffers;
-using System.Buffers.Text;
+﻿using System.Buffers.Text;
 using System.Globalization;
 
 namespace Carbon.Css.Helpers;
