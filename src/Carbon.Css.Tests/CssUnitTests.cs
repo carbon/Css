@@ -18,7 +18,7 @@ public class CssUnitTests
         Assert.Equal(CssUnitInfo.Dvh, CssUnitInfo.Get("dvh"));
         
 
-        // 511ms
+        // 511ms -> 466ms
         for (int i = 0; i < 1_000_000; i++)
         {
             CssUnitInfo.Get("px");

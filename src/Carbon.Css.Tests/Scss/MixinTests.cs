@@ -35,7 +35,8 @@ public class MixinTests
     [Fact]
     public void MixinTest15()
     {
-        var ss = StyleSheet.Parse("""
+        var ss = StyleSheet.Parse(
+            """
             $fontWeight: 500;
 
             @mixin serif($fontWeight: 300) {
@@ -63,16 +64,14 @@ public class MixinTests
                 }
                 """, ss.ToString());
         }
-
     }
-
 
     [Fact]
     public void ParseMixin30()
     {
         var ss = StyleSheet.Parse(
             """
-            // Mixins
+            // mix-ins
             @mixin dl-horizontal($dlSpacing : 7.5em, $dlGap : 0.625em) {
               dt {
                 text-align: left;

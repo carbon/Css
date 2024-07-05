@@ -1,5 +1,30 @@
 ﻿namespace Carbon.Css.Tests;
 
+
+public class IsTests
+{
+    [Fact]
+    public void A()
+    {
+        var css = StyleSheet.Parse(
+            """
+            :is(button, .custom-input) {
+              border-radius: 4px;
+              padding: 8px 12px; 
+            }
+            """);
+
+        Assert.Equal(
+            """
+            :is(button,
+            .custom-input) {
+              border-radius: 4px;
+              padding: 8px 12px;
+            }
+            """, css.ToString());
+    }
+}
+
 public class CalcTests
 {
     [Fact]
