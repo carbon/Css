@@ -3,10 +3,10 @@
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.71.0</Version>
+    <Version>0.73.0</Version>
     <WarningsAsErrors>true</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoWarn>IDE0057,IDE0090</NoWarn>
+    <NoWarn>IDE0057,IDE0090,IDE0130</NoWarn>
 
     <!-- Package Properties-->
     <Authors>iamcarbon</Authors>
