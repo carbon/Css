@@ -17,7 +17,7 @@ public sealed partial class CssParser : IDisposable
         ReadTrivia();
 
         // This may be another expression... 
-        // TODO: Make recurssive
+        // TODO: Make recursive
         var right = ReadComponent();
 
         return new BinaryExpression(left, operatorToken, right);

@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 
 namespace Carbon.Css.Parser;
@@ -481,9 +483,11 @@ public sealed partial class CssParser : IDisposable
             case CssTokenKind.Dollar                  : return ReadVariable();
             case CssTokenKind.Number                  : return ReadNumberOrMeasurement();
             case CssTokenKind.InterpolatedStringStart : return ReadInterpolatedString();
+            case CssTokenKind.Ampersand               : return ReadReference();
         }
 
-        CssToken value = Consume();  // read string|number
+
+        CssToken nameOrValue = Consume();  // read string|number
 
         // Function
         // A functional notation is a type of component value that can represent more complex types or invoke special processing.
@@ -494,7 +498,16 @@ public sealed partial class CssParser : IDisposable
 
         if (Current.Kind is CssTokenKind.LeftParenthesis)
         {
-            return ReadFunctionCall(value);
+            // :nth(1)
+            // :has(span, div)
+            if (nameOrValue.Text is [':', ..])
+            {
+                return ReadPseudoClassFunctionCall(nameOrValue);
+            }
+            else
+            {
+                return ReadFunctionCall(nameOrValue);
+            }
         }
 
         // ReadString (consider context)
@@ -504,8 +517,38 @@ public sealed partial class CssParser : IDisposable
         // :link
         // :not
 
-        return new CssString(value, trailing: ReadTrivia());
+        return new CssString(nameOrValue, trailing: ReadTrivia());
     }
+
+    public CssFunction ReadPseudoClassFunctionCall(CssToken name)
+    {
+        Consume();              // ! (
+
+        ReadTrivia();
+
+        var args = new List<CssValue>();
+
+        do
+        {
+            ReadTrivia();
+
+            var element = new CssSequence();
+
+            while (!(Current.Kind is CssTokenKind.RightParenthesis or CssTokenKind.Comma))
+            {
+                element.Add(ReadComponent());
+            }
+
+            args.Add(element.Count is 1 ? element[0] : element);
+        }
+        while (ConsumeIf(CssTokenKind.Comma));
+
+        Consume(CssTokenKind.RightParenthesis, LexicalMode.Function); // )
+
+        return new CssFunction(name.Text, new CssValueList(args, CssValueSeparator.Comma)) {
+            Trailing = ReadTrivia()
+        };
+    }   
 
     public CssFunction ReadFunctionCall(CssToken name)
     {
@@ -923,6 +966,14 @@ public sealed partial class CssParser : IDisposable
         return name;
     }
 
+    public CssReference ReadReference()
+    {
+        var ampersand = Consume();
+
+        return new CssReference(ampersand) { Trailing = ReadTrivia() };
+
+    }
+
     public CssSequence ReadValueSpan()
     {
         var list = new CssSequence();
@@ -934,22 +985,8 @@ public sealed partial class CssParser : IDisposable
                               or CssTokenKind.Semicolon
                               or CssTokenKind.Comma))
         {
-            if (Current.Kind is CssTokenKind.InterpolatedStringStart)
-            {
-                list.Add(ReadInterpolatedString());
-            }
-            else if (Current.Kind is CssTokenKind.Ampersand)
-            {
-                var ampersand = Consume();
 
-                list.Add(new CssReference(ampersand) { Trailing = ReadTrivia() });
-            }
-            else
-            {
-                var text = Consume(); 
-
-                list.Add(new CssString(text, trailing: ReadTrivia()));
-            }
+            list.Add(ReadComponent());
         }
 
         // throw new Exception(string.Join(Environment.NewLine, list));

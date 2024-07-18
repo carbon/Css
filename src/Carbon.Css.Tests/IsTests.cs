@@ -53,6 +53,7 @@ public class PseudoClassFunctionTests
     [InlineData(".irrelevant")]
     [InlineData(".notice.alert")]
     [InlineData(".notice.alert span")]
+    [InlineData(".notice.alert ~ p")]
     [InlineData(".irrelevant > span")]
     [InlineData(".irrelevant > [name=\"test\"] ~ turtles")]
     public void NotTests(string selector)
