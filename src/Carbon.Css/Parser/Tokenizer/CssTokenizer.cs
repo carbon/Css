@@ -37,6 +37,22 @@ public sealed class CssTokenizer : IDisposable
 
     public bool IsEnd => isEnd;
 
+    public bool TryPeek(out CssToken token)
+    {
+        if (reader.IsEof)
+        {
+            token = default;
+
+            return false;
+        }
+
+        token = ReadInternal();
+
+        _stack.Push(token);
+
+        return true;
+    }
+
     // Returns the current token and advances to the next
     public CssToken Consume()
     {
@@ -47,7 +63,11 @@ public sealed class CssTokenizer : IDisposable
 
         var c = current;
 
-        if (!reader.IsEof) Next();
+        if (!reader.IsEof)
+        {
+            Next();
+        }
+
         else isEnd = true;
 
         return c;
@@ -55,21 +75,23 @@ public sealed class CssTokenizer : IDisposable
 
     public CssToken Next()
     {
-        current = ReadNext();
+        if (_stack.Count > 0)
+        {
+            current = _stack.Pop();
+        }
+        else
+        {
+            current = ReadInternal();
+        }
 
         return current;
     }
 
-    private CssToken ReadNext()
+    private CssToken ReadInternal()
     {
         if (reader.IsEof)
         {
             throw new Exception($"Cannot read past EOF. Current: {current}.");
-        }
-
-        if (_stack.Count > 0)
-        {
-            return _stack.Pop();
         }
 
         if (char.IsWhiteSpace(reader.Current) || reader.Current is '\uFEFF')
@@ -115,6 +137,8 @@ public sealed class CssTokenizer : IDisposable
 
             case ',':
                 return new CssToken(CssTokenKind.Comma, reader.ReadSymbol(","), reader.Position);
+            case '~':
+                return new CssToken(CssTokenKind.Tilde, reader.ReadSymbol("~"), reader.Position);
             case ';':
                 LeaveValueMode();
                 return new CssToken(CssTokenKind.Semicolon, reader.ReadSymbol(";"), reader.Position);
@@ -245,18 +269,13 @@ public sealed class CssTokenizer : IDisposable
     {
         reader.Mark();
 
-        while (!char.IsWhiteSpace(reader.Current) &&
-            reader.Current != '{' &&
-            reader.Current != '}' &&
-            reader.Current != '(' &&
-            reader.Current != ')' &&
-            reader.Current != ';' &&
-            reader.Current != ':' &&
-            reader.Current != ',')
+        while (!char.IsWhiteSpace(reader.Current) && !(reader.Current is '{' or '}' or '(' or ')' or ';' or ':' or ',' or SourceReader.EofChar))
         {
-            if (reader.IsEof) break;
-
             if (reader.Current is '#' && reader.Peek() is '{')
+            {
+                break;
+            }
+            else if (reader.Current is '[' && reader.Position > reader.MarkStart)
             {
                 break;
             }

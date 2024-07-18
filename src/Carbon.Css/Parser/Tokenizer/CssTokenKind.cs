@@ -20,6 +20,7 @@ public enum CssTokenKind
     Semicolon,      // ;
     Colon,          // :
     Ampersand,      // &
+    Tilde,          // ~
 
     BlockStart,         // {
     BlockEnd,           // }
@@ -38,7 +39,7 @@ public enum CssTokenKind
     // Binary Operators ------------------------
 
     // Logical
-    And = 30, // && 
+    And = 30,    // && 
     Or  = 31,    // ||
 
     // Equality
