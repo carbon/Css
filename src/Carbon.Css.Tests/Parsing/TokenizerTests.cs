@@ -3,6 +3,18 @@
 public class TokenizerTests
 {
     [Fact]
+    public void CanPeek()
+    {
+        var tokenizer = new CssTokenizer("quick: fox");
+
+        Assert.True(tokenizer.TryPeek(out var token));
+        Assert.Equal(CssTokenKind.Colon, token.Kind);
+
+        Assert.Equal("quick", tokenizer.Current.Text);
+    }
+
+
+    [Fact]
     public void TokenizeAnd()
     {
         var tokens = GetTokens(
@@ -17,6 +29,25 @@ public class TokenizerTests
         Assert.Equal((CssTokenKind.LeftParenthesis,  "("),           tokens[2].AsTuple());
         Assert.Equal((CssTokenKind.Name,             "odd"),         tokens[3].AsTuple());
         Assert.Equal((CssTokenKind.RightParenthesis, ")"),           tokens[4].AsTuple());
+    }
+
+    [Fact]
+    public void TokenizeIs()
+    {
+        var tokens = GetTokens(
+            """
+            :is(section, nav) h1 {
+              font-size: 25px;
+            }
+            """);
+
+        Assert.Equal((CssTokenKind.Name, ":is"),           tokens[0].AsTuple());
+        Assert.Equal((CssTokenKind.LeftParenthesis, "("),  tokens[1].AsTuple());
+        Assert.Equal((CssTokenKind.Name, "section"),       tokens[2].AsTuple());
+        Assert.Equal((CssTokenKind.Comma, ","),            tokens[3].AsTuple());
+        Assert.Equal((CssTokenKind.Whitespace, " "),       tokens[4].AsTuple());
+        Assert.Equal((CssTokenKind.Name, "nav"),           tokens[5].AsTuple());
+        Assert.Equal((CssTokenKind.RightParenthesis, ")"), tokens[6].AsTuple());
     }
 
     [Fact]

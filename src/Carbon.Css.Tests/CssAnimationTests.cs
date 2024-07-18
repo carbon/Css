@@ -124,10 +124,10 @@ public class CssAnimationTests
 
             @keyframes planet {
               0%   {
-                transform: translate(0, 0px)rotate(0deg);
+                transform: translate(0, 0px) rotate(0deg);
               }
               100% {
-                transform: translate(0, 0px)rotate(-360deg);
+                transform: translate(0, 0px) rotate(-360deg);
               }
             }
             """);
