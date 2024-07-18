@@ -9,7 +9,7 @@ namespace Carbon.Css;
 
 public sealed class CssColor : CssValue
 {
-    private readonly CssColorType _type = default;
+    private readonly CssColorSpace _type = default;
     private readonly Vector4 _value; // Vector4
     private readonly string? _text;
 
@@ -25,24 +25,24 @@ public sealed class CssColor : CssValue
         var rgb = SRgb.FromRgba32(value);
 
         _value = Unsafe.As<SRgb, Vector4>(ref rgb);
-        _type = CssColorType.Rgb;
+        _type = CssColorSpace.Rgb;
     }
 
     public CssColor(Hsla value)
         : base(NodeKind.Color)
     {
         _value = Unsafe.As<Hsla, Vector4>(ref value);
-        _type = CssColorType.Hsl;
+        _type = CssColorSpace.Hsl;
     }
 
     public CssColor(SRgb value)
         : base(NodeKind.Color)
     {
-        _type = CssColorType.Rgb;
+        _type = CssColorSpace.Rgb;
         _value = Unsafe.As<SRgb, Vector4>(ref value);
     }
 
-    private CssColor(CssColorType type, Vector4 value)
+    private CssColor(CssColorSpace type, Vector4 value)
         : base(NodeKind.Color)
     {
         _type = type;
@@ -53,7 +53,7 @@ public sealed class CssColor : CssValue
     {
         get
         {
-            if (_type is CssColorType.Hsl)
+            if (_type is CssColorSpace.Hsl)
             {
                 return Unsafe.BitCast<Vector4, Hsla>(_value).ToSRgb();
             }
@@ -127,11 +127,11 @@ public sealed class CssColor : CssValue
             return name switch {
                 "rgb" or "rgba" => new CssColor(new SRgb(x / 255f, y / 255f, z / 255f, w)),
                 "hsl" or "hsla" => new CssColor(new Hsla(x, y, z, w)),
-                "hwb"   => new CssColor(CssColorType.Hwb, new(x, y, z, w)),
-                "lab"   => new CssColor(CssColorType.Lab,   new(x, y, z, w)),
-                "lch"   => new CssColor(CssColorType.Lch,   new(x, y, z, w)),
-                "oklab" => new CssColor(CssColorType.OkLab, new(x, y, z, w)),
-                "oklch" => new CssColor(CssColorType.OkLch, new(x, y, z, w)),
+                "hwb"   => new CssColor(CssColorSpace.Hwb, new(x, y, z, w)),
+                "lab"   => new CssColor(CssColorSpace.Lab,   new(x, y, z, w)),
+                "lch"   => new CssColor(CssColorSpace.Lch,   new(x, y, z, w)),
+                "oklab" => new CssColor(CssColorSpace.OkLab, new(x, y, z, w)),
+                "oklch" => new CssColor(CssColorSpace.OkLch, new(x, y, z, w)),
 
                 _ => throw new Exception($"unsupported color space. was {name}")
             };

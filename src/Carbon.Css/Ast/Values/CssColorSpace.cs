@@ -1,6 +1,6 @@
 ﻿namespace Carbon.Css;
 
-internal enum CssColorType : byte
+internal enum CssColorSpace : byte
 {
                       //             | Chrome | Safari | Firefox
     Rgb         = 1,  // rgb         | 
