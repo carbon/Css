@@ -8,8 +8,10 @@ namespace Carbon.Css;
 public static class CssFunctions
 {
     // http://lesscss.org/functions/#color-operations-saturate
+    
+    public delegate CssValue CssFunctionDelegate(params ReadOnlySpan<CssValue> args);
 
-    private static readonly Dictionary<string, Func<CssValue[], CssValue>> dic = new (10) {
+    private static readonly Dictionary<string, CssFunctionDelegate> _dic = new (10) {
         ["darken"]		= Darken,
         ["lighten"]		= Lighten,
         ["saturate"]	= Saturate,
@@ -28,25 +30,25 @@ public static class CssFunctions
     // hsla
     // hue
 
-    public static bool TryGet(string name, [NotNullWhen(true)] out Func<CssValue[], CssValue>? function)
+    public static bool TryGet(string name, [NotNullWhen(true)] out CssFunctionDelegate? function)
     {
-        return dic.TryGetValue(name, out function);
+        return _dic.TryGetValue(name, out function);
     }
 
     // if($condition, $if-true, $if-false)
-    public static CssValue If(CssValue[] args)
+    public static CssValue If(ReadOnlySpan<CssValue> args)
     {
         return ToBoolean(args[0]) ? args[1] : args[2];
     }
 
-    public static CssValue Unquote(CssValue[] args)
+    public static CssValue Unquote(ReadOnlySpan<CssValue> args)
     {
         string value = args[0].ToString()!;
 
         return new CssString(value.Trim('"'));
     }
 
-    public static CssValue Mix(CssValue[] args)
+    public static CssValue Mix(ReadOnlySpan<CssValue> args)
     {
         var color1 = GetColor(args[0]).ToRgba32();
         var color2 = GetColor(args[1]).ToRgba32();
@@ -56,7 +58,7 @@ public static class CssFunctions
         return new CssColor(color1.BlendWith(color2, (float)amount));
     }
 
-    public static CssValue Saturate(CssValue[] args)
+    public static CssValue Saturate(ReadOnlySpan<CssValue> args)
     {
         Hsla color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
@@ -64,7 +66,7 @@ public static class CssFunctions
         return new CssColor(color.AdjustSaturation((float)amount));
     }
 
-    public static CssValue Desaturate(CssValue[] args)
+    public static CssValue Desaturate(ReadOnlySpan<CssValue> args)
     {
         Hsla color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
@@ -72,7 +74,7 @@ public static class CssFunctions
         return new CssColor(color.AdjustSaturation(-(float)amount));
     }
 
-    public static CssValue Lighten(CssValue[] args)
+    public static CssValue Lighten(ReadOnlySpan<CssValue> args)
     {
         Hsla color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
@@ -80,7 +82,7 @@ public static class CssFunctions
         return new CssColor(color.AdjustLightness((float)amount));
     }
 
-    public static CssValue Darken(CssValue[] args)
+    public static CssValue Darken(ReadOnlySpan<CssValue> args)
     {
         var color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
@@ -88,7 +90,7 @@ public static class CssFunctions
         return new CssColor(color.AdjustLightness(-(float)amount));
     }
 
-    public static CssValue AdjustHue(CssValue[] args)
+    public static CssValue AdjustHue(ReadOnlySpan<CssValue> args)
     {
         Hsla color = GetColor(args[0]).ToHsla();
         var amount = GetAmount(args[1]);
@@ -96,7 +98,7 @@ public static class CssFunctions
         return new CssColor(color.RotateHue((float)amount * 360).ToRgba32());
     }
 
-    public static CssValue Rgba(CssValue[] args)
+    public static CssValue Rgba(ReadOnlySpan<CssValue> args)
     {
         if (args.Length is 2 && args[1] is CssUnitValue opacity)
         {
@@ -113,7 +115,7 @@ public static class CssFunctions
         }
         else
         {
-            return new CssFunction("rgba", new CssValueList(args));
+            return new CssFunction("rgba", new CssValueList([.. args]));
         }
     }
 
