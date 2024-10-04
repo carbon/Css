@@ -6,7 +6,7 @@
     <Version>0.73.0</Version>
     <WarningsAsErrors>true</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoWarn>IDE0057,IDE0090,IDE0130</NoWarn>
+    <NoWarn>$(NoWarn),IDE0057,IDE0090</NoWarn>
 
     <!-- Package Properties-->
     <Authors>iamcarbon</Authors>
