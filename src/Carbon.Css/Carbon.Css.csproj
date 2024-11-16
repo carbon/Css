@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Version>0.73.0</Version>
     <WarningsAsErrors>true</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
