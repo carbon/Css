@@ -7,7 +7,7 @@ public sealed class CssContext
     private BrowserInfo[]? browserSupport = null;
     private Dictionary<string, MixinNode>? _mixins;
 
-    public Dictionary<string, MixinNode> Mixins => _mixins ??= new();
+    public Dictionary<string, MixinNode> Mixins => _mixins ??= [];
     
     public BrowserInfo[]? BrowserSupport => browserSupport;
 

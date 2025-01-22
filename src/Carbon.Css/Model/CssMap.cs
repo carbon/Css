@@ -4,7 +4,7 @@ namespace Carbon.Css;
 
 public sealed class CssMap : CssValue, IEnumerable<KeyValuePair<string, CssValue>>
 {
-    private readonly Dictionary<string, CssValue> _map = new();
+    private readonly Dictionary<string, CssValue> _map = [];
 
     public CssMap()
         : base(NodeKind.Map) { }
