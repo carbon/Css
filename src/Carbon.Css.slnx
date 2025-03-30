@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="Carbon.Css.Tests/Carbon.Css.Tests.csproj" />
+  <Project Path="Carbon.Css/Carbon.Css.csproj" />
+</Solution>
