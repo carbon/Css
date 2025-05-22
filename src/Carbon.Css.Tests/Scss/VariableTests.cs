@@ -15,7 +15,7 @@ public class VariableTests
         Assert.Equal(
             """
             div {
-              color: rgba(255, 0, 0, 0.5);
+              color: #ff000080;
             }
             """, css.ToString());
     }

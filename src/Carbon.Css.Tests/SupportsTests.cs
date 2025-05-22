@@ -23,7 +23,7 @@ public class SupportRuleTests
               .video-controls__progress {
                 height: 4px;
                 bottom: 1.9vw;
-                background: rgba(255, 255, 255, 0.4);
+                background: #ffffff66;
               }
             }
             """, sheet.ToString());
