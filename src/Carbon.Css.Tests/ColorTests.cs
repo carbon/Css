@@ -79,7 +79,7 @@ public class ColorTests
         Assert.Equal(
             """
             body {
-              background-color: rgba(255, 255, 255, 0.5);
+              background-color: #ffffff80;
             }
             """, value.ToString());
     }
@@ -92,7 +92,21 @@ public class ColorTests
         Assert.Equal(
             """
             div {
-              color: rgba(116, 130, 151, 0.31);
+              color: #7482974f;
+            }
+            """, sheet.ToString());
+    }
+
+
+    [Fact]
+    public void Hsl1()
+    {
+        var sheet = StyleSheet.Parse("div { color: hsl(11, 100%, 50%); }");
+
+        Assert.Equal(
+            """
+            div {
+              color: hsl(11, 100%, 50%);
             }
             """, sheet.ToString());
     }
@@ -103,10 +117,10 @@ public class ColorTests
         var s1 = StyleSheet.Parse("div { color: rgba(#748297, 30%); }");
         var s2 = StyleSheet.Parse("div { color: rgba(#748297, 0.3); }");
 
-        var expected = 
+        var expected =
             """
             div {
-              color: rgba(116, 130, 151, 0.3);
+              color: #7482974c;
             }
             """;
 
@@ -135,7 +149,7 @@ public class ColorTests
         Assert.Equal(
             """
             div {
-              color: rgba(2, 3, 4, 0.3);
+              color: #0203044c;
             }
             """, s1.ToString());
     }

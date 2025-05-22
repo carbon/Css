@@ -13,7 +13,7 @@ public class CssColorTests
     {
         var color = CssColor.Parse(text);
 
-        Assert.Equal(expected, color.ToString());
+        Assert.Equal(expected, color.Value.ToRgba32().ToHexString());
     }
   
     [Fact]

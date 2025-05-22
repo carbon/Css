@@ -532,13 +532,13 @@ carbon-waveform {
   bottom: 0px;
 }
 carbon-player.audio .control {
-  background: rgba(32, 185, 235, 0.8);
+  background: #20b9ebcc;
 }
 carbon-player.audio .control:hover {
   background: #20b9eb;
 }
 carbon-player.audio.loading .control:hover {
-  background: rgba(32, 185, 235, 0.8);
+  background: #20b9ebcc;
 }
 carbon-waveform > .bar.fill {
   background: #20b9eb;
@@ -617,7 +617,7 @@ a {
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 a:hover {
-  border-bottom-color: rgba(0, 0, 0, 0.1);
+  border-bottom-color: #0000001a;
 }
 a:hover,
 a:hover b,
@@ -686,7 +686,7 @@ textarea:focus {
 input:focus,
 textarea:focus,
 .field.focused input {
-  border-bottom: 1px solid rgba(32, 185, 235, 0.5) !important;
+  border-bottom: 1px solid #20b9eb80 !important;
 }
 textarea {
   resize: none;
@@ -706,8 +706,8 @@ button {
   -webkit-transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
   transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
   cursor: pointer;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(32, 185, 235, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(32, 185, 235, 0.3);
+  -webkit-box-shadow: inset 0 0 0 1px #20b9eb4c;
+  box-shadow: inset 0 0 0 1px #20b9eb4c;
   -webkit-font-smoothing: antialiased;
 }
 button:focus {
@@ -859,8 +859,8 @@ a.back:hover:after {
 }
 a.back:hover {
   color: #20b9eb !important;
-  -webkit-box-shadow: 0 0 0 1px rgba(32, 185, 235, 0.5) !important;
-  box-shadow: 0 0 0 1px rgba(32, 185, 235, 0.5) !important;
+  -webkit-box-shadow: 0 0 0 1px #20b9eb80 !important;
+  box-shadow: 0 0 0 1px #20b9eb80 !important;
 }
 
 /* parts/nav.scss */
@@ -869,8 +869,8 @@ nav {
   margin: 0 -5px;
 }
 nav > ul > li > a:hover {
-  -webkit-box-shadow: 0 0 0 1px rgba(32, 185, 235, 0.5) !important;
-  box-shadow: 0 0 0 1px rgba(32, 185, 235, 0.5) !important;
+  -webkit-box-shadow: 0 0 0 1px #20b9eb80 !important;
+  box-shadow: 0 0 0 1px #20b9eb80 !important;
 }
 nav > ul > li > a {
   display: inline-block;
@@ -1590,7 +1590,7 @@ a.etsy:hover {
   color: inherit !important;
   -webkit-transition: background-color 0.4s ease-in-out;
   transition: background-color 0.4s ease-in-out;
-  background-color: rgba(32, 185, 235, 0.05);
+  background-color: #20b9eb0d;
 }
 #projects .item .innerWrapper {
   max-width: 1060px;
@@ -1633,7 +1633,7 @@ a.etsy:hover {
   height: 8px;
   margin: 0 4px 0 0;
   border-radius: 40px;
-  background-color: rgba(51, 51, 51, 0.1);
+  background-color: #3333331a;
 }
 #projects .item .dots {
   position: absolute;
@@ -1690,8 +1690,8 @@ a.etsy:hover {
   line-height: 47px;
   font-size: 14px;
   color: #20b9eb;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(32, 185, 235, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(32, 185, 235, 0.3);
+  -webkit-box-shadow: inset 0 0 0 1px #20b9eb4c;
+  box-shadow: inset 0 0 0 1px #20b9eb4c;
   text-transform: uppercase;
   background-color: transparent;
   -webkit-transition: all 0.4s ease-in-out;
@@ -1856,7 +1856,7 @@ section.project > .pieces {
 .projectDetails > .description .lineTitle {
   display: block;
   margin-right: 10px;
-  color: rgba(51, 51, 51, 0.5);
+  color: #33333380;
 }
 .projectDetails > .description span.lines {
   display: block;
