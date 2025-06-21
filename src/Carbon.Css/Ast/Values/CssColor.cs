@@ -10,7 +10,7 @@ namespace Carbon.Css;
 public sealed class CssColor : CssValue
 {
     private readonly CssColorSpace _type = default;
-    private readonly Vector4 _value; // Vector4
+    private readonly Vector4 _value;
     private readonly string? _text;
 
     public CssColor(string value)
@@ -72,15 +72,8 @@ public sealed class CssColor : CssValue
         if (_text != null) return _text;
 
         if (_type == default) return null!;
-
-        var rgba32 = Value.ToRgba32();
-
-        if (rgba32.IsOpaque)
-        {
-            return rgba32.ToString();
-        }
-
-        return rgba32.ToString();
+  
+        return Value.ToRgba32().ToHexString();
     }
 
     public static CssColor FromRgb(byte r, byte g, byte b, float alpha = 1)
