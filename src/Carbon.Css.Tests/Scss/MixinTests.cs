@@ -192,7 +192,7 @@ public class MixinTests
             .happy dd {
               padding-left: 8.125em;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]

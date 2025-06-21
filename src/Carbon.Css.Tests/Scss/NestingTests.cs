@@ -84,7 +84,7 @@ public class NestingTests
             span .hide {
               display: none;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]

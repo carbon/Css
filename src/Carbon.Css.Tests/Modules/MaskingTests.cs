@@ -20,6 +20,6 @@ public class MaskingTests
               -webkit-mask-image: url('mask.svg');
               mask-image: url('mask.svg');
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

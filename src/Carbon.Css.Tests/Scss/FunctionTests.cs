@@ -14,7 +14,6 @@ public class FunctionTests
             div { color: lighten($red, 0.2); }
             """);
 
-
         Assert.Equal(
             """
             div {
@@ -23,7 +22,7 @@ public class FunctionTests
             div {
               color: #f66;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -49,7 +48,7 @@ public class FunctionTests
               color: #c00;
               color: #f66;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -85,7 +84,7 @@ public class FunctionTests
               color: #a11721;
               color: #ccc;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -121,7 +120,7 @@ public class FunctionTests
               -webkit-font-smoothing: antialiased;
               z-index: 2;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -228,6 +227,6 @@ public class FunctionTests
         .block .description {
           padding: 5px 250px 20px 225px;
         }
-        """, ss.ToString());
+        """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 }

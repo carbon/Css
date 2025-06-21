@@ -71,7 +71,7 @@ public class ScssTests
               -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
               transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]

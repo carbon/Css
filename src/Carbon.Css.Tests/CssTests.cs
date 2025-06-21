@@ -282,7 +282,7 @@ public class CssTests
                 margin: 0 auto;
               }
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -354,7 +354,7 @@ public class CssTests
             hi {
               hello: test;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -412,7 +412,7 @@ public class CssTests
               margin: 0.5in;
               width: calc(100% / 3 - 2 * 1em - 2 * 1px);
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -432,7 +432,7 @@ public class CssTests
             .someClass {
               font-size: 1.2rem;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -498,7 +498,7 @@ public class CssTests
               font-weight: normal;
               font-style: normal;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
 
         // Test 2
         StyleSheet.Parse(

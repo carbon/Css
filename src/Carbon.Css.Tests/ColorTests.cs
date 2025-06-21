@@ -12,7 +12,7 @@ public class ColorTests
             div {
               color: rgba(100, 100, 100, 0.5);
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class ColorTests
 
         var sheet = StyleSheet.Parse(text);
 
-        Assert.Equal(text, sheet.ToString());
+        Assert.Equal(text, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class ColorTests
             div {
               color: rgb(255, 255, 255, 0.5);
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class ColorTests
             div {
               color: rgb(255 255 255 / 50%);
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class ColorTests
             body {
               background-color: #ffffff80;
             }
-            """, value.ToString());
+            """, value.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -94,9 +94,8 @@ public class ColorTests
             div {
               color: #7482974f;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
-
 
     [Fact]
     public void Hsl1()
@@ -108,7 +107,7 @@ public class ColorTests
             div {
               color: hsl(11, 100%, 50%);
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -138,7 +137,7 @@ public class ColorTests
             div {
               background: linear-gradient(0deg, rgb(29 30 40 / 0%) 0%, red 94%);
             }
-            """, s1.ToString());
+            """, s1.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -151,7 +150,7 @@ public class ColorTests
             div {
               color: #0203044c;
             }
-            """, s1.ToString());
+            """, s1.ToString(), ignoreLineEndingDifferences: true);
     }
 }
 

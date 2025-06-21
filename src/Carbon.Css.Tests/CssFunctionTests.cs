@@ -17,7 +17,7 @@ public class CssFunctionTests
             div {
               padding: calc((100% - 600px) / 2);
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -30,6 +30,6 @@ public class CssFunctionTests
             div {
               background-color: rgba(42, 45, 53, 0.7);
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

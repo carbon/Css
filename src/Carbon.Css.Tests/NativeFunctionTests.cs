@@ -33,6 +33,6 @@ public class NativeFunctionTests
             div {
               {{expected ?? declaration}};
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 }

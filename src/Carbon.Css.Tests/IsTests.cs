@@ -25,7 +25,7 @@ public class PseudoClassFunctionTests
             body:has(mymind-lightbox > .intro-video) mymind-lightbox-close-bar {
               display: none !important;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class PseudoClassFunctionTests
             body:has(mymind-lightbox-close-bar:hover) mymind-backdrop {
               opacity: 0.8 !important;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Theory]
@@ -70,9 +70,8 @@ public class PseudoClassFunctionTests
             p:not({{selector}}) {
               font-weight: bold;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
-
    
     [Fact]
     public void WhereTests()
@@ -90,7 +89,7 @@ public class PseudoClassFunctionTests
             :where(ol, ul, menu:unsupported) :where(ol, ul) {
               color: green;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -110,7 +109,7 @@ public class PseudoClassFunctionTests
               border-radius: 4px;
               padding: 8px 12px;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -132,20 +131,20 @@ public class PseudoClassFunctionTests
               border-radius: 4px;
               padding: 8px 12px;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void B()
     {
-        var sheet = StyleSheet.Parse(
+        var css = StyleSheet.Parse(
             """
             :is(section, article, aside, nav) h1 {
               font-size: 25px;
             }
             """, new CssContext());
 
-        var rule = (StyleRule)sheet.Children[0];
+        var rule = (StyleRule)css.Children[0];
 
         Assert.Single(rule.Selector);
 
@@ -163,6 +162,6 @@ public class PseudoClassFunctionTests
             :is(section, article, aside, nav) h1 {
               font-size: 25px;
             }
-            """, sheet.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 }
