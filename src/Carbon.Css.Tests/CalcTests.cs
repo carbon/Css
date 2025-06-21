@@ -17,7 +17,7 @@ public class CalcTests
             div {
               width: calc(100vw - 380px - var(--cover-block-padding) * 2);
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class CalcTests
             div {
               width: calc(100vw - 380px - 50px * 2);
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class CalcTests
             div {
               width: calc(380px - var(--containerWidth) * 2);
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class CalcTests
             div {
               width: calc(380px - 50px);
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public class CalcTests
             div {
               width: 150px;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -102,7 +102,7 @@ public class CalcTests
             div {
               width: 100px;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -119,6 +119,6 @@ public class CalcTests
             div {
               width: calc(100px);
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 }

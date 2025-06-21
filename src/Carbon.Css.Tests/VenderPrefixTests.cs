@@ -17,7 +17,7 @@ public class VendorPrefixTests
               -webkit-transition: -webkit-transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
               transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class VendorPrefixTests
             a {
               transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class VendorPrefixTests
             a {
               transition: transform 0.04s linear, opacity 0.04s linear, visibility 0.04s linear;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class VendorPrefixTests
                 opacity: 0.25;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public class VendorPrefixTests
               cursor: default;
               z-index: 100;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -186,7 +186,7 @@ public class VendorPrefixTests
             #networkLinks .block .controls {
               padding: 5px 0 10px 210px;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -208,7 +208,7 @@ public class VendorPrefixTests
               -webkit-transform: rotate(90);
               transform: rotate(90);
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
 
@@ -230,7 +230,7 @@ public class VendorPrefixTests
               -webkit-backdrop-filter: blur(10px);
               backdrop-filter: blur(10px);
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -251,7 +251,7 @@ public class VendorPrefixTests
               -webkit-backface-visibility: hidden;
               backface-visibility: hidden;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
 
     }
 }

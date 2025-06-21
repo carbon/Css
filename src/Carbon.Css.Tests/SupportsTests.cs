@@ -16,7 +16,6 @@ public class SupportRuleTests
             }
             """);
 
-
         Assert.Equal(
             """
             @supports (-moz-appearance: none) {
@@ -26,6 +25,6 @@ public class SupportRuleTests
                 background: #ffffff66;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

@@ -17,7 +17,7 @@ public class VariableTests
             div {
               color: #ff000080;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class VariableTests
               background-color: #dceef7;
               color: #fff5cc;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -129,7 +129,7 @@ public class VariableTests
             body {
               background-color: red;
             }
-            """, sheet.ToString(dic));
+            """, sheet.ToString(dic), ignoreLineEndingDifferences: true);
 
         sheet = StyleSheet.Parse(
             """
@@ -156,7 +156,7 @@ public class VariableTests
             body {
               background-color: red;
             }
-            """, sheet.ToString(dic));
+            """, sheet.ToString(dic), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -188,7 +188,7 @@ public class VariableTests
               monster: purple;
               padding: 10px 20px 10px 10px;
             }
-            """, sheet.ToString(dic));
+            """, sheet.ToString(dic), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -216,6 +216,6 @@ public class VariableTests
             .editBlock.populated button.save {
               background: #dceef7;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 }

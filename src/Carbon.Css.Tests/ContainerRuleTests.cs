@@ -21,7 +21,7 @@ public class ContainerRuleTests
                 background: red;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class ContainerRuleTests
                 font-size: max(1.5em, 1.23em + 2cqi);
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -68,6 +68,6 @@ public class ContainerRuleTests
                 font-size: 15px;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

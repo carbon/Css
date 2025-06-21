@@ -67,7 +67,7 @@ public class OperatorTests
             div {
               font: italic small-caps normal 13px / 150% Arial, Helvetica, sans-serif;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class OperatorTests
               color: #808080;
               background-color: #808080;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class OperatorTests
             div {
               background-color: orange;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public class OperatorTests
             div {
               background-color: #ffffff;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -178,7 +178,7 @@ public class OperatorTests
             div {
               background-color: purple;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -191,7 +191,7 @@ public class OperatorTests
             div {
               color: purple;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -204,7 +204,7 @@ public class OperatorTests
             div {
               color: green;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -229,6 +229,6 @@ public class OperatorTests
             div {
               background-color: orange;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

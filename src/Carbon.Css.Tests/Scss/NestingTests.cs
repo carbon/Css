@@ -12,7 +12,7 @@ public class NestingTests
             div.hide {
               display: none;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class NestingTests
             #networkLinks .block .edit {
               opacity: 0;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class NestingTests
             div textarea {
               display: block;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class NestingTests
             div.hidden {
               display: none;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public class NestingTests
             body .hide {
               display: none;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public class NestingTests
             .details .description ol {
               font-size: 1.2em;
             }
-            """, css.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -198,7 +198,7 @@ public class NestingTests
               padding: 6px 12px;
               text-decoration: none;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
 
@@ -267,7 +267,7 @@ public class NestingTests
             #header .inner {
               display: table;
             }
-            """, StyleSheet.Parse(text).ToString());
+            """, StyleSheet.Parse(text).ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -311,6 +311,6 @@ public class NestingTests
               display: table-cell;
               vertical-align: middle;
             }
-            """, stylesheet.ToString());
+            """, stylesheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

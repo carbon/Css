@@ -26,7 +26,7 @@ public class ForRuleTests
             div {
               width: 4px;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public class ForRuleTests
             div {
               width: 5px;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -84,7 +84,7 @@ public class ForRuleTests
             .col-5 {
               width: 5px;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -126,6 +126,6 @@ public class ForRuleTests
               left: 100%;
               margin: 5px;
             }
-            """, sheet.ToString(dic));
+            """, sheet.ToString(dic), ignoreLineEndingDifferences: true);
     }
 }

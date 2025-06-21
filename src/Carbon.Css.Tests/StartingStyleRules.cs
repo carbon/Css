@@ -23,7 +23,7 @@ public class StartingStyleRules
                 background-color: transparent;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class StartingStyleRules
               color: red;
               background-color: transparent;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -73,6 +73,6 @@ public class StartingStyleRules
                 background-color: transparent;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

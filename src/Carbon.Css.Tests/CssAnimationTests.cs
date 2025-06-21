@@ -43,7 +43,7 @@ public class CssAnimationTests
                 box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2);
               }
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -112,7 +112,7 @@ public class CssAnimationTests
                 box-shadow: inset 0 0 0 3px rgba(248, 202, 92, 1), 0 0 0 3px rgba(248, 202, 92, 0.2);
               }
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public class CssAnimationTests
                     transform: translate(0, 0px) rotate(-360deg);
                   }
                 }
-                """, sheet.ToString());
+                """, sheet.ToString(), ignoreLineEndingDifferences: true);
         }
     }
 
@@ -199,6 +199,6 @@ public class CssAnimationTests
                 opacity: 0.6;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

@@ -25,7 +25,7 @@ public class EachTests
             .icon-80px {
               font-size: 80px;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
         
     [Fact]
@@ -57,7 +57,7 @@ public class EachTests
             .font-bold {
               font-weight: 700;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
     
 }

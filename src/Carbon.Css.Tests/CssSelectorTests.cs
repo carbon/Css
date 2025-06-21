@@ -46,7 +46,7 @@ public class CssSelectorTests
             div > h1 {
               width: 100px;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]

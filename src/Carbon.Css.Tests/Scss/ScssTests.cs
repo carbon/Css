@@ -52,7 +52,7 @@ public class ScssTests
               time: 10s;
               undefined: /* $undefined undefined */;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -256,7 +256,7 @@ public class ScssTests
               -webkit-transition: -webkit-transform 0.2s ease-in-out, opacity 0.4s ease-in-out;
               transition: transform 0.2s ease-in-out, opacity 0.4s ease-in-out;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -303,7 +303,6 @@ public class ScssTests
             nav i b {
               color: red;
             }
-            """, sheet.ToString());
-
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

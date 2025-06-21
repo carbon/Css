@@ -23,7 +23,7 @@ public class MediaTests
                 width: 100px;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class MediaTests
                 width: 100px;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -137,7 +137,7 @@ public class MediaTests
                 width: 50px;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact(Skip = "Not implemented yet")]
@@ -164,7 +164,7 @@ public class MediaTests
                 width: 50px;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -254,6 +254,6 @@ public class MediaTests
                 color: red;
               }
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

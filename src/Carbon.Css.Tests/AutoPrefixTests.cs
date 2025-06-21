@@ -20,7 +20,7 @@ public class AutoPrefixTests
               -webkit-mask-image: url('image.svg');
               mask-image: url('image.svg');
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class AutoPrefixTests
               cursor: -webkit-zoom-out;
               cursor: zoom-out;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -58,6 +58,6 @@ public class AutoPrefixTests
               cursor: -webkit-grab;
               cursor: grab;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

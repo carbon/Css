@@ -29,7 +29,7 @@ public class MixinTests
               text-rendering: optimizeLegibility;
               margin: 0 0 1rem 0;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class MixinTests
                   text-rendering: optimizeLegibility;
                   margin: 0 0 1rem 0;
                 }
-                """, ss.ToString());
+                """, ss.ToString(), ignoreLineEndingDifferences: true);
         }
     }
 
@@ -114,7 +114,7 @@ public class MixinTests
             .left .exhibitions dl dd {
               padding-left: 3.75em;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -158,7 +158,7 @@ public class MixinTests
             .happy li {
               padding-bottom: 1em;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -231,7 +231,7 @@ public class MixinTests
             .happy li {
               padding-bottom: 1em;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -259,7 +259,7 @@ public class MixinTests
               float: left;
               apples: bananas;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -299,6 +299,6 @@ public class MixinTests
               border-radius: 50px;
               -webkit-border-radius: 50px;
             }
-            """, ss.ToString());
+            """, ss.ToString(), ignoreLineEndingDifferences: true);
     }
 }
