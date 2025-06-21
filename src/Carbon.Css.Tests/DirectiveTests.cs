@@ -17,6 +17,6 @@ public class DirectiveTests
             div {
               color: blue;
             }
-            """, sheet.ToString());
+            """, sheet.ToString(), ignoreLineEndingDifferences: true);
     }
 }

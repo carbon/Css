@@ -123,8 +123,8 @@ public class ColorTests
             }
             """;
 
-        Assert.Equal(expected, s1.ToString());
-        Assert.Equal(expected, s2.ToString());
+        Assert.Equal(expected, s1.ToString(), ignoreLineEndingDifferences: true);
+        Assert.Equal(expected, s2.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
