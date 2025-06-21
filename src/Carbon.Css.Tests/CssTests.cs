@@ -21,7 +21,7 @@ public class CssTests
 
         writer.Flush();
 
-        Assert.Equal(27, output.Length);
+        Assert.Equal(23 + (Environment.NewLine.Length * 2), output.Length);
     }
 
     [Fact]
@@ -325,8 +325,7 @@ public class CssTests
               -webkit-transition: width 1s;
               transition: width 1s;
             }
-            """,
-            actual: sheet.ToString()
+            """.ReplaceLineEndings(Environment.NewLine), sheet.ToString()
         );
     }
 
@@ -587,21 +586,21 @@ public class CssTests
             :focus {
               outline: 0;
             }
-            """, StyleSheet.Parse(":focus { outline:0; }").ToString());
+            """.ReplaceLineEndings(Environment.NewLine), StyleSheet.Parse(":focus { outline:0; }").ToString());
 
         Assert.Equal(
             """
             .projects li:first-child {
               background-color: orange;
             }
-            """, StyleSheet.Parse(".projects li:first-child { background-color: orange; }").ToString(), ignoreLineEndingDifferences: true);
+            """.ReplaceLineEndings(Environment.NewLine), StyleSheet.Parse(".projects li:first-child { background-color: orange; }").ToString(), ignoreLineEndingDifferences: true);
 
         Assert.Equal(
             """
             .projects li:first-child a {
               background-color: orange;
             }
-            """, StyleSheet.Parse(".projects li:first-child a { background-color: orange; }").ToString(), ignoreLineEndingDifferences: true);
+            """.ReplaceLineEndings(Environment.NewLine), StyleSheet.Parse(".projects li:first-child a { background-color: orange; }").ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]

@@ -42,7 +42,6 @@ public class CssColorTests
     }
 }
 
-
 // color(rec2020 0.42053 0.979780 0.00579)
 
 // color(display-p3 34% 58% 73%)
