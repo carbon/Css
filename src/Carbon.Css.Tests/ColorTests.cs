@@ -23,11 +23,11 @@ public class ColorTests
             div {
               background-color: rgba(32, 185, 235, 0.05);
             }
-            """;
+            """.ReplaceLineEndings(Environment.NewLine);
 
         var sheet = StyleSheet.Parse(text);
 
-        Assert.Equal(text, sheet.ToString(), ignoreLineEndingDifferences: true);
+        Assert.Equal(text, sheet.ToString());
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class ColorTests
             div {
               color: color-mix(in lch, purple 50%, plum 50%);
             }
-            """, sheet.ToString(), ignoreWhiteSpaceDifferences: true);
+            """.ReplaceLineEndings(Environment.NewLine), sheet.ToString());
     }
 
     [Fact]

@@ -23,6 +23,6 @@ public class WriterTests
             #piece_1 {
               max-width: 960px;
             }
-            """, sb.ToString());
+            """.ReplaceLineEndings(Environment.NewLine), sb.ToString());
     }
 }

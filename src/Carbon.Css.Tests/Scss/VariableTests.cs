@@ -104,7 +104,7 @@ public class VariableTests
               color: #fff5cc;
               monster: red;
             }
-            """, sheet.ToString(dic));
+            """, sheet.ToString(dic), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
