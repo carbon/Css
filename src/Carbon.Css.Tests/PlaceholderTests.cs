@@ -5,7 +5,7 @@ public class PlaceholderTests
     [Fact]
     public void InsideMediaBlock()
     {
-        var ss = StyleSheet.Parse(
+        var css = StyleSheet.Parse(
             """
             @media only screen and (max-width: 770px) {
               ::-webkit-input-placeholder { color: rgba(0,0,0,.2); -webkit-font-smoothing: antialiased; }
@@ -24,13 +24,13 @@ public class PlaceholderTests
                 color: red;
               }
             }
-            """, ss.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void PlaceholderTests1()
     {
-        var ss = StyleSheet.Parse(
+        var css = StyleSheet.Parse(
             """
             //= support Safari >= 5
             .block ::-webkit-input-placeholder { color: #cfcece ; font-weight: 400; }
@@ -57,13 +57,13 @@ public class PlaceholderTests
               color: #cfcece;
               font-weight: 400;
             }
-            """, ss.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void PlaceholderTest2()
     {
-        var ss = StyleSheet.Parse(
+        var css = StyleSheet.Parse(
             """
             //= support Safari >= 5
             .block ::placeholder { color: #cfcece ; font-weight: 400; }
@@ -75,6 +75,6 @@ public class PlaceholderTests
               color: #cfcece;
               font-weight: 400;
             }
-            """, ss.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 }

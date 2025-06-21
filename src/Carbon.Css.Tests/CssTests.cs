@@ -309,8 +309,6 @@ public class CssTests
         Assert.Equal(LexicalMode.Selector, mode.Current);
     }
 
-   
-
     [Fact]
     public void Transitions()
     {
@@ -320,13 +318,6 @@ public class CssTests
             //= support Chrome >= 1
             div { transition: width 1s }
             """);
-
-        /*
-        Assert.Equal(
-            expected: "div { transition: width: 5px; }", 
-            actual: sheet.ToString()
-        );
-        */
 
         Assert.Equal(
             """
@@ -604,14 +595,14 @@ public class CssTests
             .projects li:first-child {
               background-color: orange;
             }
-            """, StyleSheet.Parse(".projects li:first-child { background-color: orange; }").ToString());
+            """, StyleSheet.Parse(".projects li:first-child { background-color: orange; }").ToString(), ignoreLineEndingDifferences: true);
 
         Assert.Equal(
             """
             .projects li:first-child a {
               background-color: orange;
             }
-            """, StyleSheet.Parse(".projects li:first-child a { background-color: orange; }").ToString());
+            """, StyleSheet.Parse(".projects li:first-child a { background-color: orange; }").ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]

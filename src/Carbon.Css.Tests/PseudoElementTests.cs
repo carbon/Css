@@ -5,7 +5,7 @@ public class PseudoElementTests
     [Fact]
     public void A()
     {
-        var ss = StyleSheet.Parse(
+        var css = StyleSheet.Parse(
             """
             //= support Safari >= 5
             .block ::-webkit-input-placeholder { color: #cfcece ; font-weight: 400; }
@@ -32,13 +32,13 @@ public class PseudoElementTests
               color: #cfcece;
               font-weight: 400;
             }
-            """, ss.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void B()
     {
-        var ss = StyleSheet.Parse(
+        var css = StyleSheet.Parse(
             """        
             .block::after { content: '' }
             """);
@@ -48,6 +48,6 @@ public class PseudoElementTests
             .block::after {
               content: '';
             }
-            """, ss.ToString());
+            """, css.ToString(), ignoreLineEndingDifferences: true);
     }
 }

@@ -235,6 +235,6 @@ public class TokenizerTests
               margin: 0.5in;
               width: calc(100% / 3 - 2 * 1em - 2 * 1px);
             }
-            """, StyleSheet.Parse(styles).ToString());
+            """, StyleSheet.Parse(styles).ToString(), ignoreLineEndingDifferences: true);
     }
 }
