@@ -15,7 +15,7 @@ internal sealed class SelectorList : List<Selector>
 
     public override string ToString()
     {
-        var sb = new ValueStringBuilder();
+        var sb = new ValueStringBuilder(128);
 
         for (int i = 0; i < Count; i++)
         {

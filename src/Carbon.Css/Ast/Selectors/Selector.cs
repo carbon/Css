@@ -61,7 +61,7 @@ public class Selector : CssNode
         if (Arguments != null)
         {
             sb.Append('(');
-            sb.Append(Arguments.ToString());
+            Arguments.WriteTo(ref sb);
             sb.Append(')');
         }
 

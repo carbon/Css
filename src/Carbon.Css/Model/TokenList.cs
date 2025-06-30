@@ -26,7 +26,7 @@ public sealed class TokenList : List<CssToken>
         }
     }
 
-    private void WriteTo(ref ValueStringBuilder writer)
+    private void WriteTo(scoped ref ValueStringBuilder writer)
     {
         var span = CollectionsMarshal.AsSpan(this);
 

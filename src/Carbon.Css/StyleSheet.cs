@@ -201,17 +201,16 @@ public sealed class StyleSheet : CssRoot, IStylesheet
                 catch (SyntaxException ex)
                 {
                     AddChild(new StyleRule("body, html") {
-                           new CssDeclaration("background-color", "red", "important")
-                        });
+                        new CssDeclaration("background-color", "red", "important")
+                    });
 
                     AddChild(new StyleRule("body *") {
-                            { "display", "none" }
-                        });
+                        { "display", "none" }
+                    });
 
                     AddChild(new CssComment($" --- Syntax error reading '{absolutePath}' : {ex.Message} --- "));
 
-
-                    if (ex.Lines is {  Count: > 0})
+                    if (ex.Lines is { Count: > 0})
                     {
                         var sb = new ValueStringBuilder(512);
 

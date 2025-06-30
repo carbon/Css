@@ -64,9 +64,7 @@ public sealed class CssDeclaration : CssNode
         var sb = new ValueStringBuilder(stackalloc char[64]);
 
         sb.Append(Info.Name);
-
         sb.Append(": ");
-
         Value.WriteTo(ref sb);
 
         if (Priority is not null)
