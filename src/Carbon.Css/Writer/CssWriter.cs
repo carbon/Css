@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 
 using Carbon.Color;
+using Carbon.Css.Helpers;
 using Carbon.Css.Parser;
 
 namespace Carbon.Css;
@@ -527,9 +528,40 @@ public sealed class CssWriter : IDisposable
     {
         // {name}({args})
 
+        if (_resolver != null && function is CssUrl { Arguments: CssString urlString } && _context.MaxInlineSize > 0)
+        {
+            var url = CssUrlValue.Parse(urlString.Text);
+
+            if (url.IsPath)
+            {
+                var absolutePath = url.GetAbsolutePath(_resolver.ScopedPath);
+
+                if (absolutePath.EndsWith(".svg"))
+                {
+                    try
+                    {
+                        using var stream = _resolver.Open(absolutePath);
+
+                        if (stream.Length <= _context.MaxInlineSize)
+                        {
+                            _writer.Write("url(\"data:image/svg+xml;base64,");
+                            Base64Helper.WriteStreamAsBase64(stream, _writer);
+                            _writer.Write("\")");
+
+                            return;
+                        }
+                    }
+                    catch 
+                    {
+                        _writer.Write("/* error inlining svg */");
+                    }
+                }
+            }
+        }
+        
         if (CssFunctions.TryGet(function.Name, out var func))
         {
-            CssValue[] args = GetArgs(function.Arguments).ToArray();
+            CssValue[] args = [.. GetArgs(function.Arguments)];
 
             _writer.Write(func(args));
 

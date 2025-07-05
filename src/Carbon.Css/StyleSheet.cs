@@ -69,6 +69,24 @@ public sealed class StyleSheet : CssRoot, IStylesheet
                             browsers.Add(new BrowserInfo(browserType, browserVersion));
                         }
                     }
+                    else if (directive.Name is "inline" && directive.Value != null)
+                    {
+                        var value = directive.Value;
+                        int multiplier = 1;
+
+                        if (value.EndsWith("KiB"))
+                        {
+                            value = value[0..^3];
+                            multiplier = 1024;
+                        }
+                        else if (value.EndsWith("KB"))
+                        {
+                            value = value[0..^3];
+                            multiplier = 1000;
+                        }
+
+                        sheet.Context!.MaxInlineSize = int.Parse(value.Trim('<', ' '), CultureInfo.InvariantCulture) * multiplier;
+                    }
                 }
                 else
                 {

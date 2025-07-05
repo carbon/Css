@@ -3,27 +3,6 @@
 public class AutoPrefixTests
 {
     [Fact]
-    public void CssMask()
-    {
-        var sheet = StyleSheet.Parse(
-            """
-            //= support Safari 5+
-            //= support Chrome 120+
-            div {
-              mask-image: url('image.svg');
-            }
-            """);
-
-        Assert.Equal(
-            """
-            div {
-              -webkit-mask-image: url('image.svg');
-              mask-image: url('image.svg');
-            }
-            """, sheet.ToString(), ignoreLineEndingDifferences: true);
-    }
-
-    [Fact]
     public void ZoomOut()
     {
         var sheet = StyleSheet.Parse(

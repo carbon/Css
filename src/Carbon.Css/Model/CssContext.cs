@@ -11,6 +11,8 @@ public sealed class CssContext
     
     public BrowserInfo[]? BrowserSupport => browserSupport;
 
+    public int MaxInlineSize { get; set; }
+
     // Firefox 117
     // Safar 17.?
 

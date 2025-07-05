@@ -12,4 +12,5 @@ EXAMPLES:
 //= support IE 11+
 //= support Safari 5.1+
 //= support Chrome 20+
+//= inline < 1KiB
 */
