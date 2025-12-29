@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Carbon.Css</AssemblyName>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>0.76.1</Version>
     <WarningsAsErrors>true</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -18,7 +18,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Carbon.Color" Version="3.7.0" />
+    <PackageReference Include="Carbon.Color" Version="3.8.0" />
   </ItemGroup>
 
 </Project>
