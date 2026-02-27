@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 
 namespace Carbon.Css.Parser;
@@ -666,15 +664,13 @@ public sealed partial class CssParser : IDisposable
 
     public CssSelector ReadSelector()
     {
-        List<CssSequence>? list = null;
+        var list = new SmallList<CssSequence>();
 
-        var span = ReadValueSpan();
+        list.Add(ReadValueSpan());
 
         // Maybe a multi-selector
         while (ConsumeIf(CssTokenKind.Comma)) // ? ,
         {
-            list ??= [span];            
-                
             ReadTrivia(); // trailing whitespace
 
             list.Add(ReadValueSpan());
@@ -682,7 +678,7 @@ public sealed partial class CssParser : IDisposable
 
         // #id.hello { } 
 
-        return new CssSelector(list ?? [span]);
+        return new CssSelector(list.ToArray());
     }
 
     public StyleRule ReadStyleRule()
@@ -864,27 +860,24 @@ public sealed partial class CssParser : IDisposable
                 continue;
             }
 
+            var list = new SmallList<CssSequence>();
 
-            var span = ReadValueSpan();
-
-            List<CssSequence>? spanList = null;
+            list.Add(ReadValueSpan());
                 
             while (ConsumeIf(CssTokenKind.Comma)) // ? ,
-            {
-                spanList ??= [span];
-                    
+            {                    
                 ReadTrivia(); // ? {trivia}
 
-                spanList.Add(ReadValueSpan());
+                list.Add(ReadValueSpan());
             }
 
             switch (Current.Kind)
             {
                 case CssTokenKind.Colon: 
-                    block.Add(ReadDeclarationFromName(span[0].ToString()!));  break; // DeclarationName
+                    block.Add(ReadDeclarationFromName(list[0].ToString()!));  break; // DeclarationName
                 case CssTokenKind.BlockStart:
                     block.Flags |= CssBlockFlags.HasChildBlocks;
-                    block.Add(ReadRuleBlock(new CssSelector(spanList ?? [span]))); 
+                    block.Add(ReadRuleBlock(new CssSelector(list.ToArray())));
                     break;
                 case CssTokenKind.BlockEnd: 
                     break;

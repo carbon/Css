@@ -1195,11 +1195,11 @@ public sealed class CssWriter : IDisposable
 
         ancestors.Reverse();
 
-        var result = new List<CssSequence>();
+        var result = new SmallList<CssSequence>();
 
         // { &.open { } }
 
-        CssSequence? span = new();
+        CssSequence? span = [];
 
         for (int i = 0; i < ancestors.Count; i++)
         {
@@ -1287,7 +1287,7 @@ public sealed class CssWriter : IDisposable
             result.Add(span);
         }
 
-        return new CssSelector(result);
+        return new CssSelector(result.ToArray());
     }
 
     private static CssSequence SetReference(CssSequence current, CssSequence parent)

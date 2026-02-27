@@ -4,11 +4,11 @@ using Carbon.Css.Parser;
 
 namespace Carbon.Css;
 
-public sealed class CssSelector(List<CssSequence> items) : IEnumerable<CssSequence>
+public sealed class CssSelector(CssSequence[] items) : IEnumerable<CssSequence>
 {
-    private readonly List<CssSequence> _items = items; // comma separated
+    private readonly CssSequence[] _items = items; // comma separated
 
-    public int Count => _items.Count;
+    public int Count => _items.Length;
 
     public CssSequence this[int index] => _items[index];
 
@@ -22,7 +22,7 @@ public sealed class CssSelector(List<CssSequence> items) : IEnumerable<CssSequen
         return false;
     }
 
-    public override string ToString() => string.Join(", ", _items);
+    public override string ToString() => string.Join<CssSequence>(", ", _items);
 
     public static CssSelector Parse(string text)
     {
@@ -33,7 +33,7 @@ public sealed class CssSelector(List<CssSequence> items) : IEnumerable<CssSequen
 
     #region IEnumerator
 
-    public IEnumerator<CssSequence> GetEnumerator() => _items.GetEnumerator();
+    public IEnumerator<CssSequence> GetEnumerator() => ((IEnumerable<CssSequence>)_items).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 
