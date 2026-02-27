@@ -172,10 +172,10 @@ public sealed class CssWriter : IDisposable
     {
         var enumerable = EvaluateExpression(block.Enumerable);
 
+        _scope = _scope.GetChildScope();
+
         if (enumerable is CssValueList list)
         {
-            _scope = _scope.GetChildScope();
-
             uint a = 0;
             var symbol = block.Variables[0].Symbol;
 
@@ -193,8 +193,6 @@ public sealed class CssWriter : IDisposable
 
         else if (enumerable is CssMap map)
         {
-            _scope = _scope.GetChildScope();
-
             uint a = 0;
             var s0 = block.Variables[0].Symbol; // keyName
             var s1 = block.Variables[1].Symbol; // keyValue
@@ -346,7 +344,7 @@ public sealed class CssWriter : IDisposable
     {
         if (CssFunctions.TryGet(function.Name, out var func))
         {
-            CssValue[] args = GetArgs(function.Arguments).ToArray();
+            CssValue[] args = [.. GetArgs(function.Arguments)];
 
             return func(args);
         }
@@ -598,13 +596,15 @@ public sealed class CssWriter : IDisposable
                 {
                     yield return list;
                 }
-
-                // Break out comma separated values
-                foreach (var v in list)
+                else
                 {
-                    foreach (var item in GetArgs(v))
+                    // Break out comma separated values
+                    foreach (var v in list)
                     {
-                        yield return item;
+                        foreach (var item in GetArgs(v))
+                        {
+                            yield return item;
+                        }
                     }
                 }
 
