@@ -24,7 +24,7 @@ public sealed class CssSequence : CssValue, IEnumerable<CssValue>
     public CssSequence(params CssValue[] items)
         : base(NodeKind.Sequence)
     {
-        _children = new List<CssValue>(items);
+        _children = [.. items];
     }
 
     public void Add(CssValue item)
@@ -91,6 +91,18 @@ public sealed class CssSequence : CssValue, IEnumerable<CssValue>
         }
 
         return false;
+    }
+
+    public CssSequence Clone()
+    {
+        var clone = new CssSequence(_children.Count);
+
+        foreach (var child in _children)
+        {
+            clone.Add(child);
+        }
+
+        return clone;
     }
 
     public IEnumerator<CssValue> GetEnumerator() => _children.GetEnumerator();
