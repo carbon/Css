@@ -27,7 +27,7 @@ internal sealed class SourceReader(TextReader textReader) : IDisposable
     {
         int charCode = _textReader.Peek();
 
-        return (charCode > 0) ? (char)charCode : EofChar;
+        return (charCode >= 0) ? (char)charCode : EofChar;
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ internal sealed class SourceReader(TextReader textReader) : IDisposable
             Advance();
         }
 
-        return new string(buffer[..2]);
+        return new string(buffer[..count]);
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ internal sealed class SourceReader(TextReader textReader) : IDisposable
     /// </summary>
     public void Advance()
     {
-        if (IsEof) throw new Exception("Cannot read past EOF.");
+        if (IsEof) throw new EndOfStreamException();
 
         if (_marked != -1 && (_marked <= _position))
         {
