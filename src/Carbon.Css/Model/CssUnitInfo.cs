@@ -72,7 +72,7 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
     public static readonly CssUnitInfo Dppx = new("dppx",           NodeKind.Resolution);
     public static readonly CssUnitInfo X    = new(CssUnitNames.X,   NodeKind.Resolution);
 
-    public static readonly FrozenDictionary<string, CssUnitInfo> s_items = ((KeyValuePair<string, CssUnitInfo>[])[
+    public static readonly FrozenDictionary<string, CssUnitInfo> s_items = FrozenDictionary.Create<string, CssUnitInfo>([
         // <length> : relative
         new(CssUnitNames.Cap   , Cap),
         new(CssUnitNames.Em    , Em),
@@ -129,7 +129,7 @@ public sealed class CssUnitInfo(string name, NodeKind kind, CssUnitFlags flags =
         new("dpcm"            , Dpcm),
         new("dppx"            , Dppx),
         new(CssUnitNames.X    , X)
-    ]).ToFrozenDictionary();
+    ]);
 
     public string Name { get; } = name;
 

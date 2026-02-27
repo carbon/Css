@@ -16,38 +16,31 @@ public static class CssCursor
         standard: new(chrome: 37, edge: 12, firefox: 24, safari: 9)
     );
 
-    private static readonly FrozenDictionary<string, CssCompatibility> s_table = new Dictionary<string, CssCompatibility>()
-    {
-        ["auto"]      = CssCompatibility.All,
-        ["alias"]     = CssCompatibility.All,
-        ["copy"]      = CssCompatibility.All,
-        ["crosshair"] = CssCompatibility.All,
-
-        ["default"]  = CssCompatibility.All,
-        ["e-resize"] = CssCompatibility.All,
-        ["grab"]     = s_grabCursor,
-        ["grabbing"] = s_grabCursor,
-
-        ["help"] = CssCompatibility.All,
-
-        ["move"]      = CssCompatibility.All,
-        ["n-resize"]  = CssCompatibility.All,
-        ["ne-resize"] = CssCompatibility.All,
-        ["nw-resize"] = CssCompatibility.All,
-
-        ["pointer"]   = CssCompatibility.All,
-        ["progress"]  = CssCompatibility.All,
-        ["s-resize"]  = CssCompatibility.All,
-        ["se-resize"] = CssCompatibility.All,
-        ["sw-resize"] = CssCompatibility.All,
-
-        ["text"]    = CssCompatibility.All,
-        ["wait"]    = CssCompatibility.All,
-        ["w-resize"] = CssCompatibility.All,
-
-        ["zoom-in"]  = s_zoomCursor,
-        ["zoom-out"] = s_zoomCursor
-    }.ToFrozenDictionary();
+    private static readonly FrozenDictionary<string, CssCompatibility> s_table = FrozenDictionary.Create<string, CssCompatibility>([
+        new("auto",      CssCompatibility.All),
+        new("alias",     CssCompatibility.All),
+        new("copy",      CssCompatibility.All),
+        new("crosshair", CssCompatibility.All),
+        new("default",   CssCompatibility.All),
+        new("e-resize",  CssCompatibility.All),
+        new("grab",      s_grabCursor),
+        new("grabbing",  s_grabCursor),
+        new("help",      CssCompatibility.All),
+        new("move",      CssCompatibility.All),
+        new("n-resize",  CssCompatibility.All),
+        new("ne-resize", CssCompatibility.All),
+        new("nw-resize", CssCompatibility.All),
+        new("pointer",   CssCompatibility.All),
+        new("progress",  CssCompatibility.All),
+        new("s-resize",  CssCompatibility.All),
+        new("se-resize", CssCompatibility.All),
+        new("sw-resize", CssCompatibility.All),
+        new("text",      CssCompatibility.All),
+        new("wait",      CssCompatibility.All),
+        new("w-resize",  CssCompatibility.All),
+        new("zoom-in",   s_zoomCursor),
+        new("zoom-out",  s_zoomCursor)
+    ]);
         
     public static bool NeedsPatch(string value, BrowserInfo browser)
     {
