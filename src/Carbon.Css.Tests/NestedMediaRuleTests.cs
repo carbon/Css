@@ -93,6 +93,38 @@ public class NestedMediaRuleTests
     }
 
     [Fact]
+    public void NestedMediaRule_WithNestedSelectorBrowserSupportsNesting()
+    {
+        var css = StyleSheet.Parse(
+            """
+            .container {
+              width: 100%;
+              .item {
+                flex: 1;
+                @media (min-width: 1024px) {
+                  flex: none;
+                  width: 50%;
+                }
+              }
+            }
+            """, new CssContext {  SupportsNesting = true });
+
+        Assert.Equal(
+            """
+            .container {
+              width: 100%;
+              .item {
+                flex: 1;
+                @media (min-width: 1024px) {
+                  flex: none;
+                  width: 50%;
+                }
+              }
+            }
+            """, css.ToString(), ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
     public void NestedMediaRule_WithReference()
     {
         var css = StyleSheet.Parse(

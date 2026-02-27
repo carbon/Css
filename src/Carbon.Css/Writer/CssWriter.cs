@@ -648,7 +648,7 @@ public sealed class CssWriter : IDisposable
 
     public void WriteRule(CssRule rule, int depth = 0)
     {
-        if (rule.IsComplex && rule is StyleRule styleRule)
+        if (!_context.SupportsNesting && rule.IsComplex && rule is StyleRule styleRule)
         {
             uint i = 0;
 
@@ -880,14 +880,13 @@ public sealed class CssWriter : IDisposable
 
         var count = 0;
 
-        // Write the declarations
-        foreach (var node in block.Children) // TODO: Change to an immutable list?
+        foreach (var node in block.Children)
         {
             if (node.Kind is NodeKind.Include)
             {
                 var b2 = new CssBlock(NodeKind.Block) {
-                    node
-                };
+                node
+            };
 
                 _scope = ExpandInclude((IncludeNode)node, b2);
 
@@ -917,7 +916,7 @@ public sealed class CssWriter : IDisposable
                     WritePatchedDeclaration(declaration, depth + 1);
                 }
             }
-            else if (node.Kind is NodeKind.Rule)  // Nested rule
+            else if (node.Kind is NodeKind.Rule)
             {
                 if (count is 0) _writer.WriteLine();
 
@@ -931,15 +930,16 @@ public sealed class CssWriter : IDisposable
             }
             else if (node.Kind is NodeKind.For)
             {
+                EvaluateFor((ForBlock)node, depth + 1);
             }
-            
-             _writer.WriteLine();
-            
+
+            _writer.WriteLine();
+
             count++;
         }
 
         Indent(depth);
-  
+
         _writer.Write('}'); // Block end
     }
 
