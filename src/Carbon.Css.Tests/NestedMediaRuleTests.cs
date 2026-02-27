@@ -97,6 +97,8 @@ public class NestedMediaRuleTests
     {
         var css = StyleSheet.Parse(
             """
+            //= nesting native
+
             .container {
               width: 100%;
               .item {
@@ -107,7 +109,7 @@ public class NestedMediaRuleTests
                 }
               }
             }
-            """, new CssContext {  SupportsNesting = true });
+            """);
 
         Assert.Equal(
             """

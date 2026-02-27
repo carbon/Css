@@ -69,6 +69,10 @@ public sealed class StyleSheet : CssRoot, IStylesheet
                             browsers.Add(new BrowserInfo(browserType, browserVersion));
                         }
                     }
+                    else if (directive.Name is "nesting" && directive.Value is "native")
+                    {
+                        sheet.Context!.SupportsNesting = true;
+                    }
                     else if (directive.Name is "inline" && directive.Value != null)
                     {
                         var value = directive.Value;
