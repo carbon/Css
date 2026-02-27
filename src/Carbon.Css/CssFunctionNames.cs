@@ -4,7 +4,7 @@ namespace Carbon.Css;
 
 internal static class CssFunctionNames
 {
-    private static readonly FrozenSet<string> s_items = FrozenSet.ToFrozenSet([
+    private static readonly FrozenSet<string> s_items = [
         "abs",
         "attr",
         "asin",
@@ -36,7 +36,7 @@ internal static class CssFunctionNames
         "color-mix",
         "color-contrast",
         "light-dark",
-    ]);
+    ];
 
     public static bool Contains(string name) => s_items.Contains(name);
 }

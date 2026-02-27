@@ -910,7 +910,7 @@ public sealed partial class CssParser : IDisposable
 
         var value = ReadValueList();                        // read value (value or valuelist)
 
-        ConsumeIf(CssTokenKind.Semicolon);                     // ? ;
+        ConsumeIf(CssTokenKind.Semicolon);                  // ? ;
 
 
         ReadTrivia();

@@ -1041,9 +1041,9 @@ public sealed class CssWriter : IDisposable
 
             innerStyleRule.AddRange(mediaRule.Children);
 
-            var bubbledMedia = new MediaRule(mediaRule.Queries);
-
-            bubbledMedia.Add(innerStyleRule);
+            var bubbledMedia = new MediaRule(mediaRule.Queries) {
+                innerStyleRule
+            };
 
             clone.Remove(mediaRule);
 
@@ -1071,8 +1071,9 @@ public sealed class CssWriter : IDisposable
             var innerStyleRule = new StyleRule(ExpandSelector(rule));
             innerStyleRule.AddRange(mediaRule.Children);
 
-            var bubbled = new MediaRule(mediaRule.Queries);
-            bubbled.Add(innerStyleRule);
+            var bubbled = new MediaRule(mediaRule.Queries) {
+                innerStyleRule
+            };
 
             (bubbledMedia ??= []).Add(bubbled);
 
@@ -1275,7 +1276,7 @@ public sealed class CssWriter : IDisposable
 
                 foreach (var item in ancestor)
                 {
-                    span = new CssSequence();
+                    span = [];
 
                     if (parentSelector is { Count: > 0 }) // multi-selector
                     {

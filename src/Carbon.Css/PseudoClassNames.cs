@@ -4,7 +4,7 @@ namespace Carbon.Css;
 
 public static class PseudoClassNames
 {
-    private static readonly FrozenSet<string> s_items = FrozenSet.ToFrozenSet([
+    private static readonly FrozenSet<string> s_items = [
         "active",
         "any",
         "any-link",
@@ -72,7 +72,7 @@ public static class PseudoClassNames
         "visited",
         "volume-locked",
         "where"
-    ]);
+    ];
 
     public static bool Contains(string name) => s_items.Contains(name);
 }

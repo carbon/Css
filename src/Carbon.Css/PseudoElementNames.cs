@@ -4,7 +4,7 @@ namespace Carbon.Css;
 
 public static class PseudoElementNames
 {
-    private static readonly FrozenSet<string> s_items = FrozenSet.ToFrozenSet([
+    private static readonly FrozenSet<string> s_items = [
         "after",
         "backdrop",  // Safari 15.4
         "before",
@@ -24,7 +24,7 @@ public static class PseudoElementNames
         "target-text",
         "view-transition",
         "view-transition-group"
-    ]);
+    ];
 
     public static bool Contains(string name) => s_items.Contains(name);
 }
