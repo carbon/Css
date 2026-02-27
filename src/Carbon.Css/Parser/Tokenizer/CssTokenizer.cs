@@ -143,11 +143,12 @@ public sealed class CssTokenizer : IDisposable
                 LeaveValueMode();
                 return new CssToken(CssTokenKind.Semicolon, reader.ReadSymbol(";"), reader.Position);
             case '{':
+                LeaveValueMode();
+
                 _mode.Enter(LexicalMode.Block);
 
                 return new CssToken(CssTokenKind.BlockStart, reader.ReadSymbol("{"), reader.Position);
             case '}':
-
                 LeaveValueMode();
 
                 if (_mode.Current is LexicalMode.InterpolatedString)

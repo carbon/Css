@@ -842,7 +842,7 @@ public sealed partial class CssParser : IDisposable
                         continue;
                     case "media":
                         block.Flags |= CssBlockFlags.HasNestedAtRule;
-                        block.Add(ReadMediaRule()); 
+                        block.Add(ReadMediaRule());
                         continue;
                     case "starting-style":
                         block.Flags |= CssBlockFlags.HasNestedAtRule;

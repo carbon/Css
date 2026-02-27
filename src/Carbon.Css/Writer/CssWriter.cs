@@ -1010,30 +1010,21 @@ public sealed class CssWriter : IDisposable
         if (rule.IsSimple)
         {
             yield return rule;
-
             yield break;
         }
 
         var clone = rule.CloneNode();
 
-        if (rule.Flags.HasFlag(CssBlockFlags.HasNestedAtRule) && !_context.SupportsNesting)
-        {
-            throw new Exception("nested @ rules are not supported");
-        }
-
-        if (rule.Flags.HasFlag(CssBlockFlags.HasIncludes)) // Expand the includes
+        if (rule.Flags.HasFlag(CssBlockFlags.HasIncludes))
         {
             foreach (var includeNode in clone.Children.OfType<IncludeNode>().ToList())
             {
                 _scope = ExpandInclude(includeNode, clone);
-
                 clone.Children.Remove(includeNode);
             }
         }
 
-        var root = new List<CssRule> {
-            clone
-        };
+        var root = new List<CssRule> { clone };
 
         foreach (var nestedRule in clone.Children.OfType<StyleRule>().ToList())
         {
@@ -1043,19 +1034,50 @@ public sealed class CssWriter : IDisposable
             }
         }
 
+        // Bubble up nested @media rules
+        foreach (var mediaRule in clone.Children.OfType<MediaRule>().ToList())
+        {
+            var innerStyleRule = new StyleRule(rule.Selector);
+
+            innerStyleRule.AddRange(mediaRule.Children);
+
+            var bubbledMedia = new MediaRule(mediaRule.Queries);
+
+            bubbledMedia.Add(innerStyleRule);
+
+            clone.Remove(mediaRule);
+
+            root.Add(bubbledMedia);
+        }
+
         foreach (CssRule r in root)
         {
             if (r.HasChildren)
             {
                 yield return r;
             }
-
         }
     }
 
     private static IEnumerable<CssRule> ExpandStyleRule(StyleRule rule, CssRule parent)
     {
         var newRule = new StyleRule(ExpandSelector(rule));
+
+        // Collect nested @media before processing children
+        List<CssRule>? bubbledMedia = null;
+
+        foreach (var mediaRule in rule.Children.OfType<MediaRule>().ToList())
+        {
+            var innerStyleRule = new StyleRule(ExpandSelector(rule));
+            innerStyleRule.AddRange(mediaRule.Children);
+
+            var bubbled = new MediaRule(mediaRule.Queries);
+            bubbled.Add(innerStyleRule);
+
+            (bubbledMedia ??= []).Add(bubbled);
+
+            rule.Remove(mediaRule);
+        }
 
         bool hasNestedRules = false;
 
@@ -1064,7 +1086,6 @@ public sealed class CssWriter : IDisposable
             if (child is StyleRule)
             {
                 hasNestedRules = true;
-
                 break;
             }
         }
@@ -1075,9 +1096,17 @@ public sealed class CssWriter : IDisposable
             {
                 if (childNode is StyleRule childRule)
                 {
+                    // Separate media from non-media results
                     foreach (var r in ExpandStyleRule(childRule, rule))
                     {
-                        yield return r;
+                        if (r is MediaRule)
+                        {
+                            (bubbledMedia ??= []).Add(r);
+                        }
+                        else
+                        {
+                            yield return r;
+                        }
                     }
                 }
                 else
@@ -1091,11 +1120,20 @@ public sealed class CssWriter : IDisposable
             newRule.AddRange(rule.Children);
         }
 
-        parent.Remove(rule); // Remove from parent node after it's been processed
+        parent.Remove(rule);
 
         if (newRule.HasChildren)
         {
             yield return newRule;
+        }
+
+        // All @media rules (from this level and children) go last
+        if (bubbledMedia != null)
+        {
+            foreach (var media in bubbledMedia)
+            {
+                yield return media;
+            }
         }
     }
 
@@ -1239,7 +1277,7 @@ public sealed class CssWriter : IDisposable
                 {
                     span = new CssSequence();
 
-                    if (parentSelector is { Count: > 0 })
+                    if (parentSelector is { Count: > 0 }) // multi-selector
                     {
                         foreach (var part in parentSelector)
                         {

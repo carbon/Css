@@ -219,7 +219,7 @@ public class CssTests
 
         var sheet = StyleSheet.Parse(text);
 
-        Assert.Equal(1083, sheet.Children.Count);
+        Assert.Equal(1082, sheet.Children.Count);
     }
 
     [Fact]
