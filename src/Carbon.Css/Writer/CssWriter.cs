@@ -1175,33 +1175,35 @@ public sealed class CssWriter : IDisposable
 
     public static CssSelector ExpandSelector(StyleRule rule)
     {
-        var ancestors = new List<CssSelector>(rule.Depth + 1) {
-            rule.Selector
-        };
-
+        // Build ancestor chain top-down (avoids Reverse)
+        int depth = 0;
         StyleRule? current = rule;
 
-        while ((current = current!.Parent as StyleRule) is not null)
+        while (current is not null)
         {
-            ancestors.Add(current.Selector);
-
-            if (ancestors.Count > 6)
-            {
-                var debugParts = string.Join(' ', ancestors);
-
-                throw new Exception($"May not nest more than 6 levels deep. Was {debugParts}.");
-            }
+            depth++;
+            current = current.Parent as StyleRule;
         }
 
-        ancestors.Reverse();
+        if (depth > 6)
+        {
+            throw new Exception($"May not nest more than 6 levels deep.");
+        }
+
+        var ancestors = new CssSelector[depth];
+        current = rule;
+
+        for (int i = depth - 1; i >= 0; i--)
+        {
+            ancestors[i] = current!.Selector;
+            current = current.Parent as StyleRule;
+        }
 
         var result = new SmallList<CssSequence>();
 
-        // { &.open { } }
-
         CssSequence? span = [];
 
-        for (int i = 0; i < ancestors.Count; i++)
+        for (int i = 0; i < ancestors.Length; i++)
         {
             var ancestor = ancestors[i];
 
@@ -1215,12 +1217,14 @@ public sealed class CssWriter : IDisposable
                 {
                     foreach (var node in a)
                     {
-                        if (node is CssReference reference)
+                        if (node.Kind is NodeKind.Reference)
                         {
-                            reference.Value = prev;
+                            span.Add(new CssReference("&", prev));
                         }
-
-                        span.Add(node);
+                        else
+                        {
+                            span.Add(node);
+                        }
                     }
                 }
 
@@ -1229,18 +1233,14 @@ public sealed class CssWriter : IDisposable
 
             if (ancestor.Count > 1)
             {
-                // The node is a multi-selector
-                // e.g. h1, h2, h3
-
                 var parentSelector = span;
 
                 foreach (var item in ancestor)
                 {
                     span = new CssSequence();
 
-                    if (parentSelector.Count > 0)
+                    if (parentSelector is { Count: > 0 })
                     {
-                        // expand and flatten the parent
                         foreach (var part in parentSelector)
                         {
                             span.Add(part);
@@ -1256,9 +1256,11 @@ public sealed class CssWriter : IDisposable
                         span.Add(item);
                     }
 
-                    // Remaining selectors
-                    foreach (var c in ancestors.Skip(i + 1))
+                    // Remaining ancestors
+                    for (int j = i + 1; j < ancestors.Length; j++)
                     {
+                        var c = ancestors[j];
+
                         if (c.Contains(NodeKind.Reference))
                         {
                             span = SetReference(c[0], span);
